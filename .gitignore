@@ -1,0 +1,13 @@
+# Java Files
+*.class
+*.jar
+*.properties
+*.lst
+
+# Eclipse Files
+.settings/
+.project
+.classpath
+
+# Maven Files
+dependency-reduced-pom.xml

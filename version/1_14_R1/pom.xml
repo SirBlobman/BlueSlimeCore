@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.SirBlobman.api</groupId>
+        <artifactId>SirBlobmanAPI-parent</artifactId>
+        <version>1.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>nms_1_14_R1</artifactId>
+    <name>SirBlobman API NMS 1_14_R1</name>
+    <description>Main API for SirBlobman plugins</description>
+
+    <dependencies>
+        <!-- Spigot NMS 1.14 -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.14-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- NMS Handler -->
+        <dependency>
+        	<groupId>com.SirBlobman.api</groupId>
+        	<artifactId>nms_handler</artifactId>
+        	<version>${project.version}</version>
+        	<scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>
