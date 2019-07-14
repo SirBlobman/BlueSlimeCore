@@ -48,7 +48,7 @@ public abstract class NMS_Handler {
 
     public static final int getMinorVersion() {
         String baseVersion = baseVersion();
-        String minorString = baseVersion.substring(2);
+        String minorString = baseVersion.substring(baseVersion.indexOf(".") + 1);
         return Integer.parseInt(minorString);
     }
     

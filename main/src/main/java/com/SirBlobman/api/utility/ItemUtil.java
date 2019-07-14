@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemUtil {
     public static final ItemStack AIR = newItem(Material.AIR);
-    public static boolean air(ItemStack is) {
+    public static boolean isAir(ItemStack is) {
         if(is == null) return true;
         if(is.equals(AIR)) return true;
         Material mat = is.getType();
@@ -29,13 +29,13 @@ public class ItemUtil {
 
     public static ItemStack newItem(Material mat, int amount) {
         ItemStack is = newItem(mat);
-        if(!air(is)) is.setAmount(amount);
+        if(!isAir(is)) is.setAmount(amount);
         return is;
     }
 
     public static ItemStack newItem(Material mat, int amount, int data) {
         ItemStack is = newItem(mat, amount);
-        if(!air(is)) {
+        if(!isAir(is)) {
             short meta = (short) data;
             is.setDurability(meta);
         }
@@ -44,7 +44,7 @@ public class ItemUtil {
 
     public static ItemStack newItem(Material mat, int amount, int data, String name) {
         ItemStack is = newItem(mat, amount, data);
-        if(!air(is)) {
+        if(!isAir(is)) {
             ItemMeta meta = is.getItemMeta();
             String disp = ChatColor.translateAlternateColorCodes('&', name);
             meta.setDisplayName(disp);
@@ -56,7 +56,7 @@ public class ItemUtil {
 
     public static ItemStack newItem(Material mat, int amount, int data, String name, String... lore) {
         ItemStack is = newItem(mat, amount, data, name);
-        if(!air(is)) {
+        if(!isAir(is)) {
             ItemMeta meta = is.getItemMeta();
             for(int i = 0; i < lore.length; i++) {
                 String line = lore[i];
