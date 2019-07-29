@@ -1,35 +1,80 @@
 package com.SirBlobman.api.nms;
 
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 public abstract class BossBar {
-    protected static Map<UUID, BossBar> CURRENT_BOSS_BAR = new HashMap<>();
-    
-    public abstract String getTitle();
-    public abstract double getProgress();
-    public abstract Object getColor();
-    public abstract Object getStyle();
-    public abstract void sendTo(Player player);
-    public abstract void remove(Player player);
+	private static final Map<UUID, BossBar> BOSS_BAR_MAP = new HashMap<>();
     
     public static void removeBossBar(Player player) {
         if(player == null) return;
         
         UUID uuid = player.getUniqueId();
-        BossBar bossBar = CURRENT_BOSS_BAR.getOrDefault(uuid, null);
+        BossBar bossBar = BOSS_BAR_MAP.getOrDefault(uuid, null);
         if(bossBar == null) return;
         
-        bossBar.remove(player);
+        bossBar.remove();
+        BOSS_BAR_MAP.remove(uuid);
+    }
+    
+    public static BossBar getCurrentBossBar(Player player) {
+    	if(player == null) return null;
+    	
+    	UUID uuid = player.getUniqueId();
+    	return BOSS_BAR_MAP.getOrDefault(uuid, null);
     }
     
     public static void setCurrentBossBar(Player player, BossBar bossBar) {
         if(player == null || bossBar == null) return;
         
         UUID uuid = player.getUniqueId();
-        CURRENT_BOSS_BAR.put(uuid, bossBar);
+        BOSS_BAR_MAP.put(uuid, bossBar);
     }
+    
+    
+    private UUID uuid;
+    private String title, color, style;
+    private double progress;
+    public BossBar(Player player, String title, double progress, String barColor, String barStyle) {
+    	this.uuid = player.getUniqueId();
+    	this.progress = progress;
+    	this.title = title;
+    	this.color = barColor;
+    	this.style = barStyle;
+    }
+    
+    public final Player getPlayer() {
+    	return Bukkit.getPlayer(this.uuid);
+    }
+    
+    public final void update(double progress, String title) {
+    	this.progress = progress;
+    	this.title = title;
+    	send();
+    }
+    
+    public String getTitle() {
+    	return this.title;
+    }
+    
+    public double getProgress() {
+    	return this.progress;
+    }
+    
+    public String getBarColorString() {
+    	return this.color;
+    }
+    
+    public String getBarStyleString() {
+    	return this.style;
+    }
+    
+    public abstract Object getBarColor();
+    public abstract Object getBarStyle();
+    public abstract void send();
+    public abstract void remove();
 }

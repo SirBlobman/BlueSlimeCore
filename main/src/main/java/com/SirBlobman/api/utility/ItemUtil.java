@@ -1,5 +1,8 @@
 package com.SirBlobman.api.utility;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -9,17 +12,10 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ItemUtil {
-    public static final ItemStack AIR = newItem(Material.AIR);
-    public static boolean isAir(ItemStack is) {
-        if(is == null) return true;
-        if(is.equals(AIR)) return true;
-        Material mat = is.getType();
-        boolean air = (mat == Material.AIR);
-        return air;
+    private static final ItemStack AIR = newItem(Material.AIR);
+    public static ItemStack getAir() {
+        return AIR.clone();
     }
 
     public static ItemStack newItem(Material mat) {
@@ -70,6 +66,11 @@ public class ItemUtil {
         }
         return is;
     }
+    
+    public static ItemStack newItem(Material mat, int amount, int data, String name, List<String> lore) {
+    	String[] loreArray = lore.toArray(new String[0]);
+    	return newItem(mat, amount, data, name, loreArray);
+    }
 
     public static ItemStack newPotion(PotionEffectType main, PotionEffect[] potionEffects, String disp, String... lore) {
         ItemStack is = newItem(Material.POTION, 1, 0, disp, lore);
@@ -86,5 +87,62 @@ public class ItemUtil {
     public static ItemStack conditionalMetaItem(boolean condition, Material mat, int amount, int metaIfTrue, int metaIfFalse, String disp, String... lore) {
         ItemStack is = newItem(mat, amount, (condition ? metaIfTrue : metaIfFalse), disp, lore);
         return is;
+    }
+    
+    /** Item Checks **/
+    public static boolean isAir(ItemStack item) {
+        if(item == null) return true;
+        if(item.equals(getAir())) return true;
+        
+        Material type = item.getType();
+        String typeName = type.name();
+        return (type == Material.AIR || typeName.endsWith("_AIR"));
+    }
+    
+    public static boolean hasLore(ItemStack item) {
+        if(isAir(item)) return false;
+        if(!item.hasItemMeta()) return false;
+        
+        ItemMeta meta = item.getItemMeta();
+        return meta.hasLore();
+    }
+    
+    public static boolean doesAnyLoreLineContain(ItemStack item, String string) {
+        if(!hasLore(item)) return false;
+        
+        ItemMeta meta = item.getItemMeta();
+        List<String> loreList = meta.getLore();
+        
+        for(String lore : loreList) {
+            if(!lore.contains(string)) continue;
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean doesAnyLoreLineStartWith(ItemStack item, String string) {
+        if(!hasLore(item)) return false;
+        
+        ItemMeta meta = item.getItemMeta();
+        List<String> loreList = meta.getLore();
+        
+        for(String lore : loreList) {
+            if(!lore.startsWith(string)) continue;
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean doesAnyLoreLineEndWith(ItemStack item, String string) {
+        if(!hasLore(item)) return false;
+        
+        ItemMeta meta = item.getItemMeta();
+        List<String> loreList = meta.getLore();
+        
+        for(String lore : loreList) {
+            if(!lore.endsWith(string)) continue;
+            return true;
+        }
+        return false;
     }
 }

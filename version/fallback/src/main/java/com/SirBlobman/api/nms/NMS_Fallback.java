@@ -18,7 +18,7 @@ public class NMS_Fallback extends NMS_Handler {
     }
 
     @Override
-    public void sendBossBar(Player player, String title, double progress, String colorName, String styleName) {
+    public void sendNewBossBar(Player player, String title, double progress, String colorName, String styleName) {
         Logger.getLogger("SirBlobmanAPI").warning("NMS not found, sending boss bar as chat");
         
         String color = ChatColor.translateAlternateColorCodes('&', title);
@@ -43,6 +43,8 @@ public class NMS_Fallback extends NMS_Handler {
 
     @Override
     public Objective createScoreboardObjective(Scoreboard scoreboard, String name, String criteria, String displayName) {
-        return scoreboard.registerNewObjective(name, criteria);
+        Objective objective = scoreboard.registerNewObjective(name, criteria);
+        objective.setDisplayName(displayName);
+        return objective;
     }
 }

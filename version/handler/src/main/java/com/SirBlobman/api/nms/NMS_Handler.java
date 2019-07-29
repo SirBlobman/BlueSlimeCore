@@ -1,15 +1,15 @@
 package com.SirBlobman.api.nms;
 
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.gson.JsonObject;
 
@@ -52,17 +52,22 @@ public abstract class NMS_Handler {
         return Integer.parseInt(minorString);
     }
     
+    public static boolean WARNING_SENT = false;
     public static NMS_Handler getHandler() {
         String nmsVersion = getNetMinecraftServerVersion();
         String className = "com.SirBlobman.api.nms.NMS_" + nmsVersion;
         try {
             Class<?> handler_class = Class.forName(className);
             return (NMS_Handler) handler_class.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex1) {
+        } catch (ReflectiveOperationException ex1) {
             try {
-                Logger.getLogger("SirBlobmanAPI").warning("Could not find valid NMS handler for '" + nmsVersion + "'. Using fallback handler...");
+                if(!WARNING_SENT) {
+                    WARNING_SENT = true;
+                    Logger.getLogger("SirBlobmanAPI").warning("Could not find valid NMS handler for '" + nmsVersion + "'. Using fallback handler...");
+                }
+                
                 return (NMS_Handler) Class.forName("com.SirBlobman.api.nms.NMS_Fallback").newInstance();
-            } catch(ClassNotFoundException | InstantiationException | IllegalAccessException ex2) {
+            } catch(ReflectiveOperationException ex2) {
                 Logger.getLogger("SirBlobmanAPI").severe("An error occurred while getting the NMS Handler!");
                 ex2.printStackTrace();
                 return null;
@@ -83,7 +88,7 @@ public abstract class NMS_Handler {
     }
     
     public abstract void sendActionBar(Player player, String message);
-    public abstract void sendBossBar(Player player, String title, double progress, String colorName, String styleName);
+    public abstract void sendNewBossBar(Player player, String title, double progress, String colorName, String styleName);
     public abstract void setTab(Player player, String header, String footer);
     
     public abstract double getMaxHealth(LivingEntity entity);

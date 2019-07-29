@@ -9,16 +9,22 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>nms_1_11_R1</artifactId>
-    <name>SirBlobman API NMS 1_11_R1</name>
+    <artifactId>nms_1_7_R4</artifactId>
+    <name>SirBlobman API NMS 1_7_R4</name>
     <description>Main API for SirBlobman plugins</description>
 
     <dependencies>
-        <!-- Spigot NMS 1.11.2 -->
+        <!-- Spigot NMS 1.7.10 -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.7.10</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <version>1.7.10</version>
             <scope>provided</scope>
         </dependency>
         

@@ -1,10 +1,11 @@
 package com.SirBlobman.api.nms;
 
+import java.lang.reflect.Field;
+import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,12 +13,10 @@ import org.bukkit.entity.Player.Spigot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.lang.reflect.Field;
-import java.util.logging.Logger;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
@@ -34,12 +33,9 @@ public class NMS_1_13_R2 extends NMS_Handler {
     }
 
     @Override
-    public void sendBossBar(Player player, String title, double progress, String color, String style) {
-        BarColor barColor = ((color == null || color.isEmpty()) ? BarColor.BLUE : BarColor.valueOf(color));
-        BarStyle barStyle = ((style == null || style.isEmpty()) ? BarStyle.SOLID : BarStyle.valueOf(style));
-        
-        BossBar bossBar = new BossBar_1_13_R2(title, progress, barColor, barStyle);
-        bossBar.sendTo(player);
+    public void sendNewBossBar(Player player, String title, double progress, String color, String style) {
+        BossBar bossBar = new BossBar_1_13_R2(player, title, progress, color, style);
+        bossBar.send();
     }
 
     @Override

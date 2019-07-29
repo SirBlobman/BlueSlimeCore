@@ -1,15 +1,13 @@
 package com.SirBlobman.api.nms;
 
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
+import java.lang.reflect.Field;
+import java.util.logging.Logger;
+
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.lang.reflect.Field;
-import java.util.logging.Logger;
 
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
@@ -36,12 +34,9 @@ public class NMS_1_10_R1 extends NMS_Handler {
     }
 
     @Override
-    public void sendBossBar(Player player, String title, double progress, String color, String style) {
-        BarColor barColor = ((color == null || color.isEmpty()) ? BarColor.BLUE : BarColor.valueOf(color));
-        BarStyle barStyle = ((style == null || style.isEmpty()) ? BarStyle.SOLID : BarStyle.valueOf(style));
-        
-        BossBar bossBar = new BossBar_1_10_R1(title, progress, barColor, barStyle);
-        bossBar.sendTo(player);
+    public void sendNewBossBar(Player player, String title, double progress, String color, String style) {
+        BossBar bossBar = new BossBar_1_10_R1(player, title, progress, color, style);
+        bossBar.send();
     }
 
     @Override

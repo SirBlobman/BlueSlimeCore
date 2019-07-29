@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.SirBlobman.api</groupId>
         <artifactId>SirBlobmanAPI-parent</artifactId>
-        <version>1.1</version>
+        <version>1.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,6 +32,12 @@
         <dependency>
             <groupId>com.SirBlobman.api</groupId>
             <artifactId>nms_fallback</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>nms_1_7_R4</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

@@ -62,7 +62,7 @@ public abstract class BasicPagedGUI extends BasicGUI {
         
         for(int i = startIndex; (i < itemListSize && i < endIndex); i++) {
             ItemStack item = itemList.get(i);
-            if(ItemUtil.isAir(item)) item = ItemUtil.AIR;
+            if(ItemUtil.isAir(item)) item = ItemUtil.getAir();
             
             inventory.setItem(slotIndex, item);
             slotIndex++;
@@ -71,8 +71,8 @@ public abstract class BasicPagedGUI extends BasicGUI {
         ItemStack filler = ItemUtil.newItem(Material.STAINED_GLASS_PANE, 1, 15, "&f");
         for(int i = 36; i < 45; i++) inventory.setItem(i, filler);
         
-        inventory.setItem(45, startIndex > 0 ? BACK_ITEM : ItemUtil.AIR);
-        inventory.setItem(53, endIndex < itemListSize ? NEXT_ITEM : ItemUtil.AIR);
+        inventory.setItem(45, startIndex > 0 ? BACK_ITEM : ItemUtil.getAir());
+        inventory.setItem(53, endIndex < itemListSize ? NEXT_ITEM : ItemUtil.getAir());
         
         return inventory;
     }

@@ -1,5 +1,8 @@
 package com.SirBlobman.api.nms;
 
+import java.lang.reflect.Field;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
@@ -8,17 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.lang.reflect.Field;
-import java.util.logging.Logger;
-
-import org.inventivetalent.bossbar.BossBarAPI;
-
 import net.minecraft.server.v1_8_R1.ChatSerializer;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
 import net.minecraft.server.v1_8_R1.IChatBaseComponent;
 import net.minecraft.server.v1_8_R1.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R1.PacketPlayOutPlayerListHeaderFooter;
 import net.minecraft.server.v1_8_R1.PlayerConnection;
+
+import org.inventivetalent.bossbar.BossBarAPI;
 
 public class NMS_1_8_R1 extends NMS_Handler {
     @Override
@@ -38,7 +38,7 @@ public class NMS_1_8_R1 extends NMS_Handler {
     }
 
     @Override
-    public void sendBossBar(Player player, String title, double progress, String color, String style) {
+    public void sendNewBossBar(Player player, String title, double progress, String color, String style) {
         if(!Bukkit.getPluginManager().isPluginEnabled("BossBarAPI")) {
             Logger.getLogger("SirBlobmanAPI").warning("BossBarAPI not installed, sending as chat instead!");
             
@@ -50,8 +50,8 @@ public class NMS_1_8_R1 extends NMS_Handler {
         BossBarAPI.Color barColor = ((color == null || color.isEmpty()) ? BossBarAPI.Color.BLUE : BossBarAPI.Color.valueOf(color));
         BossBarAPI.Style barStyle = ((style == null || style.isEmpty()) ? BossBarAPI.Style.PROGRESS : BossBarAPI.Style.valueOf(style.contains("SEGMENTED") ? style.replace("SEGMENTED", "NOTCHED") : "PROGRESS"));
         
-        BossBar bossBar = new BossBar_1_8_R1(title, progress, barColor, barStyle);
-        bossBar.sendTo(player);
+        BossBar bossBar = new BossBar_1_8_R1(player, title, progress, barColor.name(), barStyle.name());
+        bossBar.send();
     }
 
     @Override
