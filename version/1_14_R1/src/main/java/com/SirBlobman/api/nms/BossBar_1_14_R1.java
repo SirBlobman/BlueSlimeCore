@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -49,14 +50,14 @@ public class BossBar_1_14_R1 extends BossBar {
 
 	@Override
 	public void remove() {
-		Player player = getPlayer();
+		OfflinePlayer player = getOfflinePlayer();
 		UUID uuid = player.getUniqueId();
 		
 		org.bukkit.boss.BossBar bossBar = BOSS_BARS.getOrDefault(uuid, null);
 		if(bossBar == null) return;
 		
 		bossBar.setVisible(false);
-		bossBar.removePlayer(player);
+		if(player.isOnline()) bossBar.removePlayer(player.getPlayer());
 		BOSS_BARS.remove(uuid);
 	}
 }

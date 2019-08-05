@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -57,14 +58,14 @@ public class BossBar_1_8_R3 extends BossBar {
 
 	@Override
 	public void remove() {
-		Player player = getPlayer();
+		OfflinePlayer player = getOfflinePlayer();
 		UUID uuid = player.getUniqueId();
 		
 		org.inventivetalent.bossbar.BossBar bossBar = BOSS_BARS.getOrDefault(uuid, null);
 		if(bossBar == null) return;
 		
 		bossBar.setVisible(false);
-		bossBar.removePlayer(player);
+		if(player.isOnline()) bossBar.removePlayer(player.getPlayer());
 		BOSS_BARS.remove(uuid);
 	}
 }

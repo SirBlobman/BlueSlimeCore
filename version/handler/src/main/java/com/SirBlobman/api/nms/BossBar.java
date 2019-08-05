@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public abstract class BossBar {
@@ -49,6 +50,10 @@ public abstract class BossBar {
     
     public final Player getPlayer() {
     	return Bukkit.getPlayer(this.uuid);
+    }
+    
+    public final OfflinePlayer getOfflinePlayer() {
+    	return Bukkit.getOfflinePlayer(this.uuid);
     }
     
     public final void update(double progress, String title) {
