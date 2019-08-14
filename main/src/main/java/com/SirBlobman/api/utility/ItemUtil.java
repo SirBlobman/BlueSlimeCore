@@ -1,16 +1,15 @@
 package com.SirBlobman.api.utility;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import com.SirBlobman.api.item.ItemBuilder;
 
 public class ItemUtil {
     private static final ItemStack AIR = newItem(Material.AIR);
@@ -18,75 +17,48 @@ public class ItemUtil {
         return AIR.clone();
     }
 
-    public static ItemStack newItem(Material mat) {
-        ItemStack is = new ItemStack(mat);
-        return is;
-    }
-
-    public static ItemStack newItem(Material mat, int amount) {
-        ItemStack is = newItem(mat);
-        if(!isAir(is)) is.setAmount(amount);
-        return is;
-    }
-
-    public static ItemStack newItem(Material mat, int amount, int data) {
-        ItemStack is = newItem(mat, amount);
-        if(!isAir(is)) {
-            short meta = (short) data;
-            is.setDurability(meta);
-        }
-        return is;
-    }
-
-    public static ItemStack newItem(Material mat, int amount, int data, String name) {
-        ItemStack is = newItem(mat, amount, data);
-        if(!isAir(is)) {
-            ItemMeta meta = is.getItemMeta();
-            String disp = ChatColor.translateAlternateColorCodes('&', name);
-            meta.setDisplayName(disp);
-            meta.addItemFlags(ItemFlag.values());
-            is.setItemMeta(meta);
-        }
-        return is;
-    }
-
-    public static ItemStack newItem(Material mat, int amount, int data, String name, String... lore) {
-        ItemStack is = newItem(mat, amount, data, name);
-        if(!isAir(is)) {
-            ItemMeta meta = is.getItemMeta();
-            for(int i = 0; i < lore.length; i++) {
-                String line = lore[i];
-                String color = ChatColor.translateAlternateColorCodes('&', line);
-                lore[i] = color;
-            }
-            
-            List<String> list = Arrays.asList(lore);
-            meta.setLore(list);
-            is.setItemMeta(meta);
-        }
-        return is;
+    public static ItemStack newItem(Material type) {
+    	return newItem(type, 1);
     }
     
-    public static ItemStack newItem(Material mat, int amount, int data, String name, List<String> lore) {
-    	String[] loreArray = lore.toArray(new String[0]);
-    	return newItem(mat, amount, data, name, loreArray);
+    public static ItemStack newItem(Material type, int amount) {
+    	return newItem(type, amount, 0);
+    }
+    
+    public static ItemStack newItem(Material type, int amount, int data) {
+    	return newItem(type, amount, data, null);
     }
 
-    public static ItemStack newPotion(PotionEffectType main, PotionEffect[] potionEffects, String disp, String... lore) {
-        ItemStack is = newItem(Material.POTION, 1, 0, disp, lore);
-        ItemMeta meta = is.getItemMeta();
-        PotionMeta pm = (PotionMeta) meta;
-        for(int i = 0; i < potionEffects.length; i++) {
-            PotionEffect next = potionEffects[i];
-            pm.addCustomEffect(next, false);
-        }
-        is.setItemMeta(pm);
-        return is;
+    public static ItemStack newItem(Material type, int amount, int data, String displayName) {
+    	return newItem(type, amount, data, null, new String[0]);
     }
 
-    public static ItemStack conditionalMetaItem(boolean condition, Material mat, int amount, int metaIfTrue, int metaIfFalse, String disp, String... lore) {
-        ItemStack is = newItem(mat, amount, (condition ? metaIfTrue : metaIfFalse), disp, lore);
-        return is;
+    public static ItemStack newItem(Material type, int amount, int data, String name, String... lore) {
+    	List<String> loreList = Util.newList(lore);
+    	return newItem(type, amount, data, null, loreList);
+    }
+    
+    public static ItemStack newItem(Material type, int amount, int data, String displayName, List<String> lore) {
+    	ItemBuilder builder = new ItemBuilder().setType(type).setAmount(amount).setDamage(data);
+    	if(displayName != null && !displayName.isEmpty()) builder = builder.setDisplayName(displayName);
+    	if(lore != null && !lore.isEmpty()) builder = builder.setLore(lore);
+    	return builder.create();
+    }
+
+    public static ItemStack newPotion(PotionEffectType main, PotionEffect[] potionEffects, String displayName, String... lore) {
+    	ItemStack item = newItem(Material.POTION, 1, 0, displayName, lore);
+    	ItemMeta meta = item.getItemMeta();
+    	
+    	PotionMeta potion = (PotionMeta) meta;
+    	potion.setMainEffect(main);
+    	for(PotionEffect effect : potionEffects) potion.addCustomEffect(effect, true);
+    	
+    	item.setItemMeta(potion);
+    	return item;
+    }
+    
+    public static ItemStack conditionalMetaItem(boolean condition, Material type, int amount, int metaTrue, int metaFalse, String displayName, String... lore) {
+    	return newItem(type, amount, (condition ? metaTrue : metaFalse), displayName, lore);
     }
     
     /** Item Checks **/
