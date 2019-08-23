@@ -53,6 +53,7 @@ public abstract class BasicGUI implements InventoryHolder, Listener {
         if(inventory == null) return;
         
         InventoryHolder holder = inventory.getHolder();
+        if(holder == null) return;
         if(!holder.equals(this)) return;
         
         HandlerList.unregisterAll(this);
@@ -65,6 +66,7 @@ public abstract class BasicGUI implements InventoryHolder, Listener {
         if(inventory == null) return;
         
         InventoryHolder holder = inventory.getHolder();
+        if(holder == null) return;
         if(!holder.equals(this)) return;
         
         e.setCancelled(true);        
@@ -77,6 +79,7 @@ public abstract class BasicGUI implements InventoryHolder, Listener {
         if(inventory == null) return;
         
         InventoryHolder holder = inventory.getHolder();
+        if(holder == null) return;
         if(!holder.equals(this)) return;
         
         e.setCancelled(true);

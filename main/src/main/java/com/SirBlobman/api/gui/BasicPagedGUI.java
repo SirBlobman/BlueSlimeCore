@@ -1,5 +1,7 @@
 package com.SirBlobman.api.gui;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,8 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.SirBlobman.api.utility.ItemUtil;
-
-import java.util.List;
 
 public abstract class BasicPagedGUI extends BasicGUI {
     public BasicPagedGUI(JavaPlugin plugin, Player player) {super(plugin, player);}
@@ -68,7 +68,7 @@ public abstract class BasicPagedGUI extends BasicGUI {
             slotIndex++;
         }
         
-        ItemStack filler = ItemUtil.newItem(Material.STAINED_GLASS_PANE, 1, 15, "&f");
+        ItemStack filler = getFillerItem();
         for(int i = 36; i < 45; i++) inventory.setItem(i, filler);
         
         inventory.setItem(45, startIndex > 0 ? BACK_ITEM : ItemUtil.getAir());
@@ -99,4 +99,5 @@ public abstract class BasicPagedGUI extends BasicGUI {
     public abstract void onValidClose(InventoryCloseEvent e);
     public abstract void onValidDrag(InventoryDragEvent e);
     public abstract void onCustomClick(InventoryClickEvent e);
+    public abstract ItemStack getFillerItem();
 }
