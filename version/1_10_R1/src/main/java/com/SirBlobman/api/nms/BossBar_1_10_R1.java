@@ -31,6 +31,7 @@ public class BossBar_1_10_R1 extends BossBar {
 	@Override
 	public void send() {
 		Player player = getPlayer();
+		if(player == null) return;
 		UUID uuid = player.getUniqueId();
 		
 		org.bukkit.boss.BossBar bossBar = BOSS_BARS.getOrDefault(uuid, null);

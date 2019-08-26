@@ -15,11 +15,14 @@ public class ItemBuilder {
 	private ItemStack item;
 	private ItemMeta meta;
 	public ItemBuilder() {this.item = new ItemStack(Material.AIR);}
+	public ItemBuilder(ItemStack base) {this.item = base;}
 	
 	public ItemStack create() {
-		ItemStack item = this.item.clone();
-		ItemMeta meta = this.meta.clone();
-		item.setItemMeta(meta);
+		ItemStack item = (this.item != null ? this.item.clone() : new ItemStack(Material.AIR));
+		if(this.meta != null) {
+			ItemMeta meta = this.meta.clone();
+			item.setItemMeta(meta);
+		}
 		return item;
 	}
 	
@@ -60,6 +63,10 @@ public class ItemBuilder {
 	}
 	
 	public ItemBuilder setLore(String... loreList) {
+		for(int i = 0; i < loreList.length; i++) {
+			loreList[i] = Util.color(loreList[i]);
+		}
+		
 		List<String> copy = Util.newList(loreList);
 		return setLore(copy);
 	}
@@ -75,6 +82,14 @@ public class ItemBuilder {
 		setupMeta();
 		
 		this.meta.addEnchant(enchant, level, true);
+		return this;
+	}
+	
+	public ItemBuilder setGlowing() {
+		setupMeta();
+		
+		if(this.meta.getEnchants().isEmpty()) this.meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		this.meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
 		return this;
 	}
 }

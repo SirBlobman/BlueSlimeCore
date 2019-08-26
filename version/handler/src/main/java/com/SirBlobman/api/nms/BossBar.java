@@ -49,7 +49,8 @@ public abstract class BossBar {
     }
     
     public final Player getPlayer() {
-    	return Bukkit.getPlayer(this.uuid);
+    	OfflinePlayer player = getOfflinePlayer();
+    	return (player.isOnline() ? player.getPlayer() : null);
     }
     
     public final OfflinePlayer getOfflinePlayer() {

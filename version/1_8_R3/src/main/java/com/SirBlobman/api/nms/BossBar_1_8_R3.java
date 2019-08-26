@@ -35,6 +35,7 @@ public class BossBar_1_8_R3 extends BossBar {
 	@SuppressWarnings("deprecation")
 	public void send() {
 		Player player = getPlayer();
+		if(player == null) return;
 		UUID uuid = player.getUniqueId();
 		
 		String titleString = getTitle();

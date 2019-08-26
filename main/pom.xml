@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.SirBlobman.api</groupId>
         <artifactId>SirBlobmanAPI-parent</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -122,6 +122,9 @@
     					<goals>
     						<goal>shade</goal>
     					</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+						</configuration>
     				</execution>
     			</executions>
     		</plugin>

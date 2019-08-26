@@ -9,5 +9,9 @@
 .project
 .classpath
 
+# IntelliJ Files
+.idea/
+*.iml
+
 # Maven Files
 dependency-reduced-pom.xml
