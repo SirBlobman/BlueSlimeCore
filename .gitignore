@@ -14,4 +14,5 @@
 *.iml
 
 # Maven Files
+target/
 dependency-reduced-pom.xml
