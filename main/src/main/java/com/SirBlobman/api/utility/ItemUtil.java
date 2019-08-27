@@ -30,12 +30,12 @@ public class ItemUtil {
     }
 
     public static ItemStack newItem(Material type, int amount, int data, String displayName) {
-    	return newItem(type, amount, data, null, new String[0]);
+        return newItem(type, amount, data, displayName, new String[0]);
     }
 
-    public static ItemStack newItem(Material type, int amount, int data, String name, String... lore) {
+    public static ItemStack newItem(Material type, int amount, int data, String displayName, String... lore) {
     	List<String> loreList = Util.newList(lore);
-    	return newItem(type, amount, data, null, loreList);
+    	return newItem(type, amount, data, displayName, loreList);
     }
     
     public static ItemStack newItem(Material type, int amount, int data, String displayName, List<String> lore) {
@@ -61,7 +61,12 @@ public class ItemUtil {
     	return newItem(type, amount, (condition ? metaTrue : metaFalse), displayName, lore);
     }
     
-    /** Item Checks **/
+    /* Item Checks */
+
+    /**
+     * @param item The item to check
+     * @return {@code true} if the item is null or has an AIR material, {@code false} otherwise.
+     */
     public static boolean isAir(ItemStack item) {
         if(item == null) return true;
         if(item.equals(getAir())) return true;

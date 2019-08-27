@@ -18,12 +18,11 @@ public class ItemBuilder {
 	public ItemBuilder(ItemStack base) {this.item = base;}
 	
 	public ItemStack create() {
-		ItemStack item = (this.item != null ? this.item.clone() : new ItemStack(Material.AIR));
-		if(this.meta != null) {
-			ItemMeta meta = this.meta.clone();
-			item.setItemMeta(meta);
-		}
-		return item;
+		if(this.item == null) return new ItemStack(Material.AIR);
+		if(this.meta == null) return this.item;
+
+		this.item.setItemMeta(meta);
+		return this.item.clone();
 	}
 	
 	public ItemBuilder setType(Material type) {
@@ -56,17 +55,15 @@ public class ItemBuilder {
 	
 	public ItemBuilder setLore(Collection<String> loreList) {
 		setupMeta();
-		
-		List<String> copy = Util.newList(loreList);
-		this.meta.setLore(copy);
+
+		List<String> lore = Util.newList();
+		for(String line : loreList) lore.add(Util.color(line));
+
+		this.meta.setLore(lore);
 		return this;
 	}
 	
 	public ItemBuilder setLore(String... loreList) {
-		for(int i = 0; i < loreList.length; i++) {
-			loreList[i] = Util.color(loreList[i]);
-		}
-		
 		List<String> copy = Util.newList(loreList);
 		return setLore(copy);
 	}
