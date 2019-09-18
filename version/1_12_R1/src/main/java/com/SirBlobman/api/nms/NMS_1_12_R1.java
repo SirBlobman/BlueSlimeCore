@@ -84,4 +84,9 @@ public class NMS_1_12_R1 extends NMS_Handler {
         obj.setDisplayName(displayName);
         return obj;
     }
+
+    @Override
+    public void forceRespawn(Player player) {
+        player.spigot().respawn();
+    }
 }

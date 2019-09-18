@@ -93,6 +93,7 @@ public abstract class NMS_Handler {
     
     public abstract double getMaxHealth(LivingEntity entity);
     public abstract void setMaxHealth(LivingEntity entity, double maxHealth);
+    public abstract void forceRespawn(Player player);
 
     public abstract Objective createScoreboardObjective(Scoreboard scoreboard, String name, String criteria, String displayName);
 }

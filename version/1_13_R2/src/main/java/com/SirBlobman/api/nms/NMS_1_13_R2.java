@@ -83,4 +83,9 @@ public class NMS_1_13_R2 extends NMS_Handler {
         Objective obj = scoreboard.registerNewObjective(name, criteria, displayName);
         return obj;
     }
+
+    @Override
+    public void forceRespawn(Player player) {
+        player.spigot().respawn();
+    }
 }

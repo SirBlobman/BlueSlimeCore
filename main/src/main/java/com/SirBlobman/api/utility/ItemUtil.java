@@ -12,9 +12,8 @@ import org.bukkit.potion.PotionEffectType;
 import com.SirBlobman.api.item.ItemBuilder;
 
 public class ItemUtil {
-    private static final ItemStack AIR = newItem(Material.AIR);
     public static ItemStack getAir() {
-        return AIR.clone();
+        return new ItemStack(Material.AIR);
     }
 
     public static ItemStack newItem(Material type) {

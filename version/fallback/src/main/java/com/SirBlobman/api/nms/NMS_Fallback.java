@@ -28,7 +28,6 @@ public class NMS_Fallback extends NMS_Handler {
     @Override
     public void setTab(Player player, String header, String footer) {
         Logger.getLogger("SirBlobmanAPI").warning("NMS not found, ignoring tab list change.");
-        return;
     }
 
     @Override
@@ -46,5 +45,10 @@ public class NMS_Fallback extends NMS_Handler {
         Objective objective = scoreboard.registerNewObjective(name, criteria);
         objective.setDisplayName(displayName);
         return objective;
+    }
+
+    @Override
+    public void forceRespawn(Player player) {
+        player.spigot().respawn();
     }
 }
