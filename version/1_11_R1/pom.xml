@@ -5,20 +5,28 @@
     <parent>
         <groupId>com.SirBlobman.api</groupId>
         <artifactId>SirBlobmanAPI-parent</artifactId>
-        <version>1.9</version>
+        <version>1.10</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>nms_1_11_R1</artifactId>
     <name>SirBlobman API NMS 1_11_R1</name>
     <description>Main API for SirBlobman plugins</description>
+    
+    <repositories>
+        <!-- CodeMC Spigot/Bukkit NMS -->
+        <repository>
+            <id>nms-repo</id>
+            <url>https://repo.codemc.org/repository/nms/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- Spigot NMS 1.11.2 -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <version>1.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         

@@ -5,13 +5,27 @@
     <parent>
         <groupId>com.SirBlobman.api</groupId>
         <artifactId>SirBlobmanAPI-parent</artifactId>
-        <version>1.9</version>
+        <version>1.10</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>nms_fallback</artifactId>
     <name>SirBlobman API Fallback NMS</name>
     <description>Main API for SirBlobman plugins</description>
+    
+    <repositories>
+        <!-- Spigot API Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
+        <!-- BungeeCord Chat Repository -->
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- Spigot API 1.8 -->
