@@ -28,10 +28,6 @@ public class ItemUtil {
     	return newItem(type, amount, data, null);
     }
 
-    public static ItemStack newItem(Material type, int amount, int data, String displayName) {
-        return newItem(type, amount, data, displayName, new String[0]);
-    }
-
     public static ItemStack newItem(Material type, int amount, int data, String displayName, String... lore) {
     	List<String> loreList = Util.newList(lore);
     	return newItem(type, amount, data, displayName, loreList);
@@ -74,13 +70,24 @@ public class ItemUtil {
         String typeName = type.name();
         return (type == Material.AIR || typeName.endsWith("_AIR"));
     }
+
+    public static boolean hasMeta(ItemStack item) {
+        if(isAir(item)) return false;
+        return item.hasItemMeta();
+    }
     
     public static boolean hasLore(ItemStack item) {
-        if(isAir(item)) return false;
-        if(!item.hasItemMeta()) return false;
+        if(!hasMeta(item)) return false;
         
         ItemMeta meta = item.getItemMeta();
         return meta.hasLore();
+    }
+
+    public static boolean hasDisplayName(ItemStack item) {
+        if(!hasMeta(item)) return false;
+
+        ItemMeta meta = item.getItemMeta();
+        return meta.hasDisplayName();
     }
     
     public static boolean doesAnyLoreLineContain(ItemStack item, String string) {
@@ -120,5 +127,27 @@ public class ItemUtil {
             return true;
         }
         return false;
+    }
+
+    public static boolean areLoresEqual(ItemStack item1, ItemStack item2) {
+        if(!hasLore(item1) || !hasLore(item2)) return false;
+
+        ItemMeta meta1 = item1.getItemMeta();
+        ItemMeta meta2 = item2.getItemMeta();
+
+        List<String> lore1 = meta1.getLore();
+        List<String> lore2 = meta2.getLore();
+        return lore1.containsAll(lore2);
+    }
+
+    public static boolean areNamesEqual(ItemStack item1, ItemStack item2) {
+        if(!hasDisplayName(item1) || !hasDisplayName(item2)) return false;
+
+        ItemMeta meta1 = item1.getItemMeta();
+        ItemMeta meta2 = item2.getItemMeta();
+
+        String display1 = meta1.getDisplayName();
+        String display2 = meta2.getDisplayName();
+        return display1.equals(display2);
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.SirBlobman.api.utility.MessageUtil;
 import com.SirBlobman.api.utility.Util;
 
 public class ItemBuilder {
@@ -48,7 +49,7 @@ public class ItemBuilder {
 	public ItemBuilder setDisplayName(String displayName) {
 		setupMeta();
 		
-		String color = Util.color(displayName);
+		String color = MessageUtil.color(displayName);
 		this.meta.setDisplayName(color);
 		return this;
 	}
@@ -57,7 +58,7 @@ public class ItemBuilder {
 		setupMeta();
 
 		List<String> lore = Util.newList();
-		for(String line : loreList) lore.add(Util.color(line));
+		for(String line : loreList) lore.add(MessageUtil.color(line));
 
 		this.meta.setLore(lore);
 		return this;

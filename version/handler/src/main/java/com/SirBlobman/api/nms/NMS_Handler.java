@@ -14,6 +14,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.google.gson.JsonObject;
 
 public abstract class NMS_Handler {
+    /**
+     * @return The current minecraft version of the server (e.g. "1.14.4")
+     */
     public static final String getMinecraftVersion() {
         String bukkitVersion = Bukkit.getVersion();
         Pattern pattern = Pattern.compile("(\\(MC: )([\\d\\.]+)(\\))");
@@ -23,13 +26,20 @@ public abstract class NMS_Handler {
         return "";
     }
 
+    /**
+     * @return The current base version of the server (e.g. "1.14")
+     * @see #getMinecraftVersion()
+     */
     public static final String baseVersion() {
         String version = getMinecraftVersion();
         int last = version.lastIndexOf('.');
         String base = (last < 2) ? version : version.substring(0, last);
         return base;
     }
-    
+
+    /**
+     * @return The current NMS version of the server (e.g. "1_14_R1")
+     */
     public static final String getNetMinecraftServerVersion() {
         Server server = Bukkit.getServer();
         Class<?> server_class = server.getClass();
@@ -40,12 +50,20 @@ public abstract class NMS_Handler {
         return packageName.substring(index);
     }
 
+    /**
+     * @return the current major version of the server (e.g. "1")
+     * @see #getMinecraftVersion()
+     */
     public static final int getMajorVersion() {
         String baseVersion = baseVersion();
         String majorString = baseVersion.substring(0, baseVersion.indexOf("."));
         return Integer.parseInt(majorString);
     }
 
+    /**
+     * @return the current minor version of the server (e.g. "14")
+     * @see #getMinecraftVersion()
+     */
     public static final int getMinorVersion() {
         String baseVersion = baseVersion();
         String minorString = baseVersion.substring(baseVersion.indexOf(".") + 1);
@@ -53,6 +71,11 @@ public abstract class NMS_Handler {
     }
     
     public static boolean WARNING_SENT = false;
+
+    /**
+     * @return The correct version of the NMS Handler for this server version
+     * @see #getNetMinecraftServerVersion()
+     */
     public static NMS_Handler getHandler() {
         String nmsVersion = getNetMinecraftServerVersion();
         String className = "com.SirBlobman.api.nms.NMS_" + nmsVersion;
@@ -93,7 +116,21 @@ public abstract class NMS_Handler {
     
     public abstract double getMaxHealth(LivingEntity entity);
     public abstract void setMaxHealth(LivingEntity entity, double maxHealth);
+
+    /**
+     * Force a player to send their Respawn packet
+     * @param player The player that needs to be respawned
+     */
     public abstract void forceRespawn(Player player);
 
+    /**
+     * Create an objective for the scoreboard
+     * @param scoreboard The scoreboard to create the objective for
+     * @param name The name of the objective (e.g. "objective")
+     * @param criteria The criteria of the objective (usually "dummy")
+     * @param displayName The display name of the objective (e.g. "Scoreboard Objective")
+     * @return A scoreboard objective with the name, criteria, and display name
+     * @see Scoreboard#registerNewObjective
+     */
     public abstract Objective createScoreboardObjective(Scoreboard scoreboard, String name, String criteria, String displayName);
 }

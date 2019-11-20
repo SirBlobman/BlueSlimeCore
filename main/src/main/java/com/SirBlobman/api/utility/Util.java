@@ -9,18 +9,6 @@ import java.util.Map;
 import org.bukkit.ChatColor;
 
 public class Util {
-	public static String color(String string) {
-		return ChatColor.translateAlternateColorCodes('&', string);
-	}
-	
-	public static String undoColor(String string) {
-		return string.replace(ChatColor.COLOR_CHAR, '&');
-	}
-	
-	public static String removeColor(String string) {
-		return ChatColor.stripColor(string);
-	}
-	
 	public static <L> List<L> newList(Collection<L> oldList) {
 		return new ArrayList<>(oldList);
 	}
