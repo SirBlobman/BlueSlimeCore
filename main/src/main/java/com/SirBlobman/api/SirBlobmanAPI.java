@@ -59,7 +59,7 @@ public class SirBlobmanAPI {
         UUID uuid = player.getUniqueId();
         String uuidString = uuid.toString();
         String fileName = uuidString + ".yml";
-        saveConfig(fileName, dataFile);
+        saveConfig("player data/" + fileName, dataFile);
     }
 
     /**
@@ -73,6 +73,7 @@ public class SirBlobmanAPI {
             File file = new File(folder, fileName);
             if(!file.exists()) {
                 folder.mkdirs();
+                file.getParentFile().mkdirs();
                 file.createNewFile();
             }
             
@@ -97,6 +98,7 @@ public class SirBlobmanAPI {
             File file = new File(folder, fileName);
             if(!file.exists()) {
                 folder.mkdirs();
+                file.getParentFile().mkdirs();
                 file.createNewFile();
             }
 
