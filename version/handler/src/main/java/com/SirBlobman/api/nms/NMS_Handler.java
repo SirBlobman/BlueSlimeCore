@@ -17,9 +17,9 @@ public abstract class NMS_Handler {
     /**
      * @return The current minecraft version of the server (e.g. "1.14.4")
      */
-    public static final String getMinecraftVersion() {
+    public static String getMinecraftVersion() {
         String bukkitVersion = Bukkit.getVersion();
-        Pattern pattern = Pattern.compile("(\\(MC: )([\\d\\.]+)(\\))");
+        Pattern pattern = Pattern.compile("(\\(MC: )([\\d.]+)(\\))");
         Matcher matcher = pattern.matcher(bukkitVersion);
         
         if(matcher.find()) return matcher.group(2);
@@ -30,17 +30,16 @@ public abstract class NMS_Handler {
      * @return The current base version of the server (e.g. "1.14")
      * @see #getMinecraftVersion()
      */
-    public static final String baseVersion() {
+    public static String baseVersion() {
         String version = getMinecraftVersion();
         int last = version.lastIndexOf('.');
-        String base = (last < 2) ? version : version.substring(0, last);
-        return base;
+        return ((last < 2) ? version : version.substring(0, last));
     }
 
     /**
      * @return The current NMS version of the server (e.g. "1_14_R1")
      */
-    public static final String getNetMinecraftServerVersion() {
+    public static String getNetMinecraftServerVersion() {
         Server server = Bukkit.getServer();
         Class<?> server_class = server.getClass();
         Package server_package = server_class.getPackage();
@@ -54,7 +53,7 @@ public abstract class NMS_Handler {
      * @return the current major version of the server (e.g. "1")
      * @see #getMinecraftVersion()
      */
-    public static final int getMajorVersion() {
+    public static int getMajorVersion() {
         String baseVersion = baseVersion();
         String majorString = baseVersion.substring(0, baseVersion.indexOf("."));
         return Integer.parseInt(majorString);
@@ -64,7 +63,7 @@ public abstract class NMS_Handler {
      * @return the current minor version of the server (e.g. "14")
      * @see #getMinecraftVersion()
      */
-    public static final int getMinorVersion() {
+    public static int getMinorVersion() {
         String baseVersion = baseVersion();
         String minorString = baseVersion.substring(baseVersion.indexOf(".") + 1);
         return Integer.parseInt(minorString);

@@ -92,8 +92,15 @@ public abstract class BasicPagedGUI extends BasicGUI {
         
         onCustomClick(e);
     }
+
+    public int getMaxPages() {
+        List<ItemStack> itemList = getInventoryItems();
+        int itemListSize = itemList.size();
+
+        int extra = ((itemListSize % 36) == 0 ? 0 : 1);
+        return ((itemListSize / 36) + extra);
+    }
     
-    public abstract int getMaxPages();
     public abstract List<ItemStack> getInventoryItems();
     public abstract String getInventoryTitle();
     public abstract void onValidClose(InventoryCloseEvent e);

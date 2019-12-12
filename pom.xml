@@ -42,6 +42,7 @@
     <module>version/1_13_R1</module>
     <module>version/1_13_R2</module>
     <module>version/1_14_R1</module>
+    <module>version/1_15_R1</module>
 
     <!-- Main API/Code -->
     <module>main</module>
