@@ -2,7 +2,10 @@ package com.SirBlobman.api.utility;
 
 import org.bukkit.ChatColor;
 
-public class MessageUtil {
+import java.util.Collection;
+import java.util.List;
+
+public final class MessageUtil {
     public static String color(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
@@ -26,5 +29,14 @@ public class MessageUtil {
         }
         
         return colorArray;
+    }
+
+    public static List<String> color(Collection<String> stringList) {
+        List<String> colorList = Util.newList();
+        for(String string : stringList) {
+            String color = color(string);
+            colorList.add(color);
+        }
+        return colorList;
     }
 }
