@@ -14,8 +14,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
 import org.apache.commons.lang.Validate;
 
 public class SirBlobmanAPI {
