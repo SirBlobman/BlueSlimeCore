@@ -1,50 +1,137 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <packaging>pom</packaging>
-
-  <groupId>com.SirBlobman.api</groupId>
-  <artifactId>SirBlobmanAPI-parent</artifactId>
-  <version>1.10-SNAPSHOT</version>
-
-  <name>SirBlobman API Parent</name>
-  <description>Parent Holder for the NMS Handler Project</description>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
-  </properties>
-
-  <distributionManagement>
-    <repository>
-      <id>codemc-releases</id>
-      <url>https://repo.codemc.io/repository/maven-releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>codemc-snapshots</id>
-      <url>https://repo.codemc.io/repository/maven-snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-  <modules>
-    <!-- NMS Versions (More can be added in the future) -->
-    <module>version/handler</module>
-    <module>version/fallback</module>
-    <module>version/1_7_R4</module>
-    <module>version/1_8_R1</module>
-    <module>version/1_8_R2</module>
-    <module>version/1_8_R3</module>
-    <module>version/1_9_R1</module>
-    <module>version/1_9_R2</module>
-    <module>version/1_10_R1</module>
-    <module>version/1_11_R1</module>
-    <module>version/1_12_R1</module>
-    <module>version/1_13_R1</module>
-    <module>version/1_13_R2</module>
-    <module>version/1_14_R1</module>
-    <module>version/1_15_R1</module>
-
-    <!-- Main API/Code -->
-    <module>main</module>
-  </modules>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    
+    <groupId>com.SirBlobman.api</groupId>
+    <artifactId>SirBlobmanAPI-parent</artifactId>
+    <version>1.11-SNAPSHOT</version>
+    
+    <name>SirBlobmanAPI Parent</name>
+    <description>Parent POM for SirBlobmanAPI</description>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+    </properties>
+    
+    <modules>
+        <!-- NMS Modules -->
+        <module>nms/handler</module>
+        <module>nms/fallback</module>
+        <module>nms/1_7_R4</module>
+        <module>nms/1_8_R1</module>
+        <module>nms/1_8_R2</module>
+        <module>nms/1_8_R3</module>
+        <module>nms/1_9_R1</module>
+        <module>nms/1_9_R2</module>
+        <module>nms/1_10_R1</module>
+        <module>nms/1_11_R1</module>
+        <module>nms/1_12_R1</module>
+        <module>nms/1_13_R1</module>
+        <module>nms/1_13_R2</module>
+        <module>nms/1_14_R1</module>
+        <module>nms/1_15_R1</module>
+        
+        <!-- Main API -->
+        <module>main</module>
+    </modules>
+    
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        
+        <!-- CodeMC NMS Repository -->
+        <repository>
+            <id>nms-repo</id>
+            <url>https://repo.codemc.io/repository/nms/</url>
+        </repository>
+    </repositories>
+    
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    
+        <plugins>
+            <!-- Maven Shade Plugin -->
+            <!-- This is used to include all the NMS API versions in the final jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Maven Source Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.1.0</version>
+                
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Maven Javadoc Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+                
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <distributionManagement>
+        <!-- CodeMC Releases -->
+        <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.io/repository/maven-releases/</url>
+        </repository>
+        
+        <!-- CodeMC Snapshots -->
+        <snapshotRepository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

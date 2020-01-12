@@ -1,42 +1,37 @@
 package com.SirBlobman.api.utility;
 
-import org.bukkit.ChatColor;
-
 import java.util.Collection;
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 public final class MessageUtil {
     public static String color(String message) {
+        if(message == null) return "";
+        
         return ChatColor.translateAlternateColorCodes('&', message);
     }
     
-    public static String undoColor(String message) {
-        return message.replace(ChatColor.COLOR_CHAR, '&');
-    }
-    
-    public static String removeColor(String message) {
-        return ChatColor.stripColor(message);
-    }
-    
-    public static String[] color(Object... messages) {
-        String[] colorArray = new String[messages.length];
+    public static String[] colorArray(String... messageArray) {
+        int messageArrayLength = messageArray.length;
+        String[] colorArray = new String[messageArrayLength];
         
-        int arrayId = 0;
-        for(Object messageObj : messages) {
-            String message = messageObj.toString();
-            String color = color(message);
-            colorArray[arrayId++] = color;
+        for(int i = 0; i < messageArrayLength; i++) {
+            String message = messageArray[i];
+            colorArray[i] = color(message);
         }
         
         return colorArray;
     }
-
-    public static List<String> color(Collection<String> stringList) {
+    
+    public static List<String> colorList(Collection<String> messageList) {
         List<String> colorList = Util.newList();
-        for(String string : stringList) {
-            String color = color(string);
+        
+        for(String message : messageList) {
+            String color = color(message);
             colorList.add(color);
         }
+        
         return colorList;
     }
 }

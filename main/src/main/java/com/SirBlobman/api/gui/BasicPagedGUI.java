@@ -2,6 +2,8 @@ package com.SirBlobman.api.gui;
 
 import java.util.List;
 
+import com.SirBlobman.api.item.ItemUtil;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,8 +15,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.SirBlobman.api.utility.ItemUtil;
 
 public abstract class BasicPagedGUI extends BasicGUI {
     public BasicPagedGUI(JavaPlugin plugin, Player player) {super(plugin, player);}
