@@ -7,6 +7,7 @@ public class NMS_1_7_R4 extends NMS_Handler {
     private final BossBarHandler bossBarHandler = new BossBarHandler_1_7_R4();
     private final PlayerHandler playerHandler = new PlayerHandler_1_7_R4();
     private final EntityHandler entityHandler = new EntityHandler_1_7_R4();
+    private final ScoreboardHandler scoreboardHandler = new ScoreboardHandler_1_7_R4();
     
     @Override
     public BossBarHandler getBossBarHandler() {
@@ -21,5 +22,10 @@ public class NMS_1_7_R4 extends NMS_Handler {
     @Override
     public EntityHandler getEntityHandler() {
         return this.entityHandler;
+    }
+    
+    @Override
+    public ScoreboardHandler getScoreboardHandler() {
+        return this.scoreboardHandler;
     }
 }

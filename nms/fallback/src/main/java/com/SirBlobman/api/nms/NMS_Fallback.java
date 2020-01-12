@@ -6,6 +6,7 @@ public class NMS_Fallback extends NMS_Handler {
     private final BossBarHandler bossBarHandler = new FallbackBossBarHandler();
     private final PlayerHandler playerHandler = new FallbackPlayerHandler();
     private final EntityHandler entityHandler = new FallbackEntityHandler();
+    private final ScoreboardHandler scoreboardHandler = new FallbackScoreboardHandler();
     
     @Override
     public BossBarHandler getBossBarHandler() {
@@ -20,5 +21,10 @@ public class NMS_Fallback extends NMS_Handler {
     @Override
     public EntityHandler getEntityHandler() {
         return this.entityHandler;
+    }
+    
+    @Override
+    public ScoreboardHandler getScoreboardHandler() {
+        return this.scoreboardHandler;
     }
 }

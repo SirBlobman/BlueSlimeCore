@@ -90,4 +90,5 @@ public abstract class NMS_Handler {
     public abstract BossBarHandler getBossBarHandler();
     public abstract PlayerHandler getPlayerHandler();
     public abstract EntityHandler getEntityHandler();
+    public abstract ScoreboardHandler getScoreboardHandler();
 }
