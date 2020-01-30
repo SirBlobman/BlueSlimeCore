@@ -34,4 +34,9 @@ public final class MessageUtil {
         
         return colorList;
     }
+    
+    public static List<String> colorList(String... messageArray) {
+        List<String> messageList = Util.newList(messageArray);
+        return colorList(messageList);
+    }
 }
