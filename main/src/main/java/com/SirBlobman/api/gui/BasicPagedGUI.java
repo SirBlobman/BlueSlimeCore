@@ -4,14 +4,10 @@ import java.util.List;
 
 import com.SirBlobman.api.item.ItemUtil;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,34 +19,38 @@ public abstract class BasicPagedGUI extends BasicGUI {
     protected static final ItemStack NEXT_ITEM = ItemUtil.newItem(Material.PAPER, 1, 0, "&7Next Page");
     protected int page = 1;
     
+    /**
+     * Open the next page or reopen the current page if the next page does not exist.
+     */
     public void openNextPage() {
         Player player = getPlayer();
-        if(player != null) {
-            player.closeInventory();
-            page = Math.min(page + 1, getMaxPages());
-            HandlerList.unregisterAll(this);
-            open();
-        }
+        if(player == null) return;
+        
+        player.closeInventory();
+        this.page = Math.min(this.page + 1, getMaxPages());
+        
+        HandlerList.unregisterAll(this);
+        open();
     }
     
+    /**
+     * Open the previous page or reopen the current page if the next page does not exist.
+     */
     public void openPreviousPage() {
         Player player = getPlayer();
-        if(player != null) {
-            player.closeInventory();
-            page = Math.max(page - 1, 1);
-            HandlerList.unregisterAll(this);
-            open();
-        }
-    }
-    
-    public Inventory getInventory(int size, String title) {
-        title = ChatColor.translateAlternateColorCodes('&', title);
-        return Bukkit.createInventory(this, size, title);
+        if(player == null) return;
+        
+        player.closeInventory();
+        this.page = Math.max(this.page - 1, 1);
+        
+        HandlerList.unregisterAll(this);
+        open();
     }
     
     @Override
-    public Inventory getInventory() {
-        Inventory inventory = getInventory(54, getInventoryTitle());
+    public final Inventory getInventory() {
+        String title = getInventoryTitle();
+        Inventory inventory = getInventory(54, title);
         final int invSize = inventory.getSize();
         
         List<ItemStack> itemList = getInventoryItems();
@@ -92,7 +92,12 @@ public abstract class BasicPagedGUI extends BasicGUI {
         
         onCustomClick(e);
     }
-
+    
+    /**
+     * Get the highest page number possible for this GUI
+     * By default it checks the amount of available items
+     * @return The maximum number of pages for this GUI
+     */
     public int getMaxPages() {
         List<ItemStack> itemList = getInventoryItems();
         int itemListSize = itemList.size();
@@ -101,10 +106,24 @@ public abstract class BasicPagedGUI extends BasicGUI {
         return ((itemListSize / 36) + extra);
     }
     
+    /**
+     * @return All of the items that will be placed into this GUI
+     */
     public abstract List<ItemStack> getInventoryItems();
+    
+    /**
+     * @return The title for this GUI
+     */
     public abstract String getInventoryTitle();
-    public abstract void onValidClose(InventoryCloseEvent e);
-    public abstract void onValidDrag(InventoryDragEvent e);
+    
+    /**
+     * An abstract method that allows custom GUI classes to execute stuff when an item is clicked
+     * @param e The {@link InventoryClickEvent}
+     */
     public abstract void onCustomClick(InventoryClickEvent e);
+    
+    /**
+     * @return The item that will be used to fill empty slots in this GUI
+     */
     public abstract ItemStack getFillerItem();
 }
