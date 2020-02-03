@@ -19,7 +19,7 @@ import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerListHeaderFooter;
 
 import io.netty.buffer.Unpooled;
 
-public class PlayerHandler_1_9_R2 extends PlayerHandler_1_8_R1 {
+public class PlayerHandler_1_9_R2 extends PlayerHandler {
     @Override
     public void sendActionBar(Player player, String message) {
         BaseComponent[] chatComponent = TextComponent.fromLegacyText(message);
@@ -53,6 +53,12 @@ public class PlayerHandler_1_9_R2 extends PlayerHandler_1_8_R1 {
             Logger logger = Logger.getLogger("SirBlobmanAPI");
             logger.log(Level.WARNING, "An error occurred while sending a tab packet.", ex);
         }
+    }
+    
+    @Override
+    public void forceRespawn(Player player) {
+        Spigot spigot = player.spigot();
+        spigot.respawn();
     }
     
     @Override

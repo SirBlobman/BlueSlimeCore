@@ -5,14 +5,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Player.Spigot;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import net.minecraft.server.v1_10_R1.*;
+import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.IChatBaseComponent;
 import net.minecraft.server.v1_10_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_10_R1.PacketDataSerializer;
+import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerListHeaderFooter;
 
 import io.netty.buffer.Unpooled;
 
-public class PlayerHandler_1_10_R1 extends PlayerHandler_1_9_R2 {
+public class PlayerHandler_1_10_R1 extends PlayerHandler {
+    @Override
+    public void sendActionBar(Player player, String message) {
+        BaseComponent[] chatComponent = TextComponent.fromLegacyText(message);
+        ChatMessageType actionBar = ChatMessageType.ACTION_BAR;
+        
+        Spigot spigot = player.spigot();
+        spigot.sendMessage(actionBar, chatComponent);
+    }
+    
     @Override
     public void setTabInfo(Player player, String header, String footer) {
         String jsonHeader = toJSON(header);
@@ -37,6 +53,12 @@ public class PlayerHandler_1_10_R1 extends PlayerHandler_1_9_R2 {
             Logger logger = Logger.getLogger("SirBlobmanAPI");
             logger.log(Level.WARNING, "An error occurred while sending a tab packet.", ex);
         }
+    }
+    
+    @Override
+    public void forceRespawn(Player player) {
+        Spigot spigot = player.spigot();
+        spigot.respawn();
     }
     
     @Override
