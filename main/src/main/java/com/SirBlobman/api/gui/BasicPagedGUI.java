@@ -71,8 +71,8 @@ public abstract class BasicPagedGUI extends BasicGUI {
         ItemStack filler = getFillerItem();
         for(int slot = 45; slot < 54; slot++) inventory.setItem(slot, filler);
         
-        inventory.setItem(45, startIndex > 0 ? BACK_ITEM : ItemUtil.getAir());
-        inventory.setItem(53, endIndex < itemListSize ? NEXT_ITEM : ItemUtil.getAir());
+        inventory.setItem(45, startIndex > 0 ? BACK_ITEM : filler);
+        inventory.setItem(53, endIndex < itemListSize ? NEXT_ITEM : filler);
         
         return inventory;
     }
