@@ -2,7 +2,7 @@ package com.SirBlobman.api.nms;
 
 import org.bukkit.entity.LivingEntity;
 
-public class EntityHandler_1_8_R1 extends EntityHandler {
+public class EntityHandler_1_10_R1 extends EntityHandler {
     @Override
     public double getMaxHealth(LivingEntity entity) {
         return entity.getMaxHealth();

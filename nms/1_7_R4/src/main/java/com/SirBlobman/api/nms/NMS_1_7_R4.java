@@ -1,7 +1,6 @@
 package com.SirBlobman.api.nms;
 
 import com.SirBlobman.api.nms.boss.bar.BossBarHandler;
-import com.SirBlobman.api.nms.boss.bar.BossBarHandler_1_7_R4;
 
 public class NMS_1_7_R4 extends NMS_Handler {
     private final BossBarHandler bossBarHandler = new BossBarHandler_1_7_R4();

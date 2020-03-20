@@ -1,8 +1,12 @@
-package com.SirBlobman.api.nms.boss.bar;
+package com.SirBlobman.api.nms;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.SirBlobman.api.nms.boss.bar.BossBarHandler;
+import com.SirBlobman.api.nms.boss.bar.BossBarWrapper;
+import com.SirBlobman.api.nms.boss.bar.BossBarWrapper_Spigot;
 
 import org.bukkit.entity.Player;
 

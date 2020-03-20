@@ -41,37 +41,5 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- SirBlobmanAPI NMS 1_7_R4 -->
-        <dependency>
-            <groupId>com.SirBlobman.api</groupId>
-            <artifactId>NMS-1_7_R4</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- SirBlobmanAPI NMS 1_8_R1 -->
-        <dependency>
-            <groupId>com.SirBlobman.api</groupId>
-            <artifactId>NMS-1_8_R1</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- SirBlobmanAPI NMS 1_9_R1 -->
-        <dependency>
-            <groupId>com.SirBlobman.api</groupId>
-            <artifactId>NMS-1_9_R1</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- SirBlobmanAPI NMS 1_9_R2 -->
-        <dependency>
-            <groupId>com.SirBlobman.api</groupId>
-            <artifactId>NMS-1_9_R2</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>

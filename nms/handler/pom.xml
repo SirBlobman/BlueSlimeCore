@@ -12,10 +12,18 @@
     <artifactId>NMS-handler</artifactId>
     <name>SirBlobmanAPI NMS Handler</name>
     <description>Handler classes for all NMS versions.</description>
-    
+
     <properties>
-        <spigot.version>1.8-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.9-R0.1-SNAPSHOT</spigot.version>
     </properties>
+
+    <repositories>
+        <!-- InventiveTalent Repository -->
+        <repository>
+            <id>inventive-repo</id>
+            <url>https://repo.inventivetalent.org/content/groups/public/</url>
+        </repository>
+    </repositories>
     
     <dependencies>
         <!-- Spigot API -->
@@ -24,6 +32,25 @@
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- BossBar API -->
+        <dependency>
+            <groupId>org.inventivetalent</groupId>
+            <artifactId>bossbarapi</artifactId>
+            <version>2.4.1</version>
+            <scope>provided</scope>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mcstats.bukkit</groupId>
+                    <artifactId>metrics-lite</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

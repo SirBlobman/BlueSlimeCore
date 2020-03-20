@@ -38,15 +38,15 @@ public class PlayerHandler_1_8_R2 extends PlayerHandler {
         
         IChatBaseComponent headerComponent = ChatSerializer.a(jsonHeader);
         IChatBaseComponent footerComponent = ChatSerializer.a(jsonFooter);
-        
+    
         try {
             PacketDataSerializer packetData = new PacketDataSerializer(Unpooled.buffer());
             packetData.a(headerComponent);
             packetData.a(footerComponent);
-    
+        
             PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
             packet.a(packetData);
-    
+        
             entityPlayer.playerConnection.sendPacket(packet);
         } catch(IOException ex) {
             Logger logger = Logger.getLogger("SirBlobmanAPI");

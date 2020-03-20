@@ -1,16 +1,18 @@
-package com.SirBlobman.api.nms.boss.bar;
+package com.SirBlobman.api.nms;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.SirBlobman.api.nms.NMS_Handler;
+import com.SirBlobman.api.nms.boss.bar.BossBarHandler;
+import com.SirBlobman.api.nms.boss.bar.BossBarWrapper;
+import com.SirBlobman.api.nms.boss.bar.BossBarWrapper_BossBarAPI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-public class BossBarHandler_1_7_R4 extends BossBarHandler {
+public class BossBarHandler_1_8_R3 extends BossBarHandler {
     private final Map<UUID, BossBarWrapper> playerToBossBarMap = new HashMap<>();
     
     @Override

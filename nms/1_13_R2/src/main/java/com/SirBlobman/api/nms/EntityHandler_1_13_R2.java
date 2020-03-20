@@ -4,7 +4,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
 
-public class EntityHandler_1_12_R1 extends EntityHandler {
+public class EntityHandler_1_13_R2 extends EntityHandler {
     @Override
     public double getMaxHealth(LivingEntity entity) {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
