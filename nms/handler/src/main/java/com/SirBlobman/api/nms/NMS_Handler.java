@@ -56,14 +56,18 @@ public abstract class NMS_Handler {
         return Integer.parseInt(minorString);
     }
     
+    private static NMS_Handler currentHandler = null;
     public static NMS_Handler getHandler() {
+        if(currentHandler != null) return currentHandler;
+        
         String nmsVersion = getNetMinecraftServerVersion();
         String className = ("com.SirBlobman.api.nms.NMS_" + nmsVersion);
         
         try {
             Class<?> handlerClass = Class.forName(className);
             Object instance = handlerClass.newInstance();
-            return (NMS_Handler) instance;
+            currentHandler = (NMS_Handler) instance;
+            return currentHandler;
         } catch(ReflectiveOperationException ex1) {
             if(!WARNING_SENT) {
                 WARNING_SENT = true;
@@ -71,7 +75,8 @@ public abstract class NMS_Handler {
                 logger.warning("Could not find valid NMS handler for version '" + nmsVersion + "'. Using fallback handler...");
             }
             
-            return getFallbackHandler();
+            currentHandler = getFallbackHandler();
+            return currentHandler;
         }
     }
     
