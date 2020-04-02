@@ -11,7 +11,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
+/**
+ * @deprecated
+ * Replaced with AbstractPagedMenu
+ */
 public abstract class BasicPagedGUI extends BasicGUI {
     public BasicPagedGUI(JavaPlugin plugin, Player player) {super(plugin, player);}
 

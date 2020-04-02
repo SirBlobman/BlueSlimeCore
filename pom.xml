@@ -4,7 +4,7 @@
     
     <groupId>com.SirBlobman.api</groupId>
     <artifactId>SirBlobmanAPI-parent</artifactId>
-    <version>1.11-SNAPSHOT</version>
+    <version>1.12-SNAPSHOT</version>
     
     <name>SirBlobmanAPI Parent</name>
     <description>Parent POM for SirBlobmanAPI</description>

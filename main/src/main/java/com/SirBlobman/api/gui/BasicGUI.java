@@ -17,6 +17,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * @deprecated
+ * Replaced with AbstractMenu
+ */
 public abstract class BasicGUI implements InventoryHolder, Listener {
     private final JavaPlugin plugin;
     private final UUID uuid;
