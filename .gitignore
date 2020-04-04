@@ -1,18 +1,16 @@
-# Java Files
+# Java
 *.class
-*.jar
-*.properties
-*.lst
 
-# Eclipse Files
+# Eclipse IDE
 .settings/
-.project
+bin/
 .classpath
+.project
 
-# IntelliJ Files
+# IntelliJ IDEA
 .idea/
 *.iml
 
-# Maven Files
+# Maven
 target/
 dependency-reduced-pom.xml

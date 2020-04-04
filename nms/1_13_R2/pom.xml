@@ -5,17 +5,48 @@
     <parent>
         <groupId>com.SirBlobman.api</groupId>
         <artifactId>SirBlobmanAPI-parent</artifactId>
-        <version>1.12-SNAPSHOT</version>
+        <version>1.13-SNAPSHOT</version>
         <relativePath>../../</relativePath>
     </parent>
     
-    <artifactId>NMS-1_13_R2</artifactId>
-    <name>SirBlobmanAPI NMS Version 1_13_R2</name>
-    <description>The NMS handler for v1_13_R2 (Spigot 1.13.2)</description>
+    <groupId>com.SirBlobman.api.nms</groupId>
+    <artifactId>1_13_R2</artifactId>
+    
+    <name>NMS 1_13_R2</name>
+    <description>The NMS Handler for Spigot 1.13.2 and forks of it.</description>
     
     <properties>
         <spigot.version>1.13.2-R0.1-SNAPSHOT</spigot.version>
     </properties>
+    
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <!-- MD_5 Releases -->
+        <repository>
+            <id>md_5-releases</id>
+            <url>https://repo.md-5.net/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-public</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        
+        <!-- CodeMC NMS Repository -->
+        <repository>
+            <id>codemc-nms</id>
+            <url>https://repo.codemc.io/repository/nms/</url>
+        </repository>
+    </repositories>
     
     <dependencies>
         <!-- Spigot API -->
@@ -33,11 +64,11 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
-        
-        <!-- SirBlobmanAPI NMS Handler -->
+
+        <!-- NMS Handler -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
-            <artifactId>NMS-handler</artifactId>
+            <groupId>com.SirBlobman.api.nms</groupId>
+            <artifactId>handler</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

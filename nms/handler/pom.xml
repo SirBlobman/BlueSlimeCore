@@ -5,19 +5,42 @@
     <parent>
         <groupId>com.SirBlobman.api</groupId>
         <artifactId>SirBlobmanAPI-parent</artifactId>
-        <version>1.12-SNAPSHOT</version>
+        <version>1.13-SNAPSHOT</version>
         <relativePath>../../</relativePath>
     </parent>
     
-    <artifactId>NMS-handler</artifactId>
-    <name>SirBlobmanAPI NMS Handler</name>
-    <description>Handler classes for all NMS versions.</description>
-
+    <groupId>com.SirBlobman.api.nms</groupId>
+    <artifactId>handler</artifactId>
+    
+    <name>NMS Handler</name>
+    <description>The NMS handler for SirBlobmanAPI</description>
+    
     <properties>
-        <spigot.version>1.9-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.15.2-R0.1-SNAPSHOT</spigot.version>
     </properties>
-
+    
     <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <!-- MD_5 Releases -->
+        <repository>
+            <id>md_5-releases</id>
+            <url>https://repo.md-5.net/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-public</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+
         <!-- InventiveTalent Repository -->
         <repository>
             <id>inventive-repo</id>
@@ -34,7 +57,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- BossBar API -->
+        <!-- BossBarAPI -->
         <dependency>
             <groupId>org.inventivetalent</groupId>
             <artifactId>bossbarapi</artifactId>

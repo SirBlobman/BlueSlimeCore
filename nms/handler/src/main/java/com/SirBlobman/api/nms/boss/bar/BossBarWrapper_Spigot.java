@@ -127,4 +127,6 @@ public class BossBarWrapper_Spigot extends BossBarWrapper {
             return BarFlag.CREATE_FOG;
         }
     }
+    
+    
 }

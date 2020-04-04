@@ -1,22 +1,31 @@
 package com.SirBlobman.api.nms.boss.bar;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
-import org.apache.commons.lang.Validate;
 
 public abstract class BossBarWrapper {
     private final UUID playerId;
     public BossBarWrapper(Player player) {
-        Validate.notNull(player, "player must not be null!");
-        this.playerId = player.getUniqueId();
+        this.playerId = Objects.requireNonNull(player, "player must not be null!").getUniqueId();
+    }
+    
+    public final UUID getPlayerId() {
+        return this.playerId;
+    }
+    
+    public final OfflinePlayer getOffinePlayer() {
+        UUID uuid = getPlayerId();
+        return Bukkit.getOfflinePlayer(uuid);
     }
     
     public final Player getPlayer() {
-        return Bukkit.getPlayer(this.playerId);
+        OfflinePlayer offlinePlayer = getOffinePlayer();
+        return (offlinePlayer.isOnline() ? offlinePlayer.getPlayer() : null);
     }
     
     public final void removeAllPlayers() {

@@ -1,16 +1,19 @@
 package com.SirBlobman.api.nms;
 
-import com.SirBlobman.api.nms.boss.bar.BossBarHandler;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class NMS_1_11_R1 extends NMS_Handler {
-    private final PlayerHandler playerHandler = new PlayerHandler_1_11_R1();
-    private final EntityHandler entityHandler = new EntityHandler_1_11_R1();
-    private final BossBarHandler bossBarHandler = new BossBarHandler_1_11_R1();
-    private final ScoreboardHandler scoreboardHandler = new ScoreboardHandler_1_11_R1();
-    
-    @Override
-    public BossBarHandler getBossBarHandler() {
-        return this.bossBarHandler;
+public class NMS_1_11_R1 extends AbstractNMS {
+    private final ItemHandler itemHandler;
+    private final PlayerHandler playerHandler;
+    private final EntityHandler entityHandler;
+    private final ScoreboardHandler scoreboardHandler;
+    public NMS_1_11_R1(JavaPlugin plugin) {
+        super(plugin);
+        
+        this.itemHandler = new ItemHandler_1_11_R1(plugin);
+        this.playerHandler = new PlayerHandler_1_11_R1(plugin);
+        this.entityHandler = new EntityHandler_1_11_R1(plugin);
+        this.scoreboardHandler = new ScoreboardHandler_1_11_R1(plugin);
     }
     
     @Override
@@ -26,5 +29,10 @@ public class NMS_1_11_R1 extends NMS_Handler {
     @Override
     public ScoreboardHandler getScoreboardHandler() {
         return this.scoreboardHandler;
+    }
+    
+    @Override
+    public ItemHandler getItemHandler() {
+        return this.itemHandler;
     }
 }

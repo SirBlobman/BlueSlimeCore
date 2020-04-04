@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import net.minecraft.server.v1_8_R3.*;
@@ -14,22 +15,25 @@ import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import io.netty.buffer.Unpooled;
 
 public class PlayerHandler_1_8_R3 extends PlayerHandler {
-    @Override
-    public void sendActionBar(Player player, String message) {
-        String json = toJSON(message);
-        
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-    
-        IChatBaseComponent chatComponent = ChatSerializer.a(json);
-        byte actionBar = 2;
-        
-        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, actionBar);
-        entityPlayer.playerConnection.sendPacket(packet);
+    public PlayerHandler_1_8_R3(JavaPlugin plugin) {
+        super(plugin);
     }
     
     @Override
-    public void setTabInfo(Player player, String header, String footer) {
+    public void sendActionBar(Player player, String message) {
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        
+        String json = toJSON(message);
+        IChatBaseComponent component = ChatSerializer.a(json);
+        byte actionBar = 2;
+    
+        PacketPlayOutChat actionBarPacket = new PacketPlayOutChat(component, actionBar);
+        entityPlayer.playerConnection.sendPacket(actionBarPacket);
+    }
+    
+    @Override
+    public void sendTabInfo(Player player, String header, String footer) {
         String jsonHeader = toJSON(header);
         String jsonFooter = toJSON(footer);
     
@@ -49,7 +53,8 @@ public class PlayerHandler_1_8_R3 extends PlayerHandler {
         
             entityPlayer.playerConnection.sendPacket(packet);
         } catch(IOException ex) {
-            Logger logger = Logger.getLogger("SirBlobmanAPI");
+            JavaPlugin plugin = getPlugin();
+            Logger logger = plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while sending a tab packet.", ex);
         }
     }
@@ -64,7 +69,6 @@ public class PlayerHandler_1_8_R3 extends PlayerHandler {
     public double getAbsorptionHearts(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer entityPlayer = craftPlayer.getHandle();
-        
         return entityPlayer.getAbsorptionHearts();
     }
     
@@ -73,7 +77,7 @@ public class PlayerHandler_1_8_R3 extends PlayerHandler {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer entityPlayer = craftPlayer.getHandle();
         
-        float floatHearts = Double.valueOf(hearts).floatValue();
-        entityPlayer.setAbsorptionHearts(floatHearts);
+        float heartsFloat = (float) hearts;
+        entityPlayer.setAbsorptionHearts(heartsFloat);
     }
 }

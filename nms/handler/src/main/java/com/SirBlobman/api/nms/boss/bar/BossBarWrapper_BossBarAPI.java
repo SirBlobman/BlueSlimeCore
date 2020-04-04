@@ -27,7 +27,7 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
     public void setTitle(String title) {
         Player player = getPlayer();
         if(player == null) return;
-    
+        
         BossBarAPI.setMessage(player, title);
     }
     
@@ -38,7 +38,7 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
     
     @Override
     public void setColor(String color) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
@@ -48,17 +48,17 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
     
     @Override
     public void setStyle(String style) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
     public void removeFlag(String flag) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
     public void addFlag(String flag) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
@@ -71,7 +71,7 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
         Player player = getPlayer();
         if(player == null) return;
         
-        float floatProgress = Double.valueOf(progress).floatValue();
+        float floatProgress = (float) progress;
         BossBarAPI.setHealth(player, floatProgress);
     }
     
@@ -79,35 +79,34 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
     public double getProgress() {
         Player player = getPlayer();
         if(player == null) return 0.0D;
-    
+        
         return BossBarAPI.getHealth(player);
     }
     
     @Override
     public void addPlayer(Player player) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
     public void removePlayer(Player player) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
     public List<Player> getPlayers() {
         Player player = getPlayer();
-        if(player == null) return Collections.emptyList();
-        
-        return Collections.singletonList(player);
+        return (player == null ? Collections.emptyList() : Collections.singletonList(player));
     }
     
     @Override
     public void setVisible(boolean visible) {
-        // N/A
+        // Do Nothing
     }
     
     @Override
     public boolean isVisible() {
-        return true;
+        Player player = getPlayer();
+        return (player != null);
     }
 }

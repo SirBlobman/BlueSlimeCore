@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
+import org.bukkit.plugin.java.JavaPlugin;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -20,17 +21,21 @@ import net.minecraft.server.v1_13_R2.PacketPlayOutPlayerListHeaderFooter;
 import io.netty.buffer.Unpooled;
 
 public class PlayerHandler_1_13_R2 extends PlayerHandler {
-    @Override
-    public void sendActionBar(Player player, String message) {
-        BaseComponent[] chatComponent = TextComponent.fromLegacyText(message);
-        ChatMessageType actionBar = ChatMessageType.ACTION_BAR;
-        
-        Spigot spigot = player.spigot();
-        spigot.sendMessage(actionBar, chatComponent);
+    public PlayerHandler_1_13_R2(JavaPlugin plugin) {
+        super(plugin);
     }
     
     @Override
-    public void setTabInfo(Player player, String header, String footer) {
+    public void sendActionBar(Player player, String message) {
+        BaseComponent[] componentArray = TextComponent.fromLegacyText(message);
+        ChatMessageType actionBar = ChatMessageType.ACTION_BAR;
+        
+        Spigot spigot = player.spigot();
+        spigot.sendMessage(actionBar, componentArray);
+    }
+    
+    @Override
+    public void sendTabInfo(Player player, String header, String footer) {
         String jsonHeader = toJSON(header);
         String jsonFooter = toJSON(footer);
     
@@ -50,7 +55,8 @@ public class PlayerHandler_1_13_R2 extends PlayerHandler {
         
             entityPlayer.playerConnection.sendPacket(packet);
         } catch(IOException ex) {
-            Logger logger = Logger.getLogger("SirBlobmanAPI");
+            JavaPlugin plugin = getPlugin();
+            Logger logger = plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while sending a tab packet.", ex);
         }
     }
@@ -65,7 +71,6 @@ public class PlayerHandler_1_13_R2 extends PlayerHandler {
     public double getAbsorptionHearts(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer entityPlayer = craftPlayer.getHandle();
-        
         return entityPlayer.getAbsorptionHearts();
     }
     
@@ -74,7 +79,7 @@ public class PlayerHandler_1_13_R2 extends PlayerHandler {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer entityPlayer = craftPlayer.getHandle();
         
-        float floatHearts = Double.valueOf(hearts).floatValue();
-        entityPlayer.setAbsorptionHearts(floatHearts);
+        float heartsFloat = (float) hearts;
+        entityPlayer.setAbsorptionHearts(heartsFloat);
     }
 }
