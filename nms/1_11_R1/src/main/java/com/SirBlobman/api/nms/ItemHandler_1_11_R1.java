@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,6 +30,17 @@ public class ItemHandler_1_11_R1 extends ItemHandler {
     @Override
     public Material matchMaterial(String string) {
         return Material.matchMaterial(string);
+    }
+    
+    @Override
+    public String getLocalizedName(ItemStack item) {
+        if(item == null) return "Air";
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta != null && meta.hasDisplayName()) return meta.getDisplayName();
+        
+        net.minecraft.server.v1_11_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        return nmsItem.getName();
     }
     
     @Override

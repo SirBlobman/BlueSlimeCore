@@ -32,6 +32,7 @@ public abstract class ItemHandler {
     }
     
     public abstract Material matchMaterial(String string);
+    public abstract String getLocalizedName(ItemStack item);
     
     public abstract String toNBT(ItemStack item);
     public abstract ItemStack fromNBT(String string);

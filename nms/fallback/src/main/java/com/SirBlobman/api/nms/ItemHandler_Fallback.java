@@ -3,6 +3,7 @@ package com.SirBlobman.api.nms;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +15,17 @@ public class ItemHandler_Fallback extends ItemHandler {
     @Override
     public Material matchMaterial(String string) {
         return Material.matchMaterial(string);
+    }
+    
+    @Override
+    public String getLocalizedName(ItemStack item) {
+        if(item == null) return "Air";
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta != null && meta.hasDisplayName()) return meta.getDisplayName();
+        
+        Material type = item.getType();
+        return type.name();
     }
     
     @Override

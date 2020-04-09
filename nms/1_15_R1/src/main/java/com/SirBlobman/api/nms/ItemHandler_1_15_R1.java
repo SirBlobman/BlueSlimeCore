@@ -37,6 +37,17 @@ public class ItemHandler_1_15_R1 extends ItemHandler {
     }
     
     @Override
+    public String getLocalizedName(ItemStack item) {
+        if(item == null) return "Air";
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta != null) return (meta.hasDisplayName() ? meta.getDisplayName() : meta.getLocalizedName());
+        
+        net.minecraft.server.v1_15_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        return nmsItem.getName().getText();
+    }
+    
+    @Override
     public String toNBT(ItemStack item) {
         NBTTagCompound nbtData = new NBTTagCompound();
         net.minecraft.server.v1_15_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
