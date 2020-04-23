@@ -169,4 +169,10 @@ public class ItemHandler_1_8_R3 extends ItemHandler {
         item.setItemMeta(meta);
         return item;
     }
+    
+    @Override
+    public void setDamage(ItemStack item, int damage) {
+        short durability = Integer.valueOf(damage).shortValue();
+        item.setDurability(durability);
+    }
 }

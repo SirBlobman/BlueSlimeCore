@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -169,5 +170,16 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
         
         item.setItemMeta(meta);
         return item;
+    }
+    
+    @Override
+    public void setDamage(ItemStack item, int damage) {
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof Damageable) {
+            Damageable damageable = (Damageable) meta;
+            damageable.setDamage(damage);
+        }
+        
+        item.setItemMeta(meta);
     }
 }

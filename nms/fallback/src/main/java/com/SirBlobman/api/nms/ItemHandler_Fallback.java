@@ -3,8 +3,6 @@ package com.SirBlobman.api.nms;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ItemHandler_Fallback extends ItemHandler {
@@ -14,18 +12,12 @@ public class ItemHandler_Fallback extends ItemHandler {
     
     @Override
     public Material matchMaterial(String string) {
-        return Material.matchMaterial(string);
+        throw new UnsupportedOperationException("Unsupported NMS version!");
     }
     
     @Override
     public String getLocalizedName(ItemStack item) {
-        if(item == null) return "Air";
-        
-        ItemMeta meta = item.getItemMeta();
-        if(meta != null && meta.hasDisplayName()) return meta.getDisplayName();
-        
-        Material type = item.getType();
-        return type.name();
+        throw new UnsupportedOperationException("Unsupported NMS version!");
     }
     
     @Override
@@ -55,24 +47,21 @@ public class ItemHandler_Fallback extends ItemHandler {
     
     @Override
     public ItemStack getPlayerHead(String username) {
-        short playerHead = 3;
-        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, playerHead);
-        
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwner(username);
-        
-        item.setItemMeta(meta);
-        return item;
+        throw new UnsupportedOperationException("Unsupported NMS version!");
     }
     
     @Override
     public ItemStack getPlayerHead(OfflinePlayer player) {
-        String username = player.getName();
-        return getPlayerHead(username);
+        throw new UnsupportedOperationException("Unsupported NMS version!");
     }
     
     @Override
     public ItemStack getBase64Head(String base64) {
+        throw new UnsupportedOperationException("Unsupported NMS version!");
+    }
+    
+    @Override
+    public void setDamage(ItemStack item, int damage) {
         throw new UnsupportedOperationException("Unsupported NMS version!");
     }
 }
