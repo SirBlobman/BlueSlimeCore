@@ -90,6 +90,8 @@ public class ItemHandler_1_8_R3 extends ItemHandler {
         if(item == null || key == null || key.isEmpty()) return defaultValue;
     
         net.minecraft.server.v1_8_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        if(nmsItem == null) return defaultValue;
+        
         NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
         if(nbtData == null) nbtData = new NBTTagCompound();
     
