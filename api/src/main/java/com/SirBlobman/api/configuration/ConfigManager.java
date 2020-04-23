@@ -43,7 +43,7 @@ public class ConfigManager<P extends JavaPlugin> {
         
         try {
             File parentFile = actualFile.getParentFile();
-            if(parentFile != null) {
+            if(parentFile != null && !parentFile.exists()) {
                 boolean makeParent = parentFile.mkdirs();
                 if(!makeParent) {
                     Logger logger = this.plugin.getLogger();
