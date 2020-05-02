@@ -37,7 +37,7 @@ public class ConfigManager<P extends JavaPlugin> {
         InputStream inputStream = this.plugin.getResource(fileName);
         if(inputStream == null) {
             Logger logger = this.plugin.getLogger();
-            logger.warning("Could not find a default named '" + fileName + " in the jar.");
+            logger.warning("Could not find a default config file named '" + fileName + " in the jar.");
             return;
         }
         
@@ -47,7 +47,7 @@ public class ConfigManager<P extends JavaPlugin> {
                 boolean makeParent = parentFile.mkdirs();
                 if(!makeParent) {
                     Logger logger = this.plugin.getLogger();
-                    logger.warning("Failed to make parent folder for '" + fileName + "'.");
+                    logger.warning("Failed to make the parent folder for '" + fileName + "'.");
                     return;
                 }
             }
@@ -55,7 +55,7 @@ public class ConfigManager<P extends JavaPlugin> {
             boolean makeFile = actualFile.createNewFile();
             if(!makeFile) {
                 Logger logger = this.plugin.getLogger();
-                logger.warning("Failed to make file '" + fileName + "'.");
+                logger.warning("Failed to make the file '" + fileName + "'.");
                 return;
             }
             

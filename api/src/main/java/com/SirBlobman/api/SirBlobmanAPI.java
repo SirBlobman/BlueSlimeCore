@@ -2,6 +2,8 @@ package com.SirBlobman.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,9 +14,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.apache.commons.lang.Validate;
-
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class SirBlobmanAPI {
     public static SirBlobmanAPI getInstance(JavaPlugin plugin) {
         return new SirBlobmanAPI(plugin);
@@ -23,13 +22,18 @@ public class SirBlobmanAPI {
     private final JavaPlugin plugin;
     private final Logger logger;
     public SirBlobmanAPI(JavaPlugin plugin) {
-        Validate.notNull(plugin, "plugin must not be NULL!");
-        this.plugin = plugin;
+        this.plugin = Objects.requireNonNull(plugin, "plugin must not be null!");
+        this.logger = this.plugin.getLogger();
+        this.logger.info("This plugin is using SirBlobmanAPI.");
         
-        Logger logger = this.plugin.getLogger();
-        Logger subLogger = Logger.getLogger("SirBlobmanAPI");
-        subLogger.setParent(logger);
-        this.logger = subLogger;
+        String[] message = {
+                "  ___ _     ___ _     _                    ",
+                " / __(_)_ _| _ | |___| |__ _ __  __ _ _ _  ",
+                " \\__ | | '_| _ | / _ | '_ | '  \\/ _` | ' \\ ",
+                " |___|_|_| |___|_\\___|_.__|_|_|_\\__,_|_||_|",
+                "                                           "
+        };
+        Arrays.stream(message).forEach(this.logger::info);
     }
     
     public JavaPlugin getPlugin() {
@@ -40,6 +44,10 @@ public class SirBlobmanAPI {
         return this.logger;
     }
     
+    /**
+     * @deprecated
+     * @see com.SirBlobman.api.configuration.ConfigManager
+     */
     public YamlConfiguration getDataFile(OfflinePlayer player) {
         if(player == null) return null;
     
@@ -54,6 +62,10 @@ public class SirBlobmanAPI {
         return getConfig(file);
     }
     
+    /**
+     * @deprecated
+     * @see com.SirBlobman.api.configuration.ConfigManager
+     */
     public void saveDataFile(OfflinePlayer player, YamlConfiguration dataFile) {
         if(player == null || dataFile == null) return;
     
@@ -68,31 +80,54 @@ public class SirBlobmanAPI {
         saveConfig(file, dataFile);
     }
     
+    /**
+     * @deprecated
+     * @see com.SirBlobman.api.configuration.ConfigManager
+     */
     public YamlConfiguration getConfig(String fileName) {
         File pluginFolder = this.plugin.getDataFolder();
         File file = new File(pluginFolder, fileName);
         return getConfig(file);
     }
     
+    /**
+     * @deprecated
+     * @see com.SirBlobman.api.configuration.ConfigManager
+     */
     public void saveConfig(String fileName, FileConfiguration config) {
         File pluginFolder = this.plugin.getDataFolder();
         File file = new File(pluginFolder, fileName);
         saveConfig(file, config);
     }
     
+    /**
+     * @deprecated
+     * @see com.SirBlobman.api.configuration.ConfigManager
+     */
     public YamlConfiguration getConfig(File file) {
         try {
             File realFile = file.getCanonicalFile();
             if(!realFile.exists()) {
                 File parent = realFile.getParentFile();
-                parent.mkdirs();
+                if(!parent.exists()) {
+                    boolean makeParent = parent.mkdirs();
+                    if(!makeParent) {
+                        Logger logger = getLogger();
+                        logger.warning("Failed to make parent file for '" + realFile + "'.");
+                        return new YamlConfiguration();
+                    }
+                }
                 
-                realFile.createNewFile();
+                boolean makeFile = realFile.createNewFile();
+                if(!makeFile) {
+                    Logger logger = getLogger();
+                    logger.warning("Failed to make file '" + realFile + "'.");
+                    return new YamlConfiguration();
+                }
             }
             
             YamlConfiguration config = new YamlConfiguration();
             config.load(realFile);
-            
             return config;
         } catch(IOException | InvalidConfigurationException ex) {
             Logger logger = getLogger();
@@ -101,14 +136,30 @@ public class SirBlobmanAPI {
         }
     }
     
+    /**
+     * @deprecated
+     * @see com.SirBlobman.api.configuration.ConfigManager
+     */
     public void saveConfig(File file, FileConfiguration config) {
         try {
             File realFile = file.getCanonicalFile();
             if(!realFile.exists()) {
                 File parent = realFile.getParentFile();
-                parent.mkdirs();
-        
-                realFile.createNewFile();
+                if(!parent.exists()) {
+                    boolean makeParent = parent.mkdirs();
+                    if(!makeParent) {
+                        Logger logger = getLogger();
+                        logger.warning("Failed to make parent file for '" + realFile + "'.");
+                        return;
+                    }
+                }
+    
+                boolean makeFile = realFile.createNewFile();
+                if(!makeFile) {
+                    Logger logger = getLogger();
+                    logger.warning("Failed to make file '" + realFile + "'.");
+                    return;
+                }
             }
             
             config.save(file);
