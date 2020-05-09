@@ -21,11 +21,12 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ConfigManager<P extends JavaPlugin> {
+public final class ConfigManager<P extends JavaPlugin> {
     private final P plugin;
-    private final Map<String, YamlConfiguration> fileNameToConfigMap = new HashMap<>();
+    private final Map<String, YamlConfiguration> configurationMap;
     public ConfigManager(P plugin) {
         this.plugin = plugin;
+        this.configurationMap = new HashMap<>();
     }
     
     public void saveDefaultConfig(String fileName) {
@@ -73,17 +74,17 @@ public class ConfigManager<P extends JavaPlugin> {
         File actualFile = getActualFile(fileName);
         String actualFileName = actualFile.getAbsolutePath();
         
-        YamlConfiguration config = this.fileNameToConfigMap.getOrDefault(actualFileName, null);
+        YamlConfiguration config = this.configurationMap.getOrDefault(actualFileName, null);
         if(config == null) {
             reloadConfig(fileName);
-            config = this.fileNameToConfigMap.getOrDefault(actualFileName, new YamlConfiguration());
+            config = this.configurationMap.getOrDefault(actualFileName, new YamlConfiguration());
         }
         
         return config;
     }
     
     public void reloadConfigs() {
-        Map<String, YamlConfiguration> copyMap = new HashMap<>(this.fileNameToConfigMap);
+        Map<String, YamlConfiguration> copyMap = new HashMap<>(this.configurationMap);
         Set<String> keySet = copyMap.keySet();
         
         for(String actualFileName : keySet) {
@@ -106,7 +107,7 @@ public class ConfigManager<P extends JavaPlugin> {
             
             InputStream inputStream = this.plugin.getResource(fileName);
             if(inputStream == null) {
-                this.fileNameToConfigMap.put(actualFileName, config);
+                this.configurationMap.put(actualFileName, config);
                 return;
             }
             
@@ -115,7 +116,7 @@ public class ConfigManager<P extends JavaPlugin> {
             defaultConfig.load(reader);
             
             config.setDefaults(defaultConfig);
-            this.fileNameToConfigMap.put(actualFileName, config);
+            this.configurationMap.put(actualFileName, config);
         } catch(IOException | InvalidConfigurationException ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while loading the config for '" + fileName + "'.", ex);
