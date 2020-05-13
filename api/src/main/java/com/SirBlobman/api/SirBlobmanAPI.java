@@ -46,6 +46,7 @@ public class SirBlobmanAPI {
     
     /**
      * @deprecated
+     * @param player The Player that owns this data
      * @see com.SirBlobman.api.configuration.ConfigManager
      */
     public YamlConfiguration getDataFile(OfflinePlayer player) {
@@ -64,6 +65,8 @@ public class SirBlobmanAPI {
     
     /**
      * @deprecated
+     * @param player The Player that owns this data
+     * @param dataFile The data that will be saved
      * @see com.SirBlobman.api.configuration.ConfigManager
      */
     public void saveDataFile(OfflinePlayer player, YamlConfiguration dataFile) {
@@ -82,6 +85,7 @@ public class SirBlobmanAPI {
     
     /**
      * @deprecated
+     * @param fileName the name of the file in the plugin folder/jar
      * @see com.SirBlobman.api.configuration.ConfigManager
      */
     public YamlConfiguration getConfig(String fileName) {
@@ -92,6 +96,8 @@ public class SirBlobmanAPI {
     
     /**
      * @deprecated
+     * @param fileName The name of the file that the contents will be saved in.
+     * @param config The FileConfiguration to be saved
      * @see com.SirBlobman.api.configuration.ConfigManager
      */
     public void saveConfig(String fileName, FileConfiguration config) {
@@ -102,6 +108,7 @@ public class SirBlobmanAPI {
     
     /**
      * @deprecated
+     * @param file The file to load the config from if its not cached
      * @see com.SirBlobman.api.configuration.ConfigManager
      */
     public YamlConfiguration getConfig(File file) {
@@ -137,7 +144,9 @@ public class SirBlobmanAPI {
     }
     
     /**
-     * @deprecated
+     * @deprecated Use ConfigManager instead
+     * @param file The file that the contents will be saved in.
+     * @param config The FileConfiguration to be saved
      * @see com.SirBlobman.api.configuration.ConfigManager
      */
     public void saveConfig(File file, FileConfiguration config) {

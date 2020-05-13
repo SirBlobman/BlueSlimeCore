@@ -28,11 +28,14 @@ public abstract class ItemHandler {
     }
     
     protected final String encodeTextureURL(String url) {
-        byte[] urlByteArray = url.getBytes();
-        Encoder encoder = Base64.getEncoder();
+        String partOne = "{textures:{SKIN:{url:\"";
+        String partTwo = "\"}}}";
+        String textureNBT = (partOne + url + partTwo);
+        byte[] urlByteArray = textureNBT.getBytes();
         
-        byte[] base64ByteArray = encoder.encode(urlByteArray);
-        return new String(base64ByteArray);
+        Encoder encoder = Base64.getEncoder();
+        byte[] base64 = encoder.encode(urlByteArray);
+        return new String(base64);
     }
     
     /**
