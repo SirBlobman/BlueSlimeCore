@@ -35,6 +35,17 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
     }
     
     @Override
+    public void setDamage(ItemStack item, int damage) {
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof Damageable) {
+            Damageable damageable = (Damageable) meta;
+            damageable.setDamage(damage);
+        }
+        
+        item.setItemMeta(meta);
+    }
+    
+    @Override
     public String getLocalizedName(ItemStack item) {
         if(item == null) return "Air";
         
@@ -146,11 +157,24 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
     @Override
     public ItemStack getBase64Head(String base64) {
         GameProfile gameProfile = new GameProfile(CUSTOM_HEAD_UUID, "Base64");
-        PropertyMap properties = gameProfile.getProperties();
-    
         Property property = new Property("textures", base64);
-        properties.put("textures", property);
         
+        PropertyMap properties = gameProfile.getProperties();
+        properties.put("textures", property);
+        return createGameProfileHead(gameProfile);
+    }
+    
+    @Override
+    public ItemStack getBase64HeadWithRandomUUID(String base64) {
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "Base64");
+        Property property = new Property("textures", base64);
+        
+        PropertyMap properties = gameProfile.getProperties();
+        properties.put("textures", property);
+        return createGameProfileHead(gameProfile);
+    }
+    
+    private ItemStack createGameProfileHead(GameProfile gameProfile) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         if(meta == null) return item;
@@ -164,22 +188,11 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
         } catch(ReflectiveOperationException ex) {
             JavaPlugin plugin = getPlugin();
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while creating a Base64 head.", ex);
+            logger.log(Level.WARNING, "An error occurred while creating a GameProfile head.", ex);
             return item;
         }
         
         item.setItemMeta(meta);
         return item;
-    }
-    
-    @Override
-    public void setDamage(ItemStack item, int damage) {
-        ItemMeta meta = item.getItemMeta();
-        if(meta instanceof Damageable) {
-            Damageable damageable = (Damageable) meta;
-            damageable.setDamage(damage);
-        }
-        
-        item.setItemMeta(meta);
     }
 }

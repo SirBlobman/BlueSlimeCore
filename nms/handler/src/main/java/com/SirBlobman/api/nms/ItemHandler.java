@@ -27,6 +27,11 @@ public abstract class ItemHandler {
         return getBase64Head(base64);
     }
     
+    public final ItemStack getTextureHeadWithRandomUUID(String url) {
+        String base64 = encodeTextureURL(url);
+        return getBase64HeadWithRandomUUID(base64);
+    }
+    
     protected final String encodeTextureURL(String url) {
         String partOne = "{textures:{SKIN:{url:\"";
         String partTwo = "\"}}}";
@@ -45,12 +50,32 @@ public abstract class ItemHandler {
     public abstract Material matchMaterial(String string);
     
     /**
+     * Set the data/damage/durability of an {@link ItemStack}.
+     * Some items can't have durability applied
+     *
+     * @param item The item to set the value of
+     * @param damage The value to set
+     */
+    public abstract void setDamage(ItemStack item, int damage);
+    
+    /**
      * @param item The {@link ItemStack} to get the name for
      * @return The display name or internal name of the item
      */
     public abstract String getLocalizedName(ItemStack item);
     
+    /**
+     * Convert an {@link ItemStack} into a {@link String} of NBT data for storage
+     * @param item The {@link ItemStack} to convert
+     * @return A valid {@link String} containing the NBT data.
+     */
     public abstract String toNBT(ItemStack item);
+    
+    /**
+     * Convert a previously saved {@link String} from {@link #toNBT(ItemStack)} into an {@link ItemStack}
+     * @param string The {@link String} to convert
+     * @return A valid {@link ItemStack} if the string can be parsed, or AIR if any syntax errors occurred.
+     */
     public abstract ItemStack fromNBT(String string);
     
     public abstract ItemStack setCustomNBT(ItemStack item, String key, String value);
@@ -59,14 +84,7 @@ public abstract class ItemHandler {
     
     public abstract ItemStack getPlayerHead(String username);
     public abstract ItemStack getPlayerHead(OfflinePlayer player);
-    public abstract ItemStack getBase64Head(String base64);
     
-    /**
-     * Set the data/damage/durability of an {@link ItemStack}.
-     * Some items can't have durability applied
-     *
-     * @param item The item to set the value of
-     * @param damage The value to set
-     */
-    public abstract void setDamage(ItemStack item, int damage);
+    public abstract ItemStack getBase64Head(String base64);
+    public abstract ItemStack getBase64HeadWithRandomUUID(String base64);
 }

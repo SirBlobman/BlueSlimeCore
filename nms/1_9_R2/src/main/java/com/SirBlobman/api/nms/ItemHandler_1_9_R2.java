@@ -33,6 +33,12 @@ public class ItemHandler_1_9_R2 extends ItemHandler {
     }
     
     @Override
+    public void setDamage(ItemStack item, int damage) {
+        short durability = Integer.valueOf(damage).shortValue();
+        item.setDurability(durability);
+    }
+    
+    @Override
     public String getLocalizedName(ItemStack item) {
         if(item == null) return "Air";
         
@@ -143,12 +149,24 @@ public class ItemHandler_1_9_R2 extends ItemHandler {
     @Override
     public ItemStack getBase64Head(String base64) {
         GameProfile gameProfile = new GameProfile(CUSTOM_HEAD_UUID, "Base64");
-        PropertyMap properties = gameProfile.getProperties();
-    
         Property property = new Property("textures", base64);
+        
+        PropertyMap properties = gameProfile.getProperties();
         properties.put("textures", property);
+        return createGameProfileHead(gameProfile);
+    }
     
+    @Override
+    public ItemStack getBase64HeadWithRandomUUID(String base64) {
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "Base64");
+        Property property = new Property("textures", base64);
+        
+        PropertyMap properties = gameProfile.getProperties();
+        properties.put("textures", property);
+        return createGameProfileHead(gameProfile);
+    }
     
+    private ItemStack createGameProfileHead(GameProfile gameProfile) {
         short playerHead = 3;
         ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, playerHead);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -162,17 +180,11 @@ public class ItemHandler_1_9_R2 extends ItemHandler {
         } catch(ReflectiveOperationException ex) {
             JavaPlugin plugin = getPlugin();
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while creating a Base64 head.", ex);
+            logger.log(Level.WARNING, "An error occurred while creating a GameProfile head.", ex);
             return item;
         }
         
         item.setItemMeta(meta);
         return item;
-    }
-    
-    @Override
-    public void setDamage(ItemStack item, int damage) {
-        short durability = Integer.valueOf(damage).shortValue();
-        item.setDurability(durability);
     }
 }

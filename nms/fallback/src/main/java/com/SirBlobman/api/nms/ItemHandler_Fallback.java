@@ -16,6 +16,11 @@ public class ItemHandler_Fallback extends ItemHandler {
     }
     
     @Override
+    public void setDamage(ItemStack item, int damage) {
+        throw new UnsupportedOperationException("Unsupported NMS version!");
+    }
+    
+    @Override
     public String getLocalizedName(ItemStack item) {
         throw new UnsupportedOperationException("Unsupported NMS version!");
     }
@@ -61,7 +66,7 @@ public class ItemHandler_Fallback extends ItemHandler {
     }
     
     @Override
-    public void setDamage(ItemStack item, int damage) {
+    public ItemStack getBase64HeadWithRandomUUID(String base64) {
         throw new UnsupportedOperationException("Unsupported NMS version!");
     }
 }
