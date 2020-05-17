@@ -2,6 +2,7 @@ package com.SirBlobman.api.nms;
 
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -28,8 +29,9 @@ public abstract class ItemHandler {
     }
     
     public final ItemStack getTextureHeadWithRandomUUID(String url) {
+        UUID uuid = UUID.randomUUID();
         String base64 = encodeTextureURL(url);
-        return getBase64HeadWithRandomUUID(base64);
+        return getBase64Head(base64, uuid);
     }
     
     protected final String encodeTextureURL(String url) {
@@ -86,5 +88,5 @@ public abstract class ItemHandler {
     public abstract ItemStack getPlayerHead(OfflinePlayer player);
     
     public abstract ItemStack getBase64Head(String base64);
-    public abstract ItemStack getBase64HeadWithRandomUUID(String base64);
+    public abstract ItemStack getBase64Head(String base64, UUID uuid);
 }

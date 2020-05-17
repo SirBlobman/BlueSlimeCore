@@ -1,5 +1,7 @@
 package com.SirBlobman.api.nms;
 
+import java.util.UUID;
+
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -66,7 +68,7 @@ public class ItemHandler_Fallback extends ItemHandler {
     }
     
     @Override
-    public ItemStack getBase64HeadWithRandomUUID(String base64) {
+    public ItemStack getBase64Head(String base64, UUID uuid) {
         throw new UnsupportedOperationException("Unsupported NMS version!");
     }
 }

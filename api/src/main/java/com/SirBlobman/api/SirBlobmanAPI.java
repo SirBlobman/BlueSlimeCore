@@ -48,6 +48,7 @@ public class SirBlobmanAPI {
      * @deprecated
      * @param player The Player that owns this data
      * @see com.SirBlobman.api.configuration.ConfigManager
+     * @return The data file for the player
      */
     public YamlConfiguration getDataFile(OfflinePlayer player) {
         if(player == null) return null;
@@ -87,6 +88,7 @@ public class SirBlobmanAPI {
      * @deprecated
      * @param fileName the name of the file in the plugin folder/jar
      * @see com.SirBlobman.api.configuration.ConfigManager
+     * @return A config file
      */
     public YamlConfiguration getConfig(String fileName) {
         File pluginFolder = this.plugin.getDataFolder();
@@ -110,6 +112,7 @@ public class SirBlobmanAPI {
      * @deprecated
      * @param file The file to load the config from if its not cached
      * @see com.SirBlobman.api.configuration.ConfigManager
+     * @return a config file
      */
     public YamlConfiguration getConfig(File file) {
         try {

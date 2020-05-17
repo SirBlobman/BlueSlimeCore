@@ -27,7 +27,6 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public class ItemHandler_1_15_R1 extends ItemHandler {
-    private static final UUID CUSTOM_HEAD_UUID = UUID.fromString("8f0fa41c-ef7a-4cda-80e7-c7b6109c2b6f");
     public ItemHandler_1_15_R1(JavaPlugin plugin) {
         super(plugin);
     }
@@ -151,17 +150,14 @@ public class ItemHandler_1_15_R1 extends ItemHandler {
     
     @Override
     public ItemStack getBase64Head(String base64) {
-        GameProfile gameProfile = new GameProfile(CUSTOM_HEAD_UUID, "Base64");
-        Property property = new Property("textures", base64);
-        
-        PropertyMap properties = gameProfile.getProperties();
-        properties.put("textures", property);
-        return createGameProfileHead(gameProfile);
+        byte[] base64Bytes = base64.getBytes();
+        UUID uuid = UUID.nameUUIDFromBytes(base64Bytes);
+        return getBase64Head(base64, uuid);
     }
     
     @Override
-    public ItemStack getBase64HeadWithRandomUUID(String base64) {
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "Base64");
+    public ItemStack getBase64Head(String base64, UUID uuid) {
+        GameProfile gameProfile = new GameProfile(uuid, "custom");
         Property property = new Property("textures", base64);
         
         PropertyMap properties = gameProfile.getProperties();
