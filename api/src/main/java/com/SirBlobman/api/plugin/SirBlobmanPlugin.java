@@ -68,7 +68,8 @@ public abstract class SirBlobmanPlugin<P extends JavaPlugin> extends JavaPlugin 
     
     public final void registerCommand(Class<? extends CustomCommand> commandClass) {
         try {
-            Constructor<? extends CustomCommand> constructor = commandClass.getDeclaredConstructor(SirBlobmanPlugin.class);
+            Class<?> thisClass = getClass();
+            Constructor<? extends CustomCommand> constructor = commandClass.getDeclaredConstructor(thisClass);
             CustomCommand customCommand = constructor.newInstance(this);
             customCommand.register();
         } catch(Exception ex) {
