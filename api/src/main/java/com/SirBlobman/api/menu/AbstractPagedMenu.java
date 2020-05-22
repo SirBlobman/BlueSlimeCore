@@ -70,8 +70,8 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         int currentPage = getCurrentPage();
         int maxPages = getMaxPages();
         
-        if(currentPage > 1) contents[45] = getPreviousPageItem();
-        if(currentPage < maxPages) contents[53] = getNextPageItem();
+        if(currentPage > 1) contents[getPreviousPageSlot()] = getPreviousPageItem();
+        if(currentPage < maxPages) contents[getNextPageSlot()] = getNextPageItem();
         inventory.setContents(contents);
         
         updatePage(inventory);
@@ -86,12 +86,12 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         int page = getCurrentPage();
         int maxPages = getMaxPages();
         
-        if(page > 1 && slot == 45) {
+        if(page > 1 && slot == getPreviousPageSlot()) {
             openPreviousPage(inventory);
             return;
         }
         
-        if(page < maxPages && slot == 53) {
+        if(page < maxPages && slot == getNextPageSlot()) {
             openNextPage(inventory);
             return;
         }
@@ -120,7 +120,7 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         ItemStack fillerItem = getFillerItem();
         Arrays.fill(contents, fillerItem);
     
-        for(int slot = 0; slot < 45; slot++) {
+        for(int slot = 0; slot < getHighestItemSlot(); slot++) {
             if(slot >= itemListSize) {
                 contents[slot] = ItemUtil.getAir();
                 continue;
@@ -138,9 +138,21 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         int currentPage = getCurrentPage();
         int maxPages = getMaxPages();
     
-        if(currentPage > 1) contents[45] = getPreviousPageItem();
-        if(currentPage < maxPages) contents[53] = getNextPageItem();
+        if(currentPage > 1) contents[getPreviousPageSlot()] = getPreviousPageItem();
+        if(currentPage < maxPages) contents[getNextPageSlot()] = getNextPageItem();
         inventory.setContents(contents);
+    }
+    
+    public int getNextPageSlot() {
+        return 53;
+    }
+    
+    public int getPreviousPageSlot() {
+        return 45;
+    }
+    
+    public int getHighestItemSlot() {
+        return 45;
     }
     
     protected abstract int getMaxPages();
