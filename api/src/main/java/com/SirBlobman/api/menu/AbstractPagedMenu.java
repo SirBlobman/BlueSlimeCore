@@ -9,10 +9,11 @@ import com.SirBlobman.api.item.ItemUtil;
 import com.SirBlobman.api.menu.button.MenuButton;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMenu<P> {
     private final Map<Integer, Map<Integer, MenuButton>> pagedButtonMap;
@@ -70,7 +71,7 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         int maxPages = getMaxPages();
         
         if(currentPage > 1) contents[45] = getPreviousPageItem();
-        if(currentPage < maxPages) contents[54] = getNextPageItem();
+        if(currentPage < maxPages) contents[53] = getNextPageItem();
         inventory.setContents(contents);
         
         updatePage(inventory);
@@ -79,8 +80,21 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
     
     @Override
     public final void onValidClick(InventoryClickEvent e) {
-        int page = getCurrentPage();
         int slot = e.getSlot();
+        Inventory inventory = e.getInventory();
+    
+        int page = getCurrentPage();
+        int maxPages = getMaxPages();
+        
+        if(page > 1 && slot == 45) {
+            openPreviousPage(inventory);
+            return;
+        }
+        
+        if(page < maxPages && slot == 53) {
+            openNextPage(inventory);
+            return;
+        }
     
         Map<Integer, MenuButton> buttonMap = this.pagedButtonMap.getOrDefault(page, new HashMap<>());
         MenuButton menuButton = buttonMap.getOrDefault(slot, null);
@@ -103,11 +117,29 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         List<ItemStack> itemList = getCurrentItems();
         int itemListSize = itemList.size();
     
-        for(int slot = 0; slot < 45 && slot < itemListSize; slot++) {
+        ItemStack fillerItem = getFillerItem();
+        Arrays.fill(contents, fillerItem);
+    
+        for(int slot = 0; slot < 45; slot++) {
+            if(slot >= itemListSize) {
+                contents[slot] = ItemUtil.getAir();
+                continue;
+            }
+            
             ItemStack item = itemList.get(slot);
-            if(ItemUtil.isAir(item)) continue;
+            if(ItemUtil.isAir(item)) {
+                contents[slot] = ItemUtil.getAir();
+                continue;
+            }
+            
             contents[slot] = item.clone();
         }
+    
+        int currentPage = getCurrentPage();
+        int maxPages = getMaxPages();
+    
+        if(currentPage > 1) contents[45] = getPreviousPageItem();
+        if(currentPage < maxPages) contents[53] = getNextPageItem();
         inventory.setContents(contents);
     }
     
