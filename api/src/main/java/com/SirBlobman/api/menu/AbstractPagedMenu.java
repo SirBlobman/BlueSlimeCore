@@ -120,19 +120,22 @@ public abstract class AbstractPagedMenu<P extends JavaPlugin> extends AbstractMe
         ItemStack fillerItem = getFillerItem();
         Arrays.fill(contents, fillerItem);
     
+        int index = 0;
         for(int slot = 0; slot < getHighestItemSlot(); slot++) {
+            if(slot == getPreviousPageSlot() || slot == getNextPageSlot()) continue;
             if(slot >= itemListSize) {
                 contents[slot] = ItemUtil.getAir();
                 continue;
             }
             
-            ItemStack item = itemList.get(slot);
+            ItemStack item = itemList.get(index);
             if(ItemUtil.isAir(item)) {
                 contents[slot] = ItemUtil.getAir();
                 continue;
             }
             
             contents[slot] = item.clone();
+            index++;
         }
     
         int currentPage = getCurrentPage();
