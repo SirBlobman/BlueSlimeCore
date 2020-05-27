@@ -34,6 +34,7 @@
         
         <!-- External Plugin Hooks -->
         <module>hook/handler</module>
+        <module>hook/Vault</module>
         
         <!-- Main API -->
         <module>api</module>

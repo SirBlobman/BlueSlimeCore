@@ -1,0 +1,84 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    
+    <parent>
+        <groupId>com.SirBlobman.api</groupId>
+        <artifactId>SirBlobmanAPI-parent</artifactId>
+        <version>1.13-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
+    </parent>
+    
+    <groupId>com.SirBlobman.api.hook</groupId>
+    <artifactId>handler-Vault</artifactId>
+    
+    <name>Hook Handler - Vault</name>
+    <description>The hook handler for Vault chat, permission, and economy.</description>
+    
+    <properties>
+        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+    </properties>
+    
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <!-- MD_5 Releases -->
+        <repository>
+            <id>md_5-releases</id>
+            <url>https://repo.md-5.net/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-public</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        
+        <!-- JitPack Repository -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io/</url>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Hook Handler -->
+        <dependency>
+            <groupId>com.SirBlobman.api.hook</groupId>
+            <artifactId>handler</artifactId>
+            <version>1.13-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <!-- Vault API -->
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>Vault</artifactId>
+            <version>1.7.2</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>
