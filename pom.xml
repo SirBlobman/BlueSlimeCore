@@ -32,6 +32,9 @@
         <module>nms/1_14_R1</module>
         <module>nms/1_15_R1</module>
         
+        <!-- External Plugin Hooks -->
+        <module>hook/handler</module>
+        
         <!-- Main API -->
         <module>api</module>
     </modules>

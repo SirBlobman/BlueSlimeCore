@@ -13,7 +13,7 @@ import com.SirBlobman.api.nms.MultiVersionHandler;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class SirBlobmanPlugin<P extends JavaPlugin> extends JavaPlugin {
+public abstract class SirBlobmanPlugin<P extends SirBlobmanPlugin<P>> extends JavaPlugin {
     private final SirBlobmanAPI sirBlobmanAPI;
     private final MultiVersionHandler<?> multiVersionHandler;
     private final ConfigManager<?> configManager;
