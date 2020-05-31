@@ -1,5 +1,6 @@
 package com.SirBlobman.api.nms;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,5 +52,10 @@ public class PlayerHandler_1_7_R4 extends PlayerHandler {
         
         float heartsFloat = (float) hearts;
         entityPlayer.setAbsorptionHearts(heartsFloat);
+    }
+    
+    @Override
+    public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
+        // Do Nothing
     }
 }

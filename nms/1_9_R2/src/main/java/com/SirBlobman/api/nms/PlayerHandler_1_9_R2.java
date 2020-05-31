@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +14,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R2.util.CraftMagicNumbers;
 import net.minecraft.server.v1_9_R2.*;
 import net.minecraft.server.v1_9_R2.IChatBaseComponent.ChatSerializer;
 
@@ -79,5 +81,15 @@ public class PlayerHandler_1_9_R2 extends PlayerHandler {
         
         float heartsFloat = (float) hearts;
         entityPlayer.setAbsorptionHearts(heartsFloat);
+    }
+    
+    @Override
+    public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        
+        Item item = CraftMagicNumbers.getItem(material);
+        PacketPlayOutSetCooldown packet = new PacketPlayOutSetCooldown(item, ticksLeft);
+        entityPlayer.playerConnection.sendPacket(packet);
     }
 }

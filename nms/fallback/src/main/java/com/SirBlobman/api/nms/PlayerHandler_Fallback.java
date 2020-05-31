@@ -1,5 +1,6 @@
 package com.SirBlobman.api.nms;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,16 +26,21 @@ public class PlayerHandler_Fallback extends PlayerHandler {
     
     @Override
     public void forceRespawn(Player player) {
-        throw new UnsupportedOperationException("Unsupported NMS version!");
+        // Do Nothing
     }
     
     @Override
     public double getAbsorptionHearts(Player player) {
-        throw new UnsupportedOperationException("Unsupported NMS version!");
+        return 0.0D;
     }
     
     @Override
     public void setAbsorptionHearts(Player player, double hearts) {
-        throw new UnsupportedOperationException("Unsupported NMS version!");
+        // Do Nothing
+    }
+    
+    @Override
+    public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
+        // Do Nothing
     }
 }

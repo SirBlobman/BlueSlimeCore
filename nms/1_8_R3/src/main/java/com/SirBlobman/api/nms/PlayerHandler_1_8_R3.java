@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -79,5 +80,10 @@ public class PlayerHandler_1_8_R3 extends PlayerHandler {
         
         float heartsFloat = (float) hearts;
         entityPlayer.setAbsorptionHearts(heartsFloat);
+    }
+    
+    @Override
+    public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
+        // Do Nothing
     }
 }

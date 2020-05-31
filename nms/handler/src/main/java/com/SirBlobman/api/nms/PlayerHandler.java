@@ -1,5 +1,6 @@
 package com.SirBlobman.api.nms;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,4 +30,6 @@ public abstract class PlayerHandler {
     
     public abstract double getAbsorptionHearts(Player player);
     public abstract void setAbsorptionHearts(Player player, double hearts);
+    
+    public abstract void sendCooldownPacket(Player player, Material material, int ticksLeft);
 }
