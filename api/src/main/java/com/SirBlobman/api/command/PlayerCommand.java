@@ -7,22 +7,23 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.SirBlobman.api.plugin.SirBlobmanPlugin;
+import com.SirBlobman.api.plugin.ConfigPlugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class PlayerCommand extends CustomCommand {
-    public PlayerCommand(SirBlobmanPlugin<?> plugin, String commandName) {
+public abstract class PlayerCommand<Plugin extends JavaPlugin & ConfigPlugin> extends CustomCommand<Plugin> {
+    public PlayerCommand(Plugin plugin, String commandName) {
         super(plugin, commandName);
     }
     
     @Override
     void registerSubCommands() {
         try {
-            Class<? extends CustomCommand> commandClass = getClass();
+            Class<?> commandClass = getClass();
             Method[] methodArray = commandClass.getDeclaredMethods();
             for(Method method : methodArray) {
                 SubCommand subCommand = method.getDeclaredAnnotation(SubCommand.class);

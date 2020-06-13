@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.SirBlobman.api.configuration.ConfigManager;
 import com.SirBlobman.api.item.ItemUtil;
-import com.SirBlobman.api.plugin.SirBlobmanPlugin;
+import com.SirBlobman.api.plugin.ConfigPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,14 +21,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.event.Listener;
 
-public abstract class CustomCommand implements TabExecutor {
+public abstract class CustomCommand<Plugin extends JavaPlugin & ConfigPlugin> implements TabExecutor {
     final String commandName;
     final Map<String, Method> subCommandMap;
-    protected final SirBlobmanPlugin<?> plugin;
-    public CustomCommand(SirBlobmanPlugin<?> plugin, String commandName) {
+    protected final Plugin plugin;
+    public CustomCommand(Plugin plugin, String commandName) {
         this.plugin = Objects.requireNonNull(plugin, "plugin must not be null!");
         this.commandName = Objects.requireNonNull(commandName, "commandName must not be null");
         this.subCommandMap = new HashMap<>();
@@ -64,7 +65,7 @@ public abstract class CustomCommand implements TabExecutor {
     
     void registerSubCommands() {
         try {
-            Class<? extends CustomCommand> commandClass = getClass();
+            Class<?> commandClass = getClass();
             Method[] methodArray = commandClass.getDeclaredMethods();
             for(Method method : methodArray) {
                 SubCommand subCommand = method.getDeclaredAnnotation(SubCommand.class);
