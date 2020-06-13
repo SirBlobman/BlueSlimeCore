@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import com.SirBlobman.api.handler.Hook;
 
 import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -17,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class HookVault<P extends JavaPlugin> extends Hook<P, Vault> {
     private Chat chatHandler;
