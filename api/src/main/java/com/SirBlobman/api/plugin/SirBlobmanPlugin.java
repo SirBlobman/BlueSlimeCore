@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.event.Listener;
 
-public abstract class SirBlobmanPlugin<P extends SirBlobmanPlugin<P>> extends JavaPlugin {
+public abstract class SirBlobmanPlugin<P> extends JavaPlugin implements ConfigPlugin {
     private final SirBlobmanAPI sirBlobmanAPI;
     private final MultiVersionHandler<?> multiVersionHandler;
     private final ConfigManager<?> configManager;
@@ -70,12 +70,12 @@ public abstract class SirBlobmanPlugin<P extends SirBlobmanPlugin<P>> extends Ja
         configManager.saveConfig("config.yml");
     }
     
-    protected final void registerCommand(Class<? extends CustomCommand> commandClass) {
+    protected final void registerCommand(Class<? extends CustomCommand<?>> commandClass) {
         try {
             Class<?> thisClass = getClass();
-            Constructor<? extends CustomCommand> constructor = commandClass.getDeclaredConstructor(thisClass);
+            Constructor<? extends CustomCommand<?>> constructor = commandClass.getDeclaredConstructor(thisClass);
             
-            CustomCommand customCommand = constructor.newInstance(this);
+            CustomCommand<?> customCommand = constructor.newInstance(this);
             customCommand.register();
         } catch(Exception ex) {
             Logger logger = getLogger();

@@ -82,6 +82,11 @@ public final class PlayerDataManager<P extends JavaPlugin> {
         }
     }
     
+    public boolean hasData(OfflinePlayer player) {
+        File file = getFile(player);
+        return file.exists();
+    }
+    
     private File getFile(OfflinePlayer player) {
         File dataFolder = this.plugin.getDataFolder();
         File playerDataFolder = new File(dataFolder, "player-data");
