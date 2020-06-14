@@ -1,0 +1,51 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    
+    <parent>
+        <groupId>com.SirBlobman.api.hook.factions</groupId>
+        <artifactId>handler-factions-parent</artifactId>
+        <version>1.13-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>handler-factions-hook</artifactId>
+    <name>Hook Handler - Factions Hook</name>
+    <description>The abstract hook handler for all factions modules.</description>
+    
+    <properties>
+        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+    </properties>
+    
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-public</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Hook Handler -->
+        <dependency>
+            <groupId>com.SirBlobman.api.hook</groupId>
+            <artifactId>handler</artifactId>
+            <version>1.13-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

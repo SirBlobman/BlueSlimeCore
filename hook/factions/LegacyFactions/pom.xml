@@ -1,0 +1,62 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    
+    <parent>
+        <groupId>com.SirBlobman.api.hook.factions</groupId>
+        <artifactId>handler-factions-parent</artifactId>
+        <version>1.13-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>handler-factions-LegacyFactions</artifactId>
+    
+    <name>Hook Handler - LegacyFactions</name>
+    <description>The LegacyFactions hook handler.</description>
+    
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-public</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+
+        <!-- Jitpack -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io/</url>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Hook Handler -->
+        <dependency>
+            <groupId>com.SirBlobman.api.hook.factions</groupId>
+            <artifactId>handler-factions-hook</artifactId>
+            <version>1.13-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- LegacyFactions -->
+        <dependency>
+            <groupId>com.github.redstone</groupId>
+            <artifactId>LegacyFactions</artifactId>
+            <version>v1.4.4</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

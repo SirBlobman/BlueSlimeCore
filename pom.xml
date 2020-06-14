@@ -32,9 +32,13 @@
         <module>nms/1_14_R1</module>
         <module>nms/1_15_R1</module>
         
+        <!-- Dummy API -->
+        <module>dummy-api/Factions</module>
+        
         <!-- External Plugin Hooks -->
         <module>hook/handler</module>
         <module>hook/Vault</module>
+        <module>hook/factions</module>
         
         <!-- Main API -->
         <module>api</module>

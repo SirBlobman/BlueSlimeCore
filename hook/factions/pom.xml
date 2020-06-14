@@ -1,0 +1,26 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    
+    <parent>
+        <groupId>com.SirBlobman.api</groupId>
+        <artifactId>SirBlobmanAPI-parent</artifactId>
+        <version>1.13-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
+    </parent>
+    
+    <groupId>com.SirBlobman.api.hook.factions</groupId>
+    <artifactId>handler-factions-parent</artifactId>
+    
+    <name>Hook Handler - Factions Parent</name>
+    <description>The parent POM for all faction hook modules.</description>
+    
+    <modules>
+        <module>hook</module>
+        <module>FactionsUUID</module>
+        <module>FactionsX</module>
+        <module>LegacyFactions</module>
+        <module>MassiveCore</module>
+        <module>factions</module>
+    </modules>
+</project>

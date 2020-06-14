@@ -1,0 +1,70 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    
+    <parent>
+        <groupId>com.SirBlobman.api.hook.factions</groupId>
+        <artifactId>handler-factions-parent</artifactId>
+        <version>1.13-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>handler-factions-FactionsX</artifactId>
+    
+    <name>Hook Handler - FactionsX</name>
+    <description>The FactionsX hook handler.</description>
+    
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
+        <!-- CodeMC Public Repository -->
+        <repository>
+            <id>codemc-public</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        
+        <!-- SavageLabs Repository -->
+        <repository>
+            <id>savagelabs</id>
+            <url>https://nexus.savagelabs.net/repository/maven-releases/</url>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Hook Handler -->
+        <dependency>
+            <groupId>com.SirBlobman.api.hook.factions</groupId>
+            <artifactId>handler-factions-hook</artifactId>
+            <version>1.13-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Base Plugin -->
+        <dependency>
+            <groupId>net.prosavage</groupId>
+            <artifactId>BasePlugin</artifactId>
+            <version>1.7.4</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- FactionsX -->
+        <dependency>
+            <groupId>net.prosavage.factionsx</groupId>
+            <artifactId>FactionsX</artifactId>
+            <version>0.4.2-PATREON</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
