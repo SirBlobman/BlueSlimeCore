@@ -8,10 +8,8 @@
         <version>1.13-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
-    
-    <groupId>com.SirBlobman.api.hook.factions</groupId>
+
     <artifactId>handler-factions-MassiveCore</artifactId>
-    
     <name>Hook Handler - MassiveCore Factions</name>
     <description>The MassiveCore Factions hook handler.</description>
     
@@ -57,7 +55,7 @@
             <groupId>com.SirBlobman.api.dummy</groupId>
             <artifactId>Factions</artifactId>
             <version>2.14.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
