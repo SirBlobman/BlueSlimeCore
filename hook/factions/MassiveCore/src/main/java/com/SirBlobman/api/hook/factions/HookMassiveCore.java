@@ -1,6 +1,9 @@
 package com.SirBlobman.api.hook.factions;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -47,8 +50,10 @@ public class HookMassiveCore<Plugin extends JavaPlugin> extends HookFactions<Plu
     
     @Override
     public boolean hasFaction(Player player) {
+        if(player == null) return false;
+        
         MPlayer mplayer = MPlayer.get(player);
-        return mplayer.hasFaction();
+        return (mplayer != null && mplayer.hasFaction());
     }
     
     @Override
@@ -161,5 +166,23 @@ public class HookMassiveCore<Plugin extends JavaPlugin> extends HookFactions<Plu
         MPlayer mplayer = MPlayer.get(player);
         Rel role = mplayer.getRole();
         return role.getPrefix();
+    }
+    
+    @Override
+    public List<UUID> getMembersForFactionAt(Location location) {
+        Faction faction = getFactionAt(location);
+        if(faction == null) return Collections.emptyList();
+    
+        List<MPlayer> mplayerList = faction.getMPlayers();
+        return mplayerList.stream().map(MPlayer::getUuid).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<UUID> getMembersForFactionOf(Player player) {
+        Faction faction = getFactionFor(player);
+        if(faction == null) return Collections.emptyList();
+    
+        List<MPlayer> mplayerList = faction.getMPlayers();
+        return mplayerList.stream().map(MPlayer::getUuid).collect(Collectors.toList());
     }
 }

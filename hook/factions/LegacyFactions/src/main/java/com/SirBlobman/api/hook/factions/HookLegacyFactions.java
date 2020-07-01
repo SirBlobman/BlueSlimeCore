@@ -1,6 +1,10 @@
 package com.SirBlobman.api.hook.factions;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -157,5 +161,23 @@ public class HookLegacyFactions<Plugin extends JavaPlugin> extends HookFactions<
         FPlayer fplayer = FPlayerColl.get(player);
         Role role = fplayer.getRole();
         return role.getPrefix();
+    }
+    
+    @Override
+    public List<UUID> getMembersForFactionAt(Location location) {
+        Faction faction = getFactionAt(location);
+        if(faction == null) return Collections.emptyList();
+        
+        Set<FPlayer> memberSet = faction.getFPlayers();
+        return memberSet.stream().map(FPlayer::getId).map(UUID::fromString).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<UUID> getMembersForFactionOf(Player player) {
+        Faction faction = getFactionFor(player);
+        if(faction == null) return Collections.emptyList();
+        
+        Set<FPlayer> memberSet = faction.getFPlayers();
+        return memberSet.stream().map(FPlayer::getId).map(UUID::fromString).collect(Collectors.toList());
     }
 }

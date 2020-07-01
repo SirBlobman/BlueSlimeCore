@@ -1,5 +1,8 @@
 package com.SirBlobman.api.hook.factions;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.SirBlobman.api.handler.Hook;
 
 import org.bukkit.ChatColor;
@@ -54,4 +57,7 @@ public abstract class HookFactions<Plugin extends JavaPlugin, HookPlugin extends
     
     public abstract ChatColor getRelationChatColor(Player viewer, Player player);
     public abstract String getRolePrefix(Player player);
+    
+    public abstract List<UUID> getMembersForFactionAt(Location location);
+    public abstract List<UUID> getMembersForFactionOf(Player player);
 }

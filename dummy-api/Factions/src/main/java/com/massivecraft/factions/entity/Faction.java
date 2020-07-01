@@ -1,5 +1,7 @@
 package com.massivecraft.factions.entity;
 
+import java.util.List;
+
 import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.RelationParticipator;
 
@@ -10,6 +12,10 @@ public class Faction implements RelationParticipator {
     }
     
     public MPlayer getLeader() {
+        throw new UnsupportedOperationException("Dummy API");
+    }
+    
+    public List<MPlayer> getMPlayers() {
         throw new UnsupportedOperationException("Dummy API");
     }
     

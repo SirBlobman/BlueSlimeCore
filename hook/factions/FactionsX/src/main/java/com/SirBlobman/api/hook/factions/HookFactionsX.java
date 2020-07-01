@@ -1,5 +1,8 @@
 package com.SirBlobman.api.hook.factions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
@@ -181,5 +184,19 @@ public class HookFactionsX<Plugin extends JavaPlugin> extends HookFactions<Plugi
         FPlayer fplayer = PlayerManager.INSTANCE.getFPlayer(player);
         CustomRole role = fplayer.getRole();
         return role.getChatTag();
+    }
+    
+    @Override
+    public List<UUID> getMembersForFactionAt(Location location) {
+        Faction faction = getFactionAt(location);
+        if(faction == null) return Collections.emptyList();
+        return new ArrayList<>(faction.getFactionMembers());
+    }
+    
+    @Override
+    public List<UUID> getMembersForFactionOf(Player player) {
+        Faction faction = getFactionFor(player);
+        if(faction == null) return Collections.emptyList();
+        return new ArrayList<>(faction.getFactionMembers());
     }
 }
