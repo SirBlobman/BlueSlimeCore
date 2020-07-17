@@ -15,10 +15,20 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.SirBlobman.api.item.ItemUtil;
+import com.SirBlobman.api.nms.AbstractNMS;
+import com.SirBlobman.api.nms.ItemHandler;
+import com.SirBlobman.api.nms.MultiVersionHandler;
+import com.SirBlobman.api.plugin.SirBlobmanPlugin;
 import com.SirBlobman.api.utility.MessageUtil;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ConfigManager<P extends JavaPlugin> {
@@ -158,6 +168,65 @@ public final class ConfigManager<P extends JavaPlugin> {
         }
         
         return "{" + path + "}";
+    }
+    
+    public ItemStack getItemStack(String fileName, String path) {
+        if(!(this.plugin instanceof SirBlobmanPlugin)) throw new UnsupportedOperationException("Multi-version support is not included in this plugin.");
+        
+        SirBlobmanPlugin<?> sirBlobmanPlugin = (SirBlobmanPlugin<?>) this.plugin;
+        MultiVersionHandler<?> multiVersionHandler = sirBlobmanPlugin.getMultiVersionHandler();
+        AbstractNMS nmsHandler = multiVersionHandler.getInterface();
+        ItemHandler itemHandler = nmsHandler.getItemHandler();
+    
+        YamlConfiguration config = getConfig(fileName);
+        if(config == null) return ItemUtil.getAir();
+        if(config.isItemStack(path)) return config.getItemStack(path);
+        
+        ConfigurationSection section = config.getConfigurationSection(path);
+        if(section == null) return ItemUtil.getAir();
+        
+        String materialName = section.getString("material");
+        if(materialName == null) return ItemUtil.getAir();
+        
+        Material material = itemHandler.matchMaterial(materialName);
+        if(material == null) return ItemUtil.getAir();
+        int quantity = section.getInt("quantity", 1);
+        int damage = section.getInt("damage", 1);
+        
+        ItemStack item = new ItemStack(material, quantity);
+        itemHandler.setDamage(item, damage);
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) return item;
+        
+        if(meta instanceof SkullMeta) {
+            String ownerName = section.getString("owner");
+            if(ownerName != null) {
+                item = itemHandler.getPlayerHead(ownerName);
+                meta = item.getItemMeta();
+            }
+            
+            String texture = section.getString("texture");
+            if(texture != null) {
+                item = itemHandler.getBase64Head(texture);
+                meta = item.getItemMeta();
+            }
+        }
+        
+        String displayName = section.getString("display-name");
+        if(displayName != null) {
+            String displayNameColored = MessageUtil.color(displayName);
+            meta.setDisplayName(displayNameColored);
+        }
+        
+        List<String> loreList = section.getStringList("lore");
+        if(!loreList.isEmpty()) {
+            List<String> loreListColored = MessageUtil.colorList(loreList);
+            meta.setLore(loreListColored);
+        }
+        
+        item.setItemMeta(meta);
+        return item;
     }
     
     private File getActualFile(String fileName) {
