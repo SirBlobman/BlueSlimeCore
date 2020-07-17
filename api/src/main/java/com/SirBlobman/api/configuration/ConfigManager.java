@@ -191,7 +191,7 @@ public final class ConfigManager<P extends JavaPlugin> {
         Material material = itemHandler.matchMaterial(materialName);
         if(material == null) return ItemUtil.getAir();
         int quantity = section.getInt("quantity", 1);
-        int damage = section.getInt("damage", 1);
+        int damage = section.getInt("damage", 0);
         
         ItemStack item = new ItemStack(material, quantity);
         itemHandler.setDamage(item, damage);
