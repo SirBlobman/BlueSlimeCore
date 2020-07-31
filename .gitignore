@@ -14,3 +14,6 @@ bin/
 # Maven
 target/
 dependency-reduced-pom.xml
+
+# Mac OSX
+.DS_Store
