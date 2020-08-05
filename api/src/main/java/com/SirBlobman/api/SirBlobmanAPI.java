@@ -24,16 +24,7 @@ public class SirBlobmanAPI {
     public SirBlobmanAPI(JavaPlugin plugin) {
         this.plugin = Objects.requireNonNull(plugin, "plugin must not be null!");
         this.logger = this.plugin.getLogger();
-        this.logger.info("This plugin is using SirBlobmanAPI.");
-        
-        String[] message = {
-                "  ___ _     ___ _     _                    ",
-                " / __(_)_ _| _ | |___| |__ _ __  __ _ _ _  ",
-                " \\__ | | '_| _ | / _ | '_ | '  \\/ _` | ' \\ ",
-                " |___|_|_| |___|_\\___|_.__|_|_|_\\__,_|_||_|",
-                "                                           "
-        };
-        Arrays.stream(message).forEach(this.logger::info);
+        this.logger.info("This plugin is using SirBlobmanAPI by SirBlobman.");
     }
     
     public JavaPlugin getPlugin() {
@@ -42,6 +33,18 @@ public class SirBlobmanAPI {
     
     public Logger getLogger() {
         return this.logger;
+    }
+    
+    public void sendLogo() {
+        String[] logoArray = {
+                "  ___ _     ___ _     _                    ",
+                " / __(_)_ _| _ | |___| |__ _ __  __ _ _ _  ",
+                " \\__ | | '_| _ | / _ | '_ | '  \\/ _` | ' \\ ",
+                " |___|_|_| |___|_\\___|_.__|_|_|_\\__,_|_||_|",
+                "                                           "
+        };
+        Logger logger = getLogger();
+        for(String message : logoArray) logger.info(message);
     }
     
     /**
