@@ -4,7 +4,7 @@
     
     <groupId>com.SirBlobman.api</groupId>
     <artifactId>SirBlobmanAPI-parent</artifactId>
-    <version>1.13-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     
     <name>SirBlobmanAPI Parent</name>
     <description>The parent pom for SirBlobmanAPI</description>
@@ -13,37 +13,17 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        
-        <spigot.version>1.8-R0.1-SNAPSHOT</spigot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <modules>
-        <!-- NMS Versions -->
-        <module>nms/handler</module>
-        <module>nms/fallback</module>
-        <module>nms/1_7_R4</module>
-        <module>nms/1_8_R3</module>
-        <module>nms/1_9_R2</module>
-        <module>nms/1_10_R1</module>
-        <module>nms/1_11_R1</module>
-        <module>nms/1_12_R1</module>
-        <module>nms/1_13_R2</module>
-        <module>nms/1_14_R1</module>
-        <module>nms/1_15_R1</module>
-        <module>nms/1_16_R1</module>
-        <module>nms/1_16_R2</module>
-        
-        <!-- Dummy API -->
-        <module>dummy-api/Factions</module>
-        
-        <!-- External Plugin Hooks -->
-        <module>hook/handler</module>
-        <module>hook/Vault</module>
-        <module>hook/factions</module>
-        
-        <!-- Main API -->
-        <module>api</module>
+        <module>utility</module>
+        <module>configuration</module>
+        <module>command</module>
+        <module>menu</module>
+        <module>item</module>
+        <module>nms</module>
+        <module>core</module>
     </modules>
     
     <distributionManagement>
