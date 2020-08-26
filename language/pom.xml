@@ -9,9 +9,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>utility</artifactId>
-    <name>SirBlobmanAPI Utility</name>
-    <description>Useful utility classes for projects made by SirBlobman</description>
+    <properties>
+        <spigot.version>1.12.2-R0.1-SNAPSHOT</spigot.version>
+    </properties>
+
+    <artifactId>language</artifactId>
+    <name>SirBlobmanAPI Language</name>
+    <description>Useful localization classes for SirBlobman projects</description>
 
     <repositories>
         <!-- SpigotMC Repository -->
@@ -28,6 +32,14 @@
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Configuration -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>configuration</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

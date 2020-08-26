@@ -9,9 +9,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>utility</artifactId>
-    <name>SirBlobmanAPI Utility</name>
-    <description>Useful utility classes for projects made by SirBlobman</description>
+    <artifactId>configuration</artifactId>
+    <name>SirBlobmanAPI Configuration</name>
+    <description>Useful configuration classes for projects made by SirBlobman</description>
 
     <repositories>
         <!-- SpigotMC Repository -->
@@ -28,6 +28,14 @@
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Utility -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>utility</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

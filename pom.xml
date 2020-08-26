@@ -25,11 +25,13 @@
         <module>utility</module>
         <module>configuration</module>
         <module>language</module>
+        <!--
         <module>command</module>
         <module>menu</module>
         <module>item</module>
         <module>nms</module>
         <module>core</module>
+        -->
     </modules>
     
     <distributionManagement>
