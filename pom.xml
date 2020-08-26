@@ -10,7 +10,12 @@
     <description>The parent pom for SirBlobmanAPI</description>
     
     <properties>
+        <!-- This is the minimum supported Java version -->
         <java.version>1.8</java.version>
+
+        <!-- This is the minimum supported Spigot version -->
+        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,6 +24,7 @@
     <modules>
         <module>utility</module>
         <module>configuration</module>
+        <module>language</module>
         <module>command</module>
         <module>menu</module>
         <module>item</module>
