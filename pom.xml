@@ -3,7 +3,7 @@
     <packaging>pom</packaging>
     
     <groupId>com.SirBlobman.api</groupId>
-    <artifactId>SirBlobmanAPI-parent</artifactId>
+    <artifactId>parent</artifactId>
     <version>2.0-SNAPSHOT</version>
     
     <name>SirBlobmanAPI Parent</name>
