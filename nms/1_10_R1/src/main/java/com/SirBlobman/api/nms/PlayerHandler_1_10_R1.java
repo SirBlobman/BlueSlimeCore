@@ -9,15 +9,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R2.util.CraftMagicNumbers;
-import net.minecraft.server.v1_9_R2.*;
-import net.minecraft.server.v1_9_R2.IChatBaseComponent.ChatSerializer;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.util.CraftMagicNumbers;
+import net.minecraft.server.v1_10_R1.*;
+import net.minecraft.server.v1_10_R1.IChatBaseComponent.ChatSerializer;
 
 import io.netty.buffer.Unpooled;
 
-public class PlayerHandler_1_9_R2 extends PlayerHandler {
-    public PlayerHandler_1_9_R2(JavaPlugin plugin) {
+public class PlayerHandler_1_10_R1 extends PlayerHandler {
+    public PlayerHandler_1_10_R1(JavaPlugin plugin) {
         super(plugin);
     }
 
