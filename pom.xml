@@ -28,10 +28,8 @@
         <module>language</module>
         <module>command</module>
         <module>menu</module>
-        <!--
         <module>nms</module>
-        <module>core</module>
-        -->
+        <!--<module>core</module>-->
     </modules>
     
     <distributionManagement>
