@@ -10,8 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.SirBlobman.api.language.LanguageManager;
 
 public abstract class PlayerCommand extends Command {
-    public PlayerCommand(JavaPlugin plugin) {
-        super(plugin);
+    public PlayerCommand(JavaPlugin plugin, String commandName) {
+        super(plugin, commandName);
     }
 
     public abstract List<String> onTabComplete(Player player, String[] args);

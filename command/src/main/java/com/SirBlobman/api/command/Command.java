@@ -3,6 +3,8 @@ package com.SirBlobman.api.command;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -10,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,13 +25,14 @@ import com.SirBlobman.api.utility.Validate;
 
 public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
-    public Command(JavaPlugin plugin) {
+    private final String commandName;
+    public Command(JavaPlugin plugin, String commandName) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+        this.commandName = Validate.notEmpty(commandName, "commandName cannot be empty or null!");
     }
 
     public abstract List<String> onTabComplete(CommandSender sender, String[] args);
     public abstract boolean execute(CommandSender sender, String[] args);
-
     public LanguageManager getLanguageManager() {
         return null;
     }
@@ -41,6 +45,21 @@ public abstract class Command implements TabExecutor {
     @Override
     public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         return execute(sender, args);
+    }
+
+    public final String getCommandName() {
+        return this.commandName;
+    }
+
+    public final void register() {
+        try {
+            PluginCommand pluginCommand = this.plugin.getCommand(this.commandName);
+            pluginCommand.setExecutor(this);
+            pluginCommand.setTabCompleter(this);
+        } catch(Exception ex) {
+            Logger logger = this.plugin.getLogger();
+            logger.log(Level.WARNING, "An error occurred while registering the '" + commandName + "' command:", ex);
+        }
     }
 
     public final List<String> getMatching(Iterable<String> valueList, String arg) {
