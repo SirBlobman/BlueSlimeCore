@@ -1,0 +1,2 @@
+# Set this to false to prevent the update checker from running
+update-checker: true

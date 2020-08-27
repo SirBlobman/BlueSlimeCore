@@ -10,6 +10,7 @@ import com.SirBlobman.api.language.LanguageManager;
 import com.SirBlobman.api.nms.*;
 import com.SirBlobman.api.nms.bossbar.BossBarHandler;
 import com.SirBlobman.api.nms.scoreboard.ScoreboardHandler;
+import com.SirBlobman.api.update.UpdateChecker;
 import com.SirBlobman.api.utility.VersionUtility;
 
 public class CorePlugin extends JavaPlugin {
@@ -35,8 +36,12 @@ public class CorePlugin extends JavaPlugin {
     public void onEnable() {
         Logger logger = getLogger();
         logger.info("Enabling SirBlobman Core...");
+
         printMultiVersionInformation();
         logger.info("Successfully enabled SirBlobman Core.");
+
+        UpdateChecker updateChecker = new UpdateChecker(this, 83189L);
+        updateChecker.runCheck();
     }
 
     @Override
