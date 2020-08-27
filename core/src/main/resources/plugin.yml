@@ -1,0 +1,15 @@
+name: "${bukkit.plugin.name}"
+prefix: "${bukkit.plugin.prefix}"
+description: "${bukkit.plugin.description}"
+
+main: "${bukkit.plugin.main}"
+version: "${bukkit.plugin.version}"
+api-version: "1.13"
+load: STARTUP
+
+authors:
+  - "SirBlobman"
+
+included-api-list:
+  - "SirBlobmanAPI"
+  - "XSeries"

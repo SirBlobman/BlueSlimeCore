@@ -1,0 +1,143 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.SirBlobman.api</groupId>
+        <artifactId>parent</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>core</artifactId>
+    <name>SirBlobmanAPI Core Plugin</name>
+    <description>This plugin contains all modules of SirBlobmanAPI and can be installed on Bukkit servers.</description>
+
+    <properties>
+        <bukkit.plugin.name>SirBlobmanCore</bukkit.plugin.name>
+        <bukkit.plugin.prefix>SirBlobman Core</bukkit.plugin.prefix>
+        <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.</bukkit.plugin.description>
+
+        <bukkit.plugin.main>com.SirBlobman.core.CorePlugin</bukkit.plugin.main>
+        <bukkit.plugin.version>1.0.0</bukkit.plugin.version>
+    </properties>
+
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Utility -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>utility</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Item -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>item</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Configuration -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>configuration</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Language -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>language</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Command -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>command</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Menu -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>menu</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI NMS -->
+        <dependency>
+            <groupId>com.SirBlobman.api.nms</groupId>
+            <artifactId>nms-handler</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.cryptomorin.xseries</pattern>
+                            <shadedPattern>com.SirBlobman.api.xseries</shadedPattern>
+                        </relocation>
+                    </relocations>
+
+                    <filters>
+                        <filter>
+                            <artifact>*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

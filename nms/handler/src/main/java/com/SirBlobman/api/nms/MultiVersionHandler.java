@@ -46,7 +46,7 @@ public final class MultiVersionHandler {
             return constructor.newInstance(plugin);
         } catch(ReflectiveOperationException ex) {
             Logger logger = plugin.getLogger();
-            logger.warning("Could not find NMS handler for version '" + nmsVersion + "'. Searching for fallback handler...");
+            logger.warning("Could not find '" + classType + "' for version '" + nmsVersion + "'. Searching for fallback handler...");
             String className = ("com.SirBlobman.api.nms." + classType + "_Fallback");
 
             try {

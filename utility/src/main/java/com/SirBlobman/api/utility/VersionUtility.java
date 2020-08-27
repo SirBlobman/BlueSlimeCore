@@ -14,7 +14,7 @@ public final class VersionUtility {
      * @return The current Minecraft version of the server (Example: 1.16.2)
      */
     public static String getMinecraftVersion() {
-        String bukkitVersion = Bukkit.getBukkitVersion();
+        String bukkitVersion = Bukkit.getVersion();
         Matcher matcher = VERSION_PATTERN.matcher(bukkitVersion);
         return (matcher.find() ? matcher.group(2) : "");
     }
