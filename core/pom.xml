@@ -87,6 +87,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- SirBlobmanAPI Update -->
+        <dependency>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>update</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- SirBlobmanAPI NMS -->
         <dependency>
             <groupId>com.SirBlobman.api.nms</groupId>

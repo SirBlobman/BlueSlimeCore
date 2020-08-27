@@ -28,6 +28,7 @@
         <module>language</module>
         <module>command</module>
         <module>menu</module>
+        <module>update</module>
         <module>nms</module>
         <module>core</module>
     </modules>
