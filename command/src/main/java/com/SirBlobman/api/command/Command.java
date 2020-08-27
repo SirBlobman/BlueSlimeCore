@@ -89,6 +89,16 @@ public abstract class Command implements TabExecutor {
         languageManager.sendMessage(sender, key, replacer, color);
     }
 
+    public final boolean checkPermission(CommandSender sender, String permission, boolean sendMessage) {
+        boolean hasPermission = sender.hasPermission(permission);
+        if(!hasPermission && sendMessage) {
+            Replacer replacer = message -> message.replace("{permission}", permission);
+            sendMessageOrDefault(sender, "error.no-permission", "You do not have access to that feature.", replacer, true);
+        }
+
+        return hasPermission;
+    }
+
     public final BigInteger parseInteger(CommandSender sender, String value) {
         try {
             return new BigInteger(value);
