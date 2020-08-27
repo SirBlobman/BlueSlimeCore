@@ -59,6 +59,17 @@ public abstract class Command implements TabExecutor {
         return onlinePlayerCollection.stream().map(Player::getName).collect(Collectors.toSet());
     }
 
+    public final void sendMessageOrDefault(CommandSender sender, String key, String defaultMessage, Replacer replacer, boolean color) {
+        LanguageManager languageManager = getLanguageManager();
+        if(languageManager == null) {
+            String replaced = (replacer == null ? defaultMessage : replacer.replace(defaultMessage));
+            sender.sendMessage(replaced);
+            return;
+        }
+
+        languageManager.sendMessage(sender, key, replacer, color);
+    }
+
     public final BigInteger parseInteger(CommandSender sender, String value) {
         try {
             return new BigInteger(value);
