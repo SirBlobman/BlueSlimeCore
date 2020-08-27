@@ -34,7 +34,7 @@ public abstract class PlayerCommand extends Command {
 
         LanguageManager languageManager = getLanguageManager();
         if(languageManager != null) {
-            languageManager.sendMessage(sender, "error.not-player", null, true);
+            languageManager.sendMessage(sender, "error.player-only", null, true);
             return true;
         }
 
