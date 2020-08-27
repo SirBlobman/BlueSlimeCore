@@ -9,14 +9,24 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>nms-handler</artifactId>
-    <name>SirBlobmanAPI NMS Handler</name>
+    <artifactId>nms-1_8_R3</artifactId>
+    <name>SirBlobmanAPI NMS 1.8.8</name>
+
+    <properties>
+        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+    </properties>
 
     <repositories>
         <!-- SpigotMC Repository -->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <!-- CodeMC NMS Repository -->
+        <repository>
+            <id>codemc-nms</id>
+            <url>https://repo.codemc.io/repository/nms/</url>
         </repository>
     </repositories>
 
@@ -29,42 +39,26 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- NMS BossBar -->
+        <!-- Spigot NMS -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Abstract NMS -->
         <dependency>
             <groupId>com.SirBlobman.api.nms</groupId>
-            <artifactId>nms-bossbar</artifactId>
+            <artifactId>nms-abstract</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
-        <!-- NMS Scoreboard -->
+        <!-- SirBlobmanAPI Item -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
-            <artifactId>nms-scoreboard</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- NMS Fallback -->
-        <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
-            <artifactId>nms-fallback</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- NMS 1_7_R4 -->
-        <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
-            <artifactId>nms-1_7_R4</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- NMS 1_8_R3 -->
-        <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
-            <artifactId>nms-1_8_R3</artifactId>
+            <groupId>com.SirBlobman.api</groupId>
+            <artifactId>item</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
