@@ -15,6 +15,9 @@ import net.minecraft.server.v1_9_R2.*;
 import net.minecraft.server.v1_9_R2.IChatBaseComponent.ChatSerializer;
 
 import io.netty.buffer.Unpooled;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class PlayerHandler_1_9_R2 extends PlayerHandler {
     public PlayerHandler_1_9_R2(JavaPlugin plugin) {
@@ -23,15 +26,9 @@ public class PlayerHandler_1_9_R2 extends PlayerHandler {
 
     @Override
     public void sendActionBar(Player player, String message) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer nmsPlayer = craftPlayer.getHandle();
-
-        byte actionBar = 2;
-        String jsonMessage = asJSON(message);
-        IChatBaseComponent chatComponent = ChatSerializer.a(jsonMessage);
-
-        PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, actionBar);
-        nmsPlayer.playerConnection.sendPacket(packet);
+        BaseComponent[] baseComponents = TextComponent.fromLegacyText(message);
+        Spigot spigot = player.spigot();
+        spigot.sendMessage(ChatMessageType.ACTION_BAR, baseComponents);
     }
 
     @Override
