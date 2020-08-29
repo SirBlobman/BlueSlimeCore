@@ -123,6 +123,9 @@
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
 
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>shaded</shadedClassifierName>
+
                     <relocations>
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
