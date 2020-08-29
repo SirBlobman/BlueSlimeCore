@@ -105,7 +105,6 @@
     </dependencies>
 
     <build>
-        <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -120,6 +119,10 @@
                 <version>3.2.4</version>
 
                 <configuration>
+                    <shadeSourcesContent>true</shadeSourcesContent>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
+
                     <relocations>
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
