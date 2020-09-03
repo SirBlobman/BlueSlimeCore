@@ -19,7 +19,7 @@
         <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.</bukkit.plugin.description>
 
         <bukkit.plugin.main>com.SirBlobman.core.CorePlugin</bukkit.plugin.main>
-        <bukkit.plugin.version>1.0.0</bukkit.plugin.version>
+        <bukkit.plugin.version>1.0.1</bukkit.plugin.version>
     </properties>
 
     <repositories>

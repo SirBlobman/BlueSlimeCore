@@ -25,7 +25,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.SirBlobman.api.item.ItemBuilder;
+import com.SirBlobman.api.item.SkullBuilder;
 import com.SirBlobman.api.menu.button.AbstractButton;
+import com.SirBlobman.api.nms.HeadHandler;
 import com.SirBlobman.api.utility.MessageUtility;
 import com.SirBlobman.api.utility.Validate;
 
@@ -117,6 +119,10 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
         scheduler.scheduleSyncDelayedTask(plugin, this::internalOpen);
     }
 
+    public HeadHandler getHeadHandler() {
+        return null;
+    }
+
     protected final void setButton(int slot, AbstractButton button) {
         if(button == null) {
             this.buttonMap.remove(slot);
@@ -128,7 +134,6 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
 
     protected final ItemStack loadItemStack(ConfigurationSection config, String path) {
         if(config.isItemStack(path)) return config.getItemStack(path);
-
         ConfigurationSection section = config.getConfigurationSection(path);
         return loadItemStack(section);
     }
@@ -146,6 +151,7 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
 
         XMaterial realMaterial = xMaterial.get();
         ItemBuilder builder = new ItemBuilder(realMaterial);
+        builder = checkSkull(builder, realMaterial, section);
 
         int amount = section.getInt("quantity");
         builder.withAmount(amount);
@@ -167,6 +173,19 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
 
         if(section.getBoolean("glowing")) builder.withGlowing();
         return builder.build();
+    }
+
+    private ItemBuilder checkSkull(ItemBuilder builder, XMaterial xMaterial, ConfigurationSection section) {
+        HeadHandler headHandler = getHeadHandler();
+        if(xMaterial != XMaterial.PLAYER_HEAD || headHandler == null) return builder;
+
+        String texture = section.getString("texture");
+        if(texture != null) return SkullBuilder.withTexture(headHandler, texture);
+
+        String username = section.getString("skull-owner");
+        if(username != null) return SkullBuilder.withOwner(headHandler, username);
+
+        return builder;
     }
 
     private void internalOpen() {
