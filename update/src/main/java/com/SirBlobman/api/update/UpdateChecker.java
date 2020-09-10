@@ -42,7 +42,7 @@ public final class UpdateChecker extends BukkitRunnable {
             return;
         }
 
-        logger.info("The plugin version does match the spigot version.");
+        logger.info("The plugin version does not match the spigot version.");
         logger.info("You might need to download an update from here:");
 
         String resourceLink = getResourceLink();
