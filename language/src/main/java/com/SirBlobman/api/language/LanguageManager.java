@@ -1,8 +1,10 @@
 package com.SirBlobman.api.language;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -70,6 +72,21 @@ public final class LanguageManager {
         }
 
         sender.sendMessage(message);
+    }
+
+    /**
+     * Send a localized message to all players and the server console
+     * @param key The path to the message in the localization file
+     * @param replacer A variable replacer (can be {@code null})
+     * @param color {@code true} to replace color codes, {@code false} to leave the message as-is
+     * @see #sendMessage(CommandSender, String, Replacer, boolean)
+     */
+    public void broadcastMessage(String key, Replacer replacer, boolean color) {
+        CommandSender console = Bukkit.getConsoleSender();
+        sendMessage(console, key, replacer, color);
+
+        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
+        onlinePlayerCollection.forEach(player -> sendMessage(player, key, replacer, color));
     }
 
     private String getDefaultLocale() {
