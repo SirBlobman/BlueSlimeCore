@@ -103,6 +103,7 @@ public class BossBarWrapper_Spigot extends BossBarWrapper {
     
     private BarColor parseColor(String color) {
         try {
+            if(color == null) throw new IllegalArgumentException("color must not be null!");
             String upper = color.toUpperCase();
             return BarColor.valueOf(upper);
         } catch(IllegalArgumentException ex) {
@@ -112,6 +113,7 @@ public class BossBarWrapper_Spigot extends BossBarWrapper {
     
     private BarStyle parseStyle(String style) {
         try {
+            if(style == null) throw new IllegalArgumentException("style must not be null!");
             String upper = style.toUpperCase();
             return BarStyle.valueOf(upper);
         } catch(IllegalArgumentException ex) {
@@ -121,6 +123,7 @@ public class BossBarWrapper_Spigot extends BossBarWrapper {
     
     private BarFlag parseFlag(String flag) {
         try {
+            if(flag == null) throw new IllegalArgumentException("flag must not be null!");
             String upper = flag.toUpperCase();
             return BarFlag.valueOf(upper);
         } catch(IllegalArgumentException ex) {
