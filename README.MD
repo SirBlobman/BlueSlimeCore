@@ -1,10 +1,10 @@
 # SirBlobmanAPI
 An API that helps with minecraft NMS and other stuff.  
-This API is used in many of my other projects, such as CombatLogX or Enderpearl Cooldown.
+This API is used in many of my other projects, such as CombatLogX or Disco Armor.
 
 ## Maven Information
 You can use SirBlobmanAPI in your projects.  
-Just make sure to install the SirBlobmanCore jar on your server!
+Just make sure to install the SirBlobmanCore plugin jar on your server!
 ```xml
 <repositories>
     <!-- CodeMC Public Repository -->
