@@ -10,7 +10,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 public final class ItemUtility {
     public static boolean isAir(ItemStack item) {
         if(item == null) return true;
-
         Material material = item.getType();
         String materialName = material.name();
 
@@ -18,29 +17,43 @@ public final class ItemUtility {
         return airList.contains(materialName);
     }
 
+    public static ItemStack getAir() {
+        return new ItemStack(Material.AIR);
+    }
+
     public static boolean hasItemMeta(ItemStack item) {
         return (item != null && item.hasItemMeta());
     }
 
     public static boolean hasDisplayName(ItemStack item) {
-        if(!hasItemMeta(item)) return false;
+        if(hasItemMeta(item)) {
+            ItemMeta meta = item.getItemMeta();
+            return (meta != null && meta.hasDisplayName());
+        }
 
-        ItemMeta meta = item.getItemMeta();
-        return (meta != null && meta.hasDisplayName());
+        return false;
     }
 
     public static boolean hasLore(ItemStack item) {
-        if(!hasItemMeta(item)) return false;
+        if(hasItemMeta(item)) {
+            ItemMeta meta = item.getItemMeta();
+            return (meta != null && meta.hasLore());
+        }
 
-        ItemMeta meta = item.getItemMeta();
-        return (meta != null && meta.hasLore());
+        return false;
     }
 
     public static boolean doesAnyLoreContain(ItemStack item, String string) {
-        if(!hasLore(item)) return false;
-        ItemMeta meta = item.getItemMeta();
+        if(hasLore(item)) {
+            ItemMeta meta = item.getItemMeta();
+            if(meta == null) return false;
 
-        List<String> loreList = meta.getLore();
-        return loreList.stream().anyMatch(line -> line.contains(string));
+            List<String> loreList = meta.getLore();
+            if(loreList == null || loreList.isEmpty()) return false;
+
+            return loreList.stream().anyMatch(line -> line.contains(string));
+        }
+
+        return false;
     }
 }
