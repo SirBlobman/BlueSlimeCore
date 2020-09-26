@@ -19,7 +19,7 @@
         <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.</bukkit.plugin.description>
 
         <bukkit.plugin.main>com.SirBlobman.core.CorePlugin</bukkit.plugin.main>
-        <bukkit.plugin.version>1.0.3</bukkit.plugin.version>
+        <bukkit.plugin.version>1.0.4</bukkit.plugin.version>
     </properties>
 
     <repositories>
@@ -119,10 +119,11 @@
                 <version>3.2.4</version>
 
                 <configuration>
-                    <shadeSourcesContent>true</shadeSourcesContent>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <createSourcesJar>true</createSourcesJar>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
                     <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
 
+                    <shadeSourcesContent>true</shadeSourcesContent>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
                     <shadedClassifierName>shaded</shadedClassifierName>
 
