@@ -70,6 +70,8 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
         if(!this.equals(holder)) return;
 
         Inventory clickedInventory = e.getClickedInventory();
+        if(clickedInventory == null) return;
+
         InventoryType clickedInventoryType = clickedInventory.getType();
         ClickType clickType = e.getClick();
         if(clickedInventoryType == InventoryType.PLAYER && clickType.isShiftClick()) {
