@@ -105,6 +105,7 @@
     </dependencies>
 
     <build>
+        <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -120,12 +121,8 @@
 
                 <configuration>
                     <createSourcesJar>true</createSourcesJar>
-                    <createDependencyReducedPom>true</createDependencyReducedPom>
-                    <finalName>${bukkit.plugin.name}-${bukkit.plugin.version}</finalName>
-
                     <shadeSourcesContent>true</shadeSourcesContent>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <shadedClassifierName>shaded</shadedClassifierName>
+					<shadedArtifactAttached>true</shadedArtifactAttached>
 
                     <relocations>
                         <relocation>
