@@ -122,7 +122,7 @@
                 <configuration>
                     <createSourcesJar>true</createSourcesJar>
                     <shadeSourcesContent>true</shadeSourcesContent>
-			        <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <finalName>${project.build.finalName}</finalName>
 
                     <relocations>
                         <relocation>
