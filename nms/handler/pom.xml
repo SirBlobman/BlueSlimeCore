@@ -132,5 +132,13 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- NMS 1_16_R3 -->
+        <dependency>
+            <groupId>com.SirBlobman.api.nms</groupId>
+            <artifactId>nms-1_16_R3</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
