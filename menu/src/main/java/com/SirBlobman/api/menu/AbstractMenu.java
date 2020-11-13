@@ -6,6 +6,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import com.SirBlobman.api.item.ItemBuilder;
+import com.SirBlobman.api.item.SkullBuilder;
+import com.SirBlobman.api.menu.button.AbstractButton;
+import com.SirBlobman.api.nms.HeadHandler;
+import com.SirBlobman.api.utility.MessageUtility;
+import com.SirBlobman.api.utility.Validate;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -23,13 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-
-import com.SirBlobman.api.item.ItemBuilder;
-import com.SirBlobman.api.item.SkullBuilder;
-import com.SirBlobman.api.menu.button.AbstractButton;
-import com.SirBlobman.api.nms.HeadHandler;
-import com.SirBlobman.api.utility.MessageUtility;
-import com.SirBlobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XMaterial;
 
@@ -112,7 +112,7 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
         return this.player;
     }
 
-    public final void open() {
+    public void open() {
         JavaPlugin plugin = getPlugin();
         Player player = getPlayer();
         player.closeInventory();
