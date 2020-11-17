@@ -161,6 +161,9 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
         int damage = section.getInt("damage");
         builder.withDamage(damage);
 
+        Integer model = section.isSet("model") ? section.getInt("model") : null;
+        builder.withModel(model);
+
         String displayName = section.getString("display-name");
         if(displayName != null) {
             String displayNameColored = MessageUtility.color(displayName);

@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.SirBlobman.api.utility.Validate;
+import com.SirBlobman.api.utility.VersionUtility;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.SirBlobman.api.utility.Validate;
-import com.SirBlobman.api.utility.VersionUtility;
 
 import com.cryptomorin.xseries.XMaterial;
 
@@ -67,6 +67,18 @@ public class ItemBuilder {
             this.finalItem.setItemMeta(meta);
         }
 
+        return this;
+    }
+
+    public ItemBuilder withModel(Integer model) {
+        int minorVersion = VersionUtility.getMinorVersion();
+        if(minorVersion < 13) return this;
+
+        ItemMeta meta = this.finalItem.getItemMeta();
+        if(meta == null) return this;
+
+        meta.setCustomModelData(model);
+        this.finalItem.setItemMeta(meta);
         return this;
     }
 
