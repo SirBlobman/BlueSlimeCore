@@ -11,10 +11,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import net.minecraft.server.v1_15_R1.MojangsonParser;
 import net.minecraft.server.v1_15_R1.NBTTagCompound;
-
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public class ItemHandler_1_15_R1 extends ItemHandler {
@@ -31,6 +30,14 @@ public class ItemHandler_1_15_R1 extends ItemHandler {
 
         net.minecraft.server.v1_15_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getName().getText();
+    }
+
+    @Override
+    public String getKeyString(ItemStack item) {
+        if(item == null) return "minecraft:air";
+        Material material = item.getType();
+        NamespacedKey key = material.getKey();
+        return key.toString();
     }
 
     @Override

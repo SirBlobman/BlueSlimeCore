@@ -33,6 +33,14 @@ public class ItemHandler_1_16_R3 extends ItemHandler {
     }
 
     @Override
+    public String getKeyString(ItemStack item) {
+        if(item == null) return "minecraft:air";
+        Material material = item.getType();
+        NamespacedKey key = material.getKey();
+        return key.toString();
+    }
+
+    @Override
     public String toNBT(ItemStack item) {
         NBTTagCompound nbtData = new NBTTagCompound();
         net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);

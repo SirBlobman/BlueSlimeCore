@@ -48,6 +48,8 @@
     </distributionManagement>
     
     <build>
+        <defaultGoal>clean install</defaultGoal>
+
         <plugins>
             <!-- Create Sources Jar -->
             <plugin>

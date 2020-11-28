@@ -4,14 +4,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import net.minecraft.server.v1_13_R2.MojangsonParser;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
-
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 public class ItemHandler_1_13_R2 extends ItemHandler {
@@ -28,6 +28,14 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
 
         net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getName().getText();
+    }
+
+    @Override
+    public String getKeyString(ItemStack item) {
+        if(item == null) return "minecraft:air";
+        Material material = item.getType();
+        NamespacedKey key = material.getKey();
+        return key.toString();
     }
 
     @Override

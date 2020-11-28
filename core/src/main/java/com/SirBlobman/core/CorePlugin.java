@@ -2,8 +2,6 @@ package com.SirBlobman.core;
 
 import java.util.logging.Logger;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.SirBlobman.api.configuration.ConfigurationManager;
 import com.SirBlobman.api.configuration.PlayerDataManager;
 import com.SirBlobman.api.language.LanguageManager;
@@ -12,8 +10,13 @@ import com.SirBlobman.api.nms.bossbar.BossBarHandler;
 import com.SirBlobman.api.nms.scoreboard.ScoreboardHandler;
 import com.SirBlobman.api.update.UpdateChecker;
 import com.SirBlobman.api.utility.VersionUtility;
+import com.SirBlobman.core.command.CommandItemInfo;
+import com.SirBlobman.core.command.CommandItemToNBT;
+import com.SirBlobman.core.command.CommandItemToYML;
 
-public class CorePlugin extends JavaPlugin {
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class CorePlugin extends JavaPlugin {
     private final MultiVersionHandler multiVersionHandler;
     private final ConfigurationManager configurationManager;
     private final LanguageManager languageManager;
@@ -39,6 +42,10 @@ public class CorePlugin extends JavaPlugin {
 
         printMultiVersionInformation();
         logger.info("Successfully enabled SirBlobman Core.");
+
+        new CommandItemInfo(this).register();
+        new CommandItemToNBT(this).register();
+        new CommandItemToYML(this).register();
 
         UpdateChecker updateChecker = new UpdateChecker(this, 83189L);
         updateChecker.runCheck();

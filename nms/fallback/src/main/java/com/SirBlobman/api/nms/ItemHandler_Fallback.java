@@ -14,6 +14,11 @@ public class ItemHandler_Fallback extends ItemHandler {
     }
 
     @Override
+    public String getKeyString(ItemStack item) {
+        return "N/A";
+    }
+
+    @Override
     public String toNBT(ItemStack item) {
         return "{}";
     }

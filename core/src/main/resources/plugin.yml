@@ -10,6 +10,32 @@ load: STARTUP
 authors:
   - "SirBlobman"
 
-included-api-list:
+provides:
   - "SirBlobmanAPI"
   - "XSeries"
+
+commands:
+  item-info:
+    description: "A debug command to show information about an item."
+    usage: "/<command>"
+    permission: "sirblobman.core.command.item-info"
+    aliases:
+      - "iteminfo"
+      - "iteminformation"
+      - "item-information"
+
+  item-to-nbt:
+    description: "A debug command to show an item as an NBT string."
+    usage: "/<command> [pretty]"
+    permission: "sirblobman.core.command.item-to-nbt"
+    aliases:
+      - "itemtonbt"
+      - "itemtojson"
+      - "item-to-json"
+
+  item-to-yml:
+    description: "A debug command to show an item as a YML configuration value."
+    usage: "/<command>"
+    permission: "sirblobman.core.command.item-to-yml"
+    aliases:
+      - "itemtoyml"

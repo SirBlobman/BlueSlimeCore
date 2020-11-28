@@ -8,10 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
-import net.minecraft.server.v1_8_R3.MojangsonParseException;
-import net.minecraft.server.v1_8_R3.MojangsonParser;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 public class ItemHandler_1_8_R3 extends ItemHandler {
     public ItemHandler_1_8_R3(JavaPlugin plugin) {
@@ -27,6 +25,17 @@ public class ItemHandler_1_8_R3 extends ItemHandler {
 
         net.minecraft.server.v1_8_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getName();
+    }
+
+    @Override
+    public String getKeyString(ItemStack item) {
+        if(item == null) return "minecraft:air";
+        net.minecraft.server.v1_8_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
+        Item nmsItem = nmsItemStack.getItem();
+
+        MinecraftKey minecraftKey = Item.REGISTRY.c(nmsItem);
+        if(minecraftKey == null) return "minecraft:air";
+        return minecraftKey.toString();
     }
 
     @Override

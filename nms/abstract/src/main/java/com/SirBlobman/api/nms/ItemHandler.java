@@ -9,6 +9,7 @@ public abstract class ItemHandler extends Handler {
     }
 
     public abstract String getLocalizedName(ItemStack item);
+    public abstract String getKeyString(ItemStack item);
 
     public abstract String toNBT(ItemStack item);
     public abstract ItemStack fromNBT(String nbtJSON);
