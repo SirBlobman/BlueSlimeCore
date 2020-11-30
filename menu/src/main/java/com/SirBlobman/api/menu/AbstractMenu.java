@@ -74,7 +74,7 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
 
         InventoryType clickedInventoryType = clickedInventory.getType();
         ClickType clickType = e.getClick();
-        if(clickedInventoryType == InventoryType.PLAYER && clickType.isShiftClick()) {
+        if(clickedInventoryType == InventoryType.PLAYER && clickType.isShiftClick() && shouldCancelShiftClickFromPlayerInventory()) {
             e.setCancelled(true);
             return;
         }
@@ -123,6 +123,10 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
 
     public HeadHandler getHeadHandler() {
         return null;
+    }
+
+    public boolean shouldCancelShiftClickFromPlayerInventory() {
+        return true;
     }
 
     protected final void setButton(int slot, AbstractButton button) {

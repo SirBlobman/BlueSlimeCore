@@ -17,6 +17,8 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public final class CommandItemToNBT extends PlayerCommand {
     private final CorePlugin plugin;
@@ -59,8 +61,11 @@ public final class CommandItemToNBT extends PlayerCommand {
 
     private String prettyJSON(Player player, String json) {
         try {
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(json);
+
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(json);
+            return gson.toJson(jsonElement);
         } catch(NoClassDefFoundError | Exception ex) {
             player.sendMessage("Could not parse into pretty JSON, sending normal...");
             return json;
