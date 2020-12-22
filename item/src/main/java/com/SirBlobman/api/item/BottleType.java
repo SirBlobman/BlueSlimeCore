@@ -10,8 +10,8 @@ public enum BottleType {
     public ItemStack getItem() {
         switch(this) {
             case BOTTLE: return XMaterial.POTION.parseItem();
-            case SPLASH: return XMaterial.SPLASH_POTION.parseItem(true);
-            case LINGERING: return XMaterial.LINGERING_POTION.parseItem(true);
+            case SPLASH: return XMaterial.SPLASH_POTION.parseItem();
+            case LINGERING: return XMaterial.LINGERING_POTION.parseItem();
             default: break;
         }
 
