@@ -3,9 +3,9 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.SirBlobman.api.nms</groupId>
+        <groupId>com.github.sirblobman.api.nms</groupId>
         <artifactId>nms-parent</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -31,7 +31,7 @@
 
         <!-- NMS BossBar -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-bossbar</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -39,7 +39,7 @@
 
         <!-- NMS Scoreboard -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-scoreboard</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -47,7 +47,7 @@
 
         <!-- NMS Fallback -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-fallback</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -55,7 +55,7 @@
 
         <!-- NMS 1_7_R4 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_7_R4</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -63,7 +63,7 @@
 
         <!-- NMS 1_8_R3 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_8_R3</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -71,7 +71,7 @@
 
         <!-- NMS 1_9_R2 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_9_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -79,7 +79,7 @@
 
         <!-- NMS 1_10_R1 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_10_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -87,7 +87,7 @@
 
         <!-- NMS 1_11_R1 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_11_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -95,7 +95,7 @@
 
         <!-- NMS 1_12_R1 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_12_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -103,7 +103,7 @@
 
         <!-- NMS 1_13_R2 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_13_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -111,7 +111,7 @@
 
         <!-- NMS 1_14_R1 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_14_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -119,23 +119,15 @@
 
         <!-- NMS 1_15_R1 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_15_R1</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- NMS 1_16_R2 -->
-        <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
-            <artifactId>nms-1_16_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <!-- NMS 1_16_R3 -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-1_16_R3</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>

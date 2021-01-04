@@ -3,9 +3,9 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.SirBlobman.api</groupId>
+        <groupId>com.github.sirblobman.api</groupId>
         <artifactId>parent</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -20,8 +20,8 @@
         <bukkit.plugin.prefix>SirBlobman Core</bukkit.plugin.prefix>
         <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.</bukkit.plugin.description>
 
-        <bukkit.plugin.main>com.SirBlobman.core.CorePlugin</bukkit.plugin.main>
-        <bukkit.plugin.version>1.0.10</bukkit.plugin.version>
+        <bukkit.plugin.main>com.github.sirblobman.api.core.CorePlugin</bukkit.plugin.main>
+        <bukkit.plugin.version>2.0.0</bukkit.plugin.version>
     </properties>
 
     <repositories>
@@ -43,7 +43,7 @@
 
         <!-- SirBlobmanAPI Utility -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>utility</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -51,7 +51,7 @@
 
         <!-- SirBlobmanAPI Item -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>item</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -59,7 +59,7 @@
 
         <!-- SirBlobmanAPI Configuration -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>configuration</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -67,7 +67,7 @@
 
         <!-- SirBlobmanAPI Language -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>language</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -75,7 +75,7 @@
 
         <!-- SirBlobmanAPI Command -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>command</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -83,7 +83,7 @@
 
         <!-- SirBlobmanAPI Menu -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>menu</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -91,7 +91,7 @@
 
         <!-- SirBlobmanAPI Update -->
         <dependency>
-            <groupId>com.SirBlobman.api</groupId>
+            <groupId>com.github.sirblobman.api</groupId>
             <artifactId>update</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -99,7 +99,7 @@
 
         <!-- SirBlobmanAPI NMS -->
         <dependency>
-            <groupId>com.SirBlobman.api.nms</groupId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
             <artifactId>nms-handler</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
@@ -129,7 +129,7 @@
                     <relocations>
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
-                            <shadedPattern>com.SirBlobman.api.xseries</shadedPattern>
+                            <shadedPattern>com.github.sirblobman.api.xseries</shadedPattern>
                         </relocation>
                     </relocations>
 
