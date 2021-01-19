@@ -31,7 +31,7 @@ public final class MultiVersionHandler {
 
     private Class<?> findHandlerClass(String classType) throws ClassNotFoundException {
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
-        String className = ("com.SirBlobman.api.nms." + classType + "_" + nmsVersion);
+        String className = ("com.github.sirblobman.api.nms." + classType + "_" + nmsVersion);
         return Class.forName(className);
     }
 
@@ -47,7 +47,7 @@ public final class MultiVersionHandler {
         } catch(ReflectiveOperationException ex) {
             Logger logger = plugin.getLogger();
             logger.warning("Could not find '" + classType + "' for version '" + nmsVersion + "'. Searching for fallback handler...");
-            String className = ("com.SirBlobman.api.nms." + classType + "_Fallback");
+            String className = ("com.github.sirblobman.api.nms." + classType + "_Fallback");
 
             try {
                 Class<?> fallbackClass = Class.forName(className);
