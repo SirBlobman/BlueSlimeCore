@@ -2,19 +2,28 @@ package com.github.sirblobman.api.core;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.PlayerDataManager;
+import com.github.sirblobman.api.core.command.CommandDebugEvent;
 import com.github.sirblobman.api.core.command.CommandItemInfo;
+import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
+import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.language.LanguageManager;
-import com.github.sirblobman.api.nms.*;
+import com.github.sirblobman.api.nms.EntityHandler;
+import com.github.sirblobman.api.nms.HeadHandler;
+import com.github.sirblobman.api.nms.ItemHandler;
+import com.github.sirblobman.api.nms.MultiVersionHandler;
+import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.nms.bossbar.BossBarHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.update.UpdateChecker;
 import com.github.sirblobman.api.utility.VersionUtility;
-import com.github.sirblobman.api.core.command.CommandItemToNBT;
-
-import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CorePlugin extends JavaPlugin {
     private final MultiVersionHandler multiVersionHandler;
@@ -32,6 +41,10 @@ public final class CorePlugin extends JavaPlugin {
     public void onLoad() {
         Logger logger = getLogger();
         logger.info("Loading SirBlobman Core...");
+
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.saveDefault("config.yml");
+
         logger.info("Successfully loaded SirBlobman Core.");
     }
 
@@ -43,9 +56,17 @@ public final class CorePlugin extends JavaPlugin {
         printMultiVersionInformation();
         logger.info("Successfully enabled SirBlobman Core.");
 
+        new CommandDebugEvent(this).register();
         new CommandItemInfo(this).register();
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
+
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        if(configuration.getBoolean("command-logger", false)) {
+            PluginManager pluginManager = Bukkit.getPluginManager();
+            pluginManager.registerEvents(new ListenerCommandLogger(this), this);
+        }
 
         UpdateChecker updateChecker = new UpdateChecker(this, 83189L);
         updateChecker.runCheck();

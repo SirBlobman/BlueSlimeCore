@@ -39,3 +39,10 @@ commands:
     permission: "sirblobman.core.command.item-to-yml"
     aliases:
       - "itemtoyml"
+
+  debug-event:
+    description: "Show information about an event class."
+    usage: "/<command> <org.example.event.ClassName>"
+    permission: "sirblobman.core.command.debug-event"
+    aliases:
+      - "debugevent"
