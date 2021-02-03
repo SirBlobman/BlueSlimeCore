@@ -10,10 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+
+import com.cryptomorin.xseries.XMaterial;
 
 public class HeadHandler_1_11_R1 extends HeadHandler {
     public HeadHandler_1_11_R1(JavaPlugin plugin) {

@@ -8,8 +8,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
+import net.minecraft.server.v1_9_R2.Item;
+import net.minecraft.server.v1_9_R2.MinecraftKey;
+import net.minecraft.server.v1_9_R2.MojangsonParseException;
+import net.minecraft.server.v1_9_R2.MojangsonParser;
+import net.minecraft.server.v1_9_R2.NBTTagCompound;
 
 public class ItemHandler_1_9_R2 extends ItemHandler {
     public ItemHandler_1_9_R2(JavaPlugin plugin) {

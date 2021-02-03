@@ -8,6 +8,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import net.minecraft.server.v1_14_R1.EntityPlayer;
@@ -17,9 +20,6 @@ import net.minecraft.server.v1_14_R1.PacketDataSerializer;
 import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerListHeaderFooter;
 
 import io.netty.buffer.Unpooled;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class PlayerHandler_1_14_R1 extends PlayerHandler {
     public PlayerHandler_1_14_R1(JavaPlugin plugin) {

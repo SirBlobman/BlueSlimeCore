@@ -7,38 +7,32 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.language.LanguageManager;
-
 public abstract class PlayerCommand extends Command {
     public PlayerCommand(JavaPlugin plugin, String commandName) {
         super(plugin, commandName);
     }
 
-    public abstract List<String> onTabComplete(Player player, String[] args);
-    public abstract boolean execute(Player player, String[] args);
+    protected abstract List<String> onTabComplete(Player player, String[] args);
+    protected abstract boolean execute(Player player, String[] args);
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        if(!(sender instanceof Player)) return Collections.emptyList();
+    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+        if(sender instanceof Player) {
+            Player player = (Player) sender;
+            return onTabComplete(player, args);
+        }
 
-        Player player = (Player) sender;
-        return onTabComplete(player, args);
+        return Collections.emptyList();
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(CommandSender sender, String[] args) {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             return execute(player, args);
         }
 
-        LanguageManager languageManager = getLanguageManager();
-        if(languageManager != null) {
-            languageManager.sendMessage(sender, "error.player-only", null, true);
-            return true;
-        }
-
-        sender.sendMessage("You are not a player!");
+        sendMessageOrDefault(sender, "error.player-only", "Only players can execute that command.", null, true);
         return true;
     }
 }

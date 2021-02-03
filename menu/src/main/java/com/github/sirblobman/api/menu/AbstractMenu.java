@@ -6,13 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import com.github.sirblobman.api.item.ItemBuilder;
-import com.github.sirblobman.api.item.SkullBuilder;
-import com.github.sirblobman.api.menu.button.AbstractButton;
-import com.github.sirblobman.api.nms.HeadHandler;
-import com.github.sirblobman.api.utility.MessageUtility;
-import com.github.sirblobman.api.utility.Validate;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -30,6 +23,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import com.github.sirblobman.api.item.ItemBuilder;
+import com.github.sirblobman.api.item.SkullBuilder;
+import com.github.sirblobman.api.menu.button.AbstractButton;
+import com.github.sirblobman.api.nms.HeadHandler;
+import com.github.sirblobman.api.utility.MessageUtility;
+import com.github.sirblobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XMaterial;
 
