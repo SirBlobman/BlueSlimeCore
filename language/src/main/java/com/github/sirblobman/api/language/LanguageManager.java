@@ -51,6 +51,19 @@ public final class LanguageManager {
             return (message == null ? missingValue : message);
         }
 
+        String defaultLocaleFileName = getDefaultLocaleFileName();
+        YamlConfiguration defaultConfig = this.configurationManager.get(defaultLocaleFileName);
+
+        if(defaultConfig.isList(key)) {
+            List<String> messageList = defaultConfig.getStringList(key);
+            return String.join("\n", messageList);
+        }
+
+        if(defaultConfig.isString(key)) {
+            String message = defaultConfig.getString(key);
+            return (message == null ? missingValue : message);
+        }
+
         return missingValue;
     }
 
