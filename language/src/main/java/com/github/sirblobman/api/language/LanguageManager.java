@@ -1,8 +1,18 @@
 package com.github.sirblobman.api.language;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -89,6 +99,42 @@ public final class LanguageManager {
         onlinePlayerCollection.forEach(player -> sendMessage(player, key, replacer, color));
     }
 
+    public void saveDefaultLocales() {
+        try {
+            JavaPlugin plugin = this.configurationManager.getPlugin();
+            File pluginFolder = plugin.getDataFolder();
+            File languageFolder = new File(pluginFolder, "language");
+            if(languageFolder.exists()) return;
+
+            Set<String> localeNameSet = getJarLocaleNames();
+            localeNameSet.forEach(this.configurationManager::saveDefault);
+        } catch(Exception ex) {
+            Logger logger = this.configurationManager.getPlugin().getLogger();
+            logger.log(Level.WARNING, "An error occurred while saving the default locale files:", ex);
+        }
+    }
+
+    public void reloadLocales() {
+        try {
+            JavaPlugin javaPlugin = this.configurationManager.getPlugin();
+            File dataFolder = javaPlugin.getDataFolder();
+            File languageFolder = new File(dataFolder, "language");
+
+            FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
+            File[] localeFileArray = languageFolder.listFiles(filenameFilter);
+            if(localeFileArray == null || localeFileArray.length == 0) throw new IllegalStateException("There are no locale files to reload.");
+
+            for(File localeFile : localeFileArray) {
+                String fileName = localeFile.getName();
+                String reloadName = ("language/" + fileName);
+                this.configurationManager.reload(reloadName);
+            }
+        } catch(Exception ex) {
+            Logger logger = this.configurationManager.getPlugin().getLogger();
+            logger.log(Level.WARNING, "An error occurred while reloading locale files:", ex);
+        }
+    }
+
     private String getDefaultLocale() {
         YamlConfiguration configuration = this.configurationManager.get("language.yml");
         return configuration.getString("default-locale");
@@ -123,5 +169,32 @@ public final class LanguageManager {
     private String getDefaultLocaleFileName() {
         String defaultLocale = getDefaultLocale();
         return ("language/" + defaultLocale + ".lang.yml");
+    }
+
+    private Set<String> getJarLocaleNames() {
+        try {
+            JavaPlugin javaPlugin = this.configurationManager.getPlugin();
+            Class<?> class_JavaPlugin = Class.forName("org.bukkit.plugin.java.JavaPlugin");
+            Method method_getFile = class_JavaPlugin.getDeclaredMethod("getFile");
+
+            method_getFile.setAccessible(true);
+            File pluginJarFile = (File) method_getFile.invoke(javaPlugin);
+            JarFile jarFile = new JarFile(pluginJarFile);
+
+            Set<String> jarLocaleNameSet = new HashSet<>();
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while(entries.hasMoreElements()) {
+                JarEntry jarEntry = entries.nextElement();
+                String jarEntryName = jarEntry.getName();
+                if(!jarEntryName.startsWith("language/")) continue;
+                jarLocaleNameSet.add(jarEntryName);
+            }
+
+            return jarLocaleNameSet;
+        } catch(Exception ex) {
+            Logger logger = this.configurationManager.getPlugin().getLogger();
+            logger.log(Level.WARNING, "An error occurred while listing the jar locale files:", ex);
+            return Collections.emptySet();
+        }
     }
 }
