@@ -33,18 +33,34 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
     private final String commandName;
+
+    /**
+     * @param plugin The plugin that will be used to register this command.
+     * @param commandName The name of the command that will be registered. (must match 'plugin.yml' setting)
+     */
     public Command(JavaPlugin plugin, String commandName) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.commandName = Validate.notEmpty(commandName, "commandName cannot be empty or null!");
     }
 
-    protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
-    protected abstract boolean execute(CommandSender sender, String[] args);
-
+    /**
+     * @return The plugin used for registering this command.
+     */
     protected final JavaPlugin getPlugin() {
         return this.plugin;
     }
 
+    /**
+     * @return The name used for registering this command.
+     */
+    protected final String getCommandName() {
+        return this.commandName;
+    }
+
+    /**
+     * Override this method if your plugin has a {@link LanguageManager} from SirBlobmanCore
+     * @return A {@link LanguageManager} or {@code null} if not overridden.
+     */
     @Nullable
     protected LanguageManager getLanguageManager() {
         return null;
@@ -60,19 +76,20 @@ public abstract class Command implements TabExecutor {
         return execute(sender, args);
     }
 
-    public final String getCommandName() {
-        return this.commandName;
-    }
-
+    /**
+     * The method used to register this command to the plugin.
+     */
     public final void register() {
+        JavaPlugin plugin = getPlugin();
         String commandName = getCommandName();
+
         try {
-            PluginCommand pluginCommand = this.plugin.getCommand(commandName);
+            PluginCommand pluginCommand = plugin.getCommand(commandName);
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);
         } catch(Exception ex) {
             Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while registering the command '" + commandName + "':", ex);
+            logger.log(Level.WARNING, "An error occurred while registering the command '/" + commandName + "':", ex);
         }
     }
 
@@ -162,4 +179,18 @@ public abstract class Command implements TabExecutor {
             world.dropItemNaturally(location, item);
         }
     }
+
+    /**
+     * @param sender The {@link CommandSender} that is tab-completing this command.
+     * @param args An array of command arguments.
+     * @return The list of tab completions for this combination of sender and command arguments.
+     */
+    protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
+
+    /**
+     * @param sender The {@link CommandSender} that is executing this command.
+     * @param args An array of command arguments.
+     * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command usage.
+     */
+    protected abstract boolean execute(CommandSender sender, String[] args);
 }

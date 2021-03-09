@@ -12,9 +12,6 @@ public abstract class PlayerCommand extends Command {
         super(plugin, commandName);
     }
 
-    protected abstract List<String> onTabComplete(Player player, String[] args);
-    protected abstract boolean execute(Player player, String[] args);
-
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if(sender instanceof Player) {
@@ -35,4 +32,18 @@ public abstract class PlayerCommand extends Command {
         sendMessageOrDefault(sender, "error.player-only", "Only players can execute that command.", null, true);
         return true;
     }
+
+    /**
+     * @param player The {@link Player} that is tab-completing this command.
+     * @param args An array of command arguments.
+     * @return The list of tab completions for this combination of sender and command arguments.
+     */
+    protected abstract List<String> onTabComplete(Player player, String[] args);
+
+    /**
+     * @param player The {@link Player} that is executing this command.
+     * @param args An array of command arguments.
+     * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command usage.
+     */
+    protected abstract boolean execute(Player player, String[] args);
 }
