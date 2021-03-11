@@ -9,10 +9,10 @@ Just make sure to install the SirBlobmanCore plugin jar on your server!
 **pom.xml**
 ```xml
 <repositories>
-    <!-- CodeMC Public Repository -->
+    <!-- SirBlobman Public Repository -->
     <repository>
-        <id>codemc-public</id>
-        <url>https://repo.codemc.io/repository/maven-public/</url>
+        <id>sirblobman-public</id>
+        <url>https://nexus.sirblobman.xyz/repository/maven-public/</url>
     </repository>
 </repositories>
 
