@@ -12,7 +12,7 @@ Just make sure to install the SirBlobmanCore plugin jar on your server!
     <!-- SirBlobman Public Repository -->
     <repository>
         <id>sirblobman-public</id>
-        <url>https://nexus.sirblobman.xyz/repository/maven-public/</url>
+        <url>https://nexus.sirblobman.xyz/repository/public/</url>
     </repository>
 </repositories>
 
