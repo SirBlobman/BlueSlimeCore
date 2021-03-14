@@ -17,10 +17,10 @@
     </properties>
 
     <repositories>
-        <!-- CodeMC NMS Repository -->
+        <!-- SirBlobman Private Repository -->
         <repository>
-            <id>codemc-nms</id>
-            <url>https://repo.codemc.io/repository/nms/</url>
+            <id>sirblobman-private</id>
+            <url>https://nexus.sirblobman.xyz/repository/private/</url>
         </repository>
     </repositories>
 
