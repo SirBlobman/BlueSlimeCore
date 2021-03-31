@@ -11,7 +11,7 @@ public final class VersionUtility {
     private static final Pattern VERSION_PATTERN = Pattern.compile("(\\(MC: )([\\d.]+)(\\))");
 
     /**
-     * @return The current Minecraft version of the server (Example: 1.16.2)
+     * @return The current Minecraft version of the server (Example: 1.16.5)
      */
     public static String getMinecraftVersion() {
         String bukkitVersion = Bukkit.getVersion();
@@ -20,7 +20,7 @@ public final class VersionUtility {
     }
 
     /**
-     * @return The current NMS version of the server (Example: 1_16_R2)
+     * @return The current NMS version of the server (Example: 1_16_R3)
      */
     public static String getNetMinecraftServerVersion() {
         Server server = Bukkit.getServer();
