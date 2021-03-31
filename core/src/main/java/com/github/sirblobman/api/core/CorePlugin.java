@@ -5,16 +5,14 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
-import com.github.sirblobman.api.configuration.PlayerDataManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
 import com.github.sirblobman.api.core.command.CommandItemInfo;
 import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
-import com.github.sirblobman.api.language.LanguageManager;
+import com.github.sirblobman.api.core.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
@@ -25,18 +23,7 @@ import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.update.UpdateChecker;
 import com.github.sirblobman.api.utility.VersionUtility;
 
-public final class CorePlugin extends JavaPlugin {
-    private final MultiVersionHandler multiVersionHandler;
-    private final ConfigurationManager configurationManager;
-    private final LanguageManager languageManager;
-    private final PlayerDataManager playerDataManager;
-    public CorePlugin() {
-        this.multiVersionHandler = new MultiVersionHandler(this);
-        this.configurationManager = new ConfigurationManager(this);
-        this.languageManager = new LanguageManager(this, this.configurationManager);
-        this.playerDataManager = new PlayerDataManager(this);
-    }
-
+public final class CorePlugin extends ConfigurablePlugin {
     @Override
     public void onLoad() {
         Logger logger = getLogger();
@@ -52,9 +39,7 @@ public final class CorePlugin extends JavaPlugin {
     public void onEnable() {
         Logger logger = getLogger();
         logger.info("Enabling SirBlobman Core...");
-
         printMultiVersionInformation();
-        logger.info("Successfully enabled SirBlobman Core.");
 
         new CommandDebugEvent(this).register();
         new CommandItemInfo(this).register();
@@ -70,6 +55,8 @@ public final class CorePlugin extends JavaPlugin {
 
         UpdateChecker updateChecker = new UpdateChecker(this, 83189L);
         updateChecker.runCheck();
+
+        logger.info("Successfully enabled SirBlobman Core.");
     }
 
     @Override
@@ -77,22 +64,6 @@ public final class CorePlugin extends JavaPlugin {
         Logger logger = getLogger();
         logger.info("Disabling SirBlobman Core...");
         logger.info("Successfully disabled SirBlobman Core.");
-    }
-
-    public MultiVersionHandler getMultiVersionHandler() {
-        return this.multiVersionHandler;
-    }
-
-    public ConfigurationManager getConfigurationManager() {
-        return this.configurationManager;
-    }
-
-    public LanguageManager getLanguageManager() {
-        return this.languageManager;
-    }
-
-    public PlayerDataManager getPlayerDataManager() {
-        return this.playerDataManager;
     }
 
     private void printMultiVersionInformation() {

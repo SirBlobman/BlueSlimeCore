@@ -2,6 +2,7 @@ package com.github.sirblobman.api.core.command;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +21,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
@@ -34,7 +39,13 @@ public class CommandDebugEvent extends Command {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return (args.length == 1 ? Collections.singletonList("org.bukkit.event.Event") : Collections.emptyList());
+        if(args.length == 1) {
+            List<Class<?>> exampleClassList = Arrays.asList(PlayerInteractEvent.class, PlayerTeleportEvent.class, EntitySpawnEvent.class);
+            List<String> valueList = exampleClassList.stream().map(Class::getName).collect(Collectors.toList());
+            return getMatching(valueList, args[0]);
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
@@ -50,7 +61,7 @@ public class CommandDebugEvent extends Command {
             Class<?> namedClass = Class.forName(className);
             Class<? extends Event> eventClass = namedClass.asSubclass(Event.class);
 
-            Method method_getHandlerList = eventClass.getDeclaredMethod("getHandlerList");
+            Method method_getHandlerList = eventClass.getMethod("getHandlerList");
             Map<EventPriority, Map<String, List<String>>> eventMap = new EnumMap<>(EventPriority.class);
             HandlerList handlerList = (HandlerList) method_getHandlerList.invoke(null);
 
