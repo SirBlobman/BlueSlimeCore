@@ -20,10 +20,15 @@ import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.nms.bossbar.BossBarHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
-import com.github.sirblobman.api.update.UpdateChecker;
+import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
 
 public final class CorePlugin extends ConfigurablePlugin {
+    private final UpdateManager updateManager;
+    public CorePlugin() {
+        this.updateManager = new UpdateManager(this);
+    }
+
     @Override
     public void onLoad() {
         Logger logger = getLogger();
@@ -41,6 +46,9 @@ public final class CorePlugin extends ConfigurablePlugin {
         logger.info("Enabling SirBlobman Core...");
         printMultiVersionInformation();
 
+        UpdateManager updateManager = getUpdateManager();
+        updateManager.addResource(this, 83189L);
+
         new CommandDebugEvent(this).register();
         new CommandItemInfo(this).register();
         new CommandItemToNBT(this).register();
@@ -53,9 +61,7 @@ public final class CorePlugin extends ConfigurablePlugin {
             pluginManager.registerEvents(new ListenerCommandLogger(this), this);
         }
 
-        UpdateChecker updateChecker = new UpdateChecker(this, 83189L);
-        updateChecker.runCheck();
-
+        updateManager.checkForUpdates();
         logger.info("Successfully enabled SirBlobman Core.");
     }
 
@@ -64,6 +70,10 @@ public final class CorePlugin extends ConfigurablePlugin {
         Logger logger = getLogger();
         logger.info("Disabling SirBlobman Core...");
         logger.info("Successfully disabled SirBlobman Core.");
+    }
+
+    public UpdateManager getUpdateManager() {
+        return this.updateManager;
     }
 
     private void printMultiVersionInformation() {
