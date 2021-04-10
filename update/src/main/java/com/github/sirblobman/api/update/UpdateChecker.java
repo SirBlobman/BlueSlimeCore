@@ -17,6 +17,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.sirblobman.api.utility.Validate;
 
+/**
+ * @deprecated
+ * Your plugin should depend on SirBlobmanCore and register the version with the {@link UpdateManager} instead.
+ */
+@Deprecated
 public final class UpdateChecker extends BukkitRunnable {
     private final JavaPlugin plugin;
     private final long resourceId;
