@@ -156,9 +156,8 @@ public final class LanguageManager {
             for(Locale locale : localeArray) {
                 String language = locale.getLanguage();
                 String country = locale.getCountry();
-
-                String localeName = String.format(Locale.US, "%s_%s", language, country);
-                String localeFileName = String.format("language/%s.lang.yml", localeName);
+                String localeFileName = String.format(Locale.US,"language/%s_%s.lang.yml", language, country)
+                        .toLowerCase(Locale.US);
 
                 InputStream resource = this.configurationManager.getResourceHolder().getResource(localeFileName);
                 if(resource != null) localeNameSet.add(localeFileName);
@@ -187,14 +186,18 @@ public final class LanguageManager {
         String localeName = getLocale(sender);
         YamlConfiguration configuration = getLocaleConfiguration(localeName);
 
-        YamlConfiguration defaultConfiguration = getDefaultLocaleConfiguration();
-        configuration.setDefaults(defaultConfiguration);
+        String defaultLocaleName = getDefaultLocale();
+        if(!defaultLocaleName.equals(localeName)) {
+            YamlConfiguration defaultConfiguration = getDefaultLocaleConfiguration();
+            configuration.setDefaults(defaultConfiguration);
+        }
+
         return configuration;
     }
 
     @NotNull
     private String getDefaultLocale() {
-        YamlConfiguration configuration = this.configurationManager.get("locale.yml");
+        YamlConfiguration configuration = this.configurationManager.get("language.yml");
         String defaultLocaleName = configuration.getString("default-locale");
         return (defaultLocaleName == null ? "en_us" : defaultLocaleName);
     }
