@@ -15,139 +15,151 @@ import java.util.logging.Logger;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.Validate;
 
 public final class ConfigurationManager {
-    private final JavaPlugin plugin;
+    private final File baseFolder;
+    private final IResourceHolder resourceHolder;
     private final Map<String, YamlConfiguration> configurationMap;
+
+    /**
+     * A configuration manager that use the {@link Plugin#getDataFolder()} as the base folder.
+     * @param plugin The plugin being used.
+     */
     public ConfigurationManager(JavaPlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+        this(new WrapperPluginResourceHolder(plugin));
+    }
+
+    public ConfigurationManager(IResourceHolder resourceHolder) {
+        this.resourceHolder = Validate.notNull(resourceHolder, "resourceHolder must not be null!");
+        this.baseFolder = resourceHolder.getDataFolder();
         this.configurationMap = new HashMap<>();
     }
 
     /**
-     * @return The {@link JavaPlugin} that will be used to create/save the configs
+     * @return The {@link IResourceHolder} managing these configuration files.
      */
-    public JavaPlugin getPlugin() {
-        return this.plugin;
+    public IResourceHolder getResourceHolder() {
+        return this.resourceHolder;
+    }
+
+    /**
+     * @return The base directory that all files will be contained in.
+     */
+    public File getBaseFolder() {
+        return this.baseFolder;
     }
 
     /**
      * Copies the default configuration from the jar if it does not already exist.
-     * @param fileName The name of the configuration to copy
+     * @param fileName The relative name of the configuration to copy
      */
     public void saveDefault(String fileName) {
-        File absoluteFile = getAbsoluteFile(fileName);
-        saveDefault(fileName, absoluteFile);
+        File file = getFile(fileName);
+        saveDefault(fileName, file);
     }
 
     /**
-     * @param fileName The name of the configuration to get
-     * @return A configuration from memory. If the configuration is not in memory it will be loaded
+     * @param fileName The relative name of the configuration to get
+     * @return A configuration from memory. If the configuration is not in memory it will be loaded from strorage first.
+     *         If a file can't be loaded, an empty configuration will be returned.
      */
     public YamlConfiguration get(String fileName) {
-        File absoluteFile = getAbsoluteFile(fileName);
-        String absoluteFileName = absoluteFile.getAbsolutePath();
+        YamlConfiguration configuration = this.configurationMap.getOrDefault(fileName, null);
+        if(configuration != null) return configuration;
 
-        YamlConfiguration configuration = this.configurationMap.getOrDefault(absoluteFileName, null);
-        if(configuration == null) {
-            reload(fileName);
-            configuration = this.configurationMap.getOrDefault(absoluteFileName, new YamlConfiguration());
-        }
-
-        return configuration;
+        reload(fileName);
+        return this.configurationMap.getOrDefault(fileName, new YamlConfiguration());
     }
 
     /**
-     * Save a configuration from memory to a file
-     * @param fileName The name of the configuration to save
+     * Save a configuration from memory to storage.
+     * @param fileName The relative name of the configuration.
      */
     public void save(String fileName) {
-        File absoluteFile = getAbsoluteFile(fileName);
-        String absoluteFileName = absoluteFile.getAbsolutePath();
-
-        YamlConfiguration configuration = this.configurationMap.getOrDefault(absoluteFileName, null);
-        if(configuration == null) return;
-
         try {
-            configuration.save(absoluteFile);
+            YamlConfiguration configuration = this.configurationMap.getOrDefault(fileName, null);
+            if(configuration == null) return;
+
+            File file = getFile(fileName);
+            configuration.save(file);
         } catch(IOException ex) {
-            Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "Failed to save config '" + fileName + "' because an I/O error occurred:", ex);
+            Logger logger = getResourceHolder().getLogger();
+            logger.log(Level.WARNING, "An I/O exception occurred while saving a configuration file:", ex);
         }
     }
 
     /**
-     * Reload a configuration from a file into memory
-     * @param fileName The name of the configuration to reload
+     * Load a configuration from storage into memory.
+     * @param fileName The relative name of the configuration.
      */
     public void reload(String fileName) {
-        File absoluteFile = getAbsoluteFile(fileName);
-        String absoluteFilePath = absoluteFile.getAbsolutePath();
-        if(!absoluteFile.exists()) {
-            Logger logger = this.plugin.getLogger();
-            logger.warning("Failed to reload config '" + fileName + "' because the file does not exist!");
+        File file = getFile(fileName);
+        IResourceHolder resourceHolder = getResourceHolder();
+        if(!file.exists() || !file.isFile()) {
+            Logger logger = resourceHolder.getLogger();
+            logger.warning("'" + fileName + "' could not be reloaded because it is not a file or does not exist!");
             return;
         }
 
         try {
             YamlConfiguration configuration = new YamlConfiguration();
-            InputStream jarStream = this.plugin.getResource(fileName);
+            InputStream jarStream = getResourceHolder().getResource(fileName);
             if(jarStream != null) {
                 InputStreamReader jarStreamReader = new InputStreamReader(jarStream, StandardCharsets.UTF_8);
-                YamlConfiguration jarConfiguration = new YamlConfiguration();
-                jarConfiguration.load(jarStreamReader);
+                YamlConfiguration jarConfiguration = YamlConfiguration.loadConfiguration(jarStreamReader);
                 configuration.setDefaults(jarConfiguration);
             }
 
-            configuration.load(absoluteFile);
-            this.configurationMap.put(absoluteFilePath, configuration);
+            configuration.load(file);
+            this.configurationMap.put(fileName, configuration);
         } catch(IOException | InvalidConfigurationException ex) {
-            Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "Failed to reload config '" + fileName + "' because an I/O error occurred:", ex);
+            Logger logger = resourceHolder.getLogger();
+            logger.log(Level.WARNING, "An I/O exception occurred while loading a configuration file:", ex);
         }
     }
 
-    private File getAbsoluteFile(String fileName) {
+    private File getFile(String fileName) {
         Validate.notEmpty(fileName, "fileName cannot be null or empty!");
-        File pluginFolder = this.plugin.getDataFolder();
-        File relativeFile = new File(pluginFolder, fileName);
-        return relativeFile.getAbsoluteFile();
+        File baseFolder = getBaseFolder();
+        return new File(baseFolder, fileName);
     }
 
-    private void saveDefault(String jarName, File absoluteFile) {
-        Validate.notEmpty(jarName, "jarName cannot be null or empty!");
-        Validate.notNull(absoluteFile, "absoluteFile cannot be null!");
-        if(absoluteFile.exists()) return;
+    private void saveDefault(String fileName, File realFile) {
+        Validate.notEmpty(fileName, "jarName cannot be null or empty!");
+        Validate.notNull(realFile, "realFile cannot be null!");
+        if(realFile.exists()) return;
 
-        InputStream jarStream = this.plugin.getResource(jarName);
+        IResourceHolder resourceHolder = getResourceHolder();
+        InputStream jarStream = resourceHolder.getResource(fileName);
         if(jarStream == null) {
-            Logger logger = this.plugin.getLogger();
-            logger.warning("Failed to save default config '" + jarName + "' because it does not exist in the jar.");
+            Logger logger = resourceHolder.getLogger();
+            logger.warning("Failed to save default config '" + fileName + "' because it does not exist in the jar.");
             return;
         }
 
         try {
-            File parentFile = absoluteFile.getParentFile();
+            File parentFile = realFile.getParentFile();
             if(parentFile != null && !parentFile.exists() && !parentFile.mkdirs()) {
-                Logger logger = this.plugin.getLogger();
-                logger.warning("Failed to save default config '" + jarName + "' because the parent folder could not be created.");
+                Logger logger = resourceHolder.getLogger();
+                logger.warning("Failed to save default config '" + fileName + "' because the parent folder could not be created.");
                 return;
             }
 
-            if(!absoluteFile.createNewFile()) {
-                Logger logger = this.plugin.getLogger();
-                logger.warning("Failed to save default config '" + jarName + "' because the file could not be created.");
+            if(!realFile.createNewFile()) {
+                Logger logger = resourceHolder.getLogger();
+                logger.warning("Failed to save default config '" + fileName + "' because the file could not be created.");
                 return;
             }
 
-            Path absolutePath = absoluteFile.toPath();
+            Path absolutePath = realFile.toPath();
             Files.copy(jarStream, absolutePath, StandardCopyOption.REPLACE_EXISTING);
         } catch(IOException ex) {
-            Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING,"Failed to save default config '" + jarName + "' because an I/O error occurred:", ex);
+            Logger logger = resourceHolder.getLogger();
+            logger.log(Level.WARNING,"An I/O exception occurred while saving a default file:", ex);
         }
     }
 }
