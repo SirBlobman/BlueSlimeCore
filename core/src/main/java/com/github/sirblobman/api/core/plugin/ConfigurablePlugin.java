@@ -18,7 +18,7 @@ public abstract class ConfigurablePlugin extends JavaPlugin {
         this.configurationManager = new ConfigurationManager(this);
         this.multiVersionHandler = new MultiVersionHandler(this);
         this.playerDataManager = new PlayerDataManager(this);
-        this.languageManager = new LanguageManager(this, this.configurationManager);
+        this.languageManager = new LanguageManager(this.configurationManager);
     }
 
     @Override
