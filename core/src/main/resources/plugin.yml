@@ -46,3 +46,10 @@ commands:
     permission: "sirblobman.core.command.debug-event"
     aliases:
       - "debugevent"
+
+  global-gamerule:
+    description: "Change a gamerule for every world on your server at once."
+    usage: "/global-gamerule <gamerule> <value>"
+    permission: "sirblobman.core.command.global-gamerule"
+    aliases:
+      - "globalgamerule"

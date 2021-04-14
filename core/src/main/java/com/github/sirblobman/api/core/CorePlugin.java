@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
+import com.github.sirblobman.api.core.command.CommandGlobalGamerule;
 import com.github.sirblobman.api.core.command.CommandItemInfo;
 import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
@@ -50,6 +51,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         updateManager.addResource(this, 83189L);
 
         new CommandDebugEvent(this).register();
+        new CommandGlobalGamerule(this).register();
         new CommandItemInfo(this).register();
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
