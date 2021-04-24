@@ -39,6 +39,16 @@ public class ItemHandler_Fallback extends ItemHandler {
     }
 
     @Override
+    public ItemStack fromBase64String(String string) {
+        return null;
+    }
+
+    @Override
+    public String toBase64String(ItemStack item) {
+        return null;
+    }
+
+    @Override
     public ItemStack removeCustomNBT(ItemStack item, String key) {
         return item;
     }

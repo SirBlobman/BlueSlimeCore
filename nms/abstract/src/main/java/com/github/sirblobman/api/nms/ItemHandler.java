@@ -1,6 +1,5 @@
 package com.github.sirblobman.api.nms;
 
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class ItemHandler extends Handler {
@@ -8,13 +7,16 @@ public abstract class ItemHandler extends Handler {
         super(plugin);
     }
 
-    public abstract String getLocalizedName(ItemStack item);
-    public abstract String getKeyString(ItemStack item);
+    public abstract String getLocalizedName(org.bukkit.inventory.ItemStack item);
+    public abstract String getKeyString(org.bukkit.inventory.ItemStack item);
 
-    public abstract String toNBT(ItemStack item);
-    public abstract ItemStack fromNBT(String nbtJSON);
+    public abstract String toNBT(org.bukkit.inventory.ItemStack item);
+    public abstract org.bukkit.inventory.ItemStack fromNBT(String nbtJSON);
 
-    public abstract ItemStack setCustomNBT(ItemStack item, String key, String value);
-    public abstract String getCustomNBT(ItemStack item, String key, String defaultValue);
-    public abstract ItemStack removeCustomNBT(ItemStack item, String key);
+    public abstract org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key, String value);
+    public abstract org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key);
+    public abstract String getCustomNBT(org.bukkit.inventory.ItemStack item, String key, String defaultValue);
+
+    public abstract org.bukkit.inventory.ItemStack fromBase64String(String string);
+    public abstract String toBase64String(org.bukkit.inventory.ItemStack item);
 }
