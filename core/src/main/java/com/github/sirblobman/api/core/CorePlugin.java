@@ -10,9 +10,11 @@ import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
 import com.github.sirblobman.api.core.command.CommandGlobalGamerule;
 import com.github.sirblobman.api.core.command.CommandItemInfo;
+import com.github.sirblobman.api.core.command.CommandItemToBase64;
 import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
+import com.github.sirblobman.api.core.listener.ListenerLanguage;
 import com.github.sirblobman.api.core.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
@@ -53,13 +55,16 @@ public final class CorePlugin extends ConfigurablePlugin {
         new CommandDebugEvent(this).register();
         new CommandGlobalGamerule(this).register();
         new CommandItemInfo(this).register();
+        new CommandItemToBase64(this).register();
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvents(new ListenerLanguage(), this);
 
         ConfigurationManager configurationManager = getConfigurationManager();
         YamlConfiguration configuration = configurationManager.get("config.yml");
         if(configuration.getBoolean("command-logger", false)) {
-            PluginManager pluginManager = Bukkit.getPluginManager();
             pluginManager.registerEvents(new ListenerCommandLogger(this), this);
         }
 

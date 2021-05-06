@@ -24,6 +24,15 @@ commands:
       - "iteminformation"
       - "item-information"
 
+  item-to-base64:
+    description: "A debug command to show an item as a Base64 string."
+    usage: "/<command>"
+    permission: "sirblobman.core.command.item-to-base64"
+    aliases:
+      - "item-to-b64"
+      - "itemtobase64"
+      - "itemtob64"
+
   item-to-nbt:
     description: "A debug command to show an item as an NBT string."
     usage: "/<command> [pretty]"

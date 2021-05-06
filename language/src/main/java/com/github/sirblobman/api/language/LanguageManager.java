@@ -5,14 +5,18 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class LanguageManager {
     private final ConfigurationManager configurationManager;
+    private final Map<UUID, String> cachedLocaleMap;
 
     /**
      * @deprecated Used {@link #LanguageManager(ConfigurationManager)} instead.
@@ -44,6 +49,23 @@ public final class LanguageManager {
      */
     public LanguageManager(ConfigurationManager configurationManager) {
         this.configurationManager = Validate.notNull(configurationManager, "plugin must not be null!");
+        this.cachedLocaleMap = new HashMap<>();
+    }
+
+    public void updateCachedLocale(Player player) {
+        int minorVersion = VersionUtility.getMinorVersion();
+        if(minorVersion < 12) return;
+
+        UUID uuid = player.getUniqueId();
+        String locale = player.getLocale();
+        if(locale == null) locale = getDefaultLocale();
+
+        this.cachedLocaleMap.put(uuid, locale);
+    }
+
+    public void removeCachedLocale(OfflinePlayer player) {
+        UUID uuid = player.getUniqueId();
+        this.cachedLocaleMap.remove(uuid);
     }
 
     /**
@@ -204,6 +226,13 @@ public final class LanguageManager {
 
     @NotNull
     private String getLocale(CommandSender sender) {
+        if(sender instanceof OfflinePlayer) {
+            UUID uuid = ((OfflinePlayer) sender).getUniqueId();
+            if(this.cachedLocaleMap.containsKey(uuid)) {
+                return this.cachedLocaleMap.get(uuid);
+            }
+        }
+
         int minorVersion = VersionUtility.getMinorVersion();
         if(minorVersion >= 12 && sender instanceof Player) {
             Player player = (Player) sender;
