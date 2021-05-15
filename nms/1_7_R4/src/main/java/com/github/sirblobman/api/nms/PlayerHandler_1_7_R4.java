@@ -4,10 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.EnumClientCommand;
 import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
 public class PlayerHandler_1_7_R4 extends PlayerHandler {
     public PlayerHandler_1_7_R4(JavaPlugin plugin) {

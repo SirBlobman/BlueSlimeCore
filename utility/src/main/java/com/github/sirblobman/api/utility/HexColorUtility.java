@@ -1,6 +1,6 @@
 package com.github.sirblobman.api.utility;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
