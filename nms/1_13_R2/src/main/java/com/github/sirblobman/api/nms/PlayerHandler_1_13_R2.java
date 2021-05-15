@@ -12,12 +12,12 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_13_R2.PacketDataSerializer;
 import net.minecraft.server.v1_13_R2.PacketPlayOutPlayerListHeaderFooter;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 
 import io.netty.buffer.Unpooled;
 
