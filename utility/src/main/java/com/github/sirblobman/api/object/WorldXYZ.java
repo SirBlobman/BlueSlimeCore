@@ -97,4 +97,13 @@ public final class WorldXYZ {
     public int getZ() {
         return this.z;
     }
+
+    @Nullable
+    public Location asLocation() {
+        World world = getWorld();
+        if(world == null) return null;
+
+        int x = getX(), y = getY(), z = getZ();
+        return new Location(world, x, y, z);
+    }
 }
