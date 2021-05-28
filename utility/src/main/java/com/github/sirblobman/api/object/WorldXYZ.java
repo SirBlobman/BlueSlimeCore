@@ -19,7 +19,7 @@ public final class WorldXYZ {
     private final UUID worldId;
     private final int x, y, z;
 
-    public WorldXYZ(World world, int x, int y, int z) {
+    private WorldXYZ(World world, int x, int y, int z) {
         this.worldId = Validate.notNull(world, "world must not be null!").getUID();
         this.x = x;
         this.y = y;
