@@ -50,13 +50,10 @@ public class BossBarHandler_BossBarAPI extends BossBarHandler {
     @Override
     public void updateBossBar(Player player, String message, double progress, String color, String style) {
         BossBarWrapper wrapper = getBossBar(player);
-        wrapper.addPlayer(player);
-        
         wrapper.setTitle(message);
         wrapper.setProgress(progress);
         wrapper.setColor(color);
         wrapper.setStyle(style);
-        
         wrapper.setVisible(true);
     }
 }

@@ -5,30 +5,29 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import org.inventivetalent.bossbar.BossBar;
 import org.inventivetalent.bossbar.BossBarAPI;
 import org.inventivetalent.bossbar.BossBarAPI.Color;
 import org.inventivetalent.bossbar.BossBarAPI.Style;
 
 @SuppressWarnings("deprecation")
 public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
+    private BossBar bossBar;
     public BossBarWrapper_BossBarAPI(Player player) {
         super(player);
+        this.bossBar = null;
     }
     
     @Override
     public String getTitle() {
-        Player player = getPlayer();
-        if(player == null) return "N/A";
-        
-        return BossBarAPI.getMessage(player);
+        BossBar bossBar = getBossBar(false);
+        return (bossBar == null ? "N/A" : bossBar.getMessage());
     }
     
     @Override
     public void setTitle(String title) {
-        Player player = getPlayer();
-        if(player == null) return;
-        
-        BossBarAPI.setMessage(player, title);
+        BossBar bossBar = getBossBar(true);
+        if(bossBar != null) bossBar.setMessage(title);
     }
     
     @Override
@@ -68,29 +67,27 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
     
     @Override
     public void setProgress(double progress) {
-        Player player = getPlayer();
-        if(player == null) return;
-        
-        float floatProgress = (float) progress;
-        BossBarAPI.setHealth(player, floatProgress);
+        BossBar bossBar = getBossBar(true);
+        if(bossBar != null) {
+            float floatProgress = (float) progress;
+            bossBar.setProgress(floatProgress);
+        }
     }
     
     @Override
     public double getProgress() {
-        Player player = getPlayer();
-        if(player == null) return 0.0D;
-        
-        return BossBarAPI.getHealth(player);
+        BossBar bossBar = getBossBar(false);
+        return (bossBar == null ? 0.0D : 1.0D);
     }
     
     @Override
     public void addPlayer(Player player) {
-        // Do Nothing
+        setVisible(true);
     }
     
     @Override
     public void removePlayer(Player player) {
-        // Do Nothing
+        setVisible(false);
     }
     
     @Override
@@ -101,12 +98,25 @@ public class BossBarWrapper_BossBarAPI extends BossBarWrapper {
     
     @Override
     public void setVisible(boolean visible) {
-        // Do Nothing
+        BossBar bossBar = getBossBar(visible);
+        if(bossBar != null) bossBar.setVisible(visible);
     }
     
     @Override
     public boolean isVisible() {
+        BossBar bossBar = getBossBar(false);
+        return (bossBar != null && bossBar.isVisible());
+    }
+
+    private BossBar getBossBar(boolean create) {
+        if(this.bossBar != null || !create) {
+            return this.bossBar;
+        }
+
         Player player = getPlayer();
-        return (player != null);
+        if(player == null) return null;
+
+        BossBarAPI.setMessage(player, "", 1.0F);
+        return (this.bossBar = BossBarAPI.getBossBar(player));
     }
 }

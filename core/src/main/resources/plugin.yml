@@ -14,6 +14,9 @@ provides:
   - "SirBlobmanAPI"
   - "XSeries"
 
+softdepend:
+  - "BossBarAPI"
+
 commands:
   item-info:
     description: "A debug command to show information about an item."
