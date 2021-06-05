@@ -63,8 +63,29 @@ public final class ConfigurationManager {
     }
 
     /**
+     * @param fileName The name of the internal file.
+     * @return A configuration stored inside of the resource holder
+     * ({@code null} if the file does not exist or an error occurred.)
+     * @see IResourceHolder#getResource(String)
+     */
+    public YamlConfiguration getInternal(String fileName) {
+        IResourceHolder resourceHolder = getResourceHolder();
+        InputStream inputStream = resourceHolder.getResource(fileName);
+        if(inputStream == null) return null;
+
+        try {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            YamlConfiguration configuration = new YamlConfiguration();
+            configuration.load(inputStreamReader);
+            return configuration;
+        } catch(IOException | InvalidConfigurationException ex) {
+            return null;
+        }
+    }
+
+    /**
      * @param fileName The relative name of the configuration to get
-     * @return A configuration from memory. If the configuration is not in memory it will be loaded from strorage first.
+     * @return A configuration from memory. If the configuration is not in memory it will be loaded from storage first.
      *         If a file can't be loaded, an empty configuration will be returned.
      */
     public YamlConfiguration get(String fileName) {
@@ -107,10 +128,9 @@ public final class ConfigurationManager {
 
         try {
             YamlConfiguration configuration = new YamlConfiguration();
-            InputStream jarStream = getResourceHolder().getResource(fileName);
-            if(jarStream != null) {
-                InputStreamReader jarStreamReader = new InputStreamReader(jarStream, StandardCharsets.UTF_8);
-                YamlConfiguration jarConfiguration = YamlConfiguration.loadConfiguration(jarStreamReader);
+
+            YamlConfiguration jarConfiguration = getInternal(fileName);
+            if(jarConfiguration != null) {
                 configuration.setDefaults(jarConfiguration);
             }
 

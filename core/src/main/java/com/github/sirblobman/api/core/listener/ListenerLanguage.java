@@ -7,24 +7,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.core.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.language.LanguageManager;
 
-public final class ListenerLanguage implements Listener {
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
-    public void onJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-        Set<ConfigurablePlugin> pluginSet = getLanguagePlugins();
-        for(ConfigurablePlugin plugin : pluginSet) {
-            LanguageManager languageManager = plugin.getLanguageManager();
-            languageManager.updateCachedLocale(player);
-        }
+public final class ListenerLanguage extends PluginListener<CorePlugin> {
+    public ListenerLanguage(CorePlugin plugin) {
+        super(plugin);
     }
 
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
@@ -33,7 +26,7 @@ public final class ListenerLanguage implements Listener {
         Set<ConfigurablePlugin> pluginSet = getLanguagePlugins();
         for(ConfigurablePlugin plugin : pluginSet) {
             LanguageManager languageManager = plugin.getLanguageManager();
-            languageManager.removeCachedLocale(player);
+            languageManager.removeCachedLanguage(player);
         }
     }
 

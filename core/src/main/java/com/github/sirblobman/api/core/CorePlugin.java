@@ -2,9 +2,7 @@ package com.github.sirblobman.api.core;
 
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
@@ -34,42 +32,20 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onLoad() {
-        Logger logger = getLogger();
-        logger.info("Loading SirBlobman Core...");
-
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.saveDefault("config.yml");
-
-        logger.info("Successfully loaded SirBlobman Core.");
     }
 
     @Override
     public void onEnable() {
-        Logger logger = getLogger();
-        logger.info("Enabling SirBlobman Core...");
         printMultiVersionInformation();
+
+        registerCommands();
+        registerListeners();
 
         UpdateManager updateManager = getUpdateManager();
         updateManager.addResource(this, 83189L);
-
-        new CommandDebugEvent(this).register();
-        new CommandGlobalGamerule(this).register();
-        new CommandItemInfo(this).register();
-        new CommandItemToBase64(this).register();
-        new CommandItemToNBT(this).register();
-        new CommandItemToYML(this).register();
-
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(new ListenerLanguage(), this);
-
-        ConfigurationManager configurationManager = getConfigurationManager();
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        if(configuration.getBoolean("command-logger", false)) {
-            pluginManager.registerEvents(new ListenerCommandLogger(this), this);
-        }
-
         updateManager.checkForUpdates();
-        logger.info("Successfully enabled SirBlobman Core.");
     }
 
     @Override
@@ -111,6 +87,25 @@ public final class CorePlugin extends ConfigurablePlugin {
             Class<?> objectClass = object.getClass();
             String className = objectClass.getName();
             logger.info(" - " + className);
+        }
+    }
+
+    private void registerCommands() {
+        new CommandDebugEvent(this).register();
+        new CommandGlobalGamerule(this).register();
+        new CommandItemInfo(this).register();
+        new CommandItemToBase64(this).register();
+        new CommandItemToNBT(this).register();
+        new CommandItemToYML(this).register();
+    }
+
+    private void registerListeners() {
+        new ListenerLanguage(this).register();
+
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        if(configuration.getBoolean("command-logger", false)) {
+            new ListenerCommandLogger(this).register();
         }
     }
 }

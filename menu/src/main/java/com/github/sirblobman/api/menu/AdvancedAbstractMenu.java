@@ -149,10 +149,10 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
         ItemBuilder builder = new ItemBuilder(realMaterial);
         builder = checkSkull(builder, realMaterial, section);
 
-        int amount = section.getInt("quantity");
+        int amount = section.getInt("quantity", 1);
         builder.withAmount(amount);
 
-        int damage = section.getInt("damage");
+        int damage = section.getInt("damage", 0);
         builder.withDamage(damage);
 
         Integer model = section.isSet("model") ? section.getInt("model") : null;

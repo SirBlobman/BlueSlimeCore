@@ -2,11 +2,9 @@ package com.github.sirblobman.api.language;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,14 +13,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
+import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
@@ -31,215 +29,239 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class LanguageManager {
+    /** Last Updated: June 04, 2021 19:30 */
+    private static final String[] KNOWN_LANGUAGE_ARRAY = { "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar",
+            "be_by", "bg_bg", "br_fr", "brb", "bs_ba", "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de",
+            "el_gr", "en_au", "en_ca", "en_gb", "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar",
+            "es_cl", "es_ec", "es_es", "es_mx", "es_uy", "es_ve", "esan", "et_ee", "eu_es", "fa_ir", "fi_fi", "fil_ph",
+            "fo_fo", "fr_ca", "fr_fr", "fra_de", "fy_nl", "ga_ie", "gd_gb", "gl_es", "got_de", "gv_im", "haw_us",
+            "he_il", "hi_in", "hr_hr", "hu_hu", "hy_am", "id_id", "ig_ng", "io_en", "is_is", "isv", "it_it", "ja_jp",
+            "jbo_en", "ka_ge", "kab_kab", "kk_kz", "kn_in", "ko_kr", "ksh", "kw_gb", "la_la", "lb_lu", "li_li",
+            "lol_us", "lt_lt", "lv_lv", "mi_nz", "mk_mk", "mn_mn", "moh_ca", "ms_my", "mt_mt", "nds_de", "nl_be",
+            "nl_nl", "nn_no", "no_no", "nb_no", "nuk", "oc_fr", "oj_ca", "ovd", "pl_pl", "pt_br", "pt_pt",
+            "qya_aa", "ro_ro", "rpr", "ru_ru", "scn", "se_no", "sk_sk", "sl_si", "so_so", "sq_al", "sr_sp", "sv_se",
+            "swg", "sxu", "szl", "ta_in", "th_th", "tl_ph", "tlh_aa", "tr_tr", "tt_ru", "tzl_tzl", "uk_ua", "val_es",
+            "vec_it", "vi_vn", "yi_de", "yo_ng", "zh_cn", "zh_hk", "zh_tw"
+    };
+
     private final ConfigurationManager configurationManager;
-    private final Map<UUID, String> cachedLocaleMap;
+    private final Map<String, Language> languageMap;
+    private final Map<UUID, Language> playerLanguageMap;
+    private Language defaultLanguage;
 
     /**
-     * @deprecated Used {@link #LanguageManager(ConfigurationManager)} instead.
-     * @param plugin A Java plugin
-     * @param configurationManager The configuration manager to use.
-     */
-    public LanguageManager(JavaPlugin plugin, ConfigurationManager configurationManager) {
-        this(configurationManager);
-    }
-
-    /**
-     * Create a language manager from a configuration manager
-     * @param configurationManager The configuration manager to use.
+     * (Constructor) Create a language manager from a configuration manager
+     * @param configurationManager The {@link ConfigurationManager} to use.
      */
     public LanguageManager(ConfigurationManager configurationManager) {
         this.configurationManager = Validate.notNull(configurationManager, "plugin must not be null!");
-        this.cachedLocaleMap = new HashMap<>();
+        this.languageMap = new HashMap<>();
+        this.playerLanguageMap = new HashMap<>();
     }
 
-    public void updateCachedLocale(Player player) {
-        int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 12) return;
-
-        UUID uuid = player.getUniqueId();
-        String locale = player.getLocale();
-        if(locale == null) locale = getDefaultLocale();
-
-        this.cachedLocaleMap.put(uuid, locale);
+    public ConfigurationManager getConfigurationManager() {
+        return this.configurationManager;
     }
 
-    public void removeCachedLocale(OfflinePlayer player) {
-        UUID uuid = player.getUniqueId();
-        this.cachedLocaleMap.remove(uuid);
+    public void saveDefaultLanguages() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.saveDefault("language.yml");
+
+        YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
+        String defaultLanguageName = languageConfiguration.getString("default-locale");
+        if(defaultLanguageName == null) defaultLanguageName = "en_us";
+
+        for(String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
+            String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
+            YamlConfiguration jarLanguageConfiguration = configurationManager.getInternal(languageFileName);
+
+            if(jarLanguageConfiguration != null) {
+                configurationManager.saveDefault(languageFileName);
+                continue;
+            }
+
+            createDefaultLanguage(languageName, defaultLanguageName);
+        }
     }
 
-    /**
-     * @param sender The sender that will be used to localize the message (null for default).
-     * @param key The path to the message inside of the localization file.
-     * @return The same output from {@link #getMessage(CommandSender, String)}, but with color codes replaced
-     */
-    public String getMessageColored(@Nullable CommandSender sender, @NotNull String key) {
-        String message = getMessage(sender, key);
-        return MessageUtility.color(message);
-    }
+    public void reloadLanguages() {
+        this.languageMap.clear();
+        this.playerLanguageMap.clear();
+        IResourceHolder resourceHolder = configurationManager.getResourceHolder();
+        Logger logger = resourceHolder.getLogger();
 
-    /**
-     * @param sender The sender that will be used to localize the message (null for default).
-     * @param key The path to the message inside of the localization file.
-     * @return A localized message string, or {@code ""} if no message is set.
-     */
-    public String getMessage(@Nullable CommandSender sender, @NotNull String key) {
-        YamlConfiguration configuration = getLocaleConfiguration(sender);
-        String defaultValue = String.format(Locale.US,"{%s}", key);
+        File dataFolder = resourceHolder.getDataFolder();
+        File languageFolder = new File(dataFolder, "language");
+        if(!languageFolder.exists() || !languageFolder.isDirectory()) return;
 
-        if(configuration.isList(key)) {
-            List<String> messageList = configuration.getStringList(key);
-            return String.join("\n", messageList);
+        FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
+        File[] fileArray = languageFolder.listFiles(filenameFilter);
+        if(fileArray == null || fileArray.length == 0) return;
+
+        List<YamlConfiguration> languageConfigurationList = new ArrayList<>();
+        for(File file : fileArray) {
+            try {
+                YamlConfiguration configuration = new YamlConfiguration();
+                configuration.load(file);
+
+                configuration.set("language-name", file.getName().replace(".lang.yml", ""));
+                languageConfigurationList.add(configuration);
+            } catch(IOException | InvalidConfigurationException ex) {
+                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:", ex);
+            }
+        }
+        languageConfigurationList.sort(new LanguageConfigurationComparator());
+
+        for(YamlConfiguration configuration : languageConfigurationList) {
+            try {
+                Language language = loadLanguage(configuration);
+                if(language != null) {
+                    String languageCode = language.getLanguageCode();
+                    this.languageMap.put(languageCode, language);
+                }
+            } catch(Exception ex) {
+                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:", ex);
+            }
         }
 
-        if(configuration.isString(key)) {
-            String message = configuration.getString(key);
-            return (message == null ? defaultValue : message);
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
+        String defaultLanguageName = languageConfiguration.getString("default-locale");
+        if(!this.languageMap.containsKey(defaultLanguageName)) {
+            logger.warning("Your default language configuration doesn't match any of the existing languages!");
+            logger.warning("If you believe this is an error, please contact SirBlobman!");
+            logger.warning("Using 'en_us' as default language.");
+
+            this.defaultLanguage = this.languageMap.getOrDefault("en_us", null);
+            if(this.defaultLanguage == null) {
+                throw new IllegalStateException("Missing 'en_us' translation file!");
+            }
         }
 
-        return defaultValue;
+        int languageCount = this.languageMap.size();
+        logger.info("Successfully loaded " + languageCount + " language(s)");
     }
 
-    /**
-     * @param sender The sender that receives and will be used to localize the message.
-     * @param key The path to the message inside of the localization file.
-     * @param replacer A variable replacer.
-     * @param color {@code true} to replace color codes, {@code false} to leave the message as-is
-     * @see #getMessageColored(CommandSender, String) 
-     * @see #getMessage(CommandSender, String)
-     */
-    public void sendMessage(@NotNull CommandSender sender, @NotNull String key, @Nullable Replacer replacer, boolean color) {
-        String message = (color ? getMessageColored(sender, key) : getMessage(sender, key));
-        if(message.isEmpty()) return;
+    public void removeCachedLanguage(OfflinePlayer player) {
+        UUID playerId = player.getUniqueId();
+        this.playerLanguageMap.remove(playerId);
+    }
+
+    @NotNull
+    public String getMessage(@Nullable CommandSender sender, @NotNull String key, @Nullable Replacer replacer, boolean color) {
+        Validate.notEmpty(key, "key must not be empty!");
+        Language language = getLanguage(sender);
+
+        String message = language.getTranslation(key);
+        if(message.isEmpty()) return "";
 
         if(replacer != null) message = replacer.replace(message);
-        sender.sendMessage(message);
+        return (color ? MessageUtility.color(message) : message);
     }
 
-    /**
-     * Broadcast a localized message to all online players and the server console.
-     * @param key The path to the message inside of the localization file.
-     * @param replacer A variable replacer.
-     * @param color {@code true} to replace color codes, {@code false} to leave the message as-is
-     * @see #sendMessage(CommandSender, String, Replacer, boolean)
-     */
-    public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, boolean color) {
-        CommandSender console = Bukkit.getConsoleSender();
-        sendMessage(console, key, replacer, color);
-
-        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
-        for(Player player : onlinePlayerCollection) sendMessage(player, key, replacer, color);
-    }
-
-    /**
-     * Save all of the default localization files.
-     */
-    public void saveDefaultLocales() {
-        try {
-            File baseFolder = this.configurationManager.getBaseFolder();
-            File languageFolder = new File(baseFolder, "language");
-            if(languageFolder.exists()) return; // If the language folder already exists, don't save a new one.
-
-            Set<String> localeNameSet = getLocaleNamesFromResourceHolder();
-            for(String localeName : localeNameSet) this.configurationManager.saveDefault(localeName);
-        } catch(Exception ex) {
-            Logger logger = this.configurationManager.getResourceHolder().getLogger();
-            logger.log(Level.WARNING, "An error occurred while saving the default locale files:", ex);
-        }
-    }
-
-    /**
-     * Reload all of the localization files currently in the language folder.
-     */
-    public void reloadLocales() {
-        try {
-            File baseFolder = this.configurationManager.getBaseFolder();
-            File languageFolder = new File(baseFolder, "language");
-
-            FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
-            File[] localeFileArray = languageFolder.listFiles(filenameFilter);
-            if(localeFileArray == null || localeFileArray.length == 0) throw new IllegalStateException("There are no locale files to reload.");
-
-            for(File localeFile : localeFileArray) {
-                String fileName = localeFile.getName();
-                String reloadName = ("language/" + fileName);
-                this.configurationManager.reload(reloadName);
-            }
-        } catch(Exception ex) {
-            Logger logger = this.configurationManager.getResourceHolder().getLogger();
-            logger.log(Level.WARNING, "An error occurred while reloading locale files:", ex);
-        }
-    }
-
-    private Set<String> getLocaleNamesFromResourceHolder() {
-        try {
-            Set<String> localeNameSet = new HashSet<>();
-            Locale[] localeArray = Locale.getAvailableLocales();
-            for(Locale locale : localeArray) {
-                String language = locale.getLanguage();
-                String country = locale.getCountry();
-                String localeFileName = String.format(Locale.US,"language/%s_%s.lang.yml", language, country)
-                        .toLowerCase(Locale.US);
-
-                InputStream resource = this.configurationManager.getResourceHolder().getResource(localeFileName);
-                if(resource != null) localeNameSet.add(localeFileName);
-            }
-
-            return localeNameSet;
-        } catch(Exception ex) {
-            Logger logger = this.configurationManager.getResourceHolder().getLogger();
-            logger.log(Level.WARNING, "An error occurred while listing the jar locale files:", ex);
-            return Collections.emptySet();
-        }
-    }
-
-    private YamlConfiguration getDefaultLocaleConfiguration() {
-        String defaultLocaleName = getDefaultLocale();
-        return getLocaleConfiguration(defaultLocaleName);
-    }
-
-    private YamlConfiguration getLocaleConfiguration(String localeName) {
-        String localeFileName = String.format(Locale.US, "language/%s.lang.yml", localeName);
-        YamlConfiguration configuration = this.configurationManager.get(localeFileName);
-        return (configuration == null ? new YamlConfiguration() : configuration);
-    }
-
-    private YamlConfiguration getLocaleConfiguration(CommandSender sender) {
-        String localeName = getLocale(sender);
-        YamlConfiguration configuration = getLocaleConfiguration(localeName);
-
-        String defaultLocaleName = getDefaultLocale();
-        if(!defaultLocaleName.equals(localeName)) {
-            YamlConfiguration defaultConfiguration = getDefaultLocaleConfiguration();
-            configuration.setDefaults(defaultConfiguration);
-        }
-
-        return configuration;
+    public void sendMessage(@NotNull CommandSender sender, @NotNull String key, @Nullable Replacer replacer, boolean color) {
+        Validate.notNull(sender, "sender must not be null!");
+        String message = getMessage(sender, key, replacer, color);
+        if(!message.isEmpty()) sender.sendMessage(message);
     }
 
     @NotNull
-    private String getDefaultLocale() {
-        YamlConfiguration configuration = this.configurationManager.get("language.yml");
-        String defaultLocaleName = configuration.getString("default-locale");
-        return (defaultLocaleName == null ? "en_us" : defaultLocaleName);
-    }
-
-    @NotNull
-    private String getLocale(CommandSender sender) {
-        if(sender instanceof OfflinePlayer) {
-            UUID uuid = ((OfflinePlayer) sender).getUniqueId();
-            if(this.cachedLocaleMap.containsKey(uuid)) {
-                return this.cachedLocaleMap.get(uuid);
-            }
+    private Language getLanguage(CommandSender sender) {
+        if(this.defaultLanguage == null) {
+            throw new IllegalStateException("Missing default locale translation file!");
         }
+        if(!(sender instanceof Player)) return this.defaultLanguage;
+
+        Player player = (Player) sender;
+        UUID playerId = player.getUniqueId();
+        Language cachedLanguage = this.playerLanguageMap.getOrDefault(playerId, null);
+        if(cachedLanguage != null) return cachedLanguage;
 
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion >= 12 && sender instanceof Player) {
-            Player player = (Player) sender;
-            String playerLocale = player.getLocale();
-            if(playerLocale != null) return playerLocale;
+        if(minorVersion >= 12) {
+            String localeName = player.getLocale();
+            if(localeName != null) {
+                Language language = this.languageMap.getOrDefault(localeName, null);
+                if(language != null) {
+                    this.playerLanguageMap.put(playerId, language);
+                    return this.defaultLanguage;
+                }
+            }
         }
 
-        return getDefaultLocale();
+        this.playerLanguageMap.put(playerId, this.defaultLanguage);
+        return this.defaultLanguage;
+    }
+
+    private void createDefaultLanguage(String languageName, String defaultLanguageName) {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        IResourceHolder resourceHolder = configurationManager.getResourceHolder();
+
+        File dataFolder = resourceHolder.getDataFolder();
+        if(!dataFolder.exists()) {
+            boolean makeFolder = dataFolder.mkdirs();
+            if(!makeFolder) {
+                Logger logger = resourceHolder.getLogger();
+                logger.warning("Failed to create folder at '" + dataFolder + "'.");
+                return;
+            }
+        }
+
+        File languageFolder = new File(dataFolder, "language");
+        if(!languageFolder.exists()) {
+            boolean makeFolder = languageFolder.mkdirs();
+            if(!makeFolder) {
+                Logger logger = resourceHolder.getLogger();
+                logger.warning("Failed to create folder at '" + languageFolder + "'.");
+                return;
+            }
+        }
+
+        String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
+        File languageFile = new File(languageName, languageFileName);
+        if(languageFile.exists()) return;
+
+        try {
+            YamlConfiguration configuration = new YamlConfiguration();
+            configuration.set("parent", defaultLanguageName);
+            configuration.save(languageFile);
+        } catch(IOException ex) {
+            Logger logger = resourceHolder.getLogger();
+            logger.log(Level.WARNING, "Failed to create a default language file because an error occurred.");
+        }
+    }
+
+    private Language loadLanguage(YamlConfiguration configuration) throws InvalidConfigurationException {
+        String languageName = configuration.getString("language-name");
+        if(languageName == null) return null;
+
+        String parentLanguageName = configuration.getString("parent");
+        Language parentLanguage = null;
+        if(parentLanguageName != null) {
+            parentLanguage = this.languageMap.getOrDefault(parentLanguageName, null);
+            if(parentLanguage == null) {
+                throw new InvalidConfigurationException("parent language not loaded correctly.");
+            }
+        }
+
+        Language language = (parentLanguage == null ? new Language(languageName)
+                : new Language(parentLanguage, languageName));
+
+        Set<String> keySet = configuration.getKeys(false);
+        for(String key : keySet) {
+            String message;
+            if(configuration.isList(key)) {
+                List<String> messageList = configuration.getStringList(key);
+                message = String.join("\n", messageList);
+            } else {
+                message = configuration.getString(key);
+            }
+
+            if(message != null) {
+                language.addTranslation(key, message);
+            }
+        }
+
+        return language;
     }
 }

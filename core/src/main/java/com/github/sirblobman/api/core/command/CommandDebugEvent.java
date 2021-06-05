@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -27,10 +26,10 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
-import com.github.sirblobman.api.command.Command;
+import com.github.sirblobman.api.command.ConsoleCommand;
 import com.github.sirblobman.api.core.CorePlugin;
 
-public class CommandDebugEvent extends Command {
+public class CommandDebugEvent extends ConsoleCommand {
     private final CorePlugin plugin;
     public CommandDebugEvent(CorePlugin plugin) {
         super(plugin, "debug-event");
@@ -38,7 +37,7 @@ public class CommandDebugEvent extends Command {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public List<String> onTabComplete(ConsoleCommandSender sender, String[] args) {
         if(args.length == 1) {
             List<Class<?>> exampleClassList = Arrays.asList(PlayerInteractEvent.class, PlayerTeleportEvent.class, EntitySpawnEvent.class);
             List<String> valueList = exampleClassList.stream().map(Class::getName).collect(Collectors.toList());
@@ -49,12 +48,8 @@ public class CommandDebugEvent extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(ConsoleCommandSender sender, String[] args) {
         if(args.length < 1) return false;
-        if(!(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(ChatColor.RED + "Only the server console can execute this command.");
-            return true;
-        }
 
         try {
             String className = args[0];
