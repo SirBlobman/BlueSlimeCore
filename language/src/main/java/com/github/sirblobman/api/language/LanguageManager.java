@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +14,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -159,10 +161,32 @@ public final class LanguageManager {
         return (color ? MessageUtility.color(message) : message);
     }
 
+    @NotNull
+    @Deprecated
+    public String getMessageColored(@Nullable CommandSender sender, @NotNull String key, @Nullable Replacer replacer) {
+        return getMessage(sender, key, replacer, true);
+    }
+
+    @NotNull
+    @Deprecated
+    public String getMessageColored(@Nullable CommandSender sender, @NotNull String key) {
+        return getMessageColored(sender, key, null);
+    }
+
     public void sendMessage(@NotNull CommandSender sender, @NotNull String key, @Nullable Replacer replacer, boolean color) {
         Validate.notNull(sender, "sender must not be null!");
         String message = getMessage(sender, key, replacer, color);
         if(!message.isEmpty()) sender.sendMessage(message);
+    }
+
+    public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, boolean color) {
+        CommandSender console = Bukkit.getConsoleSender();
+        sendMessage(console, key, replacer, color);
+
+        Collection<? extends Player> onlinePlayerList = Bukkit.getOnlinePlayers();
+        for(Player player : onlinePlayerList) {
+            sendMessage(player, key, replacer, color);
+        }
     }
 
     @NotNull
