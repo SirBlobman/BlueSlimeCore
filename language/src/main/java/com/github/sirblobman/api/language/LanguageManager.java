@@ -217,8 +217,8 @@ public final class LanguageManager {
             }
         }
 
-        String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
-        File languageFile = new File(languageName, languageFileName);
+        String languageFileName = String.format(Locale.US, "%s.lang.yml", languageName);
+        File languageFile = new File(languageFolder, languageFileName);
         if(languageFile.exists()) return;
 
         try {
