@@ -59,6 +59,7 @@ public final class LanguageManager {
         this.configurationManager = Validate.notNull(configurationManager, "plugin must not be null!");
         this.languageMap = new HashMap<>();
         this.playerLanguageMap = new HashMap<>();
+        this.defaultLanguage = null;
     }
 
     public ConfigurationManager getConfigurationManager() {
@@ -129,7 +130,9 @@ public final class LanguageManager {
         ConfigurationManager configurationManager = getConfigurationManager();
         YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
         String defaultLanguageName = languageConfiguration.getString("default-locale");
-        if(!this.languageMap.containsKey(defaultLanguageName)) {
+        if(this.languageMap.containsKey(defaultLanguageName)) {
+            this.defaultLanguage = this.languageMap.getOrDefault(defaultLanguageName, null);
+        } else {
             logger.warning("Your default language configuration doesn't match any of the existing languages!");
             logger.warning("If you believe this is an error, please contact SirBlobman!");
             logger.warning("Using 'en_us' as default language.");
