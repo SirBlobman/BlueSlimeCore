@@ -9,9 +9,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>command</artifactId>
-    <name>SirBlobmanAPI Command</name>
-    <description>Useful command management classes for SirBlobman projects</description>
+    <artifactId>plugin</artifactId>
+    <name>SirBlobmanAPI Plugin Classes</name>
+    <description>Useful classes that help with creating plugins in projects by SirBlobman</description>
 
     <repositories>
         <!-- SpigotMC Repository -->
@@ -22,20 +22,20 @@
     </repositories>
 
     <dependencies>
-        <!-- JetBrains Annotations -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>20.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Configuration -->
+        <dependency>
+            <groupId>com.github.sirblobman.api</groupId>
+            <artifactId>configuration</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- SirBlobmanAPI Language -->
@@ -46,10 +46,10 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- SirBlobmanAPI Plugin Classes -->
+        <!-- SirBlobmanAPI NMS -->
         <dependency>
-            <groupId>com.github.sirblobman.api</groupId>
-            <artifactId>plugin</artifactId>
+            <groupId>com.github.sirblobman.api.nms</groupId>
+            <artifactId>nms-handler</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

@@ -1,4 +1,4 @@
-package com.github.sirblobman.api.core.plugin;
+package com.github.sirblobman.api.plugin;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,8 +44,7 @@ public abstract class ConfigurablePlugin extends JavaPlugin {
 
     @Override
     public final void reloadConfig() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        configurationManager.reload("config.yml");
+        reloadConfiguration();
     }
 
     @Override
@@ -68,5 +67,10 @@ public abstract class ConfigurablePlugin extends JavaPlugin {
 
     public final LanguageManager getLanguageManager() {
         return this.languageManager;
+    }
+
+    protected void reloadConfiguration() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.reload("config.yml");
     }
 }

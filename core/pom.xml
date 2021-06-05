@@ -89,6 +89,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- SirBlobmanAPI Plugin Classes -->
+        <dependency>
+            <groupId>com.github.sirblobman.api</groupId>
+            <artifactId>plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- SirBlobmanAPI Update -->
         <dependency>
             <groupId>com.github.sirblobman.api</groupId>

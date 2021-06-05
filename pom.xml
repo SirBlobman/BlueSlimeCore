@@ -30,6 +30,7 @@
         <module>menu</module>
         <module>update</module>
         <module>nms</module>
+        <module>plugin</module>
         <module>core</module>
     </modules>
     

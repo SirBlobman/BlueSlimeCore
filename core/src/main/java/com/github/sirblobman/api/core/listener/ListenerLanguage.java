@@ -12,8 +12,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.core.CorePlugin;
-import com.github.sirblobman.api.core.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.language.LanguageManager;
+import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 
 public final class ListenerLanguage extends PluginListener<CorePlugin> {
     public ListenerLanguage(CorePlugin plugin) {

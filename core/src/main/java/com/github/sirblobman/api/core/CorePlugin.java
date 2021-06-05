@@ -13,7 +13,7 @@ import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
-import com.github.sirblobman.api.core.plugin.ConfigurablePlugin;
+import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
@@ -21,6 +21,7 @@ import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.nms.bossbar.BossBarHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
+import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
 
@@ -32,13 +33,17 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onLoad() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        configurationManager.saveDefault("config.yml");
+        saveDefaultConfig();
+        LanguageManager languageManager = getLanguageManager();
+        languageManager.saveDefaultLanguages();
     }
 
     @Override
     public void onEnable() {
         printMultiVersionInformation();
+
+        LanguageManager languageManager = getLanguageManager();
+        languageManager.reloadLanguages();
 
         registerCommands();
         registerListeners();
@@ -50,9 +55,7 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onDisable() {
-        Logger logger = getLogger();
-        logger.info("Disabling SirBlobman Core...");
-        logger.info("Successfully disabled SirBlobman Core.");
+        // Do Nothing
     }
 
     public UpdateManager getUpdateManager() {

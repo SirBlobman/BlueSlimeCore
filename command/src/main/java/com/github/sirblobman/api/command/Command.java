@@ -24,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.language.Replacer;
+import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
@@ -63,6 +64,12 @@ public abstract class Command implements TabExecutor {
      */
     @Nullable
     protected LanguageManager getLanguageManager() {
+        JavaPlugin plugin = getPlugin();
+        if(plugin instanceof ConfigurablePlugin) {
+            ConfigurablePlugin configurablePlugin = (ConfigurablePlugin) plugin;
+            return configurablePlugin.getLanguageManager();
+        }
+
         return null;
     }
 

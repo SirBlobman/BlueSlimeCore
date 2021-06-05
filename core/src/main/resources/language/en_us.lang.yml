@@ -1,0 +1,6 @@
+# English (United States)
+language-name: "en_us"
+
+error:
+  player-only: "&cThat command can only be executed by a player."
+  console-only: "&cThat command can only be executed in the server console."

@@ -247,7 +247,7 @@ public final class LanguageManager {
         Language language = (parentLanguage == null ? new Language(languageName)
                 : new Language(parentLanguage, languageName));
 
-        Set<String> keySet = configuration.getKeys(false);
+        Set<String> keySet = configuration.getKeys(true);
         for(String key : keySet) {
             String message;
             if(configuration.isList(key)) {
