@@ -13,6 +13,7 @@
     <name>SirBlobmanAPI NMS 1.17</name>
 
     <properties>
+        <java.version>16</java.version>
         <spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
     </properties>
 

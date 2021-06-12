@@ -24,12 +24,12 @@
     <modules>
         <module>utility</module>
         <module>item</module>
+        <module>nms</module>
         <module>configuration</module>
         <module>language</module>
         <module>command</module>
         <module>menu</module>
         <module>update</module>
-        <module>nms</module>
         <module>plugin</module>
         <module>core</module>
     </modules>
@@ -72,7 +72,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
+
+                <configuration>
+                    <doclint>all,-missing</doclint>
+                </configuration>
 
                 <executions>
                     <execution>
