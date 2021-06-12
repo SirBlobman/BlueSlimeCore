@@ -6,21 +6,22 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTCompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.item.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import com.github.sirblobman.api.utility.ItemUtility;
+
+import net.minecraft.nbt.MojangsonParser;
+import net.minecraft.nbt.NBTCompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemHandler_1_17_R1 extends ItemHandler {
     public ItemHandler_1_17_R1(JavaPlugin plugin) {
