@@ -24,6 +24,13 @@
         <bukkit.plugin.version>2.2.0-Dev</bukkit.plugin.version>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>sirblobman-public</id>
+            <url>https://nexus.sirblobman.xyz/repository/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <repositories>
         <!-- SpigotMC Repository -->
         <repository>
