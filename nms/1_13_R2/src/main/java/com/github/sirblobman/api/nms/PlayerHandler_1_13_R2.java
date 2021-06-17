@@ -25,8 +25,7 @@ public class PlayerHandler_1_13_R2 extends PlayerHandler {
 
     @Override
     public void sendTabInfo(Player player, String header, String footer) {
-        player.setPlayerListHeader(header);
-        player.setPlayerListFooter(footer);
+        player.setPlayerListHeaderFooter(header, footer);
     }
 
     @Override
