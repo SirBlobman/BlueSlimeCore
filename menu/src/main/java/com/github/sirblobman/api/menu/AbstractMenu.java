@@ -72,18 +72,23 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
         Inventory clickedInventory = e.getClickedInventory();
         if(clickedInventory == null) return;
 
-        InventoryType clickedInventoryType = clickedInventory.getType();
         ClickType clickType = e.getClick();
+        InventoryType clickedInventoryType = clickedInventory.getType();
         if(clickedInventoryType == InventoryType.PLAYER && clickType.isShiftClick() && shouldCancelShiftClickFromPlayerInventory()) {
             e.setCancelled(true);
             return;
         }
 
         int slot = e.getSlot();
-        if(shouldPreventClick(slot)) e.setCancelled(true);
+        if(shouldPreventClick(slot)) {
+            e.setCancelled(true);
+        }
 
-        AbstractButton button = internalGetButton(slot);
-        if(button != null) button.onClick(e);
+        int rawSlot = e.getRawSlot();
+        AbstractButton button = internalGetButton(rawSlot);
+        if(button != null) {
+            button.onClick(e);
+        }
     }
 
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)

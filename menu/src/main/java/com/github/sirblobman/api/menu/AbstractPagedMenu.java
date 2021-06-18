@@ -26,9 +26,12 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
 
     public final void openNextPage() {
         int currentPage = getCurrentPage();
-        int maxPages = getMaxPages();
-        int newPage = Math.min(maxPages, currentPage + 1);
-        if(currentPage == newPage) return;
+        int maximumPage = getMaxPages();
+
+        int newPage = Math.min(currentPage + 1, maximumPage);
+        if(currentPage == newPage) {
+            return;
+        }
 
         this.currentPage = newPage;
         open();
@@ -36,8 +39,10 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
 
     public final void openPreviousPage() {
         int currentPage = getCurrentPage();
-        int newPage = Math.max(1, currentPage - 1);
-        if(currentPage == newPage) return;
+        int newPage = Math.max(currentPage - 1, 1);
+        if(currentPage == newPage) {
+            return;
+        }
 
         this.currentPage = newPage;
         open();
