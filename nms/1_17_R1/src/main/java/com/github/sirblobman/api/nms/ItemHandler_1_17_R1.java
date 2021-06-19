@@ -30,10 +30,14 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
 
     @Override
     public String getLocalizedName(org.bukkit.inventory.ItemStack item) {
-        if(item == null) return "Air";
+        if(ItemUtility.isAir(item)) {
+            return "Air";
+        }
 
-        ItemMeta meta = item.getItemMeta();
-        if(meta != null && meta.hasDisplayName()) return meta.getDisplayName();
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta != null && itemMeta.hasDisplayName()) {
+            return itemMeta.getDisplayName();
+        }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getName().getText();
@@ -41,10 +45,13 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
 
     @Override
     public String getKeyString(org.bukkit.inventory.ItemStack item) {
-        if(item == null) return "minecraft:air";
-        Material material = item.getType();
-        NamespacedKey key = material.getKey();
-        return key.toString();
+        if(ItemUtility.isAir(item)) {
+            return "minecraft:air";
+        }
+
+        Material bukkitMaterial = item.getType();
+        NamespacedKey bukkitMaterialKey = bukkitMaterial.getKey();
+        return bukkitMaterialKey.toString();
     }
 
     @Override
@@ -74,15 +81,15 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
     public org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key, String value) {
         if(item == null || key == null || key.isEmpty() || value == null) return item;
 
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null) return item;
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) return item;
 
         JavaPlugin plugin = getPlugin();
         NamespacedKey namespacedKey = new NamespacedKey(plugin, key);
-        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
         persistentDataContainer.set(namespacedKey, PersistentDataType.STRING, value);
 
-        item.setItemMeta(meta);
+        item.setItemMeta(itemMeta);
         return item;
     }
 
@@ -90,12 +97,12 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
     public String getCustomNBT(org.bukkit.inventory.ItemStack item, String key, String defaultValue) {
         if(item == null || key == null || key.isEmpty()) return defaultValue;
 
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null) return defaultValue;
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) return defaultValue;
 
         JavaPlugin plugin = getPlugin();
         NamespacedKey namespacedKey = new NamespacedKey(plugin, key);
-        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
         return persistentDataContainer.getOrDefault(namespacedKey, PersistentDataType.STRING, defaultValue);
     }
 
@@ -103,15 +110,15 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
     public org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key) {
         if(item == null || key == null || key.isEmpty()) return item;
 
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null) return item;
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) return item;
 
         JavaPlugin plugin = getPlugin();
         NamespacedKey namespacedKey = new NamespacedKey(plugin, key);
-        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
         persistentDataContainer.remove(namespacedKey);
 
-        item.setItemMeta(meta);
+        item.setItemMeta(itemMeta);
         return item;
     }
 

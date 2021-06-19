@@ -20,13 +20,13 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
 
     @Override
     public String getName(Entity entity) {
-        if(entity instanceof Player) {
-            Player player = (Player) entity;
+        if(entity instanceof Player player) {
             return player.getName();
         }
 
+        String entityName = entity.getName();
         String customName = entity.getCustomName();
-        return (customName == null ? entity.getName() : customName);
+        return (customName == null ? entityName : customName);
     }
 
     @Override
@@ -38,7 +38,9 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
     @Override
     public void setMaxHealth(LivingEntity entity, double maxHealth) {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if(attribute != null) attribute.setBaseValue(maxHealth);
+        if(attribute != null) {
+            attribute.setBaseValue(maxHealth);
+        }
     }
 
     @Override
@@ -48,8 +50,6 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
 
         World world = location.getWorld();
         if(world == null) throw new IllegalArgumentException("location must have a valid bukkit world!");
-
-        org.bukkit.util.Consumer<T> bukkitConsumer = beforeSpawn::accept;
-        return world.spawn(location, entityClass, bukkitConsumer);
+        return world.spawn(location, entityClass, beforeSpawn::accept);
     }
 }

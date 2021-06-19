@@ -5,7 +5,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -20,13 +19,6 @@ import com.cryptomorin.xseries.XMaterial;
 public class HeadHandler_1_12_R1 extends HeadHandler {
     public HeadHandler_1_12_R1(JavaPlugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public ItemStack getPlayerHead(String username) {
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username);
-        return getPlayerHead(offlinePlayer);
     }
 
     @Override

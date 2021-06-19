@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,7 +38,12 @@ public abstract class HeadHandler extends Handler {
         return getBase64Head(url, customId);
     }
 
-    public abstract ItemStack getPlayerHead(String username);
+    @SuppressWarnings("deprecation")
+    public ItemStack getPlayerHead(String username) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username);
+        return getPlayerHead(offlinePlayer);
+    }
+
     public abstract ItemStack getPlayerHead(OfflinePlayer player);
     public abstract ItemStack getBase64Head(String base64);
     public abstract ItemStack getBase64Head(String base64, UUID customId);
