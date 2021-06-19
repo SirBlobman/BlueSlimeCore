@@ -8,6 +8,8 @@ import com.github.sirblobman.api.configuration.PlayerDataManager;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class ConfigurablePlugin extends JavaPlugin {
     private final ConfigurationManager configurationManager;
     private final MultiVersionHandler multiVersionHandler;
@@ -53,24 +55,28 @@ public abstract class ConfigurablePlugin extends JavaPlugin {
         return configurationManager.get("config.yml");
     }
 
+    protected void reloadConfiguration() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.reload("config.yml");
+    }
+
+    @NotNull
     public final ConfigurationManager getConfigurationManager() {
         return this.configurationManager;
     }
 
+    @NotNull
     public final MultiVersionHandler getMultiVersionHandler() {
         return this.multiVersionHandler;
     }
 
+    @NotNull
     public final PlayerDataManager getPlayerDataManager() {
         return this.playerDataManager;
     }
 
+    @NotNull
     public final LanguageManager getLanguageManager() {
         return this.languageManager;
-    }
-
-    protected void reloadConfiguration() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        configurationManager.reload("config.yml");
     }
 }
