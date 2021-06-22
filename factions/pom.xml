@@ -1,0 +1,30 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.github.sirblobman.api</groupId>
+        <artifactId>parent</artifactId>
+        <version>2.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+    <groupId>com.github.sirblobman.api.factions</groupId>
+    <artifactId>factions-parent</artifactId>
+    
+    <name>SirBlobmanAPI Factions Parent</name>
+    <description>The parent pom for SirBlobmanAPI Factions</description>
+    
+    <modules>
+        <module>abstract</module>
+
+        <!-- Factions Plugins-->
+        <module>factions-legacy</module>
+        <module>factions-massive</module>
+        <module>factions-uuid</module>
+        <module>factions-uuid-legacy</module>
+        <module>factionsx</module>
+        
+        <module>handler</module>
+    </modules>
+</project>

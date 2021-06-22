@@ -119,6 +119,14 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- SirBlobmanAPI Factions -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.factions</groupId>
+            <artifactId>factions-handler</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
