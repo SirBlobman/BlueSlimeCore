@@ -29,5 +29,13 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- SirBlobmanAPI Utility -->
+        <dependency>
+            <groupId>com.github.sirblobman.api</groupId>
+            <artifactId>utility</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

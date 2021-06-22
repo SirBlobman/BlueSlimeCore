@@ -28,40 +28,48 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
-        
-        <!-- LegacyFactions -->
+
+        <!-- SirBlobmanAPI Abstract Factions -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
-            <artifactId>factions-legacy</artifactId>
+            <artifactId>abstract</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         
-        <!-- MassiveCore Factions -->
+        <!-- SirBlobmanAPI LegacyFactions -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
-            <artifactId>factions-massive</artifactId>
+            <artifactId>legacy</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         
-        <!-- Factions UUID -->
+        <!-- SirBlobmanAPI MassiveCore Factions -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
-            <artifactId>factions-uuid</artifactId>
+            <artifactId>massive</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         
-        <!-- Factions UUID Legacy and Forks -->
+        <!-- SirBlobmanAPI Factions UUID -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
-            <artifactId>factions-uuid-legacy</artifactId>
+            <artifactId>uuid</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         
-        <!-- FactionsX -->
+        <!-- SirBlobmanAPI Factions UUID Legacy and Forks -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.factions</groupId>
+            <artifactId>uuid-legacy</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <!-- SirBlobmanAPI FactionsX -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
             <artifactId>factionsx</artifactId>

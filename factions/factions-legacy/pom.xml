@@ -19,6 +19,15 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+
+        <!-- JitPack Repository -->
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -28,6 +37,28 @@
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Abstract Factions -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.factions</groupId>
+            <artifactId>abstract</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- LegacyFactions -->
+        <dependency>
+            <groupId>com.github.redstone</groupId>
+            <artifactId>LegacyFactions</artifactId>
+            <version>v1.4.4</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
