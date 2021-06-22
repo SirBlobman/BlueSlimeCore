@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>legacy</artifactId>
+    <artifactId>factionsx</artifactId>
     <name>SirBlobmanAPI FactionsX</name>
     <description>Support for the FactionsX plugin.</description>
 

@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>legacy</artifactId>
+    <artifactId>uuid-legacy</artifactId>
     <name>SirBlobmanAPI FactionsUUID Legacy</name>
     <description>Support for old versions of FactionsUUID and plugins that fork FactionsUUID.</description>
 
