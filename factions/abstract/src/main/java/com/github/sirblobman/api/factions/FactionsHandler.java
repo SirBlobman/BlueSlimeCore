@@ -32,7 +32,7 @@ public abstract class FactionsHandler {
 
     public abstract boolean hasFaction(OfflinePlayer player);
     public abstract Object getFactionFor(OfflinePlayer player);
-    public abstract Object getFactionNameFor(OfflinePlayer player);
+    public abstract String getFactionNameFor(OfflinePlayer player);
 
     /**
      * @param player1 The first player
