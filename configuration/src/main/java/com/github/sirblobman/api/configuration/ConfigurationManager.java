@@ -134,11 +134,12 @@ public final class ConfigurationManager {
                 configuration.setDefaults(jarConfiguration);
             }
 
-            configuration.load(file);
             this.configurationMap.put(fileName, configuration);
+            configuration.load(file);
         } catch(IOException | InvalidConfigurationException ex) {
             Logger logger = resourceHolder.getLogger();
             logger.log(Level.WARNING, "An I/O exception occurred while loading a configuration file:", ex);
+            logger.log(Level.WARNING, "Using default configuration from jar file instead.");
         }
     }
 
