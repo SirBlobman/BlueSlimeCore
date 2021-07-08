@@ -10,11 +10,11 @@
     </parent>
 
     <artifactId>nms-1_17_R1</artifactId>
-    <name>SirBlobmanAPI NMS 1.17</name>
+    <name>SirBlobmanAPI NMS 1.17.1</name>
 
     <properties>
         <java.version>16</java.version>
-        <spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.17.1-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <repositories>
