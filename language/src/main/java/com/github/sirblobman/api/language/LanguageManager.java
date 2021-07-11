@@ -33,17 +33,17 @@ import org.jetbrains.annotations.Nullable;
 public final class LanguageManager {
     /** Last Updated: June 04, 2021 19:30 */
     private static final String[] KNOWN_LANGUAGE_ARRAY = { "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar",
-            "be_by", "bg_bg", "br_fr", "brb", "bs_ba", "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de",
-            "el_gr", "en_au", "en_ca", "en_gb", "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar",
-            "es_cl", "es_ec", "es_es", "es_mx", "es_uy", "es_ve", "esan", "et_ee", "eu_es", "fa_ir", "fi_fi", "fil_ph",
-            "fo_fo", "fr_ca", "fr_fr", "fra_de", "fy_nl", "ga_ie", "gd_gb", "gl_es", "got_de", "gv_im", "haw_us",
-            "he_il", "hi_in", "hr_hr", "hu_hu", "hy_am", "id_id", "ig_ng", "io_en", "is_is", "isv", "it_it", "ja_jp",
-            "jbo_en", "ka_ge", "kab_kab", "kk_kz", "kn_in", "ko_kr", "ksh", "kw_gb", "la_la", "lb_lu", "li_li",
-            "lol_us", "lt_lt", "lv_lv", "mi_nz", "mk_mk", "mn_mn", "moh_ca", "ms_my", "mt_mt", "nds_de", "nl_be",
-            "nl_nl", "nn_no", "no_no", "nb_no", "nuk", "oc_fr", "oj_ca", "ovd", "pl_pl", "pt_br", "pt_pt",
-            "qya_aa", "ro_ro", "rpr", "ru_ru", "scn", "se_no", "sk_sk", "sl_si", "so_so", "sq_al", "sr_sp", "sv_se",
-            "swg", "sxu", "szl", "ta_in", "th_th", "tl_ph", "tlh_aa", "tr_tr", "tt_ru", "tzl_tzl", "uk_ua", "val_es",
-            "vec_it", "vi_vn", "yi_de", "yo_ng", "zh_cn", "zh_hk", "zh_tw"
+            "be_by", "bg_bg", "br_fr", "brb", "bs_ba", "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch",
+            "de_de", "el_gr", "en_au", "en_ca", "en_gb", "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws",
+            "eo_uy", "es_ar", "es_cl", "es_ec", "es_es", "es_mx", "es_uy", "es_ve", "esan", "et_ee", "eu_es",
+            "fa_ir", "fi_fi", "fil_ph", "fo_fo", "fr_ca", "fr_fr", "fra_de", "fy_nl", "ga_ie", "gd_gb", "gl_es",
+            "got_de", "gv_im", "haw_us", "he_il", "hi_in", "hr_hr", "hu_hu", "hy_am", "id_id", "ig_ng", "io_en",
+            "is_is", "isv", "it_it", "ja_jp", "jbo_en", "ka_ge", "kab_kab", "kk_kz", "kn_in", "ko_kr", "ksh",
+            "kw_gb", "la_la", "lb_lu", "li_li", "lol_us", "lt_lt", "lv_lv", "mi_nz", "mk_mk", "mn_mn", "moh_ca",
+            "ms_my", "mt_mt", "nds_de", "nl_be", "nl_nl", "nn_no", "no_no", "nb_no", "nuk", "oc_fr", "oj_ca",
+            "ovd", "pl_pl", "pt_br", "pt_pt", "qya_aa", "ro_ro", "rpr", "ru_ru", "scn", "se_no", "sk_sk", "sl_si",
+            "so_so", "sq_al", "sr_sp", "sv_se", "swg", "sxu", "szl", "ta_in", "th_th", "tl_ph", "tlh_aa", "tr_tr",
+            "tt_ru", "tzl_tzl", "uk_ua", "val_es", "vec_it", "vi_vn", "yi_de", "yo_ng", "zh_cn", "zh_hk", "zh_tw"
     };
 
     private final ConfigurationManager configurationManager;
@@ -110,7 +110,8 @@ public final class LanguageManager {
                 configuration.set("language-name", file.getName().replace(".lang.yml", ""));
                 languageConfigurationList.add(configuration);
             } catch(IOException | InvalidConfigurationException ex) {
-                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:", ex);
+                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:",
+                        ex);
             }
         }
         languageConfigurationList.sort(new LanguageConfigurationComparator());
@@ -123,11 +124,14 @@ public final class LanguageManager {
                     this.languageMap.put(languageCode, language);
                 }
             } catch(Exception ex) {
-                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:", ex);
+                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:",
+                        ex);
             }
         }
 
         ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.reload("language.yml");
+
         YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
         String defaultLanguageName = languageConfiguration.getString("default-locale");
         if(this.languageMap.containsKey(defaultLanguageName)) {
@@ -153,7 +157,8 @@ public final class LanguageManager {
     }
 
     @NotNull
-    public String getMessage(@Nullable CommandSender sender, @NotNull String key, @Nullable Replacer replacer, boolean color) {
+    public String getMessage(@Nullable CommandSender sender, @NotNull String key, @Nullable Replacer replacer,
+                             boolean color) {
         Validate.notEmpty(key, "key must not be empty!");
         Language language = getLanguage(sender);
 
@@ -166,7 +171,8 @@ public final class LanguageManager {
 
     @NotNull
     @Deprecated
-    public String getMessageColored(@Nullable CommandSender sender, @NotNull String key, @Nullable Replacer replacer) {
+    public String getMessageColored(@Nullable CommandSender sender, @NotNull String key,
+                                    @Nullable Replacer replacer) {
         return getMessage(sender, key, replacer, true);
     }
 
@@ -176,7 +182,8 @@ public final class LanguageManager {
         return getMessageColored(sender, key, null);
     }
 
-    public void sendMessage(@NotNull CommandSender sender, @NotNull String key, @Nullable Replacer replacer, boolean color) {
+    public void sendMessage(@NotNull CommandSender sender, @NotNull String key, @Nullable Replacer replacer,
+                            boolean color) {
         Validate.notNull(sender, "sender must not be null!");
         String message = getMessage(sender, key, replacer, color);
         if(!message.isEmpty()) sender.sendMessage(message);
@@ -195,14 +202,22 @@ public final class LanguageManager {
     @NotNull
     private Language getLanguage(CommandSender sender) {
         if(this.defaultLanguage == null) {
-            throw new IllegalStateException("Missing default locale translation file!");
+            reloadLanguages();
+            if(this.defaultLanguage == null) {
+                throw new IllegalStateException("Missing default locale translation file!");
+            }
         }
-        if(!(sender instanceof Player)) return this.defaultLanguage;
+
+        if(!(sender instanceof Player)) {
+            return this.defaultLanguage;
+        }
 
         Player player = (Player) sender;
         UUID playerId = player.getUniqueId();
         Language cachedLanguage = this.playerLanguageMap.getOrDefault(playerId, null);
-        if(cachedLanguage != null) return cachedLanguage;
+        if(cachedLanguage != null) {
+            return cachedLanguage;
+        }
 
         int minorVersion = VersionUtility.getMinorVersion();
         if(minorVersion >= 12) {
