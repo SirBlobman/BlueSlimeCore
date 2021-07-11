@@ -200,7 +200,7 @@ public final class LanguageManager {
     }
 
     @NotNull
-    private Language getLanguage(CommandSender sender) {
+    public Language getLanguage(CommandSender sender) {
         if(this.defaultLanguage == null) {
             reloadLanguages();
             if(this.defaultLanguage == null) {
