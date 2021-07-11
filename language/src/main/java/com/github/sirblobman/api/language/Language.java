@@ -1,6 +1,7 @@
 package com.github.sirblobman.api.language;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,7 +26,6 @@ public final class Language {
         this.translationMap = new HashMap<>();
     }
 
-
     /**
      * Language Constructor
      * @param languageCode The code ID for this language (Example: "en_us")
@@ -42,6 +42,12 @@ public final class Language {
     @NotNull
     public String getLanguageCode() {
         return this.languageCode;
+    }
+
+    public Optional<Locale> getJavaLocale() {
+        String languageCode = getLanguageCode();
+        Locale locale = Locale.forLanguageTag(languageCode);
+        return Optional.ofNullable(locale);
     }
 
     /**
