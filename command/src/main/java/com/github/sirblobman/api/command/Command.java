@@ -46,17 +46,17 @@ public abstract class Command implements TabExecutor {
     }
 
     /**
+     * @return The name used for registering this command.
+     */
+    public final String getCommandName() {
+        return this.commandName;
+    }
+
+    /**
      * @return The plugin used for registering this command.
      */
     protected final JavaPlugin getPlugin() {
         return this.plugin;
-    }
-
-    /**
-     * @return The name used for registering this command.
-     */
-    protected final String getCommandName() {
-        return this.commandName;
     }
 
     /**
