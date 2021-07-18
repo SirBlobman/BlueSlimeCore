@@ -64,7 +64,9 @@ public abstract class FactionsHandler {
     public abstract boolean isInEnemyLand(OfflinePlayer player, Location location);
     public abstract boolean isInOwnFaction(OfflinePlayer player, Location location);
     public abstract boolean isLeader(OfflinePlayer player, Location location);
+
     public abstract boolean canBuild(OfflinePlayer player, Location location);
+    public abstract boolean canDestroy(OfflinePlayer player, Location location);
 
     public abstract ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player);
     public abstract String getRolePrefix(OfflinePlayer player);

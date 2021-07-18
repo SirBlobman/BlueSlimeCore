@@ -170,6 +170,13 @@ public final class FactionsHandler_X extends FactionsHandler {
     }
 
     @Override
+    public boolean canDestroy(OfflinePlayer player, Location location) {
+        UUID uuid = player.getUniqueId();
+        FPlayer fplayer = PlayerManager.INSTANCE.getFPlayer(uuid);
+        return (fplayer != null && fplayer.canBreakAt(location));
+    }
+
+    @Override
     public ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player) {
         if(!hasFaction(viewer) || !hasFaction(player)) return null;
 

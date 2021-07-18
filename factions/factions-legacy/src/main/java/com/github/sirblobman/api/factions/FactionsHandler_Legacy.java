@@ -159,6 +159,16 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     }
 
     @Override
+    public boolean canDestroy(OfflinePlayer player, Location location) {
+        FPlayer fplayer = FPlayerColl.get(player);
+        if(fplayer == null) return false;
+
+        Locality locality = Locality.of(location);
+        LocalityOwnership ownership = locality.getOwnership();
+        return ownership.hasAccess(fplayer);
+    }
+
+    @Override
     public ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player) {
         FPlayer fplayer = FPlayerColl.get(player);
         FPlayer fviewer = FPlayerColl.get(viewer);

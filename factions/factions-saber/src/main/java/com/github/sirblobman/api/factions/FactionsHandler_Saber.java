@@ -156,7 +156,7 @@ public final class FactionsHandler_Saber extends FactionsHandler {
         String playerId = fplayer.getId();
         return leaderId.equals(playerId);
     }
-    
+
     @Override
     public boolean canBuild(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
@@ -167,6 +167,19 @@ public final class FactionsHandler_Saber extends FactionsHandler {
         if(fplayer == null) return false;
 
         Access access = faction.getAccess(fplayer, PermissableAction.BUILD);
+        return (access == Access.ALLOW);
+    }
+
+    @Override
+    public boolean canDestroy(OfflinePlayer player, Location location) {
+        Faction faction = getFactionAt(location);
+        if(faction == null) return true;
+
+        FPlayers fplayers = FPlayers.getInstance();
+        FPlayer fplayer = fplayers.getByOfflinePlayer(player);
+        if(fplayer == null) return false;
+
+        Access access = faction.getAccess(fplayer, PermissableAction.DESTROY);
         return (access == Access.ALLOW);
     }
     

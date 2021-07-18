@@ -169,6 +169,16 @@ public final class FactionsHandler_Massive extends FactionsHandler {
     }
 
     @Override
+    public boolean canDestroy(OfflinePlayer player, Location location) {
+        MPlayer mplayer = MPlayer.get(player);
+        if(mplayer == null) return false;
+
+        PS pos = PS.valueOf(location);
+        MPerm permBuild = MPerm.getPermBuild();
+        return permBuild.has(mplayer, pos, false);
+    }
+
+    @Override
     public ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player) {
         MPlayer mplayer = MPlayer.get(player);
         MPlayer mviewer = MPlayer.get(viewer);

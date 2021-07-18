@@ -166,6 +166,19 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         Access access = faction.getAccess(fplayer, PermissableAction.BUILD);
         return (access == Access.ALLOW);
     }
+
+    @Override
+    public boolean canDestroy(OfflinePlayer player, Location location) {
+        Faction faction = getFactionAt(location);
+        if(faction == null) return true;
+
+        FPlayers fplayers = FPlayers.getInstance();
+        FPlayer fplayer = fplayers.getByOfflinePlayer(player);
+        if(fplayer == null) return false;
+
+        Access access = faction.getAccess(fplayer, PermissableAction.DESTROY);
+        return (access == Access.ALLOW);
+    }
     
     @Override
     public ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player) {
