@@ -16,6 +16,9 @@ provides:
 
 softdepend:
   - "BossBarAPI"
+  - "Factions"
+  - "FactionsX"
+  - "LegacyFactions"
 
 commands:
   item-info:

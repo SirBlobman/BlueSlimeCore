@@ -21,7 +21,7 @@
         <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.</bukkit.plugin.description>
 
         <bukkit.plugin.main>com.github.sirblobman.api.core.CorePlugin</bukkit.plugin.main>
-        <bukkit.plugin.version>2.2.5-Dev</bukkit.plugin.version>
+        <bukkit.plugin.version>2.2.5</bukkit.plugin.version>
     </properties>
 
     <pluginRepositories>

@@ -21,6 +21,7 @@
         <!-- Factions Plugins-->
         <module>factions-legacy</module>
         <module>factions-massive</module>
+        <module>factions-saber</module>
         <module>factions-uuid</module>
         <module>factions-uuid-legacy</module>
         <module>factionsx</module>

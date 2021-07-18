@@ -1,5 +1,6 @@
 package com.github.sirblobman.api.factions;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,18 +48,27 @@ public final class FactionsHelper {
             if(plugin == null) throw new IllegalStateException("Could not find a plugin named 'Factions'.");
 
             PluginDescriptionFile description = plugin.getDescription();
+            List<String> pluginAuthorList = description.getAuthors();
             String pluginVersion = description.getVersion();
 
-            if(pluginVersion.startsWith("1.6.9.5-U0.2")) {
-                printHookInfo("Factions", "Factions UUID Legacy");
-                this.factionsHandler = new FactionsHandler_UUID_Legacy(this.plugin);
-                return this.factionsHandler;
-            }
+            if(pluginVersion.startsWith("1.6.9.5")) {
+                if(pluginVersion.startsWith("1.6.9.5-U0.2")) {
+                    printHookInfo("Factions", "Factions UUID Legacy");
+                    this.factionsHandler = new FactionsHandler_UUID_Legacy(this.plugin);
+                    return this.factionsHandler;
+                }
 
-            if(pluginVersion.startsWith("1.6.9.5-U0.5")) {
-                printHookInfo("Factions", "Factions UUID");
-                this.factionsHandler = new FactionsHandler_UUID(this.plugin);
-                return this.factionsHandler;
+                if(pluginVersion.startsWith("1.6.9.5-U0.5")) {
+                    printHookInfo("Factions", "Factions UUID");
+                    this.factionsHandler = new FactionsHandler_UUID(this.plugin);
+                    return this.factionsHandler;
+                }
+
+                if(pluginVersion.startsWith("1.6.9.5-2") && pluginAuthorList.contains("Driftay")) {
+                    printHookInfo("Factions", "SaberFactions");
+                    this.factionsHandler = new FactionsHandler_Saber(this.plugin);
+                    return this.factionsHandler;
+                }
             }
 
             printHookInfo("Factions", "MassiveCore Factions");
@@ -66,8 +76,7 @@ public final class FactionsHelper {
             return this.factionsHandler;
         } catch(Exception ex) {
             Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING,"Could not find a Factions plugin to hook into because an error occurred:",
-                    ex);
+            logger.log(Level.WARNING,"Failed to hook into a Factions plugin because an error occurred:", ex);
             return null;
         }
     }
@@ -85,6 +94,6 @@ public final class FactionsHelper {
         String pluginVersion = description.getVersion();
 
         Logger logger = this.plugin.getLogger();
-        logger.info("Successfully hooked into '" + hookName + " " + pluginVersion + " '.");
+        logger.info("Successfully hooked into '" + hookName + " v" + pluginVersion + "'.");
     }
 }

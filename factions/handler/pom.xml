@@ -53,6 +53,14 @@
             <scope>compile</scope>
         </dependency>
         
+        <!-- SirBlobmanAPI SaberFactions -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.factions</groupId>
+            <artifactId>saber</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
         <!-- SirBlobmanAPI Factions UUID -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
