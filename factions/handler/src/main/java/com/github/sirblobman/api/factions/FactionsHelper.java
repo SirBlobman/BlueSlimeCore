@@ -45,7 +45,7 @@ public final class FactionsHelper {
             }
 
             Plugin plugin = getPlugin("Factions");
-            if(plugin == null) throw new IllegalStateException("Could not find a plugin named 'Factions'.");
+            if(plugin == null) throw new FactionsNotFoundException();
 
             PluginDescriptionFile description = plugin.getDescription();
             List<String> pluginAuthorList = description.getAuthors();
@@ -74,6 +74,11 @@ public final class FactionsHelper {
             printHookInfo("Factions", "MassiveCore Factions");
             this.factionsHandler = new FactionsHandler_Massive(this.plugin);
             return this.factionsHandler;
+        } catch(FactionsNotFoundException ignored) {
+            // Please do not print stack traces to the console when nothing is actually wrong
+            Logger logger = getPlugin().getLogger();
+            logger.info("Factions not found");
+            return null;
         } catch(Exception ex) {
             Logger logger = getPlugin().getLogger();
             logger.log(Level.WARNING,"Failed to hook into a Factions plugin because an error occurred:", ex);
@@ -95,5 +100,8 @@ public final class FactionsHelper {
 
         Logger logger = this.plugin.getLogger();
         logger.info("Successfully hooked into '" + hookName + " v" + pluginVersion + "'.");
+    }
+
+    private static final class FactionsNotFoundException extends Exception {
     }
 }
