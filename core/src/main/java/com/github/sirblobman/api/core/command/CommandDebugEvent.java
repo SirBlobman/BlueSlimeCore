@@ -29,8 +29,9 @@ import org.bukkit.plugin.RegisteredListener;
 import com.github.sirblobman.api.command.ConsoleCommand;
 import com.github.sirblobman.api.core.CorePlugin;
 
-public class CommandDebugEvent extends ConsoleCommand {
+public final class CommandDebugEvent extends ConsoleCommand {
     private final CorePlugin plugin;
+
     public CommandDebugEvent(CorePlugin plugin) {
         super(plugin, "debug-event");
         this.plugin = plugin;
@@ -39,7 +40,8 @@ public class CommandDebugEvent extends ConsoleCommand {
     @Override
     public List<String> onTabComplete(ConsoleCommandSender sender, String[] args) {
         if(args.length == 1) {
-            List<Class<?>> exampleClassList = Arrays.asList(PlayerInteractEvent.class, PlayerTeleportEvent.class, EntitySpawnEvent.class);
+            List<Class<?>> exampleClassList = Arrays.asList(PlayerInteractEvent.class, PlayerTeleportEvent.class,
+                    EntitySpawnEvent.class);
             List<String> valueList = exampleClassList.stream().map(Class::getName).collect(Collectors.toList());
             return getMatching(valueList, args[0]);
         }
@@ -57,13 +59,16 @@ public class CommandDebugEvent extends ConsoleCommand {
             Class<? extends Event> eventClass = namedClass.asSubclass(Event.class);
 
             Method method_getHandlerList = eventClass.getMethod("getHandlerList");
+            method_getHandlerList.setAccessible(true);
+            
             Map<EventPriority, Map<String, List<String>>> eventMap = new EnumMap<>(EventPriority.class);
             HandlerList handlerList = (HandlerList) method_getHandlerList.invoke(null);
 
             RegisteredListener[] registeredListenerArray = handlerList.getRegisteredListeners();
             for(RegisteredListener registeredListener : registeredListenerArray) {
                 EventPriority priority = registeredListener.getPriority();
-                Map<String, List<String>> pluginListenerClassMap = eventMap.getOrDefault(priority, new LinkedHashMap<>());
+                Map<String, List<String>> pluginListenerClassMap = eventMap.getOrDefault(priority,
+                        new LinkedHashMap<>());
 
                 Plugin plugin = registeredListener.getPlugin();
                 String pluginName = plugin.getName();
