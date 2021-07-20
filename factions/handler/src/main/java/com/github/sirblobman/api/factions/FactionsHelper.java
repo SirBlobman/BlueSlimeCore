@@ -12,6 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.Validate;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public final class FactionsHelper {
     private final JavaPlugin plugin;
     private FactionsHandler factionsHandler;
@@ -21,10 +24,12 @@ public final class FactionsHelper {
         this.factionsHandler = null;
     }
 
+    @NotNull
     public JavaPlugin getPlugin() {
         return this.plugin;
     }
 
+    @Nullable
     public FactionsHandler getFactionsHandler() {
         if(this.factionsHandler != null) {
             return this.factionsHandler;
@@ -75,9 +80,10 @@ public final class FactionsHelper {
             this.factionsHandler = new FactionsHandler_Massive(this.plugin);
             return this.factionsHandler;
         } catch(FactionsNotFoundException ignored) {
-            // Please do not print stack traces to the console when nothing is actually wrong
             Logger logger = getPlugin().getLogger();
-            logger.info("Factions not found");
+            logger.warning("Could not find any of the following plugins: " +
+                    "[LegacyFactions, FactionsX, Factions]");
+            logger.warning("Please contact SirBlobman if you believe this is mistake.");
             return null;
         } catch(Exception ex) {
             Logger logger = getPlugin().getLogger();
@@ -100,8 +106,5 @@ public final class FactionsHelper {
 
         Logger logger = this.plugin.getLogger();
         logger.info("Successfully hooked into '" + hookName + " v" + pluginVersion + "'.");
-    }
-
-    private static final class FactionsNotFoundException extends Exception {
     }
 }
