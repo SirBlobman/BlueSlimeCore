@@ -63,6 +63,10 @@ public final class CorePlugin extends ConfigurablePlugin {
     }
 
     private void printMultiVersionInformation() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        if(!configuration.getBoolean("debug-mode", false)) return;
+
         Logger logger = getLogger();
         String minecraftVersion = VersionUtility.getMinecraftVersion();
         logger.info("Minecraft Version: " + minecraftVersion);
