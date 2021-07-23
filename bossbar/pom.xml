@@ -14,6 +14,10 @@
     
     <name>SirBlobmanAPI BossBar Parent</name>
     <description>The parent pom for SirBlobmanAPI BossBar module.</description>
+
+    <properties>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
     
     <modules>
         <module>abstract</module>
