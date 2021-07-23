@@ -40,13 +40,5 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-
-        <!-- SirBlobmanAPI Item -->
-        <dependency>
-            <groupId>com.github.sirblobman.api</groupId>
-            <artifactId>item</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>

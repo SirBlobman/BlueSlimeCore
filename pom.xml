@@ -26,7 +26,6 @@
         <module>utility</module>
         <module>configuration</module>
         <module>language</module>
-        <module>command</module>
         <module>update</module>
 
         <!-- Factions Support -->
@@ -36,9 +35,10 @@
         <module>nms</module>
 
         <!-- Modules that require NMS -->
+        <module>item</module>
         <module>menu</module>
         <module>plugin</module>
-        <module>item</module>
+        <module>command</module>
 
         <!-- Core / Plugin Module -->
         <module>core</module>
@@ -66,6 +66,14 @@
             <artifactId>annotations</artifactId>
             <version>21.0.1</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- XSeries -->
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>8.2.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     
