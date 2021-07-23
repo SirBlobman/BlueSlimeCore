@@ -121,7 +121,7 @@ public final class BossBar extends BukkitRunnable {
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 18, 0);
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 19, 0);
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 20, 1_000);
-                ClassBuilder.setDataWatcherValue(this.dataWatcher, 0, 32);
+                ClassBuilder.setDataWatcherValue(this.dataWatcher, 0, (byte) 32);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -129,8 +129,8 @@ public final class BossBar extends BukkitRunnable {
         }
         try {
             ClassBuilder.setDataWatcherValue(this.dataWatcher, 6, this.health);
-            ClassBuilder.setDataWatcherValue(this.dataWatcher, 11, 1);
-            ClassBuilder.setDataWatcherValue(this.dataWatcher, 3, 1);
+            ClassBuilder.setDataWatcherValue(this.dataWatcher, 11, (byte) 1);
+            ClassBuilder.setDataWatcherValue(this.dataWatcher, 3, (byte) 1);
             ClassBuilder.setDataWatcherValue(this.dataWatcher, 10, this.message);
             ClassBuilder.setDataWatcherValue(this.dataWatcher, 2, this.message);
         }
