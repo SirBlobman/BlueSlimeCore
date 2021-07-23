@@ -73,7 +73,7 @@ public final class BossBarHandler {
 
     private Class<? extends BossBarWrapper> setupWrapperClass() {
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 8) {
+        if(minorVersion < 9) {
             return BossBarWrapper_Legacy.class;
         }
 
