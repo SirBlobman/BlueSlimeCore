@@ -3,73 +3,84 @@ package com.github.sirblobman.bossbar.legacy.reflection;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
-public abstract class Reflection
-{
+public abstract class Reflection {
     public static String getVersion() {
-        final String name = Bukkit.getServer().getClass().getPackage().getName();
-        return name.substring(name.lastIndexOf(46) + 1) + ".";
-    }
-    
-    public static Class<?> getNMSClass(final String className) {
-        final String fullName = "net.minecraft.server." + getVersion() + className;
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName(fullName);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return clazz;
-    }
-    
-    public static Class<?> getNMSClassWithException(final String className) throws Exception {
-        final String fullName = "net.minecraft.server." + getVersion() + className;
-        return Class.forName(fullName);
-    }
+        Server server = Bukkit.getServer();
+        Class<?> class_Server = server.getClass();
+        Package package_Server = class_Server.getPackage();
 
-    public static Object getHandle(final Object obj) {
+        String packageName = package_Server.getName();
+        int lastIndexOf = packageName.lastIndexOf('.');
+        return packageName.substring(lastIndexOf + 1) + ".";
+    }
+    
+    public static Class<?> getNMSClass(String className) {
         try {
-            return getMethod(obj.getClass(), "getHandle").invoke(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return getNMSClassWithException(className);
+        } catch(Exception ex) {
             return null;
         }
     }
     
-    public static Field getField(final Class<?> clazz, final String name) {
+    public static Class<?> getNMSClassWithException(String className) throws Exception {
+        String version = getVersion();
+        String fullClassName = ("net.minecraft.server." + version + className);
+        return Class.forName(fullClassName);
+    }
+
+    public static Object getHandle(Object object) {
+        if(object == null) return null;
+
         try {
-            final Field field = clazz.getDeclaredField(name);
+            Class<?> class_object = object.getClass();
+            Method method_getHandle = getMethod(class_object, "getHandle");
+            if(method_getHandle == null) return null;
+
+            return method_getHandle.invoke(object);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static Field getField(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        } catch(Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
     
-    public static Method getMethod(final Class<?> clazz, final String name, final Class<?>... args) {
-        for (final Method m : clazz.getMethods()) {
-            if (m.getName().equals(name) && (args.length == 0 || ClassListEqual(args, m.getParameterTypes()))) {
-                m.setAccessible(true);
-                return m;
+    public static Method getMethod(Class<?> clazz, String methodName, Class<?>... methodParameters) {
+        Method[] methodArray = clazz.getMethods();
+        for(Method method : methodArray) {
+            String loopMethodName = method.getName();
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            if(loopMethodName.equals(methodName) && (methodParameters.length == 0
+                    || classListEqual(methodParameters, parameterTypes))) {
+                method.setAccessible(true);
+                return method;
             }
         }
+
         return null;
     }
     
-    public static boolean ClassListEqual(final Class<?>[] l1, final Class<?>[] l2) {
-        boolean equal = true;
-        if (l1.length != l2.length) {
-            return false;
-        }
-        for (int i = 0; i < l1.length; ++i) {
-            if (l1[i] != l2[i]) {
-                equal = false;
-                break;
+    public static boolean classListEqual(Class<?>[] list1, Class<?>[] list2) {
+        if(list1.length != list2.length) return false;
+        int listLength = list1.length;
+
+        for(int i = 0; i < listLength; ++i) {
+            if(list1[i] != list2[i]) {
+                return false;
             }
         }
-        return equal;
+
+        return true;
     }
 }

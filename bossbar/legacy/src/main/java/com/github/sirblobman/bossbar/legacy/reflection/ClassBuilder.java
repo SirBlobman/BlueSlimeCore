@@ -1,81 +1,113 @@
 package com.github.sirblobman.bossbar.legacy.reflection;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
 import org.bukkit.Location;
 
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ClassBuilder {
-    public static Object buildWitherSpawnPacket(final int id, final Location loc, final Object dataWatcher) throws Exception {
-        final Object packet = NMSClass.PacketPlayOutSpawnEntityLiving.getConstructor().newInstance();
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("a")).set(packet, id);
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("b")).set(packet, 64);
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("c")).set(packet, (int)loc.getX());
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("d")).set(packet, MathUtil.floor(loc.getY() * 32.0));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("e")).set(packet, (int)loc.getZ());
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("i")).set(packet, (byte) MathUtil.d(loc.getYaw() * 256.0f / 360.0f));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("j")).set(packet, (byte) MathUtil.d(loc.getPitch() * 256.0f / 360.0f));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("k")).set(packet, (byte) MathUtil.d(loc.getPitch() * 256.0f / 360.0f));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutSpawnEntityLiving.getDeclaredField("l")).set(packet, dataWatcher);
-        return packet;
+    public static Object buildWitherSpawnPacket(int id, Location location, Object dataWatcher) throws Exception {
+        Class<?> class_Packet = NMSClass.PacketPlayOutSpawnEntityLiving;
+        Constructor<?> constructor_Packet = class_Packet.getConstructor();
+        Object object_Packet = constructor_Packet.newInstance();
+
+        Field field_a = AccessUtil.setAccessible(class_Packet.getDeclaredField("a"));
+        Field field_b = AccessUtil.setAccessible(class_Packet.getDeclaredField("b"));
+        Field field_c = AccessUtil.setAccessible(class_Packet.getDeclaredField("c"));
+        Field field_d = AccessUtil.setAccessible(class_Packet.getDeclaredField("floorFloat"));
+        Field field_e = AccessUtil.setAccessible(class_Packet.getDeclaredField("e"));
+        Field field_i = AccessUtil.setAccessible(class_Packet.getDeclaredField("i"));
+        Field field_j = AccessUtil.setAccessible(class_Packet.getDeclaredField("j"));
+        Field field_k = AccessUtil.setAccessible(class_Packet.getDeclaredField("k"));
+        Field field_l = AccessUtil.setAccessible(class_Packet.getDeclaredField("l"));
+
+        field_a.set(object_Packet, id);
+        field_b.set(object_Packet, 64);
+        field_c.set(object_Packet, location.getBlockX());
+        field_d.set(object_Packet, MathUtil.floorDouble(location.getY()));
+        field_e.set(object_Packet, location.getBlockZ());
+
+        field_i.set(object_Packet, (byte) MathUtil.floorFloat(((location.getYaw() * 256.0F) / 360.0F)));
+        field_j.set(object_Packet, (byte) MathUtil.floorFloat(((location.getPitch() * 256.0F) / 360.0F)));
+        field_k.set(object_Packet, (byte) MathUtil.floorFloat(((location.getPitch() * 256.0F) / 360.0F)));
+
+        field_l.set(object_Packet, dataWatcher);
+        return object_Packet;
     }
 
-    public static Object buildNameMetadataPacket(final int id, Object dataWatcher, final int nameIndex, final int visibilityIndex, final String name) throws Exception {
-        setDataWatcherValue(dataWatcher, nameIndex, (name != null) ? name : "");
-        dataWatcher = setDataWatcherValue(dataWatcher, visibilityIndex, (byte)((name != null && !name.isEmpty()) ? 1 : 0));
-        return NMSClass.PacketPlayOutEntityMetadata.getConstructor(Integer.TYPE, NMSClass.DataWatcher, Boolean.TYPE).newInstance(id, dataWatcher, true);
+    public static Object buildNameMetadataPacket(int id, Object dataWatcher, int nameIndex, int visibilityIndex,
+                                                 String name) throws Exception {
+        String nameString = (name == null ? "" : name);
+        setDataWatcherValue(dataWatcher, nameIndex, nameString);
+
+        byte nameByte = (byte) ((name == null || name.isEmpty()) ? 0 : 1);
+        setDataWatcherValue(dataWatcher, visibilityIndex, nameByte);
+
+        Constructor<?> constructor = NMSClass.PacketPlayOutEntityMetadata.getConstructor(Integer.TYPE,
+                NMSClass.DataWatcher, Boolean.TYPE);
+        return constructor.newInstance(id, dataWatcher, true);
     }
 
-    public static Object buildDataWatcher(@Nullable final Object entity) throws Exception {
+    public static Object buildDataWatcher(@Nullable Object entity) throws Exception {
         return NMSClass.DataWatcher.getConstructor(NMSClass.Entity).newInstance(entity);
     }
 
-    public static Object buildWatchableObject(final int type, final int index, final Object value) throws Exception {
-        return NMSClass.WatchableObject.getConstructor(Integer.TYPE, Integer.TYPE, Object.class).newInstance(type, index, value);
+    public static Object buildWatchableObject(int type, int index, Object value) throws Exception {
+        return NMSClass.WatchableObject.getConstructor(Integer.TYPE, Integer.TYPE, Object.class)
+                .newInstance(type, index, value);
     }
     
-    public static Object setDataWatcherValue(final Object dataWatcher, final int index, final Object value) throws Exception {
-        final int type = getDataWatcherValueType(value);
-        final Object map = AccessUtil.setAccessible(NMSClass.DataWatcher.getDeclaredField("dataValues")).get(dataWatcher);
-        NMUClass.gnu_trove_map_hash_TIntObjectHashMap.getDeclaredMethod("put", Integer.TYPE, Object.class).invoke(map, index, buildWatchableObject(type, index, value));
-        return dataWatcher;
+    public static void setDataWatcherValue(Object dataWatcher, int index, Object value) throws Exception {
+        int type = getDataWatcherValueType(value);
+        Object dataValuesMap = AccessUtil.setAccessible(NMSClass.DataWatcher.getDeclaredField("dataValues"))
+                .get(dataWatcher);
+        NMUClass.gnu_trove_map_hash_TIntObjectHashMap.getDeclaredMethod("put", Integer.TYPE, Object.class)
+                .invoke(dataValuesMap, index, buildWatchableObject(type, index, value));
     }
 
-    public static int getDataWatcherValueType(final Object value) {
-        int type = 0;
-        if (value instanceof Number) {
-            if (value instanceof Short) {
-                type = 1;
-            }
-            else if (value instanceof Integer) {
-                type = 2;
-            }
-            else if (value instanceof Float) {
-                type = 3;
-            }
+    public static int getDataWatcherValueType(Object value) {
+        if(value instanceof Number) {
+            if(value instanceof Byte) return 0;
+            if(value instanceof Short) return 1;
+            if(value instanceof Integer) return 2;
+            if(value instanceof Float) return 3;
         }
-        else if (value instanceof String) {
-            type = 4;
+
+        if(value instanceof String) {
+            return 4;
         }
-        else if (value != null && value.getClass().equals(NMSClass.ItemStack)) {
-            type = 5;
+
+        if(value != null) {
+            Class<?> valueClass = value.getClass();
+            if(valueClass.equals(NMSClass.ItemStack)) return 5;
+            if(valueClass.equals(NMSClass.ChunkCoordinates) || valueClass.equals(NMSClass.BlockPosition)) return 6;
+            if(valueClass.equals(NMSClass.Vector3f)) return 7;
         }
-        else if (value != null && (value.getClass().equals(NMSClass.ChunkCoordinates) || value.getClass().equals(NMSClass.BlockPosition))) {
-            type = 6;
-        }
-        else if (value != null && value.getClass().equals(NMSClass.Vector3f)) {
-            type = 7;
-        }
-        return type;
+
+        return 0;
     }
 
-    public static Object buildTeleportPacket(final int id, final Location loc) throws Exception {
-        final Object packet = NMSClass.PacketPlayOutEntityTeleport.getConstructor().newInstance();
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutEntityTeleport.getDeclaredField("a")).set(packet, id);
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutEntityTeleport.getDeclaredField("b")).set(packet, (int)(loc.getX() * 32.0));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutEntityTeleport.getDeclaredField("c")).set(packet, (int)(loc.getY() * 32.0));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutEntityTeleport.getDeclaredField("d")).set(packet, (int)(loc.getZ() * 32.0));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutEntityTeleport.getDeclaredField("e")).set(packet, (byte)(loc.getYaw() * 256.0f / 360.0f));
-        AccessUtil.setAccessible(NMSClass.PacketPlayOutEntityTeleport.getDeclaredField("f")).set(packet, (byte)(loc.getPitch() * 256.0f / 360.0f));
-        return packet;
+    public static Object buildTeleportPacket(int id, Location location) throws Exception {
+        Class<?> class_Packet = NMSClass.PacketPlayOutEntityTeleport;
+        Constructor<?> constructor_Packet = class_Packet.getConstructor();
+        Object object_Packet = constructor_Packet.newInstance();
+
+        Field field_a = AccessUtil.setAccessible(class_Packet.getDeclaredField("a"));
+        Field field_b = AccessUtil.setAccessible(class_Packet.getDeclaredField("b"));
+        Field field_c = AccessUtil.setAccessible(class_Packet.getDeclaredField("c"));
+        Field field_d = AccessUtil.setAccessible(class_Packet.getDeclaredField("floorFloat"));
+        Field field_e = AccessUtil.setAccessible(class_Packet.getDeclaredField("e"));
+        Field field_f = AccessUtil.setAccessible(class_Packet.getDeclaredField("f"));
+
+        field_a.set(object_Packet, id);
+        field_b.set(object_Packet, (int) (location.getX() * 32.0D));
+        field_c.set(object_Packet, (int) (location.getY() * 32.0D));
+        field_d.set(object_Packet, (int) (location.getZ() * 32.0D));
+        field_e.set(object_Packet, (byte) ((location.getYaw() * 256.0F) / 360.0F));
+        field_f.set(object_Packet, (byte) ((location.getPitch() * 256.0F) / 360.0F));
+
+        return object_Packet;
     }
 }
