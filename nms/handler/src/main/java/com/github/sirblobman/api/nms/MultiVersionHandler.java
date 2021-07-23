@@ -62,13 +62,21 @@ public final class MultiVersionHandler {
     }
 
     public BossBarHandler getBossBarHandler() {
+        if(this.bossBarHandler == null) {
+            JavaPlugin plugin = getPlugin();
+            this.bossBarHandler = new BossBarHandler(plugin);
+        }
+
         return this.bossBarHandler;
     }
 
     public ScoreboardHandler getScoreboardHandler() {
-        if(this.scoreboardHandler != null) return this.scoreboardHandler;
-        JavaPlugin plugin = getPlugin();
-        return (this.scoreboardHandler = new ScoreboardHandler(plugin));
+        if(this.scoreboardHandler == null) {
+            JavaPlugin plugin = getPlugin();
+            this.scoreboardHandler = new ScoreboardHandler(plugin);
+        }
+
+        return this.scoreboardHandler;
     }
 
     public EntityHandler getEntityHandler() {
