@@ -22,16 +22,25 @@
     </properties>
     
     <modules>
+        <!-- Regular Modules -->
         <module>utility</module>
-        <module>item</module>
-        <module>nms</module>
         <module>configuration</module>
         <module>language</module>
         <module>command</module>
-        <module>menu</module>
         <module>update</module>
-        <module>plugin</module>
+
+        <!-- Factions Support -->
         <module>factions</module>
+
+        <!-- NMS Module -->
+        <module>nms</module>
+
+        <!-- Modules that require NMS -->
+        <module>menu</module>
+        <module>plugin</module>
+        <module>item</module>
+
+        <!-- Core / Plugin Module -->
         <module>core</module>
     </modules>
     

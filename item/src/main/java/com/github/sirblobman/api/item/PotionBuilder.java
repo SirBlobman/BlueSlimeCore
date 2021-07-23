@@ -1,49 +1,60 @@
 package com.github.sirblobman.api.item;
 
 import org.bukkit.Color;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
-public class PotionBuilder extends ItemBuilder {
+import com.github.sirblobman.api.utility.Validate;
+
+import org.jetbrains.annotations.NotNull;
+
+public final class PotionBuilder extends ItemBuilder {
     public PotionBuilder(BottleType bottleType) {
         super(bottleType.getItem());
     }
 
-    public PotionBuilder withMainEffect(PotionType potionType, boolean extended, boolean upgraded) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(!(meta instanceof PotionMeta)) return this;
-        PotionMeta potionMeta = (PotionMeta) meta;
+    public PotionBuilder withMainEffect(@NotNull PotionType potionType, boolean extended, boolean upgraded) {
+        Validate.notNull(potionType, "potionType must not be null!");
 
+        ItemStack finalItem = getFinalItem();
+        ItemMeta itemMeta = finalItem.getItemMeta();
+        if(!(itemMeta instanceof PotionMeta)) return this;
+
+        PotionMeta potionMeta = (PotionMeta) itemMeta;
         PotionData potionData = new PotionData(potionType, extended, upgraded);
         potionMeta.setBasePotionData(potionData);
 
-        this.finalItem.setItemMeta(potionMeta);
-        return this;
+        return (PotionBuilder) withItemMeta(potionMeta);
     }
 
-    public PotionBuilder withExtraEffect(PotionEffect potionEffect) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(!(meta instanceof PotionMeta)) return this;
-        PotionMeta potionMeta = (PotionMeta) meta;
+    public PotionBuilder withExtraEffect(@NotNull PotionEffect potionEffect) {
+        Validate.notNull(potionEffect, "potionEffect must not be null!");
 
+        ItemStack finalItem = getFinalItem();
+        ItemMeta itemMeta = finalItem.getItemMeta();
+        if(!(itemMeta instanceof PotionMeta)) return this;
+
+        PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.addCustomEffect(potionEffect, true);
 
-        this.finalItem.setItemMeta(potionMeta);
-        return this;
+        return (PotionBuilder) withItemMeta(potionMeta);
     }
 
-    public PotionBuilder withColor(Color color) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(!(meta instanceof PotionMeta)) return this;
-        PotionMeta potionMeta = (PotionMeta) meta;
+    public PotionBuilder withColor(@NotNull Color color) {
+        Validate.notNull(color, "color must not be null!");
 
+        ItemStack finalItem = getFinalItem();
+        ItemMeta itemMeta = finalItem.getItemMeta();
+        if(!(itemMeta instanceof PotionMeta)) return this;
+
+        PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.setColor(color);
 
-        this.finalItem.setItemMeta(potionMeta);
-        return this;
+        return (PotionBuilder) withItemMeta(potionMeta);
     }
 
     public PotionBuilder withColor(int red, int green, int blue) {

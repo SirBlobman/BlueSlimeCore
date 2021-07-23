@@ -1,22 +1,31 @@
 package com.github.sirblobman.api.item;
 
 import org.bukkit.Color;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-public class LeatherArmorBuilder extends ItemBuilder {
+import com.github.sirblobman.api.utility.Validate;
+
+import com.cryptomorin.xseries.XMaterial;
+import org.jetbrains.annotations.NotNull;
+
+public final class LeatherArmorBuilder extends ItemBuilder {
     public LeatherArmorBuilder(ArmorType armorType) {
-        super(armorType.getArmorMaterial("LEATHER"));
+        super(armorType.getArmorMaterial(ArmorMaterialType.LEATHER).orElse(XMaterial.LEATHER_CHESTPLATE));
     }
 
-    public LeatherArmorBuilder withColor(Color color) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(!(meta instanceof LeatherArmorMeta)) return this;
-        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) meta;
+    public LeatherArmorBuilder withColor(@NotNull Color color) {
+        Validate.notNull(color, "color must not be null!");
 
+        ItemStack finalItem = getFinalItem();
+        ItemMeta itemMeta = finalItem.getItemMeta();
+        if(!(itemMeta instanceof LeatherArmorMeta)) return this;
+
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemMeta;
         leatherArmorMeta.setColor(color);
-        this.finalItem.setItemMeta(leatherArmorMeta);
-        return this;
+
+        return (LeatherArmorBuilder) withItemMeta(itemMeta);
     }
 
     public LeatherArmorBuilder withColor(int red, int green, int blue) {

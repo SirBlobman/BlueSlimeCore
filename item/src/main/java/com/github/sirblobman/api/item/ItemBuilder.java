@@ -15,11 +15,17 @@ import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
 
 import com.cryptomorin.xseries.XMaterial;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemBuilder {
     protected final ItemStack finalItem;
+
     public ItemBuilder(ItemStack item) {
         this.finalItem = Validate.notNull(item, "item must not be null!");
+    }
+
+    final ItemStack getFinalItem() {
+        return this.finalItem;
     }
 
     public ItemStack build() {
@@ -30,12 +36,12 @@ public class ItemBuilder {
         this(new ItemStack(material, 1));
     }
 
-    public ItemBuilder(XMaterial xMaterial) {
-        this(xMaterial.parseItem());
+    public ItemBuilder(XMaterial material) {
+        this(material.parseItem());
     }
 
-    public ItemBuilder withMaterial(Material type) {
-        this.finalItem.setType(type);
+    public ItemBuilder withMaterial(Material material) {
+        this.finalItem.setType(material);
         return this;
     }
 
@@ -51,6 +57,11 @@ public class ItemBuilder {
         return withAmount(maxAmount);
     }
 
+    public ItemBuilder withItemMeta(@Nullable ItemMeta itemMeta) {
+        this.finalItem.setItemMeta(itemMeta);
+        return this;
+    }
+
     @SuppressWarnings("deprecation")
     public ItemBuilder withDamage(int damage) {
         int minorVersion = VersionUtility.getMinorVersion();
@@ -60,44 +71,40 @@ public class ItemBuilder {
             return this;
         }
 
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(meta instanceof Damageable) {
-            Damageable damageable = (Damageable) meta;
-            damageable.setDamage(damage);
-            this.finalItem.setItemMeta(meta);
+        ItemMeta itemMeta = this.finalItem.getItemMeta();
+        if(itemMeta instanceof Damageable) {
+            ((Damageable) itemMeta).setDamage(damage);
+            return withItemMeta(itemMeta);
         }
 
         return this;
     }
 
-    public ItemBuilder withModel(Integer model) {
+    public ItemBuilder withModel(@Nullable Integer model) {
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 13) return this;
+        if(minorVersion < 14) return this;
 
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(meta == null) return this;
+        ItemMeta itemMeta = this.finalItem.getItemMeta();
+        if(itemMeta == null) return this;
 
-        meta.setCustomModelData(model);
-        this.finalItem.setItemMeta(meta);
-        return this;
+        itemMeta.setCustomModelData(model);
+        return withItemMeta(itemMeta);
     }
 
     public ItemBuilder withName(String name) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(meta == null) return this;
+        ItemMeta itemMeta = this.finalItem.getItemMeta();
+        if(itemMeta == null) return this;
 
-        meta.setDisplayName(name);
-        this.finalItem.setItemMeta(meta);
-        return this;
+        itemMeta.setDisplayName(name);
+        return withItemMeta(itemMeta);
     }
 
     public ItemBuilder withLore(List<String> loreList) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(meta == null) return this;
+        ItemMeta itemMeta = this.finalItem.getItemMeta();
+        if(itemMeta == null) return this;
 
-        meta.setLore(loreList);
-        this.finalItem.setItemMeta(meta);
-        return this;
+        itemMeta.setLore(loreList);
+        return withItemMeta(itemMeta);
     }
 
     public ItemBuilder withLore(String... loreArray) {
@@ -107,21 +114,19 @@ public class ItemBuilder {
     }
 
     public ItemBuilder withEnchantment(Enchantment enchantment, int level) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(meta == null) return this;
+        ItemMeta itemMeta = this.finalItem.getItemMeta();
+        if(itemMeta == null) return this;
 
-        meta.addEnchant(enchantment, level, true);
-        this.finalItem.setItemMeta(meta);
-        return this;
+        itemMeta.addEnchant(enchantment, level, true);
+        return withItemMeta(itemMeta);
     }
 
     public ItemBuilder withFlags(ItemFlag... flagArray) {
-        ItemMeta meta = this.finalItem.getItemMeta();
-        if(meta == null) return this;
+        ItemMeta itemMeta = this.finalItem.getItemMeta();
+        if(itemMeta == null) return this;
 
-        meta.addItemFlags(flagArray);
-        this.finalItem.setItemMeta(meta);
-        return this;
+        itemMeta.addItemFlags(flagArray);
+        return withItemMeta(itemMeta);
     }
 
     public ItemBuilder withGlowing() {
