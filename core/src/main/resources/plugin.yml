@@ -15,7 +15,6 @@ provides:
   - "XSeries"
 
 softdepend:
-  - "BossBarAPI"
   - "Factions"
   - "FactionsX"
   - "LegacyFactions"
