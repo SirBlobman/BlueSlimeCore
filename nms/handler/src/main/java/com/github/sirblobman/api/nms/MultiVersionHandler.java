@@ -6,21 +6,21 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.nms.bossbar.BossBarHandler;
-import com.github.sirblobman.api.nms.bossbar.BossBarHandler_BossBarAPI;
-import com.github.sirblobman.api.nms.bossbar.BossBarHandler_Spigot;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
+import com.github.sirblobman.bossbar.BossBarHandler;
 
 public final class MultiVersionHandler {
     private final JavaPlugin plugin;
+
     private BossBarHandler bossBarHandler;
     private ScoreboardHandler scoreboardHandler;
     private EntityHandler entityHandler;
     private HeadHandler headHandler;
     private ItemHandler itemHandler;
     private PlayerHandler playerHandler;
+
     public MultiVersionHandler(JavaPlugin plugin) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
     }
@@ -62,12 +62,7 @@ public final class MultiVersionHandler {
     }
 
     public BossBarHandler getBossBarHandler() {
-        if(this.bossBarHandler != null) return this.bossBarHandler;
-        JavaPlugin plugin = getPlugin();
-
-        int minorVersion = VersionUtility.getMinorVersion();
-        this.bossBarHandler = (minorVersion < 9 ? new BossBarHandler_BossBarAPI(plugin) : new BossBarHandler_Spigot(plugin));
-        return getBossBarHandler();
+        return this.bossBarHandler;
     }
 
     public ScoreboardHandler getScoreboardHandler() {

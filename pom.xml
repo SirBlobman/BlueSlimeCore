@@ -4,7 +4,7 @@
     
     <groupId>com.github.sirblobman.api</groupId>
     <artifactId>parent</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.3-SNAPSHOT</version>
     
     <name>SirBlobmanAPI Parent</name>
     <description>The parent pom for SirBlobmanAPI</description>
@@ -28,13 +28,12 @@
         <module>language</module>
         <module>update</module>
 
-        <!-- Factions Support -->
+        <!-- Version Specific Modules -->
         <module>factions</module>
-
-        <!-- NMS Module -->
+        <module>bossbar</module>
         <module>nms</module>
 
-        <!-- Modules that require NMS -->
+        <!-- Modules that require version specific modules -->
         <module>item</module>
         <module>menu</module>
         <module>plugin</module>

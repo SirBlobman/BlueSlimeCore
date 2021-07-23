@@ -1,0 +1,28 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.github.sirblobman.api</groupId>
+        <artifactId>parent</artifactId>
+        <version>2.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+    <groupId>com.github.sirblobman.api.bossbar</groupId>
+    <artifactId>bossbar-parent</artifactId>
+    
+    <name>SirBlobmanAPI BossBar Parent</name>
+    <description>The parent pom for SirBlobmanAPI BossBar module.</description>
+    
+    <modules>
+        <module>abstract</module>
+
+        <!-- BossBar Versions -->
+        <module>legacy</module>
+        <module>modern</module>
+        <module>paper</module>
+        
+        <module>handler</module>
+    </modules>
+</project>

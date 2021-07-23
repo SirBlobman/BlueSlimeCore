@@ -19,11 +19,11 @@ import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
-import com.github.sirblobman.api.nms.bossbar.BossBarHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
+import com.github.sirblobman.bossbar.BossBarHandler;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final UpdateManager updateManager;

@@ -1,0 +1,73 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.github.sirblobman.api.bossbar</groupId>
+        <artifactId>bossbar-parent</artifactId>
+        <version>2.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>bossbar-handler</artifactId>
+    <name>SirBlobmanAPI BossBar Handler</name>
+    <description>Handler code for SirBlobmanAPI boss bars.</description>
+
+    <repositories>
+        <!-- SpigotMC Repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI Utility -->
+        <dependency>
+            <groupId>com.github.sirblobman.api</groupId>
+            <artifactId>utility</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI BossBar Abstract -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.bossbar</groupId>
+            <artifactId>bossbar-abstract</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI BossBar Legacy -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.bossbar</groupId>
+            <artifactId>bossbar-legacy</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI BossBar Modern -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.bossbar</groupId>
+            <artifactId>bossbar-modern</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- SirBlobmanAPI BossBar Paper -->
+        <dependency>
+            <groupId>com.github.sirblobman.api.bossbar</groupId>
+            <artifactId>bossbar-paper</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>
