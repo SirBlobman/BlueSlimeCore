@@ -82,11 +82,16 @@ public final class CorePlugin extends ConfigurablePlugin {
 
         logger.info("Successfully linked with the following handlers:");
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
+
+        logger.info("Boss Bar Wrapper Class:");
+        logger.info(bossBarHandler.getWrapperClass().getName());
     }
 
     private void printClassNames(Object... objectArray) {
         Logger logger = getLogger();
         for(Object object : objectArray) {
+            if(object == null) continue;
+
             Class<?> objectClass = object.getClass();
             String className = objectClass.getName();
             logger.info(" - " + className);
