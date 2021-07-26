@@ -19,6 +19,11 @@ public class EntityHandler_Fallback extends EntityHandler {
     }
 
     @Override
+    public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
+        // Do Nothing
+    }
+
+    @Override
     public double getMaxHealth(LivingEntity entity) {
         return 0.0D;
     }

@@ -13,6 +13,8 @@ public abstract class EntityHandler extends Handler {
     }
 
     public abstract String getName(Entity entity);
+    public abstract void setCustomNameTextOnly(Entity entity, String text, boolean visible);
+
     public abstract double getMaxHealth(LivingEntity entity);
     public abstract void setMaxHealth(LivingEntity entity, double maxHealth);
 

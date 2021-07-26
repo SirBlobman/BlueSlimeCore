@@ -35,6 +35,15 @@ public class EntityHandler_1_7_R4 extends EntityHandler {
     }
 
     @Override
+    public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
+        if(entity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) entity;
+            livingEntity.setCustomName(text);
+            livingEntity.setCustomNameVisible(visible);
+        }
+    }
+
+    @Override
     public double getMaxHealth(LivingEntity entity) {
         return entity.getMaxHealth();
     }

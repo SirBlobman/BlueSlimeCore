@@ -31,6 +31,12 @@ public class EntityHandler_1_9_R2 extends EntityHandler {
     }
 
     @Override
+    public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
+        entity.setCustomName(text);
+        entity.setCustomNameVisible(visible);
+    }
+
+    @Override
     public double getMaxHealth(LivingEntity entity) {
         return entity.getMaxHealth();
     }

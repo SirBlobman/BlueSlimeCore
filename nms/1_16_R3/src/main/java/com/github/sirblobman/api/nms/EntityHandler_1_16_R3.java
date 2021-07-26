@@ -11,7 +11,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.minecraft.server.v1_16_R3.IChatBaseComponent;
+import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
+
 import com.github.sirblobman.api.utility.Validate;
+
+import com.google.gson.JsonObject;
 
 public class EntityHandler_1_16_R3 extends EntityHandler {
     public EntityHandler_1_16_R3(JavaPlugin plugin) {
@@ -27,6 +33,21 @@ public class EntityHandler_1_16_R3 extends EntityHandler {
 
         String customName = entity.getCustomName();
         return (customName == null ? entity.getName() : customName);
+    }
+
+    @Override
+    public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
+        if(entity instanceof CraftEntity) {
+            CraftEntity craftEntity = (CraftEntity) entity;
+            net.minecraft.server.v1_16_R3.Entity nmsEntity = craftEntity.getHandle();
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("text", text);
+
+            IChatBaseComponent chatComponent = ChatSerializer.a(jsonObject);
+            nmsEntity.setCustomName(chatComponent);
+            nmsEntity.setCustomNameVisible(visible);
+        }
     }
 
     @Override
