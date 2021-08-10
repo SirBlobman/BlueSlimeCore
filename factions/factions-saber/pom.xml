@@ -25,15 +25,6 @@
             <id>sirblobman-public</id>
             <url>https://nexus.sirblobman.xyz/repository/public/</url>
         </repository>
-        
-        <!-- JitPack Repository -->
-        <repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-		</repository>
     </repositories>
 
     <dependencies>
@@ -53,6 +44,20 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- SaberFactions -->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5-2.9.2-RC</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Lucko Helper -->
         <dependency>
             <groupId>me.lucko</groupId>
@@ -65,14 +70,6 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- SaberFactions -->
-        <dependency>
-            <groupId>com.github.SaberLLC</groupId>
-            <artifactId>Saber-Factions</artifactId>
-            <version>2.9.1-RC</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
