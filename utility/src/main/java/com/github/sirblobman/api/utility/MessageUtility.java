@@ -3,17 +3,10 @@ package com.github.sirblobman.api.utility;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 
 public final class MessageUtility {
-    /**
-     * The pattern used to find 1.16+ Hex Color Codes in a string.
-     * Matches codes in the '&#&lt;hex&gt;' format.
-     */
-    private static final Pattern RGB_PATTERN = Pattern.compile("(&)(#[0-9A-Fa-f]{6})");
-
     /**
      * @param message The message that will be colored
      * @return A new string containing {@code message} but with the color codes replaced, or an empty string if message was {@code null}.
@@ -21,14 +14,17 @@ public final class MessageUtility {
      * @see HexColorUtility#replaceHexColors(char, String)
      */
     public static String color(String message) {
-        if(message == null) return "";
+        if(message == null || message.isEmpty()) {
+            return "";
+        }
         
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion >= 16) {
-            message = HexColorUtility.replaceHexColors('&', message);
+        if(minorVersion < 16) {
+            return org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
         }
-
-        return ChatColor.translateAlternateColorCodes('&', message);
+        
+        String messageReplaced = HexColorUtility.replaceHexColors('&', message);
+        return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', messageReplaced);
     }
 
     /**
