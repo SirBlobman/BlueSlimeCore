@@ -28,6 +28,12 @@ public final class FactionsHelper {
     public JavaPlugin getPlugin() {
         return this.plugin;
     }
+    
+    @NotNull
+    public Logger getLogger() {
+        JavaPlugin plugin = getPlugin();
+        return plugin.getLogger();
+    }
 
     @Nullable
     public FactionsHandler getFactionsHandler() {
@@ -50,10 +56,13 @@ public final class FactionsHelper {
             }
 
             Plugin plugin = getPlugin("Factions");
-            if(plugin == null) throw new FactionsNotFoundException();
+            if(plugin == null) {
+                throw new FactionsNotFoundException();
+            }
 
             PluginDescriptionFile description = plugin.getDescription();
             List<String> pluginAuthorList = description.getAuthors();
+            List<String> pluginDependencyList = description.getDepend();
             String pluginVersion = description.getVersion();
 
             if(pluginVersion.startsWith("1.6.9.5")) {
@@ -68,22 +77,29 @@ public final class FactionsHelper {
                     this.factionsHandler = new FactionsHandler_UUID(this.plugin);
                     return this.factionsHandler;
                 }
-
-                if(pluginVersion.startsWith("1.6.9.5-2") && pluginAuthorList.contains("Driftay")) {
-                    printHookInfo("Factions", "SaberFactions");
-                    this.factionsHandler = new FactionsHandler_Saber(this.plugin);
-                    return this.factionsHandler;
+                
+                if(pluginAuthorList.contains("Driftay")) {
+                    if(pluginVersion.endsWith("-X") || pluginVersion.startsWith("1.6.9.5-2")) {
+                        printHookInfo("Factions", "SaberFactions");
+                        this.factionsHandler = new FactionsHandler_Saber(this.plugin);
+                        return this.factionsHandler;
+                    }
                 }
             }
-
-            printHookInfo("Factions", "MassiveCore Factions");
-            this.factionsHandler = new FactionsHandler_Massive(this.plugin);
-            return this.factionsHandler;
-        } catch(FactionsNotFoundException ignored) {
-            Logger logger = getPlugin().getLogger();
-            logger.warning("Could not find any of the following plugins: " +
-                    "[LegacyFactions, FactionsX, Factions]");
+            
+            if(pluginDependencyList.contains("MassiveCore")) {
+                printHookInfo("Factions", "MassiveCore Factions");
+                this.factionsHandler = new FactionsHandler_Massive(this.plugin);
+                return this.factionsHandler;
+            }
+            
+            throw new FactionsNotFoundException();
+        } catch(FactionsNotFoundException ex) {
+            Logger logger = getLogger();
+            logger.warning("Failed to find any of the following plugins:");
+            logger.warning("[Factions, FactionsX, LegacyFactions]");
             logger.warning("Please contact SirBlobman if you believe this is mistake.");
+            logger.warning("https://github.com/SirBlobman/SirBlobmanAPI/issues/new/choose");
             return null;
         } catch(Exception ex) {
             Logger logger = getPlugin().getLogger();
@@ -93,13 +109,15 @@ public final class FactionsHelper {
     }
 
     private Plugin getPlugin(String pluginName) {
-        PluginManager manager = Bukkit.getPluginManager();
-        return manager.getPlugin(pluginName);
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        return pluginManager.getPlugin(pluginName);
     }
 
     private void printHookInfo(String pluginName, String hookName) {
         Plugin plugin = getPlugin(pluginName);
-        if(plugin == null) return;
+        if(plugin == null) {
+            return;
+        }
 
         PluginDescriptionFile description = plugin.getDescription();
         String pluginVersion = description.getVersion();
