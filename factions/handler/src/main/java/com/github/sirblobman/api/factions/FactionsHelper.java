@@ -69,7 +69,7 @@ public final class FactionsHelper {
                     return this.factionsHandler;
                 }
 
-                if(pluginVersion.startsWith("1.6.9.5-2") && pluginAuthorList.contains("Driftay")) {
+                if(pluginVersion.startsWith("1.6.9.5-2") || pluginVersion.contains("-X") && pluginAuthorList.contains("Driftay")) {
                     printHookInfo("Factions", "SaberFactions");
                     this.factionsHandler = new FactionsHandler_Saber(this.plugin);
                     return this.factionsHandler;
