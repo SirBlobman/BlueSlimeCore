@@ -145,7 +145,7 @@
                 <version>3.3.0-SNAPSHOT</version>
 
                 <configuration>
-					<shadedArtifactAttached>false</shadedArtifactAttached>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
 					
                     <relocations>
                         <relocation>
