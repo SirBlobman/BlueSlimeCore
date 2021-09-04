@@ -3,9 +3,13 @@ package com.github.sirblobman.api.command;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -35,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
     private final String commandName;
+    private final Map<String, Command> subCommandMap;
 
     /**
      * @param plugin The plugin that will be used to register this command.
@@ -43,6 +48,7 @@ public abstract class Command implements TabExecutor {
     public Command(JavaPlugin plugin, String commandName) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.commandName = Validate.notEmpty(commandName, "commandName cannot be empty or null!");
+        this.subCommandMap = new HashMap<>();
     }
 
     /**
@@ -76,15 +82,44 @@ public abstract class Command implements TabExecutor {
      * {@inheritDoc}
      */
     @Override
-    public final List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        return onTabComplete(sender, args);
+    public final List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label,
+                                            String[] args) {
+        List<String> tabCompletions = new ArrayList<>(onTabComplete(sender, args));
+        if(args.length == 1) {
+            tabCompletions.addAll(onTabComplete(sender, args));
+            return getMatching(tabCompletions, args[0]);
+        }
+        
+        if(args.length > 1) {
+            String subCommandName = args[0].toLowerCase(Locale.US);
+            Map<String, Command> subCommands = getSubCommands();
+            Command subCommand = subCommands.getOrDefault(subCommandName, null);
+            if(subCommand != null) {
+                String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
+                return subCommand.onTabComplete(sender, command, label, newArgs);
+            }
+        }
+        
+        return Collections.emptyList();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+    public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
+                                   String[] args) {
+        if(args.length >= 1) {
+            String subCommandName = args[0].toLowerCase(Locale.US);
+            Map<String, Command> subCommands = getSubCommands();
+            Command subCommand = subCommands.getOrDefault(subCommandName, null);
+            if(subCommand != null) {
+                String[] newArgs = (args.length < 2 ? new String[0] :
+                        Arrays.copyOfRange(args, 1, args.length));
+                return subCommand.onCommand(sender, command, label, newArgs);
+            }
+        }
+        
         return execute(sender, args);
     }
 
@@ -112,6 +147,23 @@ public abstract class Command implements TabExecutor {
             logger.log(Level.WARNING,
                     "An error occurred while registering the command '/" + commandName + "':", ex);
         }
+    }
+    
+    /**
+     * Register a command to be a sub-command of this one.
+     * @param subCommand The command to register as a sub-command.
+     */
+    protected final void addSubCommand(Command subCommand) {
+        Validate.notNull(subCommand, "subCommand must not be null!");
+        String subCommandName = subCommand.getCommandName();
+        this.subCommandMap.putIfAbsent(subCommandName, subCommand);
+    }
+    
+    /**
+     * @return An unmodifiable view of the sub commands for this command.
+     */
+    protected final Map<String, Command> getSubCommands() {
+        return Collections.unmodifiableMap(this.subCommandMap);
     }
 
     /**

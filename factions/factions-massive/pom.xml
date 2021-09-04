@@ -50,6 +50,12 @@
             <artifactId>MassiveCore</artifactId>
             <version>2.14.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- MassiveCore Factions -->
@@ -58,6 +64,12 @@
             <artifactId>Factions</artifactId>
             <version>2.14.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
