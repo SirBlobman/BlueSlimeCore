@@ -59,12 +59,22 @@ public final class FactionsHelper {
             if(plugin == null) {
                 throw new FactionsNotFoundException();
             }
+            
+            if(isSaberFactions(plugin)) {
+                printHookInfo("Factions", "SaberFactions");
+                this.factionsHandler = new FactionsHandler_Saber(this.plugin);
+                return this.factionsHandler;
+            }
 
             PluginDescriptionFile description = plugin.getDescription();
-            List<String> pluginAuthorList = description.getAuthors();
             List<String> pluginDependencyList = description.getDepend();
+            if(pluginDependencyList.contains("MassiveCore")) {
+                printHookInfo("Factions", "MassiveCore Factions");
+                this.factionsHandler = new FactionsHandler_Massive(this.plugin);
+                return this.factionsHandler;
+            }
+            
             String pluginVersion = description.getVersion();
-
             if(pluginVersion.startsWith("1.6.9.5")) {
                 if(pluginVersion.startsWith("1.6.9.5-U0.2")) {
                     printHookInfo("Factions", "Factions UUID Legacy");
@@ -77,20 +87,6 @@ public final class FactionsHelper {
                     this.factionsHandler = new FactionsHandler_UUID(this.plugin);
                     return this.factionsHandler;
                 }
-                
-                if(pluginAuthorList.contains("Driftay")) {
-                    if(pluginVersion.endsWith("-X") || pluginVersion.startsWith("1.6.9.5-2")) {
-                        printHookInfo("Factions", "SaberFactions");
-                        this.factionsHandler = new FactionsHandler_Saber(this.plugin);
-                        return this.factionsHandler;
-                    }
-                }
-            }
-            
-            if(pluginDependencyList.contains("MassiveCore")) {
-                printHookInfo("Factions", "MassiveCore Factions");
-                this.factionsHandler = new FactionsHandler_Massive(this.plugin);
-                return this.factionsHandler;
             }
             
             throw new FactionsNotFoundException();
@@ -102,7 +98,7 @@ public final class FactionsHelper {
             logger.warning("https://github.com/SirBlobman/SirBlobmanAPI/issues/new/choose");
             return null;
         } catch(Exception ex) {
-            Logger logger = getPlugin().getLogger();
+            Logger logger = getLogger();
             logger.log(Level.WARNING,"Failed to hook into a Factions plugin because an error occurred:", ex);
             return null;
         }
@@ -124,5 +120,21 @@ public final class FactionsHelper {
 
         Logger logger = this.plugin.getLogger();
         logger.info("Successfully hooked into '" + hookName + " v" + pluginVersion + "'.");
+    }
+    
+    private boolean isSaberFactions(Plugin plugin) {
+        PluginDescriptionFile pluginDescription = plugin.getDescription();
+        String pluginVersion = pluginDescription.getVersion();
+        List<String> pluginAuthorList = pluginDescription.getAuthors();
+        
+        if(pluginAuthorList.contains("Driftay")) {
+            if(pluginVersion.endsWith("-X")) {
+                return true;
+            }
+    
+            return pluginVersion.startsWith("1.6.9.5-2");
+        }
+        
+        return false;
     }
 }
