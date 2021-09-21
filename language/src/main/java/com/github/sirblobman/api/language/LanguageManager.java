@@ -69,23 +69,20 @@ public final class LanguageManager {
     public void saveDefaultLanguages() {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.saveDefault("language.yml");
-
-        YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
-        String defaultLanguageName = languageConfiguration.getString("default-locale");
-        if(defaultLanguageName == null) {
-            defaultLanguageName = "en_us";
-        }
-
+        
         for(String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
             String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
             YamlConfiguration jarLanguageConfiguration = configurationManager.getInternal(languageFileName);
-
             if(jarLanguageConfiguration != null) {
                 configurationManager.saveDefault(languageFileName);
-                continue;
             }
-
-            createDefaultLanguage(languageName, defaultLanguageName);
+        }
+        
+        if(this.defaultLanguage == null) {
+            reloadLanguages();
+            if(this.defaultLanguage == null) {
+                throw new IllegalStateException("Missing default locale translation file!");
+            }
         }
     }
 
@@ -231,51 +228,13 @@ public final class LanguageManager {
                 Language language = this.languageMap.getOrDefault(localeName, null);
                 if(language != null) {
                     this.playerLanguageMap.put(playerId, language);
-                    return this.defaultLanguage;
+                    return language;
                 }
             }
         }
 
         this.playerLanguageMap.put(playerId, this.defaultLanguage);
         return this.defaultLanguage;
-    }
-
-    private void createDefaultLanguage(String languageName, String defaultLanguageName) {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        IResourceHolder resourceHolder = configurationManager.getResourceHolder();
-
-        File dataFolder = resourceHolder.getDataFolder();
-        if(!dataFolder.exists()) {
-            boolean makeFolder = dataFolder.mkdirs();
-            if(!makeFolder) {
-                Logger logger = resourceHolder.getLogger();
-                logger.warning("Failed to create folder at '" + dataFolder + "'.");
-                return;
-            }
-        }
-
-        File languageFolder = new File(dataFolder, "language");
-        if(!languageFolder.exists()) {
-            boolean makeFolder = languageFolder.mkdirs();
-            if(!makeFolder) {
-                Logger logger = resourceHolder.getLogger();
-                logger.warning("Failed to create folder at '" + languageFolder + "'.");
-                return;
-            }
-        }
-
-        String languageFileName = String.format(Locale.US, "%s.lang.yml", languageName);
-        File languageFile = new File(languageFolder, languageFileName);
-        if(languageFile.exists()) return;
-
-        try {
-            YamlConfiguration configuration = new YamlConfiguration();
-            configuration.set("parent", defaultLanguageName);
-            configuration.save(languageFile);
-        } catch(IOException ex) {
-            Logger logger = resourceHolder.getLogger();
-            logger.log(Level.WARNING, "Failed to create a default language file because an error occurred.");
-        }
     }
 
     private Language loadLanguage(YamlConfiguration configuration) throws InvalidConfigurationException {
