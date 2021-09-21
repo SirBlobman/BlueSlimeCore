@@ -29,7 +29,7 @@ public abstract class PlayerCommand extends Command {
             return execute(player, args);
         }
 
-        sendMessageOrDefault(sender, "error.player-only", "Only players can execute that command.", null, true);
+        sendMessage(sender, "error.player-only", null, true);
         return true;
     }
 

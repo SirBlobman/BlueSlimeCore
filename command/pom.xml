@@ -13,6 +13,10 @@
     <name>SirBlobmanAPI Command</name>
     <description>Useful command management classes for SirBlobman projects</description>
 
+    <properties>
+        <spigot.version>1.9.4-R0.1-SNAPSHOT</spigot.version>
+    </properties>
+
     <repositories>
         <!-- SpigotMC Repository -->
         <repository>

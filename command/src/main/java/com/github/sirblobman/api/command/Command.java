@@ -18,12 +18,16 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 
@@ -33,7 +37,9 @@ import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
+import com.github.sirblobman.api.utility.VersionUtility;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Command implements TabExecutor {
@@ -64,6 +70,11 @@ public abstract class Command implements TabExecutor {
     protected final JavaPlugin getPlugin() {
         return this.plugin;
     }
+    
+    protected final Logger getLogger() {
+        JavaPlugin plugin = getPlugin();
+        return plugin.getLogger();
+    }
 
     /**
      * Override this method if your plugin has a {@link LanguageManager} from SirBlobmanCore
@@ -79,51 +90,6 @@ public abstract class Command implements TabExecutor {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label,
-                                            String[] args) {
-        List<String> tabCompletions = new ArrayList<>(onTabComplete(sender, args));
-        if(args.length == 1) {
-            tabCompletions.addAll(onTabComplete(sender, args));
-            return getMatching(tabCompletions, args[0]);
-        }
-        
-        if(args.length > 1) {
-            String subCommandName = args[0].toLowerCase(Locale.US);
-            Map<String, Command> subCommands = getSubCommands();
-            Command subCommand = subCommands.getOrDefault(subCommandName, null);
-            if(subCommand != null) {
-                String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
-                return subCommand.onTabComplete(sender, command, label, newArgs);
-            }
-        }
-        
-        return Collections.emptyList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
-                                   String[] args) {
-        if(args.length >= 1) {
-            String subCommandName = args[0].toLowerCase(Locale.US);
-            Map<String, Command> subCommands = getSubCommands();
-            Command subCommand = subCommands.getOrDefault(subCommandName, null);
-            if(subCommand != null) {
-                String[] newArgs = (args.length < 2 ? new String[0] :
-                        Arrays.copyOfRange(args, 1, args.length));
-                return subCommand.onCommand(sender, command, label, newArgs);
-            }
-        }
-        
-        return execute(sender, args);
-    }
-
-    /**
      * The method used to register this command to the plugin.
      */
     public final void register() {
@@ -134,9 +100,8 @@ public abstract class Command implements TabExecutor {
             PluginCommand pluginCommand = plugin.getCommand(commandName);
             if(pluginCommand == null) {
                 Logger logger = plugin.getLogger();
-                logger.log(Level.WARNING,
-                        "The command '" + commandName + "' could not be registered because an error occurred:");
-                logger.warning("  Command '" + commandName + "' is missing in plugin.yml");
+                logger.warning("Failed to register command '/" + commandName + "':");
+                logger.warning("Command '" + commandName + "' is missing in the 'plugin.yml' file.");
                 return;
             }
 
@@ -144,8 +109,7 @@ public abstract class Command implements TabExecutor {
             pluginCommand.setTabCompleter(this);
         } catch(Exception ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING,
-                    "An error occurred while registering the command '/" + commandName + "':", ex);
+            logger.log(Level.WARNING, "Failed to register command '/" + commandName + "':", ex);
         }
     }
     
@@ -172,25 +136,129 @@ public abstract class Command implements TabExecutor {
      * @param valueList A list of possible values in the tab completion.
      * @param arg The argument being used to tab-complete.
      * @return A list of values that match the argument.
+     * @deprecated Use {@link #getMatching(String, Iterable)}
      */
+    @Deprecated
     protected final List<String> getMatching(Iterable<String> valueList, String arg) {
-        List<String> matchList = new ArrayList<>();
-        return StringUtil.copyPartialMatches(arg, valueList, matchList);
+        return StringUtil.copyPartialMatches(arg, valueList, new ArrayList<>());
     }
 
     /**
-     * @return A list of names for every online player.
+     * A useful method for tab completion that returns all values in the list that start with the argument.
+     * The case of the strings are ignored.
+     * @param arg The argument being used to tab-complete.
+     * @param values An iterable of possible values in the tab completion.
+     * @return A list of values that match the argument.
+     */
+    protected final List<String> getMatching(String arg, Iterable<String> values) {
+        return StringUtil.copyPartialMatches(arg, values, new ArrayList<>());
+    }
+
+    /**
+     * A useful method for tab completion that returns all values in the list that start with the argument.
+     * The case of the strings are ignored.
+     * @param arg The argument being used to tab-complete.
+     * @param values An array of possible values in the tab completion.
+     * @return A list of values that match the argument.
+     */
+    protected final List<String> getMatching(String arg, String... values) {
+        List<String> valueList = Arrays.asList(values);
+        return getMatching(arg, valueList);
+    }
+    
+    /**
+     * @param original – the array from which a range is to be copied
+     * @param start – the initial index of the range to be copied, inclusive
+     * @return A new {@link String[]} containing all values from start (inclusive) to {@code args.length} (exclusive).
+     * If the start is not an index in the original array, an empty array will be returned.
+     */
+    protected final String[] getSubArguments(String[] original, int start) {
+        if(original.length <= start) {
+            return new String[0];
+        }
+        
+        return Arrays.copyOfRange(original, start, original.length);
+    }
+    
+    protected final Set<String> getEnumNames(Class<? extends Enum<?>> enumClass) {
+        Enum<?>[] enumArray = enumClass.getEnumConstants();
+        Set<String> enumNameSet = new HashSet<>();
+        
+        for(Enum<?> enumValue : enumArray) {
+            String enumName = enumValue.name();
+            enumNameSet.add(enumName);
+        }
+        
+        return Collections.unmodifiableSet(enumNameSet);
+    }
+    
+    @Nullable
+    protected final <E extends Enum<E>> E matchEnum(Class<E> enumClass, String value) {
+        E[] enumArray = enumClass.getEnumConstants();
+        for(E enumValue : enumArray) {
+            String enumName = enumValue.name();
+            if(enumName.equals(value)) {
+                return enumValue;
+            }
+        }
+        
+        return null;
+    }
+    
+    protected final Collection<Player> getOnlinePlayers() {
+        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
+        return Collections.unmodifiableCollection(onlinePlayerCollection);
+    }
+
+    /**
+     * @return A set containing the name of each online player as a String.
      */
     protected final Set<String> getOnlinePlayerNames() {
-        Set<String> nameSet = new HashSet<>();
-        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
-
+        Collection<Player> onlinePlayerCollection = getOnlinePlayers();
+        Set<String> playerNameSet = new HashSet<>();
+        
         for(Player player : onlinePlayerCollection) {
             String playerName = player.getName();
-            nameSet.add(playerName);
+            playerNameSet.add(playerName);
         }
-
-        return nameSet;
+        
+        return Collections.unmodifiableSet(playerNameSet);
+    }
+    
+    /**
+     * @param sender The command sender.
+     * @return The location of the command sender.
+     * Defaults to the main world at 0,0,0 if no location is available. (e.g. console)
+     */
+    @NotNull
+    protected final Location getLocation(CommandSender sender) {
+        if(sender instanceof Entity) {
+            return ((Entity) sender).getLocation();
+        }
+        
+        if(sender instanceof BlockCommandSender) {
+            Block block = ((BlockCommandSender) sender).getBlock();
+            return block.getLocation();
+        }
+    
+        List<World> worldList = Bukkit.getWorlds();
+        World mainWorld = worldList.get(0);
+        return new Location(mainWorld, 0, 0, 0, 0, 0);
+    }
+    
+    @Nullable
+    protected final String getMessage(CommandSender audience, String key, Replacer replacer, boolean color) {
+        LanguageManager languageManager = getLanguageManager();
+        return (languageManager == null ? null : languageManager.getMessage(audience, key, replacer, color));
+    }
+    
+    protected final void sendMessage(CommandSender audience, String key, Replacer replacer, boolean color) {
+        LanguageManager languageManager = getLanguageManager();
+        if(languageManager == null) {
+            return;
+        }
+        
+        languageManager.sendMessage(audience, key, replacer, color);
     }
 
     /**
@@ -200,7 +268,10 @@ public abstract class Command implements TabExecutor {
      * @param defaultMessage The default message if one is not found in the configuration.
      * @param replacer {@code null}, or a replacer for variables in the message.
      * @param color {@code true} to apply bukkit color codes, {@code false} to not change the message.
+     * @deprecated Replaced by another method.
+     * @see #sendMessage(CommandSender, String, Replacer, boolean)
      */
+    @Deprecated
     protected final void sendMessageOrDefault(CommandSender sender, String key, String defaultMessage,
                                               Replacer replacer, boolean color) {
         LanguageManager languageManager = getLanguageManager();
@@ -219,19 +290,34 @@ public abstract class Command implements TabExecutor {
     /**
      * Check if a sender has access to a permission.
      * @param sender The command sender who will be checked.
-     * @param permission The name of the permission to check for.
+     * @param permissionName The name of the permission to check for.
      * @param sendMessage {@code true} if a "no permission" message should be sent, {@code false} for no output.
      * @return {@code true} if the sender has the permission, {@code false} if they do not.
      */
-    protected final boolean checkPermission(CommandSender sender, String permission, boolean sendMessage) {
-        boolean hasPermission = sender.hasPermission(permission);
-        if(!hasPermission && sendMessage) {
-            Replacer replacer = message -> message.replace("{permission}", permission);
-            sendMessageOrDefault(sender, "error.no-permission", "Missing Permission: {permission}",
-                    replacer, true);
+    protected final boolean checkPermission(Permissible sender, String permissionName, boolean sendMessage) {
+        if(sender.hasPermission(permissionName)) {
+            return true;
         }
-
-        return hasPermission;
+        
+        if(sendMessage && sender instanceof CommandSender) {
+            CommandSender audience = (CommandSender) sender;
+            Replacer replacer = message -> message.replace("{permission}", permissionName);
+            sendMessage(audience, "error.no-permission", replacer, true);
+        }
+        
+        return false;
+    }
+    
+    @SuppressWarnings("deprecation")
+    protected final ItemStack getHeldItem(Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+        int minorVersion = VersionUtility.getMinorVersion();
+        
+        if(minorVersion < 9) {
+            return playerInventory.getItemInHand();
+        } else {
+            return playerInventory.getItemInMainHand();
+        }
     }
 
     /**
@@ -304,6 +390,51 @@ public abstract class Command implements TabExecutor {
             if(ItemUtility.isAir(item)) continue;
             world.dropItemNaturally(location, item);
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label,
+                                            String[] args) {
+        List<String> tabCompletions = onTabComplete(sender, args);
+        
+        if(args.length == 1) {
+            Map<String, Command> subCommandMap = getSubCommands();
+            tabCompletions.addAll(subCommandMap.keySet());
+        }
+        
+        if(args.length > 1) {
+            String subCommandName = args[0].toLowerCase(Locale.US);
+            Map<String, Command> subCommandMap = getSubCommands();
+            Command subCommand = subCommandMap.getOrDefault(subCommandName, null);
+            if(subCommand != null) {
+                String[] newArgs = getSubArguments(args, 1);
+                tabCompletions.addAll(subCommand.onTabComplete(sender, command, label, newArgs));
+            }
+        }
+        
+        return tabCompletions;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
+                                   String[] args) {
+        if(args.length >= 1) {
+            String subCommandName = args[0].toLowerCase(Locale.US);
+            Map<String, Command> subCommandMap = getSubCommands();
+            Command subCommand = subCommandMap.getOrDefault(subCommandName, null);
+            if(subCommand != null) {
+                String[] newArgs = getSubArguments(args, 1);
+                return subCommand.onCommand(sender, command, label, newArgs);
+            }
+        }
+        
+        return execute(sender, args);
     }
 
     /**
