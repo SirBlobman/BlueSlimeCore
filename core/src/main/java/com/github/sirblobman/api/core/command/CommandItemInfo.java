@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
@@ -33,55 +32,68 @@ public final class CommandItemInfo extends PlayerCommand {
 
     @Override
     public boolean execute(Player player, String[] args) {
-        ItemStack item = getMainItem(player);
+        ItemStack item = getHeldItem(player);
         if(ItemUtility.isAir(item)) {
-            player.sendMessage("AIR does not have any information.");
+            sendMessage(player, "error.invalid-held-item", null, true);
             return true;
         }
 
-        List<String> messageList = new ArrayList<>();
-        String xMaterialName = getXMaterialName(item);
-        messageList.add("&f&lXMaterial: &7" + xMaterialName);
-
-        Material material = item.getType();
-        String materialName = material.name();
-        messageList.add("&f&lBukkit Material: &7" + materialName);
-
-        MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
-        ItemHandler itemHandler = multiVersionHandler.getItemHandler();
-        String keyedName = itemHandler.getKeyString(item);
-        messageList.add("&f&lInternal Name: &7" + keyedName);
-
+        List<String> messageList = getInformation(item);
         int minorVersion = VersionUtility.getMinorVersion();
         if(minorVersion < 13) {
-            @SuppressWarnings("deprecation")
-            int id = material.getId();
-            messageList.add("&f&lDeprecated ID: &7" + id);
-
-            short data = item.getDurability();
-            messageList.add("&f&lData/Meta Value: &7" + data);
+            addLegacyInformation(item, messageList);
         }
-
-        String[] message = MessageUtility.colorArray(messageList.toArray(new String[0]));
-        player.sendMessage(message);
+        
+        String[] messageArray = messageList.toArray(new String[0]);
+        String[] coloredArray = MessageUtility.colorArray(messageArray);
+        player.sendMessage(coloredArray);
         return true;
     }
 
-    @SuppressWarnings("deprecation")
-    private ItemStack getMainItem(Player player) {
-        int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 9) return player.getItemInHand();
-
-        PlayerInventory playerInventory = player.getInventory();
-        return playerInventory.getItemInMainHand();
-    }
-
-    private String getXMaterialName(ItemStack item) {
+    private String getMaterialNameX(ItemStack item) {
         try {
-            XMaterial xMaterial = XMaterial.matchXMaterial(item);
-            return xMaterial.name();
-        } catch(NoSuchMethodError | Exception ex) {
+            XMaterial material = XMaterial.matchXMaterial(item);
+            return material.name();
+        } catch(IllegalArgumentException ex) {
             return "N/A";
         }
+    }
+    
+    private String getMaterialNameBukkit(ItemStack item) {
+        Material material = item.getType();
+        return material.name();
+    }
+    
+    private String getInternalName(ItemStack item) {
+        MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
+        ItemHandler itemHandler = multiVersionHandler.getItemHandler();
+        return itemHandler.getKeyString(item);
+    }
+    
+    @SuppressWarnings("deprecation")
+    private int getMaterialId(ItemStack item) {
+        Material material = item.getType();
+        return material.getId();
+    }
+    
+    private List<String> getInformation(ItemStack item) {
+        String materialNameX = getMaterialNameX(item);
+        String materialNameBukkit = getMaterialNameBukkit(item);
+        String internalName = getInternalName(item);
+        
+        List<String> messageList = new ArrayList<>();
+        messageList.add("");
+        messageList.add("&f&lXMaterial: &7" + materialNameX);
+        messageList.add("&f&lBukkit Material: &7" + materialNameBukkit);
+        messageList.add("&f&lInternal Name: &7" + internalName);
+        return messageList;
+    }
+    
+    private void addLegacyInformation(ItemStack item, List<String> messageList) {
+        int id = getMaterialId(item);
+        short data = item.getDurability();
+        
+        messageList.add("&f&lDeprecated ID: &7" + id);
+        messageList.add("&f&lData/Meta Value: &7" + data);
     }
 }

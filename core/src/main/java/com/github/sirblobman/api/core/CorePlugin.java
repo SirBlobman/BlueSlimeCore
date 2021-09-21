@@ -3,6 +3,7 @@ package com.github.sirblobman.api.core;
 import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
@@ -13,6 +14,7 @@ import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
+import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
@@ -27,6 +29,7 @@ import com.github.sirblobman.bossbar.BossBarHandler;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final UpdateManager updateManager;
+    
     public CorePlugin() {
         this.updateManager = new UpdateManager(this);
     }
@@ -34,19 +37,17 @@ public final class CorePlugin extends ConfigurablePlugin {
     @Override
     public void onLoad() {
         saveDefaultConfig();
+        
         LanguageManager languageManager = getLanguageManager();
         languageManager.saveDefaultLanguages();
+        languageManager.reloadLanguages();
     }
 
     @Override
     public void onEnable() {
-        printMultiVersionInformation();
-
-        LanguageManager languageManager = getLanguageManager();
-        languageManager.reloadLanguages();
-
         registerCommands();
         registerListeners();
+        printMultiVersionInformation();
 
         UpdateManager updateManager = getUpdateManager();
         updateManager.addResource(this, 83189L);
@@ -55,7 +56,7 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onDisable() {
-        // Do Nothing
+        HandlerList.unregisterAll(this);
     }
 
     public UpdateManager getUpdateManager() {
@@ -65,7 +66,9 @@ public final class CorePlugin extends ConfigurablePlugin {
     private void printMultiVersionInformation() {
         ConfigurationManager configurationManager = getConfigurationManager();
         YamlConfiguration configuration = configurationManager.get("config.yml");
-        if(!configuration.getBoolean("debug-mode", false)) return;
+        if(!configuration.getBoolean("debug-mode", false)) {
+            return;
+        }
 
         Logger logger = getLogger();
         String minecraftVersion = VersionUtility.getMinecraftVersion();
@@ -87,19 +90,29 @@ public final class CorePlugin extends ConfigurablePlugin {
         logger.info("Successfully linked with the following handlers:");
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
 
-        logger.info("Boss Bar Wrapper Class:");
-        logger.info(bossBarHandler.getWrapperClass().getName());
+        logger.info("Boss Bar Wrapper:");
+        printClassNames(bossBarHandler.getWrapperClass());
     }
 
     private void printClassNames(Object... objectArray) {
-        Logger logger = getLogger();
         for(Object object : objectArray) {
-            if(object == null) continue;
-
-            Class<?> objectClass = object.getClass();
-            String className = objectClass.getName();
-            logger.info(" - " + className);
+            if(object == null) {
+                continue;
+            }
+            
+            printClassName(object);
         }
+    }
+    
+    private void printClassName(Object object) {
+        Logger logger = getLogger();
+        String className = getClassName(object);
+        logger.info(" - " + className);
+    }
+    
+    private String getClassName(Object object) {
+        Class<?> objectClass = (object instanceof Class ? (Class<?>) object : object.getClass());
+        return objectClass.getName();
     }
 
     private void registerCommands() {
@@ -118,6 +131,11 @@ public final class CorePlugin extends ConfigurablePlugin {
         YamlConfiguration configuration = configurationManager.get("config.yml");
         if(configuration.getBoolean("command-logger", false)) {
             new ListenerCommandLogger(this).register();
+        }
+        
+        int minorVersion = VersionUtility.getMinorVersion();
+        if(minorVersion >= 12) {
+            new ListenerLocaleChange(this).register();
         }
     }
 }

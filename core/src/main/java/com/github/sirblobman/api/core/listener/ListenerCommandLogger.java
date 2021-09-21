@@ -18,21 +18,21 @@ public final class ListenerCommandLogger extends PluginListener<CorePlugin> {
         super(plugin);
     }
 
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
         String command = e.getMessage();
         logCommand(player, command);
     }
 
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommand(ServerCommandEvent e) {
         CommandSender sender = e.getSender();
         String command = e.getCommand();
         logCommand(sender, command);
     }
 
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommand(RemoteServerCommandEvent e) {
         CommandSender sender = e.getSender();
         String command = e.getCommand();

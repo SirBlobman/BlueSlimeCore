@@ -30,7 +30,7 @@ commands:
       - "item-information"
 
   item-to-base64:
-    description: "A debug command to show an item as a Base64 string."
+    description: "A debug command to show an item as a binary Base64 string."
     usage: "/<command>"
     permission: "sirblobman.core.command.item-to-base64"
     aliases:
@@ -39,7 +39,7 @@ commands:
       - "itemtob64"
 
   item-to-nbt:
-    description: "A debug command to show an item as an NBT string."
+    description: "A debug command to show an item as an NBT/JSON string."
     usage: "/<command> [pretty]"
     permission: "sirblobman.core.command.item-to-nbt"
     aliases:
@@ -56,7 +56,7 @@ commands:
 
   debug-event:
     description: "Show information about an event class."
-    usage: "/<command> <org.example.event.ClassName>"
+    usage: "/<command> <priority> <full.package.with.ClassName>"
     permission: "sirblobman.core.command.debug-event"
     aliases:
       - "debugevent"

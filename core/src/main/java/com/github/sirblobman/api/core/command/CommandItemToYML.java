@@ -7,18 +7,14 @@ import java.util.regex.Pattern;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.utility.ItemUtility;
-import com.github.sirblobman.api.utility.VersionUtility;
 
 public final class CommandItemToYML extends PlayerCommand {
-    private final CorePlugin plugin;
     public CommandItemToYML(CorePlugin plugin) {
         super(plugin, "item-to-yml");
-        this.plugin = plugin;
     }
 
     @Override
@@ -28,9 +24,9 @@ public final class CommandItemToYML extends PlayerCommand {
 
     @Override
     public boolean execute(Player player, String[] args) {
-        ItemStack item = getMainItem(player);
+        ItemStack item = getHeldItem(player);
         if(ItemUtility.isAir(item)) {
-            player.sendMessage("Air does not have a YML value.");
+            sendMessage(player, "error.invalid-held-item", null, true);
             return true;
         }
 
@@ -41,14 +37,5 @@ public final class CommandItemToYML extends PlayerCommand {
         String[] split = configurationString.split(Pattern.quote("\n"));
         player.sendMessage(split);
         return true;
-    }
-
-    @SuppressWarnings("deprecation")
-    private ItemStack getMainItem(Player player) {
-        int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 9) return player.getItemInHand();
-
-        PlayerInventory playerInventory = player.getInventory();
-        return playerInventory.getItemInMainHand();
     }
 }

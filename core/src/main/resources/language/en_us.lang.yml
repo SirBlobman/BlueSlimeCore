@@ -4,3 +4,19 @@ language-name: "en_us"
 error:
   player-only: "&cThat command can only be executed by a player."
   console-only: "&cThat command can only be executed in the server console."
+  invalid-held-item: "&cYou must be holding a valid item to use this command."
+  invalid-world: "&cYou must be in a valid world to execute this command."
+
+command:
+  global-gamerule:
+    unknown-gamerule: "&cUnknown gamerule type &7{value}&c."
+    list-title: "&f&lGame Rule Values for &7{rule}&f&l:"
+    list-line-format: "&7&l{world}: &f{value}"
+    success-count: "&aSuccessfully changed game rule &7{rule}&a to value &7{value}&a in &7{count}&a worlds."
+    failure-count: "&cFailed to change game rule &7{rule}&c in &7{count}&c worlds."
+
+  debug-event:
+    invalid-priority: "&cUnknown EventPriority type &7{value}&c."
+    invalid-event-class: "&cUnknown or invalid event class &7{value}&c."
+    reflection-error: "&cFailed to debug that event. Check the server console for errors."
+    results-title: "Debug Results for event '{event}' and priority '{priority}':"

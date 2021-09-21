@@ -5,14 +5,12 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.utility.ItemUtility;
-import com.github.sirblobman.api.utility.VersionUtility;
 
 public final class CommandItemToBase64 extends PlayerCommand {
     private final CorePlugin plugin;
@@ -28,9 +26,9 @@ public final class CommandItemToBase64 extends PlayerCommand {
 
     @Override
     protected boolean execute(Player player, String[] args) {
-        ItemStack item = getMainItem(player);
+        ItemStack item = getHeldItem(player);
         if(ItemUtility.isAir(item)) {
-            player.sendMessage("Air does not have a Base64 value.");
+            sendMessage(player, "error.invalid-held-item", null, true);
             return true;
         }
 
@@ -40,14 +38,5 @@ public final class CommandItemToBase64 extends PlayerCommand {
 
         player.sendMessage(base64String);
         return true;
-    }
-
-    @SuppressWarnings("deprecation")
-    private ItemStack getMainItem(Player player) {
-        int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 9) return player.getItemInHand();
-
-        PlayerInventory playerInventory = player.getInventory();
-        return playerInventory.getItemInMainHand();
     }
 }
