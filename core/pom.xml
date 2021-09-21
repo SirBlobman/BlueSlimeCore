@@ -145,8 +145,9 @@
                 <version>3.3.0-SNAPSHOT</version>
 
                 <configuration>
-                    <shadedArtifactAttached>false</shadedArtifactAttached>
-					
+                    <createSourcesJar>true</createSourcesJar>
+                    <shadeSourcesContent>true</shadeSourcesContent>
+
                     <relocations>
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
