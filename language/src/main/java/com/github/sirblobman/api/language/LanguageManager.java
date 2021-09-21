@@ -72,7 +72,9 @@ public final class LanguageManager {
 
         YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
         String defaultLanguageName = languageConfiguration.getString("default-locale");
-        if(defaultLanguageName == null) defaultLanguageName = "en_us";
+        if(defaultLanguageName == null) {
+            defaultLanguageName = "en_us";
+        }
 
         for(String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
             String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
@@ -95,11 +97,15 @@ public final class LanguageManager {
 
         File dataFolder = resourceHolder.getDataFolder();
         File languageFolder = new File(dataFolder, "language");
-        if(!languageFolder.exists() || !languageFolder.isDirectory()) return;
+        if(!languageFolder.exists() || !languageFolder.isDirectory()) {
+            return;
+        }
 
         FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
         File[] fileArray = languageFolder.listFiles(filenameFilter);
-        if(fileArray == null || fileArray.length == 0) return;
+        if(fileArray == null || fileArray.length == 0) {
+            return;
+        }
 
         List<YamlConfiguration> languageConfigurationList = new ArrayList<>();
         for(File file : fileArray) {
@@ -110,8 +116,7 @@ public final class LanguageManager {
                 configuration.set("language-name", file.getName().replace(".lang.yml", ""));
                 languageConfigurationList.add(configuration);
             } catch(IOException | InvalidConfigurationException ex) {
-                logger.log(Level.WARNING, "Failed to load a language configuration because an error occurred:",
-                        ex);
+                logger.log(Level.WARNING, "Failed to load a language. Reason:", ex);
             }
         }
         languageConfigurationList.sort(new LanguageConfigurationComparator());
