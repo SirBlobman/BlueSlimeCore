@@ -398,7 +398,7 @@ public abstract class Command implements TabExecutor {
     @Override
     public final List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label,
                                             String[] args) {
-        List<String> tabCompletions = onTabComplete(sender, args);
+        List<String> tabCompletions = new ArrayList<>();
         
         if(args.length == 1) {
             Map<String, Command> subCommandMap = getSubCommands();
@@ -415,6 +415,7 @@ public abstract class Command implements TabExecutor {
             }
         }
         
+        tabCompletions.addAll(onTabComplete(sender, args));
         return tabCompletions;
     }
     
