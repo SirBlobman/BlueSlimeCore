@@ -28,9 +28,8 @@ public abstract class ConsoleCommand extends Command {
             ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return execute(console, args);
         }
-
-        sendMessageOrDefault(sender, "error.console-only",
-                "That command can only be executed in the server console.", null, true);
+        
+        sendMessage(sender, "error.console-only", null, true);
         return true;
     }
 
