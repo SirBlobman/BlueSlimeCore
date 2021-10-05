@@ -16,7 +16,7 @@ public abstract class ClassBuilder {
         Field field_a = AccessUtil.setAccessible(class_Packet.getDeclaredField("a"));
         Field field_b = AccessUtil.setAccessible(class_Packet.getDeclaredField("b"));
         Field field_c = AccessUtil.setAccessible(class_Packet.getDeclaredField("c"));
-        Field field_d = AccessUtil.setAccessible(class_Packet.getDeclaredField("floorFloat"));
+        Field field_d = AccessUtil.setAccessible(class_Packet.getDeclaredField("d"));
         Field field_e = AccessUtil.setAccessible(class_Packet.getDeclaredField("e"));
         Field field_i = AccessUtil.setAccessible(class_Packet.getDeclaredField("i"));
         Field field_j = AccessUtil.setAccessible(class_Packet.getDeclaredField("j"));
@@ -97,7 +97,7 @@ public abstract class ClassBuilder {
         Field field_a = AccessUtil.setAccessible(class_Packet.getDeclaredField("a"));
         Field field_b = AccessUtil.setAccessible(class_Packet.getDeclaredField("b"));
         Field field_c = AccessUtil.setAccessible(class_Packet.getDeclaredField("c"));
-        Field field_d = AccessUtil.setAccessible(class_Packet.getDeclaredField("floorFloat"));
+        Field field_d = AccessUtil.setAccessible(class_Packet.getDeclaredField("d"));
         Field field_e = AccessUtil.setAccessible(class_Packet.getDeclaredField("e"));
         Field field_f = AccessUtil.setAccessible(class_Packet.getDeclaredField("f"));
 
