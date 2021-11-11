@@ -21,7 +21,7 @@ Just make sure to install the SirBlobmanCore plugin jar on your server!
     <dependency>
         <groupId>com.github.sirblobman.api</groupId>
         <artifactId>core</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <version>2.3-SNAPSHOT</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
