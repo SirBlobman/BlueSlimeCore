@@ -11,13 +11,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.minecraft.network.chat.TextComponent;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 
 import com.github.sirblobman.api.utility.Validate;
-
-import com.google.gson.JsonObject;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatBaseComponent.ChatSerializer;
 
 public class EntityHandler_1_17_R1 extends EntityHandler {
     public EntityHandler_1_17_R1(JavaPlugin plugin) {
@@ -39,12 +36,8 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
     public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
         if(entity instanceof CraftEntity craftEntity) {
             net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("text", text);
-
-            IChatBaseComponent chatComponent = ChatSerializer.a(jsonObject);
-            nmsEntity.setCustomName(chatComponent);
+            TextComponent textComponent = new TextComponent(text);
+            nmsEntity.setCustomName(textComponent);
             nmsEntity.setCustomNameVisible(visible);
         }
     }
