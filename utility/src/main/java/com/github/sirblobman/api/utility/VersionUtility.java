@@ -1,29 +1,26 @@
 package com.github.sirblobman.api.utility;
 
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 public final class VersionUtility {
-    /** Pattern that matches how most server jars format the current version */
-    private static final Pattern VERSION_PATTERN;
-    private static boolean versionWarning;
-    
     static {
-        VERSION_PATTERN = Pattern.compile("(\\(MC: )([\\d.]+)(\\))");
-        versionWarning = false;
+        String bukkitVersion = Bukkit.getBukkitVersion();
+        if(bukkitVersion.contains("-pre")) {
+            Logger logger = Bukkit.getLogger();
+            logger.warning("[SirBlobmanAPI] You are using a '-pre' version of spigot. Bugs may occur.");
+        }
     }
 
     /**
      * @return The current Minecraft version of the server (Example: 1.16.5)
      */
     public static String getMinecraftVersion() {
-        String bukkitVersion = Bukkit.getVersion();
-        Matcher matcher = VERSION_PATTERN.matcher(bukkitVersion);
-        return (matcher.find() ? matcher.group(2) : "");
+        String bukkitVersion = Bukkit.getBukkitVersion();
+        int firstDash = bukkitVersion.indexOf('-');
+        return bukkitVersion.substring(0, firstDash);
     }
 
     /**
@@ -70,17 +67,6 @@ public final class VersionUtility {
         int nextIndex = (periodIndex + 1);
 
         String minorString = majorMinorVersion.substring(nextIndex);
-        if(minorString.contains("-pre")) {
-            if(!versionWarning) {
-                versionWarning = true;
-                Logger logger = Bukkit.getLogger();
-                logger.warning("[SirBlobmanAPI] You are using a '-pre' version of spigot. Bugs may occur.");
-            }
-            
-            int indexOfDash = minorString.indexOf('-');
-            minorString = minorString.substring(0, indexOfDash);
-        }
-        
         return Integer.parseInt(minorString);
     }
 }

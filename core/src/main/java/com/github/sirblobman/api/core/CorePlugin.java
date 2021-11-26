@@ -2,6 +2,7 @@ package com.github.sirblobman.api.core;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 
@@ -45,6 +46,18 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onEnable() {
+        if(isDebugMode()) {
+            Logger logger = getLogger();
+            logger.info("[Debug] Plugin version: " + getDescription().getVersion());
+            logger.info("[Debug] Server Version: " + Bukkit.getVersion());
+            logger.info("[Debug] Bukkit Version: " + Bukkit.getBukkitVersion());
+            logger.info("[Debug] Minecraft Version: " + VersionUtility.getMinecraftVersion());
+            logger.info("[Debug] NMS Version: " + VersionUtility.getNetMinecraftServerVersion());
+            logger.info("[Debug] Major.Minor Version: " + VersionUtility.getMajorMinorVersion());
+            logger.info("[Debug] Major Version: " + VersionUtility.getMajorVersion());
+            logger.info("[Debug] Minor Version: " + VersionUtility.getMinorVersion());
+        }
+        
         registerCommands();
         registerListeners();
         printMultiVersionInformation();
@@ -58,15 +71,19 @@ public final class CorePlugin extends ConfigurablePlugin {
     public void onDisable() {
         HandlerList.unregisterAll(this);
     }
+    
+    public boolean isDebugMode() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        return configuration.getBoolean("debug-mode", false);
+    }
 
     public UpdateManager getUpdateManager() {
         return this.updateManager;
     }
 
     private void printMultiVersionInformation() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        if(!configuration.getBoolean("debug-mode", false)) {
+        if(!isDebugMode()) {
             return;
         }
 
