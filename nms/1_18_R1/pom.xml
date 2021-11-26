@@ -14,7 +14,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <spigot.version>1.18-pre5-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.18-pre8-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <repositories>
