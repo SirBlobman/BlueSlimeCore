@@ -8,9 +8,10 @@ import org.bukkit.Server;
 public final class VersionUtility {
     static {
         String bukkitVersion = Bukkit.getBukkitVersion();
-        if(bukkitVersion.contains("-pre")) {
+        if(bukkitVersion.contains("-pre") || bukkitVersion.contains("-rc")) {
             Logger logger = Bukkit.getLogger();
-            logger.warning("[SirBlobmanAPI] You are using a '-pre' version of spigot. Bugs may occur.");
+            logger.warning("[SirBlobmanAPI] You are using a '-pre' or '-rc' version of spigot.");
+            logger.warning("[SirBlobmanAPI] Bugs may occur when using a preview version.");
         }
     }
 
