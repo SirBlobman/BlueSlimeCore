@@ -16,7 +16,7 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.perms.PermissibleAction;
+import com.massivecraft.factions.perms.PermissibleActions;
 import com.massivecraft.factions.perms.Relation;
 import com.massivecraft.factions.perms.Role;
 
@@ -127,13 +127,19 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     
     @Override
     public boolean isInOwnFaction(OfflinePlayer player, Location location) {
-        if(!hasFaction(player)) return false;
+        if(!hasFaction(player)) {
+            return false;
+        }
 
         Faction factionPlayer = getFactionFor(player);
-        if(factionPlayer == null) return false;
+        if(factionPlayer == null) {
+            return false;
+        }
 
         Faction factionLocation = getFactionAt(location);
-        if(factionLocation == null) return false;
+        if(factionLocation == null) {
+            return false;
+        }
 
         String factionPlayerId = factionPlayer.getId();
         String factionLocationId = factionLocation.getId();
@@ -143,10 +149,14 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public boolean isLeader(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return false;
+        if(faction == null) {
+            return false;
+        }
 
         List<FPlayer> adminList = faction.getFPlayersWhereRole(Role.ADMIN);
-        if(adminList.isEmpty()) return false;
+        if(adminList.isEmpty()) {
+            return false;
+        }
 
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
@@ -156,25 +166,35 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public boolean canBuild(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return true;
+        if(faction == null) {
+            return true;
+        }
 
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return false;
-
-        return faction.hasAccess(fplayer, PermissibleAction.BUILD);
+        if(fplayer == null) {
+            return false;
+        }
+    
+        FLocation flocation = new FLocation(location);
+        return faction.hasAccess(fplayer, PermissibleActions.BUILD, flocation);
     }
 
     @Override
     public boolean canDestroy(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return true;
+        if(faction == null) {
+            return true;
+        }
 
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return false;
-
-        return faction.hasAccess(fplayer, PermissibleAction.DESTROY);
+        if(fplayer == null) {
+            return false;
+        }
+        
+        FLocation flocation = new FLocation(location);
+        return faction.hasAccess(fplayer, PermissibleActions.DESTROY, flocation);
     }
     
     @Override
@@ -182,7 +202,9 @@ public final class FactionsHandler_UUID extends FactionsHandler {
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
         FPlayer fviewer = fplayers.getByOfflinePlayer(viewer);
-        if(fplayer == null || fviewer == null) return null;
+        if(fplayer == null || fviewer == null) {
+            return null;
+        }
 
         Relation relation = fviewer.getRelationTo(fplayer);
         return relation.getColor();
@@ -192,7 +214,9 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     public String getRolePrefix(OfflinePlayer player) {
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return null;
+        if(fplayer == null) {
+            return null;
+        }
 
         Role role = fplayer.getRole();
         return role.getPrefix();
@@ -201,7 +225,9 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public Set<UUID> getMembersForFactionAt(Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return Collections.emptySet();
+        if(faction == null) {
+            return Collections.emptySet();
+        }
 
         Set<FPlayer> memberSet = faction.getFPlayers();
         Set<UUID> memberIdSet = new HashSet<>();

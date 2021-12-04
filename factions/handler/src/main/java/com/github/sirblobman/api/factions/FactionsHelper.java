@@ -82,8 +82,8 @@ public final class FactionsHelper {
                     return this.factionsHandler;
                 }
 
-                if(pluginVersion.startsWith("1.6.9.5-U0.5")) {
-                    printHookInfo("Factions", "Factions UUID");
+                if(pluginVersion.startsWith("1.6.9.5-U0.6")) {
+                    printHookInfo("Factions", "Factions UUID Modern");
                     this.factionsHandler = new FactionsHandler_UUID(this.plugin);
                     return this.factionsHandler;
                 }
