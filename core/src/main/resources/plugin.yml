@@ -20,10 +20,22 @@ softdepend:
   - "LegacyFactions"
 
 commands:
+  sirblobmancore:
+    description: "The main command for the SirBlobmanCore plugin."
+    permission: "sirblobman.core.command.sirblobmancore"
+    usage: "/<command> help"
+    aliases:
+      - "sirblobmanapi"
+      - "sirblobman"
+      - "sbcore"
+      - "sbapi"
+      - "sbc"
+      - "sb"
+
   item-info:
     description: "A debug command to show information about an item."
-    usage: "/<command>"
     permission: "sirblobman.core.command.item-info"
+    usage: "/<command>"
     aliases:
       - "iteminfo"
       - "iteminformation"
@@ -31,8 +43,8 @@ commands:
 
   item-to-base64:
     description: "A debug command to show an item as a binary Base64 string."
-    usage: "/<command>"
     permission: "sirblobman.core.command.item-to-base64"
+    usage: "/<command>"
     aliases:
       - "item-to-b64"
       - "itemtobase64"
@@ -40,8 +52,8 @@ commands:
 
   item-to-nbt:
     description: "A debug command to show an item as an NBT/JSON string."
-    usage: "/<command> [pretty]"
     permission: "sirblobman.core.command.item-to-nbt"
+    usage: "/<command> [pretty]"
     aliases:
       - "itemtonbt"
       - "itemtojson"
@@ -49,21 +61,21 @@ commands:
 
   item-to-yml:
     description: "A debug command to show an item as a YML configuration value."
-    usage: "/<command>"
     permission: "sirblobman.core.command.item-to-yml"
+    usage: "/<command>"
     aliases:
       - "itemtoyml"
 
   debug-event:
     description: "Show information about an event class."
-    usage: "/<command> <priority> <full.package.with.ClassName>"
     permission: "sirblobman.core.command.debug-event"
+    usage: "/<command> <priority> <full.package.with.ClassName>"
     aliases:
       - "debugevent"
 
   global-gamerule:
     description: "Change a gamerule for every world on your server at once."
-    usage: "/global-gamerule <gamerule> <value>"
     permission: "sirblobman.core.command.global-gamerule"
+    usage: "/<command> <gamerule> <value>"
     aliases:
       - "globalgamerule"
