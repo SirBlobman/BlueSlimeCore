@@ -38,25 +38,25 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         Faction faction = getFactionAt(location);
         return (faction == null ? "" : faction.getTag());
     }
-
+    
     @Override
     public boolean isSafeZone(Location location) {
         Faction faction = getFactionAt(location);
         return (faction != null && faction.isSafeZone());
     }
-
+    
     @Override
     public boolean isWarZone(Location location) {
         Faction faction = getFactionAt(location);
         return (faction != null && faction.isWarZone());
     }
-
+    
     @Override
     public boolean isWilderness(Location location) {
         Faction faction = getFactionAt(location);
         return (faction == null || faction.isWilderness());
     }
-
+    
     @Override
     public boolean hasFaction(OfflinePlayer player) {
         FPlayers fplayers = FPlayers.getInstance();
@@ -100,7 +100,7 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(uuid1.equals(uuid2) || !hasFaction(player1) || !hasFaction(player2)) {
             return false;
         }
-
+        
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer1 = fplayers.getByOfflinePlayer(player1);
         FPlayer fplayer2 = fplayers.getByOfflinePlayer(player2);
@@ -131,17 +131,17 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(!hasFaction(player)) {
             return false;
         }
-
+        
         Faction factionPlayer = getFactionFor(player);
         if(factionPlayer == null) {
             return false;
         }
-
+        
         Faction factionLocation = getFactionAt(location);
         if(factionLocation == null) {
             return false;
         }
-
+        
         String factionPlayerId = factionPlayer.getId();
         String factionLocationId = factionLocation.getId();
         return factionPlayerId.equals(factionLocationId);
@@ -153,12 +153,12 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(faction == null) {
             return false;
         }
-
+        
         List<FPlayer> adminList = faction.getFPlayersWhereRole(Role.ADMIN);
         if(adminList.isEmpty()) {
             return false;
         }
-
+        
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
         return adminList.contains(fplayer);
@@ -170,30 +170,30 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(faction == null) {
             return true;
         }
-
+        
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
         if(fplayer == null) {
             return false;
         }
-
+        
         Access access = faction.getAccess(fplayer, PermissableAction.BUILD);
         return (access == Access.ALLOW);
     }
-
+    
     @Override
     public boolean canDestroy(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
         if(faction == null) {
             return true;
         }
-
+        
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
         if(fplayer == null) {
             return false;
         }
-
+        
         Access access = faction.getAccess(fplayer, PermissableAction.DESTROY);
         return (access == Access.ALLOW);
     }
@@ -206,7 +206,7 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(fplayer == null || fviewer == null) {
             return null;
         }
-
+        
         Relation relation = fviewer.getRelationTo(fplayer);
         return relation.getColor();
     }
@@ -218,7 +218,7 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(fplayer == null) {
             return null;
         }
-
+        
         Role role = fplayer.getRole();
         return role.getPrefix();
     }
@@ -227,16 +227,16 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
     public Set<UUID> getMembersForFactionAt(Location location) {
         Faction faction = getFactionAt(location);
         if(faction == null) return Collections.emptySet();
-
+        
         Set<FPlayer> memberSet = faction.getFPlayers();
         Set<UUID> memberIdSet = new HashSet<>();
-
+        
         for(FPlayer fplayer : memberSet) {
             String fplayerIdString = fplayer.getId();
             UUID fplayerId = UUID.fromString(fplayerIdString);
             memberIdSet.add(fplayerId);
         }
-
+        
         return Collections.unmodifiableSet(memberIdSet);
     }
     
@@ -246,16 +246,16 @@ public final class FactionsHandler_UUID_Legacy extends FactionsHandler {
         if(faction == null) {
             return Collections.emptySet();
         }
-
+        
         Set<FPlayer> memberSet = faction.getFPlayers();
         Set<UUID> memberIdSet = new HashSet<>();
-
+        
         for(FPlayer fplayer : memberSet) {
             String fplayerIdString = fplayer.getId();
             UUID fplayerId = UUID.fromString(fplayerIdString);
             memberIdSet.add(fplayerId);
         }
-
+        
         return Collections.unmodifiableSet(memberIdSet);
     }
 }

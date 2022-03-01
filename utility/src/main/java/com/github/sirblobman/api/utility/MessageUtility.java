@@ -9,7 +9,8 @@ import org.bukkit.ChatColor;
 public final class MessageUtility {
     /**
      * @param message The message that will be colored
-     * @return A new string containing {@code message} but with the color codes replaced, or an empty string if message was {@code null}.
+     * @return A new string containing {@code message} but with the color codes replaced, or an empty string if message
+     * was {@code null}.
      * @see ChatColor#translateAlternateColorCodes(char, String)
      * @see HexColorUtility#replaceHexColors(char, String)
      */
@@ -26,7 +27,7 @@ public final class MessageUtility {
         String messageReplaced = HexColorUtility.replaceHexColors('&', message);
         return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', messageReplaced);
     }
-
+    
     /**
      * @param messageArray The array of messages that will be colored
      * @return A new array containing every message in the input array, but with color codes replaced.
@@ -34,16 +35,16 @@ public final class MessageUtility {
     public static String[] colorArray(String... messageArray) {
         int messageArrayLength = messageArray.length;
         String[] colorMessageArray = new String[messageArrayLength];
-
+        
         for(int i = 0; i < messageArrayLength; i++) {
             String message = messageArray[i];
             colorMessageArray[i] = color(message);
         }
-
+        
         return colorMessageArray;
     }
-
-
+    
+    
     /**
      * @param messageList The iterable of messages that will be colored
      * @return A {@code List<String>} containing every message in the input iterable, but with color codes replaced.
@@ -58,7 +59,7 @@ public final class MessageUtility {
         }
         return colorList;
     }
-
+    
     /**
      * @param messageArray The array of messages that will be colored
      * @return A {@code List<String>} containing every message in the input array, but with color codes replaced.

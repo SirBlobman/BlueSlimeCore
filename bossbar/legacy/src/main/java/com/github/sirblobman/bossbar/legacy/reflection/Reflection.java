@@ -1,7 +1,8 @@
 package com.github.sirblobman.bossbar.legacy.reflection;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
@@ -10,7 +11,7 @@ public abstract class Reflection {
         Server server = Bukkit.getServer();
         Class<?> class_Server = server.getClass();
         Package package_Server = class_Server.getPackage();
-
+        
         String packageName = package_Server.getName();
         int lastIndexOf = packageName.lastIndexOf('.');
         return packageName.substring(lastIndexOf + 1) + ".";
@@ -29,15 +30,15 @@ public abstract class Reflection {
         String fullClassName = ("net.minecraft.server." + version + className);
         return Class.forName(fullClassName);
     }
-
+    
     public static Object getHandle(Object object) {
         if(object == null) return null;
-
+        
         try {
             Class<?> class_object = object.getClass();
             Method method_getHandle = getMethod(class_object, "getHandle");
             if(method_getHandle == null) return null;
-
+            
             return method_getHandle.invoke(object);
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -67,20 +68,20 @@ public abstract class Reflection {
                 return method;
             }
         }
-
+        
         return null;
     }
     
     public static boolean classListEqual(Class<?>[] list1, Class<?>[] list2) {
         if(list1.length != list2.length) return false;
         int listLength = list1.length;
-
+        
         for(int i = 0; i < listLength; ++i) {
             if(list1[i] != list2[i]) {
                 return false;
             }
         }
-
+        
         return true;
     }
 }

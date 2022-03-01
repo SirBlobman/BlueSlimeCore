@@ -10,20 +10,21 @@ import com.github.sirblobman.api.utility.Validate;
 
 public final class WrapperPluginResourceHolder implements IResourceHolder {
     private final Plugin plugin;
+    
     public WrapperPluginResourceHolder(Plugin plugin) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
     }
-
+    
     @Override
     public File getDataFolder() {
         return this.plugin.getDataFolder();
     }
-
+    
     @Override
     public InputStream getResource(String name) {
         return this.plugin.getResource(name);
     }
-
+    
     @Override
     public Logger getLogger() {
         return this.plugin.getLogger();

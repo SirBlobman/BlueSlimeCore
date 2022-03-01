@@ -8,17 +8,17 @@
         <version>2.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <groupId>com.github.sirblobman.api.factions</groupId>
     <artifactId>factions-parent</artifactId>
-    
+
     <name>SirBlobmanAPI Factions Parent</name>
     <description>The parent pom for SirBlobmanAPI Factions</description>
 
     <properties>
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
-    
+
     <modules>
         <module>abstract</module>
 
@@ -29,7 +29,7 @@
         <module>factions-uuid</module>
         <module>factions-uuid-legacy</module>
         <module>factionsx</module>
-        
+
         <module>handler</module>
     </modules>
 </project>

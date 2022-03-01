@@ -9,6 +9,8 @@ import java.util.logging.Logger;
  */
 public interface IResourceHolder {
     File getDataFolder();
+    
     InputStream getResource(String name);
+    
     Logger getLogger();
 }

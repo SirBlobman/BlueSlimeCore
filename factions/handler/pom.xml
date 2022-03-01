@@ -36,7 +36,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- SirBlobmanAPI LegacyFactions -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
@@ -44,7 +44,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- SirBlobmanAPI MassiveCore Factions -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
@@ -52,7 +52,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- SirBlobmanAPI SaberFactions -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
@@ -60,7 +60,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- SirBlobmanAPI Factions UUID -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
@@ -68,7 +68,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- SirBlobmanAPI Factions UUID Legacy and Forks -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>
@@ -76,7 +76,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- SirBlobmanAPI FactionsX -->
         <dependency>
             <groupId>com.github.sirblobman.api.factions</groupId>

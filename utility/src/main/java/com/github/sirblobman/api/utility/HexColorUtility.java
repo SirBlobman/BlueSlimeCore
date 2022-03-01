@@ -12,7 +12,7 @@ public final class HexColorUtility {
     
     /**
      * @param colorChar The character that will be used for color codes (usually {@code '&'})
-     * @param string The {@link String} that will have its values replaced.
+     * @param string    The {@link String} that will have its values replaced.
      * @return A new {@link String} with the hex color codes being replaced.
      */
     public static String replaceHexColors(char colorChar, String string) {
@@ -30,7 +30,8 @@ public final class HexColorUtility {
                 String hexCodeString = matcher.group(2);
                 String hexCode = parseHexColor(hexCodeString);
                 matcher.appendReplacement(buffer, hexCode);
-            } catch(NumberFormatException ignored) {}
+            } catch(NumberFormatException ignored) {
+            }
         }
         
         matcher.appendTail(buffer);

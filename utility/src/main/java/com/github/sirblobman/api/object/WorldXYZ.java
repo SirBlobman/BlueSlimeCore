@@ -25,13 +25,13 @@ public final class WorldXYZ {
         this.y = y;
         this.z = z;
     }
-
+    
     public static WorldXYZ from(World world, int x, int y, int z) {
         Validate.notNull(world, "world must not be null!");
         UUID worldId = world.getUID();
         return new WorldXYZ(worldId, x, y, z);
     }
-
+    
     public static WorldXYZ from(Block block) {
         Validate.notNull(block, "block must not be null!");
         World world = block.getWorld();
@@ -40,42 +40,42 @@ public final class WorldXYZ {
         int z = block.getZ();
         return from(world, x, y, z);
     }
-
+    
     public static WorldXYZ from(Location location) {
         Validate.notNull(location, "location must not be null!");
         Block block = location.getBlock();
         return from(block);
     }
-
+    
     public static WorldXYZ from(Entity entity) {
         Validate.notNull(entity, "entity must not be null!");
         Location location = entity.getLocation();
         return from(location);
     }
-
+    
     @NotNull
     public UUID getWorldId() {
         return this.worldId;
     }
-
+    
     @Nullable
     public World getWorld() {
         UUID worldId = getWorldId();
         return Bukkit.getWorld(worldId);
     }
-
+    
     public int getX() {
         return this.x;
     }
-
+    
     public int getY() {
         return this.y;
     }
-
+    
     public int getZ() {
         return this.z;
     }
-
+    
     @Nullable
     public Location asLocation() {
         World world = getWorld();

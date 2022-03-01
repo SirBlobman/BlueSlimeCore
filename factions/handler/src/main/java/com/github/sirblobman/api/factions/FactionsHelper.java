@@ -18,12 +18,12 @@ import org.jetbrains.annotations.Nullable;
 public final class FactionsHelper {
     private final JavaPlugin plugin;
     private FactionsHandler factionsHandler;
-
+    
     public FactionsHelper(JavaPlugin plugin) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.factionsHandler = null;
     }
-
+    
     @NotNull
     public JavaPlugin getPlugin() {
         return this.plugin;
@@ -34,13 +34,13 @@ public final class FactionsHelper {
         JavaPlugin plugin = getPlugin();
         return plugin.getLogger();
     }
-
+    
     @Nullable
     public FactionsHandler getFactionsHandler() {
         if(this.factionsHandler != null) {
             return this.factionsHandler;
         }
-
+        
         try {
             PluginManager manager = Bukkit.getPluginManager();
             if(manager.isPluginEnabled("FactionsX")) {
@@ -48,13 +48,13 @@ public final class FactionsHelper {
                 this.factionsHandler = new FactionsHandler_X(this.plugin);
                 return this.factionsHandler;
             }
-
+            
             if(manager.isPluginEnabled("LegacyFactions")) {
                 printHookInfo("LegacyFactions", "Legacy Factions");
                 this.factionsHandler = new FactionsHandler_Legacy(this.plugin);
                 return this.factionsHandler;
             }
-
+            
             Plugin plugin = getPlugin("Factions");
             if(plugin == null) {
                 throw new FactionsNotFoundException();
@@ -65,7 +65,7 @@ public final class FactionsHelper {
                 this.factionsHandler = new FactionsHandler_Saber(this.plugin);
                 return this.factionsHandler;
             }
-
+            
             PluginDescriptionFile description = plugin.getDescription();
             List<String> pluginDependencyList = description.getDepend();
             if(pluginDependencyList.contains("MassiveCore")) {
@@ -81,7 +81,7 @@ public final class FactionsHelper {
                     this.factionsHandler = new FactionsHandler_UUID_Legacy(this.plugin);
                     return this.factionsHandler;
                 }
-
+                
                 if(pluginVersion.startsWith("1.6.9.5-U0.6")) {
                     printHookInfo("Factions", "Factions UUID Modern");
                     this.factionsHandler = new FactionsHandler_UUID(this.plugin);
@@ -99,25 +99,25 @@ public final class FactionsHelper {
             return null;
         } catch(Exception ex) {
             Logger logger = getLogger();
-            logger.log(Level.WARNING,"Failed to hook into a Factions plugin because an error occurred:", ex);
+            logger.log(Level.WARNING, "Failed to hook into a Factions plugin because an error occurred:", ex);
             return null;
         }
     }
-
+    
     private Plugin getPlugin(String pluginName) {
         PluginManager pluginManager = Bukkit.getPluginManager();
         return pluginManager.getPlugin(pluginName);
     }
-
+    
     private void printHookInfo(String pluginName, String hookName) {
         Plugin plugin = getPlugin(pluginName);
         if(plugin == null) {
             return;
         }
-
+        
         PluginDescriptionFile description = plugin.getDescription();
         String pluginVersion = description.getVersion();
-
+        
         Logger logger = this.plugin.getLogger();
         logger.info("Successfully hooked into '" + hookName + " v" + pluginVersion + "'.");
     }
@@ -131,7 +131,7 @@ public final class FactionsHelper {
             if(pluginVersion.endsWith("-X")) {
                 return true;
             }
-    
+            
             return pluginVersion.startsWith("1.6.9.5-2");
         }
         

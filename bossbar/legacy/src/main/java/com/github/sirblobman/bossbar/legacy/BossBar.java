@@ -12,6 +12,11 @@ import com.github.sirblobman.bossbar.legacy.reflection.NMSClass;
 
 public final class BossBar extends BukkitRunnable {
     protected static int ENTITY_DISTANCE;
+
+    static {
+        BossBar.ENTITY_DISTANCE = 32;
+    }
+
     protected final int ID;
     protected final Player receiver;
     protected String message;
@@ -34,7 +39,7 @@ public final class BossBar extends BukkitRunnable {
         this.world = player.getWorld();
         this.location = makeLocation(player.getLocation());
         
-        if (percentage <= minHealth) {
+        if(percentage <= minHealth) {
             BossBarAPI.removeBar(player);
         }
     }
@@ -47,22 +52,15 @@ public final class BossBar extends BukkitRunnable {
         return 300.0F;
     }
     
-    public void setHealth(float percentage) {
-        this.health = ((percentage / 100.0F) * this.getMaxHealth());
-        if (this.health <= this.minHealth) {
-            BossBarAPI.removeBar(this.receiver);
-        } else {
-            this.sendMetadata();
-        }
-    }
-    
     public float getHealth() {
         return this.health;
     }
     
-    public void setMessage(String message) {
-        this.message = message;
-        if (this.isVisible()) {
+    public void setHealth(float percentage) {
+        this.health = ((percentage / 100.0F) * this.getMaxHealth());
+        if(this.health <= this.minHealth) {
+            BossBarAPI.removeBar(this.receiver);
+        } else {
             this.sendMetadata();
         }
     }
@@ -71,28 +69,23 @@ public final class BossBar extends BukkitRunnable {
         return this.message;
     }
     
+    public void setMessage(String message) {
+        this.message = message;
+        if(this.isVisible()) {
+            this.sendMetadata();
+        }
+    }
+    
     public Location getLocation() {
         return this.location;
     }
     
     public void run() {
         this.health -= this.healthMinus;
-        if (this.health <= this.minHealth) {
+        if(this.health <= this.minHealth) {
             BossBarAPI.removeBar(this.receiver);
         } else {
             this.sendMetadata();
-        }
-    }
-    
-    public void setVisible(boolean flag) {
-        if (flag == this.visible) {
-            return;
-        }
-
-        if (flag) {
-            this.spawn();
-        } else {
-            this.destroy();
         }
     }
     
@@ -100,30 +93,41 @@ public final class BossBar extends BukkitRunnable {
         return this.visible;
     }
     
-    protected void updateMovement() {
-        if (!this.visible) {
+    public void setVisible(boolean flag) {
+        if(flag == this.visible) {
             return;
         }
-
+        
+        if(flag) {
+            this.spawn();
+        } else {
+            this.destroy();
+        }
+    }
+    
+    protected void updateMovement() {
+        if(!this.visible) {
+            return;
+        }
+        
         this.location = this.makeLocation(this.receiver.getLocation());
         try {
             Object packet = ClassBuilder.buildTeleportPacket(this.ID, this.getLocation());
             BossBarAPI.sendPacket(this.receiver, packet);
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
     
     protected void updateDataWatcher() {
-        if (this.dataWatcher == null) {
+        if(this.dataWatcher == null) {
             try {
                 ClassBuilder.setDataWatcherValue(this.dataWatcher = ClassBuilder.buildDataWatcher(null), 17, 0);
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 18, 0);
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 19, 0);
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 20, 1_000);
                 ClassBuilder.setDataWatcherValue(this.dataWatcher, 0, (byte) 32);
-            }
-            catch (Exception e) {
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         }
@@ -133,8 +137,7 @@ public final class BossBar extends BukkitRunnable {
             ClassBuilder.setDataWatcherValue(this.dataWatcher, 3, (byte) 1);
             ClassBuilder.setDataWatcherValue(this.dataWatcher, 10, this.message);
             ClassBuilder.setDataWatcherValue(this.dataWatcher, 2, this.message);
-        }
-        catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -144,8 +147,7 @@ public final class BossBar extends BukkitRunnable {
         try {
             Object metaPacket = ClassBuilder.buildNameMetadataPacket(this.ID, this.dataWatcher, 2, 3, this.message);
             BossBarAPI.sendPacket(this.receiver, metaPacket);
-        }
-        catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -159,8 +161,7 @@ public final class BossBar extends BukkitRunnable {
             this.visible = true;
             this.sendMetadata();
             this.updateMovement();
-        }
-        catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -169,21 +170,16 @@ public final class BossBar extends BukkitRunnable {
     protected void destroy() {
         try {
             this.cancel();
+        } catch(IllegalStateException ignored) {
         }
-        catch (IllegalStateException ignored) {}
-
+        
         try {
-            Object parameter = new int[] {ID};
+            Object parameter = new int[]{ID};
             Object packet = NMSClass.PacketPlayOutEntityDestroy.getConstructor(int[].class).newInstance(parameter);
             BossBarAPI.sendPacket(this.receiver, packet);
             this.visible = false;
-        }
-        catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    static {
-        BossBar.ENTITY_DISTANCE = 32;
     }
 }

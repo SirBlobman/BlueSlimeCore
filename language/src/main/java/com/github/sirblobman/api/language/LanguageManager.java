@@ -54,6 +54,22 @@ public final class LanguageManager {
         PLAYER_LOCALE_CACHE = new ConcurrentHashMap<>();
     }
     
+    private final ConfigurationManager configurationManager;
+    private final Map<UUID, Language> playerLanguageMap;
+    private final Map<String, Language> languageMap;
+    private Language defaultLanguage;
+    /**
+     * (Constructor) Create a language manager from a configuration manager
+     *
+     * @param configurationManager The {@link ConfigurationManager} to use.
+     */
+    public LanguageManager(ConfigurationManager configurationManager) {
+        this.configurationManager = Validate.notNull(configurationManager, "plugin must not be null!");
+        this.languageMap = new HashMap<>();
+        this.playerLanguageMap = new HashMap<>();
+        this.defaultLanguage = null;
+    }
+
     public static void updateCachedLocale(Player player) {
         int minorVersion = VersionUtility.getMinorVersion();
         UUID playerId = player.getUniqueId();
@@ -66,7 +82,7 @@ public final class LanguageManager {
             PLAYER_LOCALE_CACHE.put(playerId, localeName == null ? defaultLocale : localeName);
         }
     }
-    
+
     public static void removeCachedLocale(Player player) {
         UUID playerId = player.getUniqueId();
         PLAYER_LOCALE_CACHE.remove(playerId);
@@ -77,31 +93,15 @@ public final class LanguageManager {
         if(!PLAYER_LOCALE_CACHE.containsKey(playerId)) {
             updateCachedLocale(player);
         }
-    
+        
         String defaultLocale = "default";
         return PLAYER_LOCALE_CACHE.getOrDefault(playerId, defaultLocale);
     }
-
-    private final ConfigurationManager configurationManager;
-    private final Map<UUID, Language> playerLanguageMap;
-    private final Map<String, Language> languageMap;
-    private Language defaultLanguage;
-
-    /**
-     * (Constructor) Create a language manager from a configuration manager
-     * @param configurationManager The {@link ConfigurationManager} to use.
-     */
-    public LanguageManager(ConfigurationManager configurationManager) {
-        this.configurationManager = Validate.notNull(configurationManager, "plugin must not be null!");
-        this.languageMap = new HashMap<>();
-        this.playerLanguageMap = new HashMap<>();
-        this.defaultLanguage = null;
-    }
-
+    
     public ConfigurationManager getConfigurationManager() {
         return this.configurationManager;
     }
-
+    
     public void saveDefaultLanguages() {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.saveDefault("language.yml");
@@ -121,31 +121,31 @@ public final class LanguageManager {
             }
         }
     }
-
+    
     public void reloadLanguages() {
         this.languageMap.clear();
         this.playerLanguageMap.clear();
         IResourceHolder resourceHolder = configurationManager.getResourceHolder();
         Logger logger = resourceHolder.getLogger();
-
+        
         File dataFolder = resourceHolder.getDataFolder();
         File languageFolder = new File(dataFolder, "language");
         if(!languageFolder.exists() || !languageFolder.isDirectory()) {
             return;
         }
-
+        
         FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
         File[] fileArray = languageFolder.listFiles(filenameFilter);
         if(fileArray == null || fileArray.length == 0) {
             return;
         }
-
+        
         List<YamlConfiguration> languageConfigurationList = new ArrayList<>();
         for(File file : fileArray) {
             try {
                 YamlConfiguration configuration = new YamlConfiguration();
                 configuration.load(file);
-
+                
                 configuration.set("language-name", file.getName().replace(".lang.yml", ""));
                 languageConfigurationList.add(configuration);
             } catch(IOException | InvalidConfigurationException ex) {
@@ -153,7 +153,7 @@ public final class LanguageManager {
             }
         }
         languageConfigurationList.sort(new LanguageConfigurationComparator());
-
+        
         for(YamlConfiguration configuration : languageConfigurationList) {
             try {
                 Language language = loadLanguage(configuration);
@@ -166,10 +166,10 @@ public final class LanguageManager {
                         ex);
             }
         }
-
+        
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.reload("language.yml");
-
+        
         YamlConfiguration languageConfiguration = configurationManager.get("language.yml");
         String defaultLanguageName = languageConfiguration.getString("default-locale");
         if(this.languageMap.containsKey(defaultLanguageName)) {
@@ -178,65 +178,65 @@ public final class LanguageManager {
             logger.warning("Your default language configuration doesn't match any of the existing languages!");
             logger.warning("If you believe this is an error, please contact SirBlobman!");
             logger.warning("Using 'en_us' as default language.");
-
+            
             this.defaultLanguage = this.languageMap.getOrDefault("en_us", null);
             if(this.defaultLanguage == null) {
                 throw new IllegalStateException("Missing 'en_us' translation file!");
             }
         }
-
+        
         int languageCount = this.languageMap.size();
         logger.info("Successfully loaded " + languageCount + " language(s)");
     }
-
+    
     public void removeCachedLanguage(OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         this.playerLanguageMap.remove(playerId);
     }
-
+    
     @NotNull
     public String getMessage(@Nullable CommandSender sender, @NotNull String key, @Nullable Replacer replacer,
                              boolean color) {
         Validate.notEmpty(key, "key must not be empty!");
         Language language = getLanguage(sender);
-
+        
         String message = language.getTranslation(key);
         if(message.isEmpty()) return "";
-
+        
         if(replacer != null) message = replacer.replace(message);
         return (color ? MessageUtility.color(message) : message);
     }
-
+    
     @NotNull
     @Deprecated
     public String getMessageColored(@Nullable CommandSender sender, @NotNull String key,
                                     @Nullable Replacer replacer) {
         return getMessage(sender, key, replacer, true);
     }
-
+    
     @NotNull
     @Deprecated
     public String getMessageColored(@Nullable CommandSender sender, @NotNull String key) {
         return getMessageColored(sender, key, null);
     }
-
+    
     public void sendMessage(@NotNull CommandSender sender, @NotNull String key, @Nullable Replacer replacer,
                             boolean color) {
         Validate.notNull(sender, "sender must not be null!");
         String message = getMessage(sender, key, replacer, color);
         if(!message.isEmpty()) sender.sendMessage(message);
     }
-
+    
     public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, boolean color) {
         CommandSender console = Bukkit.getConsoleSender();
         sendMessage(console, key, replacer, color);
-
+        
         Collection<? extends Player> onlinePlayerList = Bukkit.getOnlinePlayers();
         for(Player player : onlinePlayerList) {
             sendMessage(player, key, replacer, color);
         }
     }
-
+    
     @NotNull
     public Language getLanguage(CommandSender sender) {
         if(this.defaultLanguage == null) {
@@ -245,11 +245,11 @@ public final class LanguageManager {
                 throw new IllegalStateException("Missing default locale translation file!");
             }
         }
-
+        
         if(!(sender instanceof Player)) {
             return this.defaultLanguage;
         }
-
+        
         Player player = (Player) sender;
         UUID playerId = player.getUniqueId();
         
@@ -257,7 +257,7 @@ public final class LanguageManager {
         if(cachedLanguage != null) {
             return cachedLanguage;
         }
-    
+        
         String cachedLocale = getCachedLocaleOrUpdate(player);
         if(cachedLocale.equals("default")) {
             this.playerLanguageMap.put(playerId, this.defaultLanguage);
@@ -269,15 +269,15 @@ public final class LanguageManager {
             this.playerLanguageMap.put(playerId, language);
             return language;
         }
-
+        
         this.playerLanguageMap.put(playerId, this.defaultLanguage);
         return this.defaultLanguage;
     }
-
+    
     private Language loadLanguage(YamlConfiguration configuration) throws InvalidConfigurationException {
         String languageName = configuration.getString("language-name");
         if(languageName == null) return null;
-
+        
         String parentLanguageName = configuration.getString("parent");
         Language parentLanguage = null;
         if(parentLanguageName != null) {
@@ -286,10 +286,10 @@ public final class LanguageManager {
                 throw new InvalidConfigurationException("parent language not loaded correctly.");
             }
         }
-
+        
         Language language = (parentLanguage == null ? new Language(languageName)
                 : new Language(parentLanguage, languageName));
-
+        
         Set<String> keySet = configuration.getKeys(true);
         for(String key : keySet) {
             String message;
@@ -299,12 +299,12 @@ public final class LanguageManager {
             } else {
                 message = configuration.getString(key);
             }
-
+            
             if(message != null) {
                 language.addTranslation(key, message);
             }
         }
-
+        
         return language;
     }
 }

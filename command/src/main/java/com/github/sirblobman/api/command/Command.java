@@ -46,9 +46,9 @@ public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
     private final String commandName;
     private final Map<String, Command> subCommandMap;
-
+    
     /**
-     * @param plugin The plugin that will be used to register this command.
+     * @param plugin      The plugin that will be used to register this command.
      * @param commandName The name of the command that will be registered. (must match 'plugin.yml' setting)
      */
     public Command(JavaPlugin plugin, String commandName) {
@@ -56,14 +56,14 @@ public abstract class Command implements TabExecutor {
         this.commandName = Validate.notEmpty(commandName, "commandName cannot be empty or null!");
         this.subCommandMap = new HashMap<>();
     }
-
+    
     /**
      * @return The name used for registering this command.
      */
     public final String getCommandName() {
         return this.commandName;
     }
-
+    
     /**
      * @return The plugin used for registering this command.
      */
@@ -75,27 +75,28 @@ public abstract class Command implements TabExecutor {
         JavaPlugin plugin = getPlugin();
         return plugin.getLogger();
     }
-
+    
     /**
      * Override this method if your plugin has a {@link LanguageManager} from SirBlobmanCore
+     *
      * @return A {@link LanguageManager} or {@code null} if not overridden.
      */
     @Nullable
     protected LanguageManager getLanguageManager() {
         JavaPlugin plugin = getPlugin();
         if(!(plugin instanceof ConfigurablePlugin)) return null;
-
+        
         ConfigurablePlugin configurablePlugin = (ConfigurablePlugin) plugin;
         return configurablePlugin.getLanguageManager();
     }
-
+    
     /**
      * The method used to register this command to the plugin.
      */
     public final void register() {
         JavaPlugin plugin = getPlugin();
         String commandName = getCommandName();
-
+        
         try {
             PluginCommand pluginCommand = plugin.getCommand(commandName);
             if(pluginCommand == null) {
@@ -104,7 +105,7 @@ public abstract class Command implements TabExecutor {
                 logger.warning("Command '" + commandName + "' is missing in the 'plugin.yml' file.");
                 return;
             }
-
+            
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);
         } catch(Exception ex) {
@@ -115,6 +116,7 @@ public abstract class Command implements TabExecutor {
     
     /**
      * Register a command to be a sub-command of this one.
+     *
      * @param subCommand The command to register as a sub-command.
      */
     protected final void addSubCommand(Command subCommand) {
@@ -129,12 +131,13 @@ public abstract class Command implements TabExecutor {
     protected final Map<String, Command> getSubCommands() {
         return Collections.unmodifiableMap(this.subCommandMap);
     }
-
+    
     /**
-     * A useful method for tab completion that returns all values in the list that start with the argument.
-     * The case of the strings are ignored.
+     * A useful method for tab completion that returns all values in the list that start with the argument. The case of
+     * the strings are ignored.
+     *
      * @param valueList A list of possible values in the tab completion.
-     * @param arg The argument being used to tab-complete.
+     * @param arg       The argument being used to tab-complete.
      * @return A list of values that match the argument.
      * @deprecated Use {@link #getMatching(String, Iterable)}
      */
@@ -142,22 +145,24 @@ public abstract class Command implements TabExecutor {
     protected final List<String> getMatching(Iterable<String> valueList, String arg) {
         return StringUtil.copyPartialMatches(arg, valueList, new ArrayList<>());
     }
-
+    
     /**
-     * A useful method for tab completion that returns all values in the list that start with the argument.
-     * The case of the strings are ignored.
-     * @param arg The argument being used to tab-complete.
+     * A useful method for tab completion that returns all values in the list that start with the argument. The case of
+     * the strings are ignored.
+     *
+     * @param arg    The argument being used to tab-complete.
      * @param values An iterable of possible values in the tab completion.
      * @return A list of values that match the argument.
      */
     protected final List<String> getMatching(String arg, Iterable<String> values) {
         return StringUtil.copyPartialMatches(arg, values, new ArrayList<>());
     }
-
+    
     /**
-     * A useful method for tab completion that returns all values in the list that start with the argument.
-     * The case of the strings are ignored.
-     * @param arg The argument being used to tab-complete.
+     * A useful method for tab completion that returns all values in the list that start with the argument. The case of
+     * the strings are ignored.
+     *
+     * @param arg    The argument being used to tab-complete.
      * @param values An array of possible values in the tab completion.
      * @return A list of values that match the argument.
      */
@@ -168,7 +173,7 @@ public abstract class Command implements TabExecutor {
     
     /**
      * @param original – the array from which a range is to be copied
-     * @param start – the initial index of the range to be copied, inclusive
+     * @param start    – the initial index of the range to be copied, inclusive
      * @return A new {@link String[]} containing all values from start (inclusive) to {@code args.length} (exclusive).
      * If the start is not an index in the original array, an empty array will be returned.
      */
@@ -209,7 +214,7 @@ public abstract class Command implements TabExecutor {
         Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
         return Collections.unmodifiableCollection(onlinePlayerCollection);
     }
-
+    
     /**
      * @return A set containing the name of each online player as a String.
      */
@@ -227,8 +232,8 @@ public abstract class Command implements TabExecutor {
     
     /**
      * @param sender The command sender.
-     * @return The location of the command sender.
-     * Defaults to the main world at 0,0,0 if no location is available. (e.g. console)
+     * @return The location of the command sender. Defaults to the main world at 0,0,0 if no location is available.
+     * (e.g. console)
      */
     @NotNull
     protected final Location getLocation(CommandSender sender) {
@@ -240,7 +245,7 @@ public abstract class Command implements TabExecutor {
             Block block = ((BlockCommandSender) sender).getBlock();
             return block.getLocation();
         }
-    
+        
         List<World> worldList = Bukkit.getWorlds();
         World mainWorld = worldList.get(0);
         return new Location(mainWorld, 0, 0, 0, 0, 0);
@@ -260,16 +265,17 @@ public abstract class Command implements TabExecutor {
         
         languageManager.sendMessage(audience, key, replacer, color);
     }
-
+    
     /**
      * Send a translatable message to a {@link CommandSender}.
-     * @param sender The sender of the command that will receive the message.
-     * @param key The message key in the language configuration.
+     *
+     * @param sender         The sender of the command that will receive the message.
+     * @param key            The message key in the language configuration.
      * @param defaultMessage The default message if one is not found in the configuration.
-     * @param replacer {@code null}, or a replacer for variables in the message.
-     * @param color {@code true} to apply bukkit color codes, {@code false} to not change the message.
-     * @deprecated Replaced by another method.
+     * @param replacer       {@code null}, or a replacer for variables in the message.
+     * @param color          {@code true} to apply bukkit color codes, {@code false} to not change the message.
      * @see #sendMessage(CommandSender, String, Replacer, boolean)
+     * @deprecated Replaced by another method.
      */
     @Deprecated
     protected final void sendMessageOrDefault(CommandSender sender, String key, String defaultMessage,
@@ -279,19 +285,20 @@ public abstract class Command implements TabExecutor {
             languageManager.sendMessage(sender, key, replacer, color);
             return;
         }
-
+        
         if(defaultMessage != null && !defaultMessage.isEmpty()) {
             String colored = (color ? MessageUtility.color(defaultMessage) : defaultMessage);
             String replaced = (replacer == null ? colored : replacer.replace(colored));
             sender.sendMessage(replaced);
         }
     }
-
+    
     /**
      * Check if a sender has access to a permission.
-     * @param sender The command sender who will be checked.
+     *
+     * @param sender         The command sender who will be checked.
      * @param permissionName The name of the permission to check for.
-     * @param sendMessage {@code true} if a "no permission" message should be sent, {@code false} for no output.
+     * @param sendMessage    {@code true} if a "no permission" message should be sent, {@code false} for no output.
      * @return {@code true} if the sender has the permission, {@code false} if they do not.
      */
     protected final boolean checkPermission(Permissible sender, String permissionName, boolean sendMessage) {
@@ -319,10 +326,10 @@ public abstract class Command implements TabExecutor {
             return playerInventory.getItemInMainHand();
         }
     }
-
+    
     /**
      * @param sender The sender who executed the command.
-     * @param value A string value to convert to an integer.
+     * @param value  A string value to convert to an integer.
      * @return A valid BigInteger value, or {@code null} if one could not be parsed.
      */
     @Nullable
@@ -336,10 +343,10 @@ public abstract class Command implements TabExecutor {
             return null;
         }
     }
-
+    
     /**
      * @param sender The sender who executed the command.
-     * @param value A string value to convert to a decimal.
+     * @param value  A string value to convert to a decimal.
      * @return A valid BigDecimal value, or {@code null} if one could not be parsed.
      */
     @Nullable
@@ -353,9 +360,9 @@ public abstract class Command implements TabExecutor {
             return null;
         }
     }
-
+    
     /**
-     * @param sender The sender of the command.
+     * @param sender     The sender of the command.
      * @param targetName The name of the player that should be found.
      * @return an instanceof a {@link Player} if one was found with that name, otherwise {@code null}
      */
@@ -363,28 +370,29 @@ public abstract class Command implements TabExecutor {
     protected final Player findTarget(CommandSender sender, String targetName) {
         Player target = Bukkit.getPlayerExact(targetName);
         if(target != null) return target;
-
+        
         Replacer replacer = message -> message.replace("{target}", targetName);
         sendMessageOrDefault(sender, "error.invalid-target", "Unknown Player: {target}",
                 replacer, true);
         return null;
     }
-
+    
     /**
      * Give some items to a player. If their inventory is full, items will be dumped on the ground.
-     * @param player The player that will receive the items.
+     *
+     * @param player    The player that will receive the items.
      * @param itemArray An array of items that will be given.
      */
     protected final void giveItems(Player player, ItemStack... itemArray) {
         PlayerInventory playerInventory = player.getInventory();
         Map<Integer, ItemStack> leftover = playerInventory.addItem(itemArray);
         if(leftover.isEmpty()) return;
-
+        
         World world = player.getWorld();
         Location location = player.getLocation();
         sendMessageOrDefault(player, "error.inventory-full", "Inventory Full!",
                 null, true);
-
+        
         Collection<ItemStack> dropCollection = leftover.values();
         for(ItemStack item : dropCollection) {
             if(ItemUtility.isAir(item)) continue;
@@ -437,18 +445,19 @@ public abstract class Command implements TabExecutor {
         
         return execute(sender, args);
     }
-
+    
     /**
      * @param sender The {@link CommandSender} that is tab-completing this command.
-     * @param args An array of command arguments.
+     * @param args   An array of command arguments.
      * @return The list of tab completions for this combination of sender and command arguments.
      */
     protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
-
+    
     /**
      * @param sender The {@link CommandSender} that is executing this command.
-     * @param args An array of command arguments.
-     * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command usage.
+     * @param args   An array of command arguments.
+     * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command
+     * usage.
      */
     protected abstract boolean execute(CommandSender sender, String[] args);
 }
