@@ -18,7 +18,8 @@
 
         <bukkit.plugin.name>SirBlobmanCore</bukkit.plugin.name>
         <bukkit.plugin.prefix>SirBlobman Core</bukkit.plugin.prefix>
-        <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.</bukkit.plugin.description>
+        <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.
+        </bukkit.plugin.description>
 
         <bukkit.plugin.main>com.github.sirblobman.api.core.CorePlugin</bukkit.plugin.main>
         <bukkit.plugin.version>2.3.5-Dev</bukkit.plugin.version>

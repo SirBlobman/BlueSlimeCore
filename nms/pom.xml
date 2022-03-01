@@ -8,17 +8,17 @@
         <version>2.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <groupId>com.github.sirblobman.api.nms</groupId>
     <artifactId>nms-parent</artifactId>
-    
+
     <name>SirBlobmanAPI NMS Parent</name>
     <description>The parent pom for SirBlobmanAPI NMS</description>
 
     <properties>
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
-    
+
     <modules>
         <module>abstract</module>
 

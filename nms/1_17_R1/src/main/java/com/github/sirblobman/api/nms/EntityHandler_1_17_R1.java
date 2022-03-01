@@ -20,18 +20,18 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
     public EntityHandler_1_17_R1(JavaPlugin plugin) {
         super(plugin);
     }
-
+    
     @Override
     public String getName(Entity entity) {
         if(entity instanceof Player player) {
             return player.getName();
         }
-
+        
         String entityName = entity.getName();
         String customName = entity.getCustomName();
         return (customName == null ? entityName : customName);
     }
-
+    
     @Override
     public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
         if(entity instanceof CraftEntity craftEntity) {
@@ -41,13 +41,13 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
             nmsEntity.setCustomNameVisible(visible);
         }
     }
-
+    
     @Override
     public double getMaxHealth(LivingEntity entity) {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         return (attribute == null ? 0.0D : attribute.getValue());
     }
-
+    
     @Override
     public void setMaxHealth(LivingEntity entity, double maxHealth) {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
@@ -55,12 +55,12 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
             attribute.setBaseValue(maxHealth);
         }
     }
-
+    
     @Override
     public <T extends Entity> T spawnEntity(Location location, Class<T> entityClass, Consumer<T> beforeSpawn) {
         Validate.notNull(location, "location must not be null!");
         Validate.notNull(entityClass, "entityClass must not be null!");
-
+        
         World world = location.getWorld();
         if(world == null) throw new IllegalArgumentException("location must have a valid bukkit world!");
         return world.spawn(location, entityClass, beforeSpawn::accept);

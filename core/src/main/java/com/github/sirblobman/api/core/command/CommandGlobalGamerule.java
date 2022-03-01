@@ -18,7 +18,7 @@ public class CommandGlobalGamerule extends Command {
     public CommandGlobalGamerule(CorePlugin plugin) {
         super(plugin, "global-gamerule");
     }
-
+    
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if(args.length == 1) {
@@ -28,14 +28,14 @@ public class CommandGlobalGamerule extends Command {
                 return getMatching(args[0], gameRuleArray);
             }
         }
-
+        
         if(args.length == 2) {
             return getMatching(args[1], "true", "false");
         }
-
+        
         return Collections.emptyList();
     }
-
+    
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
         if(args.length < 1) {
@@ -54,7 +54,7 @@ public class CommandGlobalGamerule extends Command {
             sendMessage(sender, "command.global-gamerule.invalid-gamerule", replacer, true);
             return true;
         }
-
+        
         if(args.length < 2) {
             showPerWorldValueList(sender, gameRuleString);
             return true;
@@ -63,7 +63,7 @@ public class CommandGlobalGamerule extends Command {
         setGameRule(sender, gameRuleString, args[1]);
         return true;
     }
-
+    
     @Nullable
     private World getWorld(CommandSender sender) {
         Location location = getLocation(sender);
@@ -73,7 +73,7 @@ public class CommandGlobalGamerule extends Command {
     private void showPerWorldValueList(CommandSender sender, String gameRuleString) {
         Replacer titleReplacer = message -> message.replace("{rule}", gameRuleString);
         sendMessage(sender, "command.global-gamerule.list-title", titleReplacer, true);
-    
+        
         List<World> worldList = Bukkit.getWorlds();
         for(World world : worldList) {
             String worldName = world.getName();
@@ -87,7 +87,7 @@ public class CommandGlobalGamerule extends Command {
     private void setGameRule(CommandSender sender, String gameRuleString, String value) {
         int successCount = 0;
         int failureCount = 0;
-    
+        
         List<World> worldList = Bukkit.getWorlds();
         for(World world : worldList) {
             if(world.setGameRuleValue(gameRuleString, value)) {
@@ -96,13 +96,13 @@ public class CommandGlobalGamerule extends Command {
                 failureCount++;
             }
         }
-    
+        
         if(successCount > 0) {
             String finalSuccessCount = Integer.toString(successCount);
             Replacer replacer = message -> message.replace("{count}", finalSuccessCount);
             sendMessage(sender, "command.global-gamerule.success-count", replacer, true);
         }
-    
+        
         if(failureCount > 0) {
             String finalFailureCount = Integer.toString(successCount);
             Replacer replacer = message -> message.replace("{count}", finalFailureCount);

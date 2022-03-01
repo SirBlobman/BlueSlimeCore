@@ -14,13 +14,13 @@ public abstract class NMSClass {
     public static Class<?> ChunkCoordinates;
     public static Class<?> BlockPosition;
     public static Class<?> Vector3f;
-
+    
     static {
         for(Field field : NMSClass.class.getDeclaredFields()) {
             Class<?> fieldType = field.getType();
             if(!fieldType.equals(Class.class)) continue;
             String fieldName = field.getName();
-
+            
             try {
                 field.set(null, Reflection.getNMSClassWithException(fieldName));
             } catch(Exception ex) {

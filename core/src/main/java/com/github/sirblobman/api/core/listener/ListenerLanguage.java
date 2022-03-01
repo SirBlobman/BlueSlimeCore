@@ -24,7 +24,7 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
             Player player = e.getPlayer();
             CorePlugin plugin = getPlugin();
             BukkitScheduler scheduler = Bukkit.getScheduler();
-            scheduler.scheduleSyncDelayedTask(plugin, () -> LanguageManager.updateCachedLocale(player),1L);
+            scheduler.scheduleSyncDelayedTask(plugin, () -> LanguageManager.updateCachedLocale(player), 1L);
         }
     }
     

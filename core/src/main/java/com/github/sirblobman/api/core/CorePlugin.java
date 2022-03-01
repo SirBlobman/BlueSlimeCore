@@ -34,7 +34,7 @@ public final class CorePlugin extends ConfigurablePlugin {
     public CorePlugin() {
         this.updateManager = new UpdateManager(this);
     }
-
+    
     @Override
     public void onLoad() {
         saveDefaultConfig();
@@ -43,7 +43,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         languageManager.saveDefaultLanguages();
         languageManager.reloadLanguages();
     }
-
+    
     @Override
     public void onEnable() {
         if(isDebugMode()) {
@@ -61,12 +61,12 @@ public final class CorePlugin extends ConfigurablePlugin {
         registerCommands();
         registerListeners();
         printMultiVersionInformation();
-
+        
         UpdateManager updateManager = getUpdateManager();
         updateManager.addResource(this, 83189L);
         updateManager.checkForUpdates();
     }
-
+    
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
@@ -77,40 +77,40 @@ public final class CorePlugin extends ConfigurablePlugin {
         YamlConfiguration configuration = configurationManager.get("config.yml");
         return configuration.getBoolean("debug-mode", false);
     }
-
+    
     public UpdateManager getUpdateManager() {
         return this.updateManager;
     }
-
+    
     private void printMultiVersionInformation() {
         if(!isDebugMode()) {
             return;
         }
-
+        
         Logger logger = getLogger();
         String minecraftVersion = VersionUtility.getMinecraftVersion();
         logger.info("Minecraft Version: " + minecraftVersion);
-
+        
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
-        logger.info("NMS Version: "  + nmsVersion);
-
+        logger.info("NMS Version: " + nmsVersion);
+        
         MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
         logger.info("Attempting for find NMS handlers for version '" + nmsVersion + "'...");
-
+        
         BossBarHandler bossBarHandler = multiVersionHandler.getBossBarHandler();
         EntityHandler entityHandler = multiVersionHandler.getEntityHandler();
         HeadHandler headHandler = multiVersionHandler.getHeadHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         PlayerHandler playerHandler = multiVersionHandler.getPlayerHandler();
         ScoreboardHandler scoreboardHandler = multiVersionHandler.getScoreboardHandler();
-
+        
         logger.info("Successfully linked with the following handlers:");
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
-
+        
         logger.info("Boss Bar Wrapper:");
         printClassNames(bossBarHandler.getWrapperClass());
     }
-
+    
     private void printClassNames(Object... objectArray) {
         for(Object object : objectArray) {
             if(object == null) {
@@ -131,7 +131,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         Class<?> objectClass = (object instanceof Class ? (Class<?>) object : object.getClass());
         return objectClass.getName();
     }
-
+    
     private void registerCommands() {
         new CommandDebugEvent(this).register();
         new CommandGlobalGamerule(this).register();
@@ -140,10 +140,10 @@ public final class CorePlugin extends ConfigurablePlugin {
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
     }
-
+    
     private void registerListeners() {
         new ListenerLanguage(this).register();
-
+        
         ConfigurationManager configurationManager = getConfigurationManager();
         YamlConfiguration configuration = configurationManager.get("config.yml");
         if(configuration.getBoolean("command-logger", false)) {

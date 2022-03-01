@@ -27,7 +27,7 @@ public final class CommandItemToNBT extends PlayerCommand {
         this.plugin = plugin;
         this.prettyGson = new GsonBuilder().setPrettyPrinting().create();
     }
-
+    
     @Override
     public List<String> onTabComplete(Player player, String[] args) {
         if(args.length == 1) {
@@ -36,7 +36,7 @@ public final class CommandItemToNBT extends PlayerCommand {
         
         return Collections.emptyList();
     }
-
+    
     @Override
     public boolean execute(Player player, String[] args) {
         ItemStack item = getHeldItem(player);
@@ -44,7 +44,7 @@ public final class CommandItemToNBT extends PlayerCommand {
             sendMessage(player, "error.invalid-held-item", null, true);
             return true;
         }
-
+        
         MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         String nbtString = itemHandler.toNBT(item);
@@ -52,12 +52,12 @@ public final class CommandItemToNBT extends PlayerCommand {
         if(args.length > 0 && args[0].equalsIgnoreCase("pretty")) {
             nbtString = prettyJSON(player, nbtString);
         }
-
+        
         String[] split = nbtString.split(Pattern.quote("\n"));
         player.sendMessage(split);
         return true;
     }
-
+    
     private String prettyJSON(Player player, String json) {
         try {
             JsonParser jsonParser = new JsonParser();

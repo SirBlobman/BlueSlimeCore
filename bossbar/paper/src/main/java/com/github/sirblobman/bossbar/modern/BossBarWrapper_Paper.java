@@ -22,111 +22,115 @@ import org.jetbrains.annotations.NotNull;
 public final class BossBarWrapper_Paper extends BossBarWrapper {
     private final BossBar bossBar;
     private final Set<UUID> extraPlayerSet;
-
+    
     public BossBarWrapper_Paper(@NotNull Player player) {
         super(player);
-
+        
         Component defaultTitle = getDefaultTitle();
         this.bossBar = BossBar.bossBar(defaultTitle, 1.0F, Color.BLUE, Overlay.PROGRESS);
         player.showBossBar(this.bossBar);
-
+        
         this.extraPlayerSet = new HashSet<>();
     }
-
+    
     @Override
     public void addExtraPlayer(@NotNull Player player) {
         player.showBossBar(this.bossBar);
         this.extraPlayerSet.add(player.getUniqueId());
     }
-
+    
     @Override
     public void removeExtraPlayer(@NotNull Player player) {
         player.hideBossBar(this.bossBar);
         this.extraPlayerSet.remove(player.getUniqueId());
     }
-
+    
     @Override
     public @NotNull Set<Player> getExtraPlayers() {
         this.extraPlayerSet.removeIf(uuid -> Bukkit.getPlayer(uuid) == null);
         return Collections.unmodifiableSet(this.extraPlayerSet.stream().map(Bukkit::getPlayer)
                 .collect(Collectors.toSet()));
     }
-
+    
     @Override
     public void removeAllExtraPlayers() {
         this.extraPlayerSet.forEach(uuid -> {
             Player player = Bukkit.getPlayer(uuid);
             if(player != null) removeExtraPlayer(player);
         });
-
+        
         this.extraPlayerSet.clear();
     }
-
+    
     @Override
     public String getTitle() {
         Component component = this.bossBar.name();
         return LegacyComponentSerializer.legacySection().serialize(component);
     }
-
+    
     @Override
     public void setTitle(@NotNull String title) {
         Component component = LegacyComponentSerializer.legacySection().deserialize(title);
         this.bossBar.name(component);
     }
-
+    
     @Override
     public double getProgress() {
         return this.bossBar.progress();
     }
-
+    
     @Override
     public void setProgress(double progress) {
         float floatProgress = (float) progress;
         this.bossBar.progress(floatProgress);
     }
-
+    
     @Override
     public Color getColor() {
         return this.bossBar.color();
     }
-
+    
     @Override
     public void setColor(@NotNull String colorName) {
         try {
             Color color = Color.valueOf(colorName);
             this.bossBar.color(color);
-        } catch(IllegalArgumentException ignored) {}
+        } catch(IllegalArgumentException ignored) {
+        }
     }
-
+    
     @Override
     public Overlay getStyle() {
         return this.bossBar.overlay();
     }
-
+    
     @Override
     public void setStyle(@NotNull String styleName) {
         try {
             Overlay overlay = Overlay.valueOf(styleName);
             this.bossBar.overlay(overlay);
-        } catch(IllegalArgumentException ignored) {}
+        } catch(IllegalArgumentException ignored) {
+        }
     }
-
+    
     @Override
     public void addFlag(@NotNull String flagName) {
         try {
             Flag flag = Flag.valueOf(flagName);
             this.bossBar.addFlag(flag);
-        } catch(IllegalArgumentException ignored) {}
+        } catch(IllegalArgumentException ignored) {
+        }
     }
-
+    
     @Override
     public void removeFlag(@NotNull String flagName) {
         try {
             Flag flag = Flag.valueOf(flagName);
             this.bossBar.removeFlag(flag);
-        } catch(IllegalArgumentException ignored) {}
+        } catch(IllegalArgumentException ignored) {
+        }
     }
-
+    
     @Override
     public boolean hasFlag(@NotNull String flagName) {
         try {
@@ -136,17 +140,17 @@ public final class BossBarWrapper_Paper extends BossBarWrapper {
             return false;
         }
     }
-
+    
     @Override
     public boolean isVisible() {
         return true;
     }
-
+    
     @Override
     public void setVisible(boolean visible) {
         // Do Nothing
     }
-
+    
     private Component getDefaultTitle() {
         return Component.text("Default Title");
     }

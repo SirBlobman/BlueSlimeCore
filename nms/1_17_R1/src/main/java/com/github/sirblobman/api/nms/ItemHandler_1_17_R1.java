@@ -137,7 +137,7 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
     
     @Override
     public org.bukkit.inventory.ItemStack fromBase64String(String string) {
-        if (string == null || string.isBlank()) {
+        if(string == null || string.isBlank()) {
             return null;
         }
         
@@ -147,7 +147,7 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
         
         try {
             compoundTag = NbtIo.readCompressed(inputStream);
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger logger = getPlugin().getLogger();
             logger.log(Level.WARNING, "Failed to decode an item from a string because an error occurred:", ex);
             return null;
@@ -169,7 +169,7 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
         
         try {
             NbtIo.writeCompressed(compoundTag, outputStream);
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger logger = getPlugin().getLogger();
             logger.log(Level.WARNING, "Failed to encode an item to a string because an error occurred:", ex);
             return null;

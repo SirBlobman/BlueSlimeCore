@@ -35,7 +35,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
     public CommandDebugEvent(CorePlugin plugin) {
         super(plugin, "debug-event");
     }
-
+    
     @Override
     public List<String> onTabComplete(ConsoleCommandSender sender, String[] args) {
         if(args.length == 1) {
@@ -47,10 +47,10 @@ public final class CommandDebugEvent extends ConsoleCommand {
             Set<String> valueSet = getExampleEventClasses();
             return getMatching(args[1], valueSet);
         }
-
+        
         return Collections.emptyList();
     }
-
+    
     @Override
     public boolean execute(ConsoleCommandSender sender, String[] args) {
         if(args.length < 2) {
@@ -72,7 +72,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
             sendMessage(sender, "command.debug-event.invalid-event-class", replacer, true);
             return true;
         }
-
+        
         try {
             HandlerList handlerList = getHandlerList(eventClass);
             logDebugResults(eventClass, handlerList, eventPriority);
@@ -97,7 +97,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
     private HandlerList getHandlerList(Class<? extends Event> eventClass) throws ReflectiveOperationException {
         Method method_getHandlerList = eventClass.getMethod("getHandlerList");
         method_getHandlerList.setAccessible(true);
-    
+        
         Object object_HandlerList = method_getHandlerList.invoke(null);
         return (HandlerList) object_HandlerList;
     }
@@ -111,11 +111,11 @@ public final class CommandDebugEvent extends ConsoleCommand {
             if(listenerPriority != priority) {
                 continue;
             }
-    
+            
             Plugin plugin = registeredListener.getPlugin();
             String pluginName = plugin.getName();
             Set<String> classNameSet = pluginListenerMap.getOrDefault(pluginName, new HashSet<>());
-    
+            
             Listener listener = registeredListener.getListener();
             Class<? extends Listener> class_Listener = listener.getClass();
             String className = class_Listener.getName();
@@ -130,22 +130,22 @@ public final class CommandDebugEvent extends ConsoleCommand {
     private void logDebugResults(Class<?> eventClass, HandlerList handlerList, EventPriority priority) {
         Map<String, Set<String>> pluginListenerMap = getPluginListenerMap(handlerList, priority);
         Set<Entry<String, Set<String>>> entrySet = pluginListenerMap.entrySet();
-    
+        
         String eventClassSimpleName = eventClass.getSimpleName();
         String priorityName = priority.name();
         Replacer replacer = message -> message.replace("{event}", eventClassSimpleName)
                 .replace("{priority}", priorityName);
-    
+        
         CommandSender console = Bukkit.getConsoleSender();
         String title = getMessage(console, "command.debug-event.results-title", replacer, false);
-    
+        
         Logger logger = getLogger();
         logger.info(title);
-    
+        
         for(Entry<String, Set<String>> entry : entrySet) {
             String pluginName = entry.getKey();
             logger.info("  " + pluginName + ":");
-        
+            
             Set<String> listenerClassNameSet = entry.getValue();
             for(String listenerClassName : listenerClassNameSet) {
                 logger.info("  - " + listenerClassName);

@@ -20,16 +20,17 @@ import com.cryptomorin.xseries.XMaterial;
 
 public final class CommandItemInfo extends PlayerCommand {
     private final CorePlugin plugin;
+    
     public CommandItemInfo(CorePlugin plugin) {
         super(plugin, "item-info");
         this.plugin = plugin;
     }
-
+    
     @Override
     public List<String> onTabComplete(Player player, String[] args) {
         return Collections.emptyList();
     }
-
+    
     @Override
     public boolean execute(Player player, String[] args) {
         ItemStack item = getHeldItem(player);
@@ -37,7 +38,7 @@ public final class CommandItemInfo extends PlayerCommand {
             sendMessage(player, "error.invalid-held-item", null, true);
             return true;
         }
-
+        
         List<String> messageList = getInformation(item);
         int minorVersion = VersionUtility.getMinorVersion();
         if(minorVersion < 13) {
@@ -49,7 +50,7 @@ public final class CommandItemInfo extends PlayerCommand {
         player.sendMessage(coloredArray);
         return true;
     }
-
+    
     private String getMaterialNameX(ItemStack item) {
         try {
             XMaterial material = XMaterial.matchXMaterial(item);
