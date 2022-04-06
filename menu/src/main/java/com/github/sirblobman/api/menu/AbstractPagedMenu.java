@@ -14,7 +14,9 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
     @Override
     public String getTitle() {
         String titleFormat = getTitleFormat();
-        if(titleFormat == null) return null;
+        if(titleFormat == null) {
+            return null;
+        }
         
         int currentPage = getCurrentPage();
         String currentPageString = Integer.toString(currentPage);

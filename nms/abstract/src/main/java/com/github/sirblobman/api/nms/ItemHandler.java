@@ -15,7 +15,8 @@ public abstract class ItemHandler extends Handler {
     
     public abstract org.bukkit.inventory.ItemStack fromNBT(String nbtJSON);
     
-    public abstract org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key, String value);
+    public abstract org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key,
+                                                                String value);
     
     public abstract org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key);
     
