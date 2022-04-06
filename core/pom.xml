@@ -22,7 +22,7 @@
         </bukkit.plugin.description>
 
         <bukkit.plugin.main>com.github.sirblobman.api.core.CorePlugin</bukkit.plugin.main>
-        <bukkit.plugin.version>2.3.5</bukkit.plugin.version>
+        <bukkit.plugin.version>2.3.6-Dev</bukkit.plugin.version>
     </properties>
 
     <pluginRepositories>
