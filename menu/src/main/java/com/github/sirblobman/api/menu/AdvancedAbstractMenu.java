@@ -20,8 +20,8 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
@@ -31,13 +31,15 @@ import com.github.sirblobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XMaterial;
 
-public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends BukkitRunnable implements InventoryHolder, Listener {
+public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> implements InventoryHolder, Listener, Runnable {
     private final Plugin plugin;
     private final Player player;
+    private BukkitTask currentTask;
     
     public AdvancedAbstractMenu(Plugin plugin, Player player) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.player = Validate.notNull(player, "player must not be null!");
+        this.currentTask = null;
     }
     
     /**
@@ -52,10 +54,14 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
     public final void onClose(InventoryCloseEvent e) {
         InventoryView inventoryView = e.getView();
         Inventory topInventory = inventoryView.getTopInventory();
-        if(topInventory == null) return;
+        if(topInventory == null) {
+            return;
+        }
         
         InventoryHolder inventoryHolder = topInventory.getHolder();
-        if(!this.equals(inventoryHolder)) return;
+        if(!this.equals(inventoryHolder)) {
+            return;
+        }
         
         internalClose();
         onValidClose(e);
@@ -65,10 +71,15 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
     public final void onClick(InventoryClickEvent e) {
         InventoryView inventoryView = e.getView();
         Inventory topInventory = inventoryView.getTopInventory();
-        if(topInventory == null) return;
+        if(topInventory == null) {
+            return;
+        }
         
         InventoryHolder inventoryHolder = topInventory.getHolder();
-        if(!this.equals(inventoryHolder)) return;
+        if(!this.equals(inventoryHolder)) {
+            return;
+        }
+        
         onValidClick(e);
     }
     
@@ -76,10 +87,14 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
     public final void onDrag(InventoryDragEvent e) {
         InventoryView inventoryView = e.getView();
         Inventory topInventory = inventoryView.getTopInventory();
-        if(topInventory == null) return;
+        if(topInventory == null) {
+            return;
+        }
         
         InventoryHolder inventoryHolder = topInventory.getHolder();
-        if(!this.equals(inventoryHolder)) return;
+        if(!this.equals(inventoryHolder)) {
+            return;
+        }
         onValidDrag(e);
     }
     
@@ -110,19 +125,29 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
     }
     
     private void internalOpen() {
-        Player player = getPlayer();
-        Inventory inventory = getInventory();
-        player.openInventory(inventory);
-        
         Plugin plugin = getPlugin();
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(this, plugin);
-        runTaskTimer(plugin, 20L, 20L);
+        
+        Player player = getPlayer();
+        Inventory inventory = getInventory();
+        player.openInventory(inventory);
+    
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        this.currentTask = scheduler.runTaskTimer(plugin, this, 20L, 20L);
     }
     
     private void internalClose() {
         HandlerList.unregisterAll(this);
-        cancel();
+        if(this.currentTask != null) {
+            try {
+                this.currentTask.cancel();
+            } catch(Exception ignored) {
+            
+            } finally {
+                this.currentTask = null;
+            }
+        }
     }
     
     public HeadHandler getHeadHandler() {
@@ -130,13 +155,18 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
     }
     
     protected final ItemStack loadItemStack(ConfigurationSection config, String path) {
-        if(config.isItemStack(path)) return config.getItemStack(path);
+        if(config.isItemStack(path)) {
+            return config.getItemStack(path);
+        }
+        
         ConfigurationSection section = config.getConfigurationSection(path);
         return loadItemStack(section);
     }
     
     private ItemStack loadItemStack(ConfigurationSection section) {
-        if(section == null) return null;
+        if(section == null) {
+            return null;
+        }
         
         String materialName = section.getString("material");
         Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(materialName);
@@ -177,13 +207,19 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Bu
     
     private ItemBuilder checkSkull(ItemBuilder builder, XMaterial xMaterial, ConfigurationSection section) {
         HeadHandler headHandler = getHeadHandler();
-        if(xMaterial != XMaterial.PLAYER_HEAD || headHandler == null) return builder;
+        if(xMaterial != XMaterial.PLAYER_HEAD || headHandler == null) {
+            return builder;
+        }
         
         String texture = section.getString("texture");
-        if(texture != null) return SkullBuilder.withTexture(headHandler, texture);
+        if(texture != null) {
+            return SkullBuilder.withTexture(headHandler, texture);
+        }
         
         String username = section.getString("skull-owner");
-        if(username != null) return SkullBuilder.withOwner(headHandler, username);
+        if(username != null) {
+            return SkullBuilder.withOwner(headHandler, username);
+        }
         
         return builder;
     }
