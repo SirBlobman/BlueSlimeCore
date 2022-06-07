@@ -18,6 +18,7 @@ The following Minecraft versions are supported:
 - 1.16.5
 - 1.17.1
 - 1.18
+- 1.19
 
 ## Maven Information
 You can use SirBlobmanAPI in your projects.  
