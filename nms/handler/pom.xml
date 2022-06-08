@@ -141,14 +141,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- NMS 1_18_R1 -->
-        <dependency>
-            <groupId>com.github.sirblobman.api.nms</groupId>
-            <artifactId>nms-1_18_R1</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- NMS 1_18_R2 -->
         <dependency>
             <groupId>com.github.sirblobman.api.nms</groupId>
