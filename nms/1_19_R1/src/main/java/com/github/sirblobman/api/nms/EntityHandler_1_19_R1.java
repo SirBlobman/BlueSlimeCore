@@ -16,7 +16,7 @@ import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
 
 import com.github.sirblobman.api.utility.Validate;
 
-public class EntityHandler_1_19_R1 extends EntityHandler {
+public final class EntityHandler_1_19_R1 extends EntityHandler {
     public EntityHandler_1_19_R1(JavaPlugin plugin) {
         super(plugin);
     }

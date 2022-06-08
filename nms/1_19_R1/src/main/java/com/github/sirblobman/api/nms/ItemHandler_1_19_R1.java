@@ -25,7 +25,7 @@ import org.bukkit.craftbukkit.v1_19_R1.util.CraftChatMessage;
 
 import com.github.sirblobman.api.utility.ItemUtility;
 
-public class ItemHandler_1_19_R1 extends ItemHandler {
+public final class ItemHandler_1_19_R1 extends ItemHandler {
     public ItemHandler_1_19_R1(JavaPlugin plugin) {
         super(plugin);
     }
@@ -57,7 +57,6 @@ public class ItemHandler_1_19_R1 extends ItemHandler {
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         CompoundTag compoundTag = new CompoundTag();
         nmsItem.save(compoundTag);
-        
         return compoundTag.toString();
     }
     

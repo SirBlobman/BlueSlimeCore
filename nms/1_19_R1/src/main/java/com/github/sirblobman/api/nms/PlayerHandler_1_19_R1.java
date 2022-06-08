@@ -8,7 +8,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class PlayerHandler_1_19_R1 extends PlayerHandler {
+public final class PlayerHandler_1_19_R1 extends PlayerHandler {
     public PlayerHandler_1_19_R1(JavaPlugin plugin) {
         super(plugin);
     }
