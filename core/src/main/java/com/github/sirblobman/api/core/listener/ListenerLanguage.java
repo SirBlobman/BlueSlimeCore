@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.language.LanguageManager;
+import com.github.sirblobman.api.plugin.listener.PluginListener;
 
 public final class ListenerLanguage extends PluginListener<CorePlugin> {
     public ListenerLanguage(CorePlugin plugin) {

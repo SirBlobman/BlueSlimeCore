@@ -12,6 +12,7 @@ import org.bukkit.event.server.RemoteServerCommandEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.plugin.listener.PluginListener;
 
 public final class ListenerCommandLogger extends PluginListener<CorePlugin> {
     public ListenerCommandLogger(CorePlugin plugin) {

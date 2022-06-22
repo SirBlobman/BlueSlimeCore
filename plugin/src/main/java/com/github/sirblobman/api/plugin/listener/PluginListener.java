@@ -1,4 +1,4 @@
-package com.github.sirblobman.api.core.listener;
+package com.github.sirblobman.api.plugin.listener;
 
 import java.util.logging.Logger;
 
