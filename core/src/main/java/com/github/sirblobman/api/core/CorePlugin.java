@@ -1,5 +1,6 @@
 package com.github.sirblobman.api.core;
 
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -111,20 +112,20 @@ public final class CorePlugin extends ConfigurablePlugin {
         printClassNames(bossBarHandler.getWrapperClass());
     }
     
-    private void printClassNames(Object... objectArray) {
-        for(Object object : objectArray) {
-            if(object == null) {
-                continue;
+    private void printClassNames(Object... objects) {
+        for(Object object : objects) {
+            if(object != null) {
+                printClassName(object);
             }
-            
-            printClassName(object);
         }
     }
     
     private void printClassName(Object object) {
         Logger logger = getLogger();
         String className = getClassName(object);
-        logger.info(" - " + className);
+
+        String message = String.format(Locale.US, " - %s", className);
+        logger.info(message);
     }
     
     private String getClassName(Object object) {
