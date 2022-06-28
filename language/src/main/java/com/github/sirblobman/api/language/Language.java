@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import com.github.sirblobman.api.utility.Validate;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,26 +16,22 @@ public final class Language {
     private final String languageCode;
     private final Language parentLanguage;
     private final Map<String, String> translationMap;
+    private final YamlConfiguration originalConfiguration;
     
     /**
      * Language Constructor
      *
      * @param parentLanguage The language that this language inherits from.
      * @param languageCode   The code ID for this language (Example: "en_us")
+     * @param originalConfiguration The original {@link YamlConfiguration} for this language.
      */
-    public Language(@Nullable Language parentLanguage, @NotNull String languageCode) {
-        this.parentLanguage = parentLanguage;
+    public Language(@Nullable Language parentLanguage, @NotNull String languageCode,
+                    @NotNull YamlConfiguration originalConfiguration) {
         this.languageCode = Validate.notNull(languageCode, "languageCode must not be null!");
+        this.originalConfiguration = Validate.notNull(originalConfiguration,
+                "originalConfiguration must not be null!");
+        this.parentLanguage = parentLanguage;
         this.translationMap = new HashMap<>();
-    }
-    
-    /**
-     * Language Constructor
-     *
-     * @param languageCode The code ID for this language (Example: "en_us")
-     */
-    public Language(@NotNull String languageCode) {
-        this(null, languageCode);
     }
     
     @NotNull
@@ -45,7 +43,13 @@ public final class Language {
     public String getLanguageCode() {
         return this.languageCode;
     }
-    
+
+    @NotNull
+    public YamlConfiguration getOriginalConfiguration() {
+        return this.originalConfiguration;
+    }
+
+    @NotNull
     public Optional<Locale> getJavaLocale() {
         String languageCode = getLanguageCode();
         Locale locale = Locale.forLanguageTag(languageCode);
@@ -62,17 +66,21 @@ public final class Language {
      */
     @NotNull
     public String getTranslation(String key) {
-        Optional<Language> parentLanguageOptional = getParent();
-        String translation = this.translationMap.getOrDefault(key, "");
-        if(parentLanguageOptional.isPresent()) {
-            Language parentLanguage = parentLanguageOptional.get();
-            return parentLanguage.getTranslation(key);
+        String translation = this.translationMap.get(key);
+        if(translation != null) {
+            return translation;
         }
-        
-        return translation;
+
+        Optional<Language> parentLanguageOptional = getParent();
+        if(parentLanguageOptional.isPresent()) {
+            Language language = parentLanguageOptional.get();
+            return language.getTranslation(key);
+        }
+
+        return key;
     }
     
-    protected void addTranslation(@NotNull String key, @NotNull String value) {
+    void addTranslation(@NotNull String key, @NotNull String value) {
         Validate.notEmpty(key, "key must not be empty or null!");
         Validate.notNull(value, "value must not be null!");
         this.translationMap.put(key, value);

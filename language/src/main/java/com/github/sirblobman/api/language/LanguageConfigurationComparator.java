@@ -22,8 +22,14 @@ public class LanguageConfigurationComparator implements Comparator<Configuration
             throw new IllegalStateException("Cyclic Language Dependency: " + languageName1 + ", " + languageName2);
         }
         
-        if(Objects.equals(parentName1, languageName2)) return 1;
-        if(Objects.equals(parentName2, languageName1)) return -1;
+        if(Objects.equals(parentName1, languageName2)) {
+            return 1;
+        }
+
+        if(Objects.equals(parentName2, languageName1)) {
+            return -1;
+        }
+
         return languageName1.compareToIgnoreCase(languageName2);
     }
 }

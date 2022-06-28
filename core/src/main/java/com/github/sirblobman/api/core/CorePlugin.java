@@ -17,6 +17,7 @@ import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
 import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
+import com.github.sirblobman.api.language.Language;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
@@ -39,10 +40,9 @@ public final class CorePlugin extends ConfigurablePlugin {
     @Override
     public void onLoad() {
         saveDefaultConfig();
-        
+
         LanguageManager languageManager = getLanguageManager();
-        languageManager.saveDefaultLanguages();
-        languageManager.reloadLanguages();
+        languageManager.saveDefaultLanguageFiles();
     }
     
     @Override
@@ -58,6 +58,9 @@ public final class CorePlugin extends ConfigurablePlugin {
             logger.info("[Debug] Major Version: " + VersionUtility.getMajorVersion());
             logger.info("[Debug] Minor Version: " + VersionUtility.getMinorVersion());
         }
+
+        LanguageManager languageManager = getLanguageManager();
+        languageManager.reloadLanguageFiles();
         
         registerCommands();
         registerListeners();

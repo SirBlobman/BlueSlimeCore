@@ -11,6 +11,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.language.Language;
+import com.github.sirblobman.api.language.LanguageCache;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.plugin.listener.PluginListener;
 
@@ -23,9 +25,7 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
     public void onJoin(PlayerJoinEvent e) {
         if(shouldCacheOnJoin()) {
             Player player = e.getPlayer();
-            CorePlugin plugin = getPlugin();
-            BukkitScheduler scheduler = Bukkit.getScheduler();
-            scheduler.scheduleSyncDelayedTask(plugin, () -> LanguageManager.updateCachedLocale(player), 1L);
+            updateLater(player);
         }
     }
     
@@ -33,8 +33,15 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
     public void onQuit(PlayerQuitEvent e) {
         if(shouldRemoveOnQuit()) {
             Player player = e.getPlayer();
-            LanguageManager.removeCachedLocale(player);
+            LanguageCache.removeCachedLocale(player);
         }
+    }
+
+    private void updateLater(Player player) {
+        CorePlugin corePlugin = getPlugin();
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        Runnable task = () -> LanguageCache.updateCachedLocale(player);
+        scheduler.scheduleSyncDelayedTask(corePlugin, task);
     }
     
     private YamlConfiguration getConfiguration() {
