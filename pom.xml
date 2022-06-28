@@ -58,6 +58,15 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <!-- Global Repositories -->
+    <repositories>
+        <!-- SirBlobman Public -->
+        <repository>
+            <id>sirblobman-public</id>
+            <url>https://nexus.sirblobman.xyz/repository/public/</url>
+        </repository>
+    </repositories>
+
     <!-- Global Dependencies -->
     <dependencies>
         <!-- JetBrains Annotations -->
@@ -72,7 +81,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>8.8.0</version>
+            <version>8.8.0-SBCore</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
