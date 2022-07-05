@@ -144,20 +144,6 @@ public abstract class Command implements TabExecutor {
      * A useful method for tab completion that returns all values in the list that start with the argument. The case of
      * the strings are ignored.
      *
-     * @param valueList A list of possible values in the tab completion.
-     * @param arg       The argument being used to tab-complete.
-     * @return A list of values that match the argument.
-     * @deprecated Use {@link #getMatching(String, Iterable)}
-     */
-    @Deprecated
-    protected final List<String> getMatching(Iterable<String> valueList, String arg) {
-        return StringUtil.copyPartialMatches(arg, valueList, new ArrayList<>());
-    }
-    
-    /**
-     * A useful method for tab completion that returns all values in the list that start with the argument. The case of
-     * the strings are ignored.
-     *
      * @param arg    The argument being used to tab-complete.
      * @param values An iterable of possible values in the tab completion.
      * @return A list of values that match the argument.
