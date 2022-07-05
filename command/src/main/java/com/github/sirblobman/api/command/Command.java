@@ -275,33 +275,6 @@ public abstract class Command implements TabExecutor {
     }
     
     /**
-     * Send a translatable message to a {@link CommandSender}.
-     *
-     * @param sender         The sender of the command that will receive the message.
-     * @param key            The message key in the language configuration.
-     * @param defaultMessage The default message if one is not found in the configuration.
-     * @param replacer       {@code null}, or a replacer for variables in the message.
-     * @param color          {@code true} to apply bukkit color codes, {@code false} to not change the message.
-     * @see #sendMessage(CommandSender, String, Replacer, boolean)
-     * @deprecated Replaced by another method.
-     */
-    @Deprecated
-    protected final void sendMessageOrDefault(CommandSender sender, String key, String defaultMessage,
-                                              Replacer replacer, boolean color) {
-        LanguageManager languageManager = getLanguageManager();
-        if(languageManager != null) {
-            languageManager.sendMessage(sender, key, replacer, color);
-            return;
-        }
-        
-        if(defaultMessage != null && !defaultMessage.isEmpty()) {
-            String colored = (color ? MessageUtility.color(defaultMessage) : defaultMessage);
-            String replaced = (replacer == null ? colored : replacer.replace(colored));
-            sender.sendMessage(replaced);
-        }
-    }
-    
-    /**
      * Check if a sender has access to a permission.
      *
      * @param sender         The {@link Permissible} that will be checked, usually a command sender.
@@ -369,8 +342,7 @@ public abstract class Command implements TabExecutor {
             return new BigInteger(value);
         } catch(NumberFormatException ex) {
             Replacer replacer = message -> message.replace("{value}", value);
-            sendMessageOrDefault(sender, "error.invalid-integer", "Unknown Integer: {value}",
-                    replacer, true);
+            sendMessage(sender, "error.invalid-integer", replacer, true);
             return null;
         }
     }
@@ -386,8 +358,7 @@ public abstract class Command implements TabExecutor {
             return new BigDecimal(value);
         } catch(NumberFormatException ex) {
             Replacer replacer = message -> message.replace("{value}", value);
-            sendMessageOrDefault(sender, "error.invalid-decimal", "Unknown Decimal: {value}",
-                    replacer, true);
+            sendMessage(sender, "error.invalid-decimal", replacer, true);
             return null;
         }
     }
@@ -403,8 +374,7 @@ public abstract class Command implements TabExecutor {
         if(target != null) return target;
         
         Replacer replacer = message -> message.replace("{target}", targetName);
-        sendMessageOrDefault(sender, "error.invalid-target", "Unknown Player: {target}",
-                replacer, true);
+        sendMessage(sender, "error.invalid-target", replacer, true);
         return null;
     }
     
@@ -421,8 +391,7 @@ public abstract class Command implements TabExecutor {
         
         World world = player.getWorld();
         Location location = player.getLocation();
-        sendMessageOrDefault(player, "error.inventory-full", "Inventory Full!",
-                null, true);
+        sendMessage(player, "error.inventory-full",null, true);
         
         Collection<ItemStack> dropCollection = leftover.values();
         for(ItemStack item : dropCollection) {
@@ -507,7 +476,7 @@ public abstract class Command implements TabExecutor {
 
     public void setPermissionName(String permissionName) {
         if(permissionName == null || permissionName.isEmpty()) {
-            setPermission((Permission) null);
+            setPermission(null);
             return;
         }
 
