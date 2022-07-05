@@ -28,6 +28,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permissible;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 
@@ -46,6 +49,8 @@ public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
     private final String commandName;
     private final Map<String, Command> subCommandMap;
+
+    private Permission permission;
     
     /**
      * @param plugin      The plugin that will be used to register this command.
@@ -55,6 +60,7 @@ public abstract class Command implements TabExecutor {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.commandName = Validate.notEmpty(commandName, "commandName cannot be empty or null!");
         this.subCommandMap = new HashMap<>();
+        this.permission = null;
     }
     
     /**
@@ -84,7 +90,9 @@ public abstract class Command implements TabExecutor {
     @Nullable
     protected LanguageManager getLanguageManager() {
         JavaPlugin plugin = getPlugin();
-        if(!(plugin instanceof ConfigurablePlugin)) return null;
+        if(!(plugin instanceof ConfigurablePlugin)) {
+            return null;
+        }
         
         ConfigurablePlugin configurablePlugin = (ConfigurablePlugin) plugin;
         return configurablePlugin.getLanguageManager();
@@ -296,8 +304,8 @@ public abstract class Command implements TabExecutor {
     /**
      * Check if a sender has access to a permission.
      *
-     * @param sender         The command sender who will be checked.
-     * @param permissionName The name of the permission to check for.
+     * @param sender         The {@link Permissible} that will be checked, usually a command sender.
+     * @param permissionName The name of the permission to check.
      * @param sendMessage    {@code true} if a "no permission" message should be sent, {@code false} for no output.
      * @return {@code true} if the sender has the permission, {@code false} if they do not.
      */
@@ -312,6 +320,29 @@ public abstract class Command implements TabExecutor {
             sendMessage(audience, "error.no-permission", replacer, true);
         }
         
+        return false;
+    }
+
+    /**
+     * Check if a sender has access to a permission.
+     *
+     * @param sender         The {@link Permissible} that will be checked, usually a command sender.
+     * @param permission     The permission to check.
+     * @param sendMessage    {@code true} if a "no permission" message should be sent, {@code false} for no output.
+     * @return {@code true} if the sender has the permission, {@code false} if they do not.
+     */
+    protected final boolean checkPermission(Permissible sender, Permission permission, boolean sendMessage) {
+        if(sender.hasPermission(permission)) {
+            return true;
+        }
+
+        if(sendMessage && sender instanceof CommandSender) {
+            CommandSender audience = (CommandSender) sender;
+            String permissionName = permission.getName();
+            Replacer replacer = message -> message.replace("{permission}", permissionName);
+            sendMessage(audience, "error.no-permission", replacer, true);
+        }
+
         return false;
     }
     
@@ -442,6 +473,11 @@ public abstract class Command implements TabExecutor {
                 return subCommand.onCommand(sender, command, label, newArgs);
             }
         }
+
+        Permission permission = getPermission();
+        if(permission != null && !checkPermission(sender, permission, true)) {
+            return true;
+        }
         
         return execute(sender, args);
     }
@@ -460,4 +496,33 @@ public abstract class Command implements TabExecutor {
      * usage.
      */
     protected abstract boolean execute(CommandSender sender, String[] args);
+
+    public Permission getPermission() {
+        return this.permission;
+    }
+
+    public void setPermission(Permission permission) {
+        this.permission = permission;
+    }
+
+    public void setPermissionName(String permissionName) {
+        if(permissionName == null || permissionName.isEmpty()) {
+            setPermission((Permission) null);
+            return;
+        }
+
+        JavaPlugin plugin = getPlugin();
+        PluginDescriptionFile description = plugin.getDescription();
+        List<Permission> permissionList = description.getPermissions();
+        for (Permission loopPermission : permissionList) {
+            String loopPermissionName = loopPermission.getName();
+            if (permissionName.equals(loopPermissionName)) {
+                setPermission(loopPermission);
+                return;
+            }
+        }
+
+        Permission permission = new Permission(permissionName, "Command Permission", PermissionDefault.OP);
+        setPermission(permission);
+    }
 }
