@@ -35,7 +35,11 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     @Override
     public String getFactionNameAt(Location location) {
         Faction faction = getFactionAt(location);
-        return (faction == null ? "" : faction.getTag());
+        if(faction == null) {
+            return "";
+        }
+
+        return faction.getTag();
     }
     
     @Override
@@ -127,13 +131,19 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     
     @Override
     public boolean isInOwnFaction(OfflinePlayer player, Location location) {
-        if(!hasFaction(player)) return false;
+        if(!hasFaction(player)) {
+            return false;
+        }
         
         Faction factionPlayer = getFactionFor(player);
-        if(factionPlayer == null) return false;
+        if(factionPlayer == null) {
+            return false;
+        }
         
         Faction factionLocation = getFactionAt(location);
-        if(factionLocation == null) return false;
+        if(factionLocation == null) {
+            return false;
+        }
         
         String factionPlayerId = factionPlayer.getId();
         String factionLocationId = factionLocation.getId();
@@ -143,14 +153,20 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     @Override
     public boolean isLeader(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return false;
+        if(faction == null) {
+            return false;
+        }
         
         FPlayer fleader = faction.getFPlayerLeader();
-        if(fleader == null) return false;
+        if(fleader == null) {
+            return false;
+        }
         
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return false;
+        if(fplayer == null) {
+            return false;
+        }
         
         String leaderId = fleader.getId();
         String playerId = fplayer.getId();
@@ -160,14 +176,18 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     @Override
     public boolean canBuild(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return true;
+        if(faction == null) {
+            return true;
+        }
         
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return false;
+        if(fplayer == null) {
+            return false;
+        }
         
         Access access = faction.getAccess(fplayer, PermissableAction.BUILD);
-        return (access == Access.ALLOW);
+        return (access != Access.DENY);
     }
     
     @Override
