@@ -9,10 +9,11 @@ import org.bukkit.entity.Player;
  */
 public final class ExperienceUtility {
     /**
-     * Calculates a player's total exp based on level and progress to next. http://minecraft.gamepedia.com/Experience#Leveling_up
+     * Calculates a player's total exp based on level and progress to next.
      *
      * @param player the Player
      * @return the amount of exp the Player has
+     * @see <a href="https://minecraft.fandom.com/wiki/Experience#Leveling_up">Experience: Leveling up</a>
      */
     public static int getExp(Player player) {
         int playerLevel = player.getLevel();
@@ -22,15 +23,14 @@ public final class ExperienceUtility {
     }
     
     /**
-     * Calculates total experience based on level. http://minecraft.gamepedia.com/Experience#Leveling_up
-     * <p>
-     * "One can determine how much experience has been collected to reach a level using the equations:
-     * <p>
+     * Calculates total experience based on level.<br/>
+     * One can determine how much experience has been collected to reach a level using the equations:<br/>
      * Total Experience = [Level]2 + 6[Level] (at levels 0-15) 2.5[Level]2 - 40.5[Level] + 360 (at levels 16-30)
-     * 4.5[Level]2 - 162.5[Level] + 2220 (at level 31+)"
+     * 4.5[Level]2 - 162.5[Level] + 2220 (at level 31+)&quot;
      *
      * @param level the level
      * @return the total experience calculated
+     * @see <a href="https://minecraft.fandom.com/wiki/Experience#Leveling_up">Experience: Leveling up</a>
      */
     public static int getExpFromLevel(int level) {
         if(level > 30) {
@@ -67,11 +67,13 @@ public final class ExperienceUtility {
     }
     
     /**
-     * http://minecraft.gamepedia.com/Experience#Leveling_up
-     * <p>
-     * "The formulas for figuring out how many experience orbs you need to get to the next level are as follows:
+     * The formulas for figuring out how many experience orbs you need to get to the next level are as follows:<br/>
      * Experience Required = 2[Current Level] + 7 (at levels 0-15) 5[Current Level] - 38 (at levels 16-30) 9[Current
-     * Level] - 158 (at level 31+)"
+     * Level] - 158 (at level 31+)
+     *
+     * @param level The current level
+     * @return The amount of experience required to get to the next level.
+     * @see <a href="https://minecraft.fandom.com/wiki/Experience#Leveling_up">Experience: Leveling up</a>
      */
     private static int getExpToNext(int level) {
         if(level > 30) {
@@ -86,10 +88,9 @@ public final class ExperienceUtility {
     }
     
     /**
-     * Change a Player's exp.
-     * <p>
-     * This method should be used in place of {@link Player#giveExp(int)}, which does not properly account for different
-     * levels requiring different amounts of experience.
+     * Change a Player's exp.<br/>
+     * This method should be used in place of {@link Player#giveExp(int)},
+     * which does not properly account for different levels requiring different amounts of experience.
      *
      * @param player the Player affected
      * @param exp    the amount of experience to add or remove

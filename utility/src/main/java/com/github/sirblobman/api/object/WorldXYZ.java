@@ -112,7 +112,10 @@ public final class WorldXYZ {
     @Override
     public String toString() {
         UUID worldId = getWorldId();
-        int x = getX(), y = getY(), z = getZ();
+        int x = getX();
+        int y = getY();
+        int z = getZ();
+
         return String.format(Locale.US, "WorldXYZ{worldId=%s,x=%s,y=%s,z=%s}", worldId, x, y, z);
     }
 }
