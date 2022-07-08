@@ -102,18 +102,26 @@ public abstract class Command implements TabExecutor {
      * The method used to register this command to the plugin.
      */
     public final void register() {
-        JavaPlugin plugin = getPlugin();
         String commandName = getCommandName();
-        
+        registerCustom(commandName);
+    }
+
+    /**
+     * The method used to register this command to the plugin.
+     * @param commandName The name to use instead of the actual command name.
+     */
+    public final void registerCustom(String commandName) {
         try {
+            JavaPlugin plugin = getPlugin();
             PluginCommand pluginCommand = plugin.getCommand(commandName);
+
             if(pluginCommand == null) {
                 Logger logger = plugin.getLogger();
                 logger.warning("Failed to register command '/" + commandName + "':");
                 logger.warning("Command '" + commandName + "' is missing in the 'plugin.yml' file.");
                 return;
             }
-            
+
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);
         } catch(Exception ex) {
