@@ -187,17 +187,21 @@ public final class FactionsHandler_Saber extends FactionsHandler {
         }
         
         Access access = faction.getAccess(fplayer, PermissableAction.BUILD);
-        return (access != Access.DENY);
+        return (access == Access.ALLOW);
     }
     
     @Override
     public boolean canDestroy(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return true;
+        if(faction == null) {
+            return true;
+        }
         
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return false;
+        if(fplayer == null) {
+            return false;
+        }
         
         Access access = faction.getAccess(fplayer, PermissableAction.DESTROY);
         return (access == Access.ALLOW);
@@ -208,7 +212,9 @@ public final class FactionsHandler_Saber extends FactionsHandler {
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
         FPlayer fviewer = fplayers.getByOfflinePlayer(viewer);
-        if(fplayer == null || fviewer == null) return null;
+        if(fplayer == null || fviewer == null) {
+            return null;
+        }
         
         Relation relation = fviewer.getRelationTo(fplayer);
         return relation.getColor();
@@ -218,7 +224,9 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     public String getRolePrefix(OfflinePlayer player) {
         FPlayers fplayers = FPlayers.getInstance();
         FPlayer fplayer = fplayers.getByOfflinePlayer(player);
-        if(fplayer == null) return null;
+        if(fplayer == null) {
+            return null;
+        }
         
         Role role = fplayer.getRole();
         return role.getPrefix();
@@ -227,7 +235,9 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     @Override
     public Set<UUID> getMembersForFactionAt(Location location) {
         Faction faction = getFactionAt(location);
-        if(faction == null) return Collections.emptySet();
+        if(faction == null) {
+            return Collections.emptySet();
+        }
         
         Set<FPlayer> memberSet = faction.getFPlayers();
         Set<UUID> memberIdSet = new HashSet<>();
@@ -244,7 +254,9 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     @Override
     public Set<UUID> getMembersForFactionOf(OfflinePlayer player) {
         Faction faction = getFactionFor(player);
-        if(faction == null) return Collections.emptySet();
+        if(faction == null) {
+            return Collections.emptySet();
+        }
         
         Set<FPlayer> memberSet = faction.getFPlayers();
         Set<UUID> memberIdSet = new HashSet<>();
