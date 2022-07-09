@@ -132,7 +132,7 @@ public final class FactionsHelper {
                 return true;
             }
             
-            return pluginVersion.startsWith("1.6.9.5-2");
+            return pluginVersion.startsWith("1.6.9.5") && pluginVersion.endsWith("-RC");
         }
         
         return false;
