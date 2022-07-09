@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -404,7 +405,18 @@ public abstract class Command implements TabExecutor {
         
         if(args.length == 1) {
             Map<String, Command> subCommandMap = getSubCommands();
-            tabCompletions.addAll(subCommandMap.keySet());
+            Set<Entry<String, Command>> subCommandEntrySet = subCommandMap.entrySet();
+            for (Entry<String, Command> subCommandEntry : subCommandEntrySet) {
+                String subCommandName = subCommandEntry.getKey();
+                Command subCommand = subCommandEntry.getValue();
+
+                Permission permission = subCommand.getPermission();
+                if(permission != null && !checkPermission(sender, permission, false)) {
+                    continue;
+                }
+
+                tabCompletions.add(subCommandName);
+            }
         }
         
         if(args.length > 1) {
@@ -412,8 +424,11 @@ public abstract class Command implements TabExecutor {
             Map<String, Command> subCommandMap = getSubCommands();
             Command subCommand = subCommandMap.getOrDefault(subCommandName, null);
             if(subCommand != null) {
-                String[] newArgs = getSubArguments(args, 1);
-                tabCompletions.addAll(subCommand.onTabComplete(sender, command, label, newArgs));
+                Permission permission = subCommand.getPermission();
+                if(permission == null || checkPermission(sender, permission, false)) {
+                    String[] newArgs = getSubArguments(args, 1);
+                    tabCompletions.addAll(subCommand.onTabComplete(sender, command, label, newArgs));
+                }
             }
         }
         
