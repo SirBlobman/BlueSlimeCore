@@ -237,7 +237,7 @@ public final class LanguageManager {
             }
 
             if(configuration.isString(key)) {
-                String message = configuration.getString(key);
+                String message = configuration.getString(key, key);
                 if(message != null) {
                     language.addTranslation(key, message);
                 }

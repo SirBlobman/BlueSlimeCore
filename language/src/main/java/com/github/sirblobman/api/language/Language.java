@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.language;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -17,6 +19,8 @@ public final class Language {
     private final Language parentLanguage;
     private final Map<String, String> translationMap;
     private final YamlConfiguration originalConfiguration;
+
+    private DecimalFormat decimalFormat;
     
     /**
      * Language Constructor
@@ -54,6 +58,24 @@ public final class Language {
         String languageCode = getLanguageCode();
         Locale locale = Locale.forLanguageTag(languageCode);
         return Optional.ofNullable(locale);
+    }
+
+    @NotNull
+    public DecimalFormat getDecimalFormat() {
+        if(this.decimalFormat != null) {
+            return this.decimalFormat;
+        }
+
+        Locale javaLocale = getJavaLocale().orElse(Locale.US);
+
+        String translation = getTranslation("decimal-format");
+        if(translation.isEmpty()) {
+            translation = "0.00";
+        }
+
+        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance(javaLocale);
+        this.decimalFormat = new DecimalFormat(translation, decimalFormatSymbols);
+        return this.decimalFormat;
     }
     
     /**
