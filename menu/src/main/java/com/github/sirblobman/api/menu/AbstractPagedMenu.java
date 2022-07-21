@@ -26,7 +26,11 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
     public final int getCurrentPage() {
         return this.currentPage;
     }
-    
+
+    public void setCurrentPage(int page) {
+        this.currentPage = page;
+    }
+
     public final void openNextPage() {
         int currentPage = getCurrentPage();
         int maximumPage = getMaxPages();
@@ -36,7 +40,7 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
             return;
         }
         
-        this.currentPage = newPage;
+        setCurrentPage(newPage);
         open();
     }
     
@@ -47,7 +51,7 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
             return;
         }
         
-        this.currentPage = newPage;
+        setCurrentPage(newPage);
         open();
     }
     
