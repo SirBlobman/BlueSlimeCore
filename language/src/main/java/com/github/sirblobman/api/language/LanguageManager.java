@@ -5,18 +5,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -27,11 +24,9 @@ import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
-import com.github.sirblobman.api.utility.VersionUtility;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.security.krb5.Config;
 
 public final class LanguageManager {
     private static final String[] KNOWN_LANGUAGE_ARRAY;
@@ -202,6 +197,7 @@ public final class LanguageManager {
         configurationManager.reload("language.yml");
 
         YamlConfiguration configuration = configurationManager.get("language.yml");
+        this.forceDefaultLanguage = configuration.getBoolean("enforce-default-locale");
         this.defaultLanguageName = configuration.getString("default-locale");
         this.consoleLanguageName = configuration.getString("console-locale");
 
