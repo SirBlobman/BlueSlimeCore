@@ -11,11 +11,18 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>luckperms-helper</artifactId>
+    <artifactId>luckperms-hook</artifactId>
     <name>BungeeCord LuckPerms Helper</name>
-    <version>2.4-SNAPSHOT</version>
 
     <dependencies>
+        <!-- Abstract -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>abstract-bungee</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- LuckPerms API -->
         <dependency>
             <groupId>net.luckperms</groupId>

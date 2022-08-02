@@ -1,0 +1,6 @@
+name: "${bungee.plugin.name}"
+description: "${project.description}"
+author: "SirBlobman"
+
+main: "${bungee.plugin.main}"
+version: "${bungee.plugin.version}"

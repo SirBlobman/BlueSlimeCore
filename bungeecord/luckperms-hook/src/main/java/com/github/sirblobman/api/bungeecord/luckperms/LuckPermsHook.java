@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 
+import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
 import com.github.sirblobman.api.utility.Validate;
 
 import net.luckperms.api.LuckPerms;
@@ -18,22 +19,21 @@ import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class LuckPermsHook {
+public final class LuckPermsHook implements IPermissionHook {
     private final Plugin plugin;
 
     public LuckPermsHook(Plugin plugin) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
     }
 
+    @Override
     public Plugin getPlugin() {
         return this.plugin;
     }
 
-    /**
-     * Check if LuckPerms is disabled or does not exist.
-     * @return {@code true} if LuckPerms doesn't exist on the proxy, otherwise {@code false}.
-     */
+    @Override
     public boolean isDisabled() {
         Plugin plugin = getPlugin();
         ProxyServer proxy = plugin.getProxy();
@@ -43,12 +43,8 @@ public final class LuckPermsHook {
         return (luckPerms == null);
     }
 
-    /**
-     * Get the LuckPerms prefix for a specific player.
-     * @param playerId The {@link UUID} of the player.
-     * @return The prefix for the player, or an empty string if they do not have one.
-     */
     @NotNull
+    @Override
     public String getPrefix(UUID playerId) {
         if(isDisabled()) {
             return "";
@@ -56,7 +52,6 @@ public final class LuckPermsHook {
 
         LuckPerms luckPerms = LuckPermsProvider.get();
         UserManager userManager = luckPerms.getUserManager();
-
         User user = userManager.getUser(playerId);
         if (user == null) {
             return "";
@@ -68,12 +63,8 @@ public final class LuckPermsHook {
         return (prefix == null || prefix.isBlank() ? "" : prefix);
     }
 
-    /**
-     * Get the LuckPerms suffix for a specific player.
-     * @param playerId The {@link UUID} of the player.
-     * @return The suffix for the player, or an empty string if they do not have one.
-     */
     @NotNull
+    @Override
     public String getSuffix(UUID playerId) {
         if(isDisabled()) {
             return "";
@@ -81,7 +72,6 @@ public final class LuckPermsHook {
 
         LuckPerms luckPerms = LuckPermsProvider.get();
         UserManager userManager = luckPerms.getUserManager();
-
         User user = userManager.getUser(playerId);
         if (user == null) {
             return "";
@@ -93,14 +83,25 @@ public final class LuckPermsHook {
         return (suffix == null || suffix.isBlank() ? "" : suffix);
     }
 
+    @Nullable
+    @Override
+    public String getPrimaryGroupName(UUID playerId) {
+        if(isDisabled()) {
+            return null;
+        }
 
-    /**
-     * Get the current LuckPerms primary group weight for a player.
-     * @param playerId The {@link UUID} of the player.
-     * @param defaultWeight The default weight to use if the player doesn't have a group or weight.
-     * @return The suffix for the player, or an empty string if they do not have one.
-     */
-    public int getWeight(UUID playerId, int defaultWeight) {
+        LuckPerms luckPerms = LuckPermsProvider.get();
+        UserManager userManager = luckPerms.getUserManager();
+        User user = userManager.getUser(playerId);
+        if (user == null) {
+            return null;
+        }
+
+        return user.getPrimaryGroup();
+    }
+
+    @Override
+    public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
         if(isDisabled()) {
             return defaultWeight;
         }
@@ -108,7 +109,6 @@ public final class LuckPermsHook {
         LuckPerms luckPerms = LuckPermsProvider.get();
         UserManager userManager = luckPerms.getUserManager();
         GroupManager groupManager = luckPerms.getGroupManager();
-
         User user = userManager.getUser(playerId);
         if (user == null) {
             return defaultWeight;

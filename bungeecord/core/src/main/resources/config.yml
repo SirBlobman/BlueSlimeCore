@@ -1,0 +1,20 @@
+# Enable these hooks to use them when necessary.
+hooks:
+  LuckPerms: false
+  BungeePerms: false
+  PremiumVanish: false
+
+# This section is only applicable when no permission plugin hook is enabled above.
+# To apply a user to a group, simply give the permission "sbcore.ranks.<rank-name>"
+# (for example, mod would be "sbcore.ranks.mod")
+# Note: The higher the weight, the higher up in the list the group will be.
+ranks:
+  admin:
+    prefix: "&c[Admin]"
+    suffix: ""
+    weight: 10
+
+  mod:
+    prefix: "&e[Mod]"
+    suffix: ""
+    weight: 5
