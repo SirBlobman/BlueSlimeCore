@@ -1,10 +1,13 @@
 package com.github.sirblobman.api.bungeecord.core;
 
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 
 import com.github.sirblobman.api.bungeecord.bungeeperms.BungeePermsHook;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurablePlugin;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
+import com.github.sirblobman.api.bungeecord.core.command.CommandSBCoreReload;
 import com.github.sirblobman.api.bungeecord.core.hook.DefaultPermissionHook;
 import com.github.sirblobman.api.bungeecord.core.hook.DefaultVanishHook;
 import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
@@ -32,16 +35,24 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onEnable() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        configurationManager.reload("config.yml");
+        onReload();
 
-        setupPermissionHook();
-        setupVanishHook();
+        ProxyServer proxy = getProxy();
+        PluginManager pluginManager = proxy.getPluginManager();
+        pluginManager.registerCommand(this, new CommandSBCoreReload(this));
     }
 
     @Override
     public void onDisable() {
         // Do Nothing
+    }
+
+    public void onReload() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.reload("config.yml");
+
+        setupPermissionHook();
+        setupVanishHook();
     }
 
     @NotNull
