@@ -23,7 +23,7 @@ public interface IVanishHook extends IHook {
 
     /**
      * Set the hide value of a player.
-     * @param player The {@link Player} to hide/unhide.
+     * @param player The {@link ProxiedPlayer} to hide/unhide.
      * @param hidden {@code true} to hide the player, {@code false} to unhide the player.
      */
     void setHidden(ProxiedPlayer player, boolean hidden);

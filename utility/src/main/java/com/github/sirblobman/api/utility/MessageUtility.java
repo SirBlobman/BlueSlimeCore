@@ -75,7 +75,6 @@ public final class MessageUtility {
      * Copies all elements from the iterable collection of originals to a
      * new {@link List}
      *
-     * @param <T> the collection of strings
      * @param token String to search for
      * @param originals An iterable collection of strings to filter.
      * @return the list of all matches.
