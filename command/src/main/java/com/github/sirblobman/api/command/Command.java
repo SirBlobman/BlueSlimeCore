@@ -33,7 +33,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.StringUtil;
 
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.language.Replacer;
@@ -158,7 +157,7 @@ public abstract class Command implements TabExecutor {
      * @return A list of values that match the argument.
      */
     protected final List<String> getMatching(String arg, Iterable<String> values) {
-        return StringUtil.copyPartialMatches(arg, values, new ArrayList<>());
+        return MessageUtility.getMatches(arg, values);
     }
     
     /**

@@ -3,7 +3,9 @@ package com.github.sirblobman.api.bungeecord.core.hook;
 import java.util.UUID;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.config.Configuration;
 
+import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
 import com.github.sirblobman.api.bungeecord.hook.vanish.IVanishHook;
 import com.github.sirblobman.api.utility.Validate;
@@ -27,11 +29,17 @@ public final class DefaultVanishHook implements IVanishHook {
 
     @Override
     public boolean isHidden(ProxiedPlayer player) {
-        return false;
+        UUID playerId = player.getUniqueId();
+        return isHidden(playerId);
     }
 
     @Override
     public boolean isHidden(UUID playerId) {
-        return false;
+        CorePlugin plugin = getPlugin();
+        ConfigurationManager configurationManager = plugin.getConfigurationManager();
+        Configuration configuration = configurationManager.get("hidden.yml");
+
+        String playerIdString = playerId.toString();
+        return configuration.getBoolean(playerIdString, false);
     }
 }

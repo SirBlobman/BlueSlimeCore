@@ -7,6 +7,7 @@ import net.md_5.bungee.config.Configuration;
 import com.github.sirblobman.api.bungeecord.bungeeperms.BungeePermsHook;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurablePlugin;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
+import com.github.sirblobman.api.bungeecord.core.command.CommandSBCoreHide;
 import com.github.sirblobman.api.bungeecord.core.command.CommandSBCoreReload;
 import com.github.sirblobman.api.bungeecord.core.hook.DefaultPermissionHook;
 import com.github.sirblobman.api.bungeecord.core.hook.DefaultVanishHook;
@@ -18,11 +19,18 @@ import com.github.sirblobman.api.bungeecord.premiumvanish.PremiumVanishHook;
 import org.jetbrains.annotations.NotNull;
 
 public final class CorePlugin extends ConfigurablePlugin {
+    private final IPermissionHook defaultPermissionHook;
+    private final IVanishHook defaultVanishHook;
+
     private IPermissionHook permissionHook;
     private IVanishHook vanishHook;
 
     public CorePlugin() {
         super();
+
+        this.defaultPermissionHook = new DefaultPermissionHook(this);
+        this.defaultVanishHook = new DefaultVanishHook(this);
+
         this.permissionHook = null;
         this.vanishHook = null;
     }
@@ -31,6 +39,7 @@ public final class CorePlugin extends ConfigurablePlugin {
     public void onLoad() {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.saveDefault("config.yml");
+        configurationManager.saveDefault("hidden.yml");
     }
 
     @Override
@@ -40,6 +49,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         ProxyServer proxy = getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
         pluginManager.registerCommand(this, new CommandSBCoreReload(this));
+        pluginManager.registerCommand(this, new CommandSBCoreHide(this));
     }
 
     @Override
@@ -50,9 +60,20 @@ public final class CorePlugin extends ConfigurablePlugin {
     public void onReload() {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.reload("config.yml");
+        configurationManager.reload("hidden.yml");
 
         setupPermissionHook();
         setupVanishHook();
+    }
+
+    @NotNull
+    public IPermissionHook getDefaultPermissionHook() {
+        return this.defaultPermissionHook;
+    }
+
+    @NotNull
+    public IVanishHook getDefaultVanishHook() {
+        return this.defaultVanishHook;
     }
 
     @NotNull
@@ -86,7 +107,7 @@ public final class CorePlugin extends ConfigurablePlugin {
             }
         }
 
-        this.permissionHook = new DefaultPermissionHook(this);
+        this.permissionHook = defaultPermissionHook;
     }
 
     public void setupVanishHook() {
@@ -102,6 +123,6 @@ public final class CorePlugin extends ConfigurablePlugin {
             }
         }
 
-        this.vanishHook = new DefaultVanishHook(this);
+        this.vanishHook = defaultVanishHook;
     }
 }
