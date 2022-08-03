@@ -45,4 +45,21 @@ public final class PremiumVanishHook implements IVanishHook {
         List<UUID> invisiblePlayerList = BungeeVanishAPI.getInvisiblePlayers();
         return invisiblePlayerList.contains(playerId);
     }
+
+    @Override
+    public void setHidden(ProxiedPlayer player, boolean hidden) {
+        if(hidden) {
+            BungeeVanishAPI.hidePlayer(player);
+        } else {
+            BungeeVanishAPI.showPlayer(player);
+        }
+    }
+
+    @Override
+    public void setHidden(UUID playerId, boolean hidden) {
+        Plugin plugin = getPlugin();
+        ProxyServer proxy = plugin.getProxy();
+        ProxiedPlayer player = proxy.getPlayer(playerId);
+        setHidden(player, hidden);
+    }
 }

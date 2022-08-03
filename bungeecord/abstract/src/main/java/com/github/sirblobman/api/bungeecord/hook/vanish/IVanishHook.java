@@ -20,4 +20,18 @@ public interface IVanishHook extends IHook {
      * @return {@code true} if the player is vanished, otherwise {@code false}.
      */
     boolean isHidden(UUID playerId);
+
+    /**
+     * Set the hide value of a player.
+     * @param player The {@link Player} to hide/unhide.
+     * @param hidden {@code true} to hide the player, {@code false} to unhide the player.
+     */
+    void setHidden(ProxiedPlayer player, boolean hidden);
+
+    /**
+     * Set the hide value of a player.
+     * @param playerId The {@link UUID} of the player to hide/unhide.
+     * @param hidden {@code true} to hide the player, {@code false} to unhide the player.
+     */
+    void setHidden(UUID playerId, boolean hidden);
 }

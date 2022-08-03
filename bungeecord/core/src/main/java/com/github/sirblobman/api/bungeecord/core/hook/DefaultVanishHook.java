@@ -42,4 +42,21 @@ public final class DefaultVanishHook implements IVanishHook {
         String playerIdString = playerId.toString();
         return configuration.getBoolean(playerIdString, false);
     }
+
+    @Override
+    public void setHidden(ProxiedPlayer player, boolean hidden) {
+        UUID playerId = player.getUniqueId();
+        setHidden(playerId, hidden);
+    }
+
+    @Override
+    public void setHidden(UUID playerId, boolean hidden) {
+        CorePlugin plugin = getPlugin();
+        ConfigurationManager configurationManager = plugin.getConfigurationManager();
+        Configuration configuration = configurationManager.get("hidden.yml");
+
+        String playerIdString = playerId.toString();
+        configuration.set(playerIdString, hidden);
+        configurationManager.save("hidden.yml");
+    }
 }
