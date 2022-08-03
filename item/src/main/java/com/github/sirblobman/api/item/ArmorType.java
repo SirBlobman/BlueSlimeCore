@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 public enum ArmorType {
     HELMET, CHESTPLATE, LEGGINGS, BOOTS;
-    
+
     @Nullable
     public EquipmentSlot getSlot() {
-        switch(this) {
+        switch (this) {
             case HELMET:
                 return EquipmentSlot.HEAD;
             case CHESTPLATE:
@@ -25,16 +25,16 @@ public enum ArmorType {
             default:
                 break;
         }
-        
+
         return null;
     }
-    
+
     @Deprecated
     public Material getArmorMaterial(String type) {
         String materialName = (type + "_" + name());
         return Material.matchMaterial(materialName);
     }
-    
+
     public Optional<XMaterial> getArmorMaterial(ArmorMaterialType armorMaterialType) {
         String typeName = armorMaterialType.name();
         String armorName = this.name();

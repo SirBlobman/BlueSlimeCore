@@ -13,12 +13,12 @@ public class CommandSirBlobmanCoreReload extends Command {
     public CommandSirBlobmanCoreReload(CorePlugin plugin) {
         super(plugin, "reload");
     }
-    
+
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         return Collections.emptyList();
     }
-    
+
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
         return false;

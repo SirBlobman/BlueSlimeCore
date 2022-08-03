@@ -28,7 +28,7 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String[] args) {
-        if(args.length == 1) {
+        if (args.length == 1) {
             Set<String> valueSet = Set.of("on", "off");
             return MessageUtility.getMatches(args[0], valueSet);
         }
@@ -45,9 +45,9 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
             return;
         }
 
-        if(args.length >= 1) {
+        if (args.length >= 1) {
             String toggle = args[0];
-            switch(toggle) {
+            switch (toggle) {
                 case "on" -> setHidden(player, true);
                 case "off" -> setHidden(player, false);
                 default -> {

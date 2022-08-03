@@ -18,20 +18,20 @@ import org.jetbrains.annotations.Nullable;
 public final class WorldXYZ {
     private final UUID worldId;
     private final int x, y, z;
-    
+
     private WorldXYZ(UUID worldId, int x, int y, int z) {
         this.worldId = Validate.notNull(worldId, "worldId must not be null!");
         this.x = x;
         this.y = y;
         this.z = z;
     }
-    
+
     public static WorldXYZ from(World world, int x, int y, int z) {
         Validate.notNull(world, "world must not be null!");
         UUID worldId = world.getUID();
         return new WorldXYZ(worldId, x, y, z);
     }
-    
+
     public static WorldXYZ from(Block block) {
         Validate.notNull(block, "block must not be null!");
         World world = block.getWorld();
@@ -40,75 +40,75 @@ public final class WorldXYZ {
         int z = block.getZ();
         return from(world, x, y, z);
     }
-    
+
     public static WorldXYZ from(Location location) {
         Validate.notNull(location, "location must not be null!");
         Block block = location.getBlock();
         return from(block);
     }
-    
+
     public static WorldXYZ from(Entity entity) {
         Validate.notNull(entity, "entity must not be null!");
         Location location = entity.getLocation();
         return from(location);
     }
-    
+
     @NotNull
     public UUID getWorldId() {
         return this.worldId;
     }
-    
+
     @Nullable
     public World getWorld() {
         UUID worldId = getWorldId();
         return Bukkit.getWorld(worldId);
     }
-    
+
     public int getX() {
         return this.x;
     }
-    
+
     public int getY() {
         return this.y;
     }
-    
+
     public int getZ() {
         return this.z;
     }
-    
+
     @Nullable
     public Location asLocation() {
         World world = getWorld();
-        if(world == null) {
+        if (world == null) {
             return null;
         }
-        
+
         int x = getX();
         int y = getY();
         int z = getZ();
         return new Location(world, x, y, z, 0.0F, 0.0F);
     }
-    
+
     @Override
     public boolean equals(Object object) {
-        if(this == object) {
+        if (this == object) {
             return true;
         }
-        
-        if(!(object instanceof WorldXYZ)) {
+
+        if (!(object instanceof WorldXYZ)) {
             return false;
         }
-        
+
         WorldXYZ other = (WorldXYZ) object;
         boolean checkId = Objects.equals(this.worldId, other.worldId);
         return (checkId && this.x == other.x && this.y == other.y && this.z == other.z);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(this.worldId, this.x, this.y, this.z);
     }
-    
+
     @Override
     public String toString() {
         UUID worldId = getWorldId();

@@ -13,19 +13,19 @@ public class CommandSirBlobmanCoreHelp extends Command {
     public CommandSirBlobmanCoreHelp(CorePlugin plugin) {
         super(plugin, "help");
     }
-    
+
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         return Collections.emptyList();
     }
-    
+
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
         String permissionName = "sirblobman.core.command.sirblobmancore.help";
-        if(!checkPermission(sender, permissionName, true)) {
+        if (!checkPermission(sender, permissionName, true)) {
             return true;
         }
-        
+
         String title = MessageUtility.color("&f&lSirBlobmanCore Commands:");
         String[] commandArray = MessageUtility.colorArray(
                 "&b/sb help&7: Show this list of commands.",
@@ -38,7 +38,7 @@ public class CommandSirBlobmanCoreHelp extends Command {
                 "&b/item-to-yml&7: Convert an item to a serialized Bukkit YAML format.",
                 ""
         );
-        
+
         sender.sendMessage(title);
         sender.sendMessage(commandArray);
         return true;

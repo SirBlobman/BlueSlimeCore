@@ -13,7 +13,12 @@ public abstract class ConfigurablePlugin extends Plugin {
         return this.configurationManager;
     }
 
-    @Override public abstract void onLoad();
-    @Override public abstract void onEnable();
-    @Override public abstract void onDisable();
+    @Override
+    public abstract void onLoad();
+
+    @Override
+    public abstract void onEnable();
+
+    @Override
+    public abstract void onDisable();
 }

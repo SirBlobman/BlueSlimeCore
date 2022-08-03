@@ -11,35 +11,35 @@ public abstract class ConsoleCommand extends Command {
     public ConsoleCommand(JavaPlugin plugin, String commandName) {
         super(plugin, commandName);
     }
-    
+
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        if(sender instanceof ConsoleCommandSender) {
+        if (sender instanceof ConsoleCommandSender) {
             ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return onTabComplete(console, args);
         }
-        
+
         return Collections.emptyList();
     }
-    
+
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        if(sender instanceof ConsoleCommandSender) {
+        if (sender instanceof ConsoleCommandSender) {
             ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return execute(console, args);
         }
-        
+
         sendMessage(sender, "error.console-only", null, true);
         return true;
     }
-    
+
     /**
      * @param console The console that is tab-completing this command.
      * @param args    An array of command arguments.
      * @return The list of tab completions for this combination of sender and command arguments.
      */
     protected abstract List<String> onTabComplete(ConsoleCommandSender console, String[] args);
-    
+
     /**
      * @param console The console that is executing this command.
      * @param args    An array of command arguments.

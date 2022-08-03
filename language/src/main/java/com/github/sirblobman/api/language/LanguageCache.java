@@ -16,7 +16,7 @@ public final class LanguageCache {
         UUID playerId = player.getUniqueId();
         String defaultLocale = "default";
 
-        if(minorVersion < 12) {
+        if (minorVersion < 12) {
             PLAYER_LOCALE_CACHE.put(playerId, defaultLocale);
         } else {
             String localeName = player.getLocale();
@@ -31,7 +31,7 @@ public final class LanguageCache {
 
     public static String getCachedLocale(Player player) {
         UUID playerId = player.getUniqueId();
-        if(!PLAYER_LOCALE_CACHE.containsKey(playerId)) {
+        if (!PLAYER_LOCALE_CACHE.containsKey(playerId)) {
             updateCachedLocale(player);
         }
 

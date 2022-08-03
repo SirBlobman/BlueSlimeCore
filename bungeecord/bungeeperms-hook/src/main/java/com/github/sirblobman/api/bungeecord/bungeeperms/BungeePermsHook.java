@@ -41,7 +41,7 @@ public final class BungeePermsHook implements IPermissionHook {
     @NotNull
     @Override
     public String getPrefix(UUID playerId) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return "";
         }
 
@@ -53,7 +53,7 @@ public final class BungeePermsHook implements IPermissionHook {
     @NotNull
     @Override
     public String getSuffix(UUID playerId) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return "";
         }
 
@@ -65,7 +65,7 @@ public final class BungeePermsHook implements IPermissionHook {
     @Nullable
     @Override
     public String getPrimaryGroupName(UUID playerId) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return null;
         }
 
@@ -75,19 +75,19 @@ public final class BungeePermsHook implements IPermissionHook {
 
     @Override
     public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return defaultWeight;
         }
 
         String primaryGroupName = getPrimaryGroupName(playerId);
-        if(primaryGroupName == null) {
+        if (primaryGroupName == null) {
             return defaultWeight;
         }
 
         BungeePerms instance = BungeePerms.getInstance();
         PermissionsManager permissionsManager = instance.getPermissionsManager();
         Group group = permissionsManager.getGroup(primaryGroupName);
-        if(group == null) {
+        if (group == null) {
             return defaultWeight;
         }
 

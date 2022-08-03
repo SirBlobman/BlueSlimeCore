@@ -36,7 +36,7 @@ public final class DefaultPermissionHook implements IPermissionHook {
     @Override
     public String getPrefix(UUID playerId) {
         String primaryGroupName = getPrimaryGroupName(playerId);
-        if(primaryGroupName == null) {
+        if (primaryGroupName == null) {
             return "";
         }
 
@@ -48,7 +48,7 @@ public final class DefaultPermissionHook implements IPermissionHook {
     @Override
     public String getSuffix(UUID playerId) {
         String primaryGroupName = getPrimaryGroupName(playerId);
-        if(primaryGroupName == null) {
+        if (primaryGroupName == null) {
             return "";
         }
 
@@ -60,7 +60,7 @@ public final class DefaultPermissionHook implements IPermissionHook {
     @Override
     public String getPrimaryGroupName(UUID playerId) {
         ProxiedPlayer player = getPlayer(playerId);
-        if(player == null) {
+        if (player == null) {
             return "";
         }
 
@@ -75,13 +75,13 @@ public final class DefaultPermissionHook implements IPermissionHook {
         int highestWeight = Integer.MIN_VALUE;
         for (String rankId : rankIdSet) {
             String permissionName = ("sbcore.ranks." + rankId);
-            if(!player.hasPermission(permissionName)) {
+            if (!player.hasPermission(permissionName)) {
                 continue;
             }
 
             Configuration section = sectionRanks.getSection(rankId);
             int weight = section.getInt("weight");
-            if(weight > highestWeight) {
+            if (weight > highestWeight) {
                 highestRankId = rankId;
                 highestWeight = weight;
             }
@@ -93,7 +93,7 @@ public final class DefaultPermissionHook implements IPermissionHook {
     @Override
     public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
         String primaryGroupName = getPrimaryGroupName(playerId);
-        if(primaryGroupName == null) {
+        if (primaryGroupName == null) {
             return defaultWeight;
         }
 

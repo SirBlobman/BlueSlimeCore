@@ -11,27 +11,25 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.CorePlugin;
-import com.github.sirblobman.api.language.Language;
 import com.github.sirblobman.api.language.LanguageCache;
-import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.plugin.listener.PluginListener;
 
 public final class ListenerLanguage extends PluginListener<CorePlugin> {
     public ListenerLanguage(CorePlugin plugin) {
         super(plugin);
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
-        if(shouldCacheOnJoin()) {
+        if (shouldCacheOnJoin()) {
             Player player = e.getPlayer();
             updateLater(player);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent e) {
-        if(shouldRemoveOnQuit()) {
+        if (shouldRemoveOnQuit()) {
             Player player = e.getPlayer();
             LanguageCache.removeCachedLocale(player);
         }
@@ -43,18 +41,18 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
         Runnable task = () -> LanguageCache.updateCachedLocale(player);
         scheduler.scheduleSyncDelayedTask(corePlugin, task);
     }
-    
+
     private YamlConfiguration getConfiguration() {
         CorePlugin plugin = getPlugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         return configurationManager.get("config.yml");
     }
-    
+
     private boolean shouldCacheOnJoin() {
         YamlConfiguration configuration = getConfiguration();
         return configuration.getBoolean("cache-language-on-join");
     }
-    
+
     private boolean shouldRemoveOnQuit() {
         YamlConfiguration configuration = getConfiguration();
         return configuration.getBoolean("cache-language-remove-on-quit");

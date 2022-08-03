@@ -4,6 +4,7 @@ import com.github.sirblobman.api.utility.Validate;
 
 /**
  * A simple {@link Replacer} that replaces all strings that match the target with the replacement.
+ *
  * @see String#replace(CharSequence, CharSequence)
  */
 public final class SimpleReplacer implements Replacer {

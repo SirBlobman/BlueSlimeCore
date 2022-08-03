@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public interface IPermissionHook extends IHook {
     /**
      * Get the prefix text for a specific player.
+     *
      * @param playerId The {@link UUID} of the player.
      * @return The prefix for the player, or an empty string if they do not have one.
      */
@@ -17,6 +18,7 @@ public interface IPermissionHook extends IHook {
 
     /**
      * Get the suffix text for a specific player.
+     *
      * @param playerId The {@link UUID} of the player.
      * @return The suffix for the player, or an empty string if they do not have one.
      */
@@ -24,6 +26,7 @@ public interface IPermissionHook extends IHook {
 
     /**
      * Get the current primary group name for a player.
+     *
      * @param playerId The {@link UUID} of the player.
      * @return The primary group name for the player, or an empty string if they do not have one.
      */
@@ -31,7 +34,8 @@ public interface IPermissionHook extends IHook {
 
     /**
      * Get the current LuckPerms primary group weight for a player.
-     * @param playerId The {@link UUID} of the player.
+     *
+     * @param playerId      The {@link UUID} of the player.
      * @param defaultWeight The default weight to use if the player doesn't have a group or weight.
      * @return The weight for the player's primary group, or the value of {@code defaultWeight}.
      */

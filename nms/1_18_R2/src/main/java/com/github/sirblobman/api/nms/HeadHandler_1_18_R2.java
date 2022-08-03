@@ -1,14 +1,11 @@
 package com.github.sirblobman.api.nms;
 
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -18,10 +15,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
 
 import com.github.sirblobman.api.utility.ItemUtility;
 
@@ -38,12 +31,12 @@ public class HeadHandler_1_18_R2 extends HeadHandler {
     @Override
     public ItemStack getPlayerHead(OfflinePlayer player) {
         ItemStack itemStack = XMaterial.PLAYER_HEAD.parseItem();
-        if(ItemUtility.isAir(itemStack)) {
+        if (ItemUtility.isAir(itemStack)) {
             throw new IllegalStateException("Failed to create PLAYER_HEAD ItemStack!");
         }
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if(!(itemMeta instanceof SkullMeta skullMeta)) {
+        if (!(itemMeta instanceof SkullMeta skullMeta)) {
             throw new IllegalStateException("PLAYER_HEAD ItemStack doesn't have SkullMeta.");
         }
 
@@ -62,12 +55,12 @@ public class HeadHandler_1_18_R2 extends HeadHandler {
     @Override
     public ItemStack getBase64Head(String base64, UUID customId) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
-        if(item == null) {
+        if (item == null) {
             return null;
         }
 
         ItemMeta itemMeta = item.getItemMeta();
-        if(!(itemMeta instanceof SkullMeta skullMeta)) {
+        if (!(itemMeta instanceof SkullMeta skullMeta)) {
             return item;
         }
 
@@ -101,7 +94,7 @@ public class HeadHandler_1_18_R2 extends HeadHandler {
 
         try {
             return new URL(url);
-        } catch(MalformedURLException ignored) {
+        } catch (MalformedURLException ignored) {
             return null;
         }
     }

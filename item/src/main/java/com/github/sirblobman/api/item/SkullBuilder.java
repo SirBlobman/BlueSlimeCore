@@ -13,14 +13,14 @@ public final class SkullBuilder {
         ItemStack playerHead = headHandler.getBase64Head(base64);
         return new ItemBuilder(playerHead);
     }
-    
+
     public static ItemBuilder withOwner(HeadHandler headHandler, String playerName) {
         Validate.notNull(headHandler, "headHandler must not be null!");
         Validate.notEmpty(playerName, "playerName must not be empty or null!");
         ItemStack playerHead = headHandler.getPlayerHead(playerName);
         return new ItemBuilder(playerHead);
     }
-    
+
     public static ItemBuilder withOwner(HeadHandler headHandler, OfflinePlayer player) {
         Validate.notNull(headHandler, "headHandler must not be null!");
         Validate.notNull(player, "player must not be null!");

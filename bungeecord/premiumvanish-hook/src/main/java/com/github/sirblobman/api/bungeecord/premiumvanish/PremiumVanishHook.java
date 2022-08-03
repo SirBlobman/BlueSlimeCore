@@ -48,7 +48,7 @@ public final class PremiumVanishHook implements IVanishHook {
 
     @Override
     public void setHidden(ProxiedPlayer player, boolean hidden) {
-        if(hidden) {
+        if (hidden) {
             BungeeVanishAPI.hidePlayer(player);
         } else {
             BungeeVanishAPI.showPlayer(player);

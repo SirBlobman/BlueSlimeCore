@@ -25,58 +25,58 @@ public class PlayerHandler_1_11_R1 extends PlayerHandler {
     public PlayerHandler_1_11_R1(JavaPlugin plugin) {
         super(plugin);
     }
-    
+
     @Override
     public void sendActionBar(Player player, String message) {
         BaseComponent[] baseComponents = TextComponent.fromLegacyText(message);
         Spigot spigot = player.spigot();
         spigot.sendMessage(ChatMessageType.ACTION_BAR, baseComponents);
     }
-    
+
     @Override
     public void sendTabInfo(Player player, String header, String footer) {
         String headerJSON = asJSON(header);
         String footerJSON = asJSON(footer);
         IChatBaseComponent headerComponent = ChatSerializer.a(headerJSON);
         IChatBaseComponent footerComponent = ChatSerializer.a(footerJSON);
-        
+
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer nmsPlayer = craftPlayer.getHandle();
         try {
             PacketDataSerializer packetData = new PacketDataSerializer(Unpooled.buffer());
             packetData.a(headerComponent);
             packetData.a(footerComponent);
-            
+
             PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
             packet.a(packetData);
             nmsPlayer.playerConnection.sendPacket(packet);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             JavaPlugin plugin = getPlugin();
             Logger logger = plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while sending a tab packet:", ex);
         }
     }
-    
+
     @Override
     public void forceRespawn(Player player) {
         Spigot spigot = player.spigot();
         spigot.respawn();
     }
-    
+
     @Override
     public double getAbsorptionHearts(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer nmsPlayer = craftPlayer.getHandle();
         return nmsPlayer.getAbsorptionHearts();
     }
-    
+
     @Override
     public void setAbsorptionHearts(Player player, double hearts) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer nmsPlayer = craftPlayer.getHandle();
         nmsPlayer.setAbsorptionHearts((float) hearts);
     }
-    
+
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
         player.setCooldown(material, ticksLeft);

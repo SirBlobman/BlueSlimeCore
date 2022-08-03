@@ -21,12 +21,12 @@ public final class Language {
     private final YamlConfiguration originalConfiguration;
 
     private DecimalFormat decimalFormat;
-    
+
     /**
      * Language Constructor
      *
-     * @param parentLanguage The language that this language inherits from.
-     * @param languageCode   The code ID for this language (Example: "en_us")
+     * @param parentLanguage        The language that this language inherits from.
+     * @param languageCode          The code ID for this language (Example: "en_us")
      * @param originalConfiguration The original {@link YamlConfiguration} for this language.
      */
     public Language(@Nullable Language parentLanguage, @NotNull String languageCode,
@@ -37,12 +37,12 @@ public final class Language {
         this.parentLanguage = parentLanguage;
         this.translationMap = new HashMap<>();
     }
-    
+
     @NotNull
     public Optional<Language> getParent() {
         return Optional.ofNullable(this.parentLanguage);
     }
-    
+
     @NotNull
     public String getLanguageCode() {
         return this.languageCode;
@@ -62,14 +62,14 @@ public final class Language {
 
     @NotNull
     public DecimalFormat getDecimalFormat() {
-        if(this.decimalFormat != null) {
+        if (this.decimalFormat != null) {
             return this.decimalFormat;
         }
 
         Locale javaLocale = getJavaLocale().orElse(Locale.US);
 
         String translation = getTranslation("decimal-format");
-        if(translation.isEmpty()) {
+        if (translation.isEmpty()) {
             translation = "0.00";
         }
 
@@ -77,7 +77,7 @@ public final class Language {
         this.decimalFormat = new DecimalFormat(translation, decimalFormatSymbols);
         return this.decimalFormat;
     }
-    
+
     /**
      * Get a message from a key based on this language.
      *
@@ -89,19 +89,19 @@ public final class Language {
     @NotNull
     public String getTranslation(String key) {
         String translation = this.translationMap.get(key);
-        if(translation != null) {
+        if (translation != null) {
             return translation;
         }
 
         Optional<Language> parentLanguageOptional = getParent();
-        if(parentLanguageOptional.isPresent()) {
+        if (parentLanguageOptional.isPresent()) {
             Language language = parentLanguageOptional.get();
             return language.getTranslation(key);
         }
 
         return key;
     }
-    
+
     void addTranslation(@NotNull String key, @NotNull String value) {
         Validate.notEmpty(key, "key must not be empty or null!");
         Validate.notNull(value, "value must not be null!");

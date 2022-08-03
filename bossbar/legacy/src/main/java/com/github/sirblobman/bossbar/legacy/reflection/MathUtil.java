@@ -5,7 +5,7 @@ public abstract class MathUtil {
         int castInt = (int) value;
         return (value >= castInt ? castInt : (castInt - 1));
     }
-    
+
     public static int floorFloat(final float value) {
         int castInt = (int) value;
         return (value >= castInt ? castInt : (castInt - 1));

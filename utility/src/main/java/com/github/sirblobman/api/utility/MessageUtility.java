@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 import org.apache.commons.lang.Validate;
 
 public final class MessageUtility {
@@ -13,23 +11,24 @@ public final class MessageUtility {
      * @param message The message that will be colored
      * @return A new string containing {@code message} but with the color codes replaced,
      * or an empty string if {@code message} was {@code null}.
-     * @see ChatColor#translateAlternateColorCodes(char, String)
+     * @see org.bukkit.ChatColor#translateAlternateColorCodes(char, String)
+     * @see net.md_5.bungee.api.ChatColor#translateAlternateColorCodes(char, String)
      * @see HexColorUtility#replaceHexColors(char, String)
      */
     public static String color(String message) {
-        if(message == null || message.isEmpty()) {
+        if (message == null || message.isEmpty()) {
             return "";
         }
-        
+
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 16) {
+        if (minorVersion < 16) {
             return org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
         }
-        
+
         String messageReplaced = HexColorUtility.replaceHexColors('&', message);
         return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', messageReplaced);
     }
-    
+
     /**
      * @param messageArray The array of messages that will be colored
      * @return A new array containing every message in the input array, but with color codes replaced.
@@ -37,16 +36,16 @@ public final class MessageUtility {
     public static String[] colorArray(String... messageArray) {
         int messageArrayLength = messageArray.length;
         String[] colorMessageArray = new String[messageArrayLength];
-        
-        for(int i = 0; i < messageArrayLength; i++) {
+
+        for (int i = 0; i < messageArrayLength; i++) {
             String message = messageArray[i];
             colorMessageArray[i] = color(message);
         }
-        
+
         return colorMessageArray;
     }
-    
-    
+
+
     /**
      * @param messageList The iterable of messages that will be colored
      * @return A {@code List<String>} containing every message in the input iterable, but with color codes replaced.
@@ -55,13 +54,13 @@ public final class MessageUtility {
      */
     public static List<String> colorList(Iterable<String> messageList) {
         List<String> colorList = new ArrayList<>();
-        for(String message : messageList) {
+        for (String message : messageList) {
             String color = color(message);
             colorList.add(color);
         }
         return colorList;
     }
-    
+
     /**
      * @param messageArray The array of messages that will be colored
      * @return A {@code List<String>} containing every message in the input array, but with color codes replaced.
@@ -75,7 +74,7 @@ public final class MessageUtility {
      * Copies all elements from the iterable collection of originals to a
      * new {@link List}
      *
-     * @param token String to search for
+     * @param token     String to search for
      * @param originals An iterable collection of strings to filter.
      * @return the list of all matches.
      * @throws IllegalArgumentException if any parameter is null
@@ -103,8 +102,8 @@ public final class MessageUtility {
      * @param string String to check
      * @param prefix Prefix of string to compare
      * @return true if provided string starts with, ignoring case, the prefix
-     *     provided
-     * @throws NullPointerException if prefix is null
+     * provided
+     * @throws NullPointerException     if prefix is null
      * @throws IllegalArgumentException if string is null
      */
     public static boolean startsWithIgnoreCase(String string, String prefix) {

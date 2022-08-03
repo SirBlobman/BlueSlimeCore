@@ -17,7 +17,6 @@ import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
 import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
-import com.github.sirblobman.api.language.Language;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
@@ -32,11 +31,11 @@ import com.github.sirblobman.bossbar.BossBarHandler;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final UpdateManager updateManager;
-    
+
     public CorePlugin() {
         this.updateManager = new UpdateManager(this);
     }
-    
+
     @Override
     public void onLoad() {
         saveDefaultConfig();
@@ -44,10 +43,10 @@ public final class CorePlugin extends ConfigurablePlugin {
         LanguageManager languageManager = getLanguageManager();
         languageManager.saveDefaultLanguageFiles();
     }
-    
+
     @Override
     public void onEnable() {
-        if(isDebugMode()) {
+        if (isDebugMode()) {
             Logger logger = getLogger();
             logger.info("[Debug] Plugin version: " + getDescription().getVersion());
             logger.info("[Debug] Server Version: " + Bukkit.getVersion());
@@ -61,68 +60,68 @@ public final class CorePlugin extends ConfigurablePlugin {
 
         LanguageManager languageManager = getLanguageManager();
         languageManager.reloadLanguageFiles();
-        
+
         registerCommands();
         registerListeners();
         printMultiVersionInformation();
-        
+
         UpdateManager updateManager = getUpdateManager();
         updateManager.addResource(this, 83189L);
         updateManager.checkForUpdates();
     }
-    
+
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
     }
-    
+
     public boolean isDebugMode() {
         ConfigurationManager configurationManager = getConfigurationManager();
         YamlConfiguration configuration = configurationManager.get("config.yml");
         return configuration.getBoolean("debug-mode", false);
     }
-    
+
     public UpdateManager getUpdateManager() {
         return this.updateManager;
     }
-    
+
     private void printMultiVersionInformation() {
-        if(!isDebugMode()) {
+        if (!isDebugMode()) {
             return;
         }
-        
+
         Logger logger = getLogger();
         String minecraftVersion = VersionUtility.getMinecraftVersion();
         logger.info("Minecraft Version: " + minecraftVersion);
-        
+
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
         logger.info("NMS Version: " + nmsVersion);
-        
+
         MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
         logger.info("Attempting for find NMS handlers for version '" + nmsVersion + "'...");
-        
+
         BossBarHandler bossBarHandler = multiVersionHandler.getBossBarHandler();
         EntityHandler entityHandler = multiVersionHandler.getEntityHandler();
         HeadHandler headHandler = multiVersionHandler.getHeadHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         PlayerHandler playerHandler = multiVersionHandler.getPlayerHandler();
         ScoreboardHandler scoreboardHandler = multiVersionHandler.getScoreboardHandler();
-        
+
         logger.info("Successfully linked with the following handlers:");
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
-        
+
         logger.info("Boss Bar Wrapper:");
         printClassNames(bossBarHandler.getWrapperClass());
     }
-    
+
     private void printClassNames(Object... objects) {
-        for(Object object : objects) {
-            if(object != null) {
+        for (Object object : objects) {
+            if (object != null) {
                 printClassName(object);
             }
         }
     }
-    
+
     private void printClassName(Object object) {
         Logger logger = getLogger();
         String className = getClassName(object);
@@ -130,12 +129,12 @@ public final class CorePlugin extends ConfigurablePlugin {
         String message = String.format(Locale.US, " - %s", className);
         logger.info(message);
     }
-    
+
     private String getClassName(Object object) {
         Class<?> objectClass = (object instanceof Class ? (Class<?>) object : object.getClass());
         return objectClass.getName();
     }
-    
+
     private void registerCommands() {
         new CommandDebugEvent(this).register();
         new CommandGlobalGamerule(this).register();
@@ -144,18 +143,18 @@ public final class CorePlugin extends ConfigurablePlugin {
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
     }
-    
+
     private void registerListeners() {
         new ListenerLanguage(this).register();
-        
+
         ConfigurationManager configurationManager = getConfigurationManager();
         YamlConfiguration configuration = configurationManager.get("config.yml");
-        if(configuration.getBoolean("command-logger", false)) {
+        if (configuration.getBoolean("command-logger", false)) {
             new ListenerCommandLogger(this).register();
         }
-        
+
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion >= 12) {
+        if (minorVersion >= 12) {
             new ListenerLocaleChange(this).register();
         }
     }

@@ -11,23 +11,23 @@ public enum BottleType {
      * A regular potion bottle that players can drink.
      */
     BOTTLE,
-    
+
     /**
      * A potion that can be thrown on the ground.
      */
     SPLASH,
-    
+
     /**
      * A potion that can be thrown on the ground and stays there for a bit.
      */
     LINGERING;
-    
+
     /**
      * @return A {@link XMaterial} value that matches this potion type.
      */
     @NotNull
     public XMaterial getXMaterial() {
-        switch(this) {
+        switch (this) {
             case BOTTLE:
                 return XMaterial.POTION;
             case SPLASH:
@@ -37,10 +37,10 @@ public enum BottleType {
             default:
                 break;
         }
-        
+
         return XMaterial.POTION;
     }
-    
+
     /**
      * @return An {@link ItemStack} that matches this potion type, or {@code null}.
      */

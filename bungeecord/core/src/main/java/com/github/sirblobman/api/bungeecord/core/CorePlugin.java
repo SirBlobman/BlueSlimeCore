@@ -91,17 +91,17 @@ public final class CorePlugin extends ConfigurablePlugin {
         Configuration configuration = configurationManager.get("config.yml");
         Configuration hooksSection = configuration.getSection("hooks");
 
-        if(hooksSection.getBoolean("LuckPerms", false)) {
+        if (hooksSection.getBoolean("LuckPerms", false)) {
             IPermissionHook hook = new LuckPermsHook(this);
-            if(!hook.isDisabled()) {
+            if (!hook.isDisabled()) {
                 this.permissionHook = hook;
                 return;
             }
         }
 
-        if(hooksSection.getBoolean("BungeePerms")) {
+        if (hooksSection.getBoolean("BungeePerms")) {
             IPermissionHook hook = new BungeePermsHook(this);
-            if(!hook.isDisabled()) {
+            if (!hook.isDisabled()) {
                 this.permissionHook = hook;
                 return;
             }
@@ -115,9 +115,9 @@ public final class CorePlugin extends ConfigurablePlugin {
         Configuration configuration = configurationManager.get("config.yml");
         Configuration hooksSection = configuration.getSection("hooks");
 
-        if(hooksSection.getBoolean("PremiumVanish", false)) {
+        if (hooksSection.getBoolean("PremiumVanish", false)) {
             IVanishHook hook = new PremiumVanishHook(this);
-            if(!hook.isDisabled()) {
+            if (!hook.isDisabled()) {
                 this.vanishHook = hook;
                 return;
             }

@@ -30,10 +30,10 @@ import org.jetbrains.annotations.Nullable;
 
 public final class LanguageManager {
     private static final String[] KNOWN_LANGUAGE_ARRAY;
-    
+
     static {
         // Last Updated: June 28, 2022 18:03
-        KNOWN_LANGUAGE_ARRAY = new String[] {
+        KNOWN_LANGUAGE_ARRAY = new String[]{
                 "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar", "be_by", "bg_bg", "br_fr", "brb", "bs_ba",
                 "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de", "el_gr", "en_au", "en_ca", "en_gb",
                 "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar", "es_cl", "es_ec", "es_es",
@@ -89,25 +89,25 @@ public final class LanguageManager {
 
     @Nullable
     public Language getDefaultLanguage() {
-        if(this.defaultLanguage == null) {
-            if(this.defaultLanguageName != null) {
+        if (this.defaultLanguage == null) {
+            if (this.defaultLanguageName != null) {
                 this.defaultLanguage = this.languageMap.get(this.defaultLanguageName);
-                if(this.defaultLanguage == null) {
+                if (this.defaultLanguage == null) {
                     Logger logger = getLogger();
                     logger.warning("Missing default language with name '" + this.defaultLanguageName + "'.");
                 }
             }
         }
-        
+
         return this.defaultLanguage;
     }
 
     @Nullable
     public Language getConsoleLanguage() {
-        if(this.consoleLanguage == null) {
-            if(this.consoleLanguageName != null) {
+        if (this.consoleLanguage == null) {
+            if (this.consoleLanguageName != null) {
                 this.consoleLanguage = this.languageMap.get(this.consoleLanguageName);
-                if(this.consoleLanguage == null) {
+                if (this.consoleLanguage == null) {
                     Logger logger = getLogger();
                     logger.warning("Missing console language with name '" + this.consoleLanguageName + "'.");
                 }
@@ -127,16 +127,16 @@ public final class LanguageManager {
 
         File dataFolder = configurationManager.getBaseFolder();
         File languageFolder = new File(dataFolder, "language");
-        if(!languageFolder.exists()) {
+        if (!languageFolder.exists()) {
             boolean makeFolder = languageFolder.mkdirs();
-            if(!makeFolder) {
+            if (!makeFolder) {
                 throw new IllegalStateException("Failed to create language folder '" + languageFolder + "'.");
             }
 
-            for(String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
+            for (String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
                 String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
                 YamlConfiguration jarLanguageConfiguration = configurationManager.getInternal(languageFileName);
-                if(jarLanguageConfiguration != null) {
+                if (jarLanguageConfiguration != null) {
                     configurationManager.saveDefault(languageFileName);
                 }
             }
@@ -150,20 +150,20 @@ public final class LanguageManager {
 
         File dataFolder = resourceHolder.getDataFolder();
         File languageFolder = new File(dataFolder, "language");
-        if(!languageFolder.exists() || !languageFolder.isDirectory()) {
+        if (!languageFolder.exists() || !languageFolder.isDirectory()) {
             logger.warning("'language' folder does not exist or is not a directory.");
             return;
         }
-        
+
         FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
         File[] fileArray = languageFolder.listFiles(filenameFilter);
-        if(fileArray == null || fileArray.length == 0) {
+        if (fileArray == null || fileArray.length == 0) {
             logger.warning("Failed to find any '.lang.yml' files in the language folder.");
             return;
         }
 
         List<YamlConfiguration> configurationList = new ArrayList<>();
-        for(File languageFile : fileArray) {
+        for (File languageFile : fileArray) {
             try {
                 YamlConfiguration configuration = new YamlConfiguration();
                 configuration.load(languageFile);
@@ -173,7 +173,7 @@ public final class LanguageManager {
                 configuration.set("language-name", languageName);
 
                 configurationList.add(configuration);
-            } catch(IOException | InvalidConfigurationException ex) {
+            } catch (IOException | InvalidConfigurationException ex) {
                 logger.log(Level.WARNING, "An error occurred while loading a language file:", ex);
             }
         }
@@ -181,14 +181,14 @@ public final class LanguageManager {
         LanguageConfigurationComparator languageConfigurationComparator = new LanguageConfigurationComparator();
         configurationList.sort(languageConfigurationComparator);
 
-        for(YamlConfiguration configuration : configurationList) {
+        for (YamlConfiguration configuration : configurationList) {
             try {
                 Language language = loadLanguage(configuration);
-                if(language != null) {
+                if (language != null) {
                     String languageCode = language.getLanguageCode();
                     this.languageMap.put(languageCode, language);
                 }
-            } catch(InvalidConfigurationException ex) {
+            } catch (InvalidConfigurationException ex) {
                 logger.log(Level.WARNING, "An error occurred while loading a language configuration:", ex);
             }
         }
@@ -208,33 +208,33 @@ public final class LanguageManager {
     @Nullable
     private Language loadLanguage(YamlConfiguration configuration) throws InvalidConfigurationException {
         String languageName = configuration.getString("language-name");
-        if(languageName == null) {
+        if (languageName == null) {
             return null;
         }
 
         Language parentLanguage = null;
         String parentLanguageName = configuration.getString("parent");
-        if(parentLanguageName != null) {
+        if (parentLanguageName != null) {
             parentLanguage = this.languageMap.get(parentLanguageName);
-            if(parentLanguage == null) {
+            if (parentLanguage == null) {
                 throw new InvalidConfigurationException("parent language not loaded correctly.");
             }
         }
 
         Language language = new Language(parentLanguage, languageName, configuration);
         Set<String> keySet = configuration.getKeys(true);
-        for(String key : keySet) {
-            if(configuration.isList(key)) {
+        for (String key : keySet) {
+            if (configuration.isList(key)) {
                 List<String> messageList = configuration.getStringList(key);
-                if(!messageList.isEmpty()) {
+                if (!messageList.isEmpty()) {
                     String message = String.join("\n", messageList);
                     language.addTranslation(key, message);
                 }
             }
 
-            if(configuration.isString(key)) {
+            if (configuration.isString(key)) {
                 String message = configuration.getString(key, key);
-                if(message != null) {
+                if (message != null) {
                     language.addTranslation(key, message);
                 }
             }
@@ -245,7 +245,7 @@ public final class LanguageManager {
 
     @Nullable
     public Language getLanguage(String localeName) {
-        if(localeName == null || localeName.isEmpty() || localeName.equals("default")) {
+        if (localeName == null || localeName.isEmpty() || localeName.equals("default")) {
             return getDefaultLanguage();
         }
 
@@ -254,15 +254,15 @@ public final class LanguageManager {
 
     @Nullable
     public Language getLanguage(CommandSender audience) {
-        if(audience == null || isForceDefaultLanguage()) {
+        if (audience == null || isForceDefaultLanguage()) {
             return getDefaultLanguage();
         }
 
-        if(audience instanceof ConsoleCommandSender) {
+        if (audience instanceof ConsoleCommandSender) {
             return getConsoleLanguage();
         }
 
-        if(audience instanceof Player) {
+        if (audience instanceof Player) {
             String cachedLocale = LanguageCache.getCachedLocale((Player) audience);
             return getLanguage(cachedLocale);
         }
@@ -275,22 +275,22 @@ public final class LanguageManager {
                              boolean color) {
         Validate.notEmpty(key, "key must not be empty!");
         Language language = getLanguage(audience);
-        if(language == null) {
+        if (language == null) {
             Logger logger = getLogger();
             logger.warning("There are no languages available.");
             return "";
         }
 
         String message = language.getTranslation(key);
-        if(message.isEmpty()) {
+        if (message.isEmpty()) {
             return "";
         }
 
-        if(replacer != null) {
+        if (replacer != null) {
             message = replacer.replace(message);
         }
 
-        if(color) {
+        if (color) {
             message = MessageUtility.color(message);
         }
 
@@ -300,7 +300,7 @@ public final class LanguageManager {
     public void sendMessage(@NotNull CommandSender audience, @NotNull String key, @Nullable Replacer replacer,
                             boolean color) {
         String message = getMessage(audience, key, replacer, color);
-        if(message.isEmpty()) {
+        if (message.isEmpty()) {
             return;
         }
 
@@ -311,7 +311,7 @@ public final class LanguageManager {
                                  @Nullable String permission) {
         Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayerCollection) {
-            if(permission != null && !permission.isEmpty() && !player.hasPermission(permission)) {
+            if (permission != null && !permission.isEmpty() && !player.hasPermission(permission)) {
                 continue;
             }
 

@@ -18,36 +18,36 @@ public final class ListenerCommandLogger extends PluginListener<CorePlugin> {
     public ListenerCommandLogger(CorePlugin plugin) {
         super(plugin);
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
         String command = e.getMessage();
         logCommand(player, command);
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommand(ServerCommandEvent e) {
         CommandSender sender = e.getSender();
         String command = e.getCommand();
         logCommand(sender, command);
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommand(RemoteServerCommandEvent e) {
         CommandSender sender = e.getSender();
         String command = e.getCommand();
         logCommand(sender, command);
     }
-    
+
     private void logCommand(CommandSender sender, String command) {
         String senderInfo = getSenderInfo(sender);
         String message = String.format(Locale.US, "Detected command from '%s': '%s'.", senderInfo, command);
-        
+
         Logger logger = getLogger();
         logger.info(message);
     }
-    
+
     private String getSenderInfo(CommandSender sender) {
         String senderName = sender.getName();
         String senderPrefix = (sender instanceof Player ? "Player" : "Sender");

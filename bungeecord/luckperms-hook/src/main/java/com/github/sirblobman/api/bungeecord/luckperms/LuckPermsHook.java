@@ -46,7 +46,7 @@ public final class LuckPermsHook implements IPermissionHook {
     @NotNull
     @Override
     public String getPrefix(UUID playerId) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return "";
         }
 
@@ -66,7 +66,7 @@ public final class LuckPermsHook implements IPermissionHook {
     @NotNull
     @Override
     public String getSuffix(UUID playerId) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return "";
         }
 
@@ -86,7 +86,7 @@ public final class LuckPermsHook implements IPermissionHook {
     @Nullable
     @Override
     public String getPrimaryGroupName(UUID playerId) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return null;
         }
 
@@ -102,7 +102,7 @@ public final class LuckPermsHook implements IPermissionHook {
 
     @Override
     public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
-        if(isDisabled()) {
+        if (isDisabled()) {
             return defaultWeight;
         }
 

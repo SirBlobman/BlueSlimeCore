@@ -21,49 +21,49 @@ import com.google.gson.JsonParser;
 public final class CommandItemToNBT extends PlayerCommand {
     private final CorePlugin plugin;
     private final Gson prettyGson;
-    
+
     public CommandItemToNBT(CorePlugin plugin) {
         super(plugin, "item-to-nbt");
         this.plugin = plugin;
         this.prettyGson = new GsonBuilder().setPrettyPrinting().create();
     }
-    
+
     @Override
     public List<String> onTabComplete(Player player, String[] args) {
-        if(args.length == 1) {
+        if (args.length == 1) {
             return Collections.singletonList("pretty");
         }
-        
+
         return Collections.emptyList();
     }
-    
+
     @Override
     public boolean execute(Player player, String[] args) {
         ItemStack item = getHeldItem(player);
-        if(ItemUtility.isAir(item)) {
+        if (ItemUtility.isAir(item)) {
             sendMessage(player, "error.invalid-held-item", null, true);
             return true;
         }
-        
+
         MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         String nbtString = itemHandler.toNBT(item);
-        
-        if(args.length > 0 && args[0].equalsIgnoreCase("pretty")) {
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("pretty")) {
             nbtString = prettyJSON(player, nbtString);
         }
-        
+
         String[] split = nbtString.split(Pattern.quote("\n"));
         player.sendMessage(split);
         return true;
     }
-    
+
     private String prettyJSON(Player player, String json) {
         try {
             JsonParser jsonParser = new JsonParser();
             JsonElement jsonElement = jsonParser.parse(json);
             return this.prettyGson.toJson(jsonElement);
-        } catch(NoClassDefFoundError | Exception ex) {
+        } catch (NoClassDefFoundError | Exception ex) {
             player.sendMessage("Could not parse into pretty JSON, sending normal...");
             return json;
         }

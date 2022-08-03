@@ -14,12 +14,12 @@ public final class CommandSirBlobmanCore extends Command {
         addSubCommand(new CommandSirBlobmanCoreHelp(plugin));
         addSubCommand(new CommandSirBlobmanCoreReload(plugin));
     }
-    
+
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         return Collections.emptyList();
     }
-    
+
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
         return false;

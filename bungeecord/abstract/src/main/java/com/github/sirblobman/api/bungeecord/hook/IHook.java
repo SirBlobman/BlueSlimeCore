@@ -10,6 +10,7 @@ public interface IHook {
 
     /**
      * Check if the plugin being hooked is disabled or does not exist.
+     *
      * @return {@code true} if the hook doesn't exist on the proxy, otherwise {@code false}.
      */
     boolean isDisabled();
