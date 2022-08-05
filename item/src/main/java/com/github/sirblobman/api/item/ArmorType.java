@@ -1,44 +1,33 @@
 package com.github.sirblobman.api.item;
 
-import java.util.Optional;
-
-import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 
+import com.github.sirblobman.api.utility.Validate;
+
 import com.cryptomorin.xseries.XMaterial;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public enum ArmorType {
-    HELMET, CHESTPLATE, LEGGINGS, BOOTS;
+    HELMET(EquipmentSlot.HEAD),
+    CHESTPLATE(EquipmentSlot.CHEST),
+    LEGGINGS(EquipmentSlot.LEGS),
+    BOOTS(EquipmentSlot.FEET)
+    ;
 
-    @Nullable
-    public EquipmentSlot getSlot() {
-        switch (this) {
-            case HELMET:
-                return EquipmentSlot.HEAD;
-            case CHESTPLATE:
-                return EquipmentSlot.CHEST;
-            case LEGGINGS:
-                return EquipmentSlot.LEGS;
-            case BOOTS:
-                return EquipmentSlot.FEET;
-            default:
-                break;
-        }
+    private final EquipmentSlot equipmentSlot;
 
-        return null;
+    ArmorType(EquipmentSlot equipmentSlot) {
+        this.equipmentSlot = Validate.notNull(equipmentSlot, "equipmentSlot must not be null!");
     }
 
-    @Deprecated
-    public Material getArmorMaterial(String type) {
-        String materialName = (type + "_" + name());
-        return Material.matchMaterial(materialName);
+    @NotNull
+    public EquipmentSlot getEquipmentSlot() {
+        return this.equipmentSlot;
     }
 
-    public Optional<XMaterial> getArmorMaterial(ArmorMaterialType armorMaterialType) {
-        String typeName = armorMaterialType.name();
-        String armorName = this.name();
-        String materialName = (typeName + "_" + armorName);
-        return XMaterial.matchXMaterial(materialName);
+    @NotNull
+    public XMaterial getArmorMaterial(ArmorMaterialType materialType) {
+        Validate.notNull(materialType, "materialType must not be null!");
+        return materialType.getArmorMaterial(this);
     }
 }

@@ -14,6 +14,11 @@ public final class NextPageButton extends QuickButton {
 
     @Override
     public void onLeftClick(Player player, boolean shift) {
-        this.pagedMenu.openNextPage();
+        AbstractPagedMenu pagedMenu = getPagedMenu();
+        pagedMenu.openNextPage();
+    }
+
+    private AbstractPagedMenu getPagedMenu() {
+        return this.pagedMenu;
     }
 }

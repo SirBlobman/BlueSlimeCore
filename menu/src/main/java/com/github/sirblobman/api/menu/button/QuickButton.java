@@ -9,9 +9,11 @@ public class QuickButton extends AbstractButton {
     @Override
     public void onClick(InventoryClickEvent e) {
         HumanEntity human = e.getWhoClicked();
-        if (!(human instanceof Player)) return;
-        Player player = (Player) human;
+        if (!(human instanceof Player)) {
+            return;
+        }
 
+        Player player = (Player) human;
         ClickType clickType = e.getClick();
         boolean shift = clickType.isShiftClick();
 

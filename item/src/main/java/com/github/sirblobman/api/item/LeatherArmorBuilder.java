@@ -7,12 +7,11 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import com.github.sirblobman.api.utility.Validate;
 
-import com.cryptomorin.xseries.XMaterial;
 import org.jetbrains.annotations.NotNull;
 
 public final class LeatherArmorBuilder extends ItemBuilder {
     public LeatherArmorBuilder(ArmorType armorType) {
-        super(armorType.getArmorMaterial(ArmorMaterialType.LEATHER).orElse(XMaterial.LEATHER_CHESTPLATE));
+        super(armorType.getArmorMaterial(ArmorMaterialType.LEATHER));
     }
 
     public LeatherArmorBuilder withColor(@NotNull Color color) {

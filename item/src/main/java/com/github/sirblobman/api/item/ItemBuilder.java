@@ -25,11 +25,13 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(Material material) {
-        this(new ItemStack(material, 1));
+        Validate.notNull(material, "material must not be null!");
+        this.finalItem = new ItemStack(material, 1);
     }
 
     public ItemBuilder(XMaterial material) {
-        this(material.parseItem());
+        Validate.notNull(material, "material must not be null!");
+        this.finalItem = material.parseItem();
     }
 
     final ItemStack getFinalItem() {

@@ -34,7 +34,7 @@ import com.github.sirblobman.api.utility.Validate;
 import com.cryptomorin.xseries.XMaterial;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractMenu implements InventoryHolder, Listener {
+public abstract class AbstractMenu implements IMenu, Listener {
     private final JavaPlugin plugin;
     private final Player player;
     private final Map<Integer, AbstractButton> buttonMap;
@@ -42,11 +42,17 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
     public AbstractMenu(JavaPlugin plugin, Player player) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.player = Validate.notNull(player, "player must not be null!");
+
         if (!this.player.isOnline()) {
             throw new IllegalArgumentException("player must be online!");
         }
 
         this.buttonMap = new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public final JavaPlugin getPlugin() {
+        return this.plugin;
     }
 
     /**
@@ -120,6 +126,13 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
     }
 
     /**
+     * @return The player that will open this menu.
+     */
+    public final Player getPlayer() {
+        return this.player;
+    }
+
+    /**
      * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
      *              nine for a chest menu.
      * @param title The title of the GUI.
@@ -148,23 +161,7 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
         return Bukkit.createInventory(this, size, realTitle);
     }
 
-    /**
-     * @return The plugin linked to the listeners and tasks for this menu.
-     */
-    public final JavaPlugin getPlugin() {
-        return this.plugin;
-    }
-
-    /**
-     * @return The player that will open this menu.
-     */
-    public final Player getPlayer() {
-        return this.player;
-    }
-
-    /**
-     * Use this method to open the menu for the current player.
-     */
+    @Override
     public void open() {
         JavaPlugin plugin = getPlugin();
         Player player = getPlayer();
@@ -334,11 +331,7 @@ public abstract class AbstractMenu implements InventoryHolder, Listener {
      */
     public abstract boolean shouldPreventClick(int slot);
 
-    /**
-     * Override this method to use a custom close action.
-     *
-     * @param e the InventoryCloseEvent of the action.
-     */
+    @Override
     public void onCustomClose(InventoryCloseEvent e) {
         // Do Nothing
     }

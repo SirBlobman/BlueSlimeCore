@@ -31,7 +31,7 @@ import com.github.sirblobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XMaterial;
 
-public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> implements InventoryHolder, Listener, Runnable {
+public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> implements IMenu, Listener, Runnable {
     private final Plugin plugin;
     private final Player player;
     private BukkitTask currentTask;
@@ -42,12 +42,22 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> implements
         this.currentTask = null;
     }
 
+    @Override
+    public final Plugin getPlugin() {
+        return this.plugin;
+    }
+
     /**
      * The run method in an AdvancedAbstractMenu runs once every second while the inventory is open.
      */
     @Override
     public void run() {
         // Do Nothing
+    }
+
+    @Override
+    public void onCustomClose(InventoryCloseEvent e) {
+        onValidClose(e);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -64,7 +74,7 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> implements
         }
 
         internalClose();
-        onValidClose(e);
+        onCustomClose(e);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -95,14 +105,11 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> implements
         if (!this.equals(inventoryHolder)) {
             return;
         }
+
         onValidDrag(e);
     }
 
-    protected final Plugin getPlugin() {
-        return this.plugin;
-    }
-
-    protected final Player getPlayer() {
+    public final Player getPlayer() {
         return this.player;
     }
 

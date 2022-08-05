@@ -1,7 +1,6 @@
 package com.github.sirblobman.api.item;
 
 import org.bukkit.Color;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
@@ -20,9 +19,10 @@ public final class PotionBuilder extends ItemBuilder {
     public PotionBuilder withMainEffect(@NotNull PotionType potionType, boolean extended, boolean upgraded) {
         Validate.notNull(potionType, "potionType must not be null!");
 
-        ItemStack finalItem = getFinalItem();
-        ItemMeta itemMeta = finalItem.getItemMeta();
-        if (!(itemMeta instanceof PotionMeta)) return this;
+        ItemMeta itemMeta = getItemMeta();
+        if(!(itemMeta instanceof PotionMeta)) {
+            return this;
+        }
 
         PotionMeta potionMeta = (PotionMeta) itemMeta;
         PotionData potionData = new PotionData(potionType, extended, upgraded);
@@ -34,9 +34,10 @@ public final class PotionBuilder extends ItemBuilder {
     public PotionBuilder withExtraEffect(@NotNull PotionEffect potionEffect) {
         Validate.notNull(potionEffect, "potionEffect must not be null!");
 
-        ItemStack finalItem = getFinalItem();
-        ItemMeta itemMeta = finalItem.getItemMeta();
-        if (!(itemMeta instanceof PotionMeta)) return this;
+        ItemMeta itemMeta = getItemMeta();
+        if(!(itemMeta instanceof PotionMeta)) {
+            return this;
+        }
 
         PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.addCustomEffect(potionEffect, true);
@@ -47,9 +48,10 @@ public final class PotionBuilder extends ItemBuilder {
     public PotionBuilder withColor(@NotNull Color color) {
         Validate.notNull(color, "color must not be null!");
 
-        ItemStack finalItem = getFinalItem();
-        ItemMeta itemMeta = finalItem.getItemMeta();
-        if (!(itemMeta instanceof PotionMeta)) return this;
+        ItemMeta itemMeta = getItemMeta();
+        if(!(itemMeta instanceof PotionMeta)) {
+            return this;
+        }
 
         PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.setColor(color);
