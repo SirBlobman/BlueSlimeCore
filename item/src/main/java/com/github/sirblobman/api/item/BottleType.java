@@ -22,8 +22,7 @@ public enum BottleType {
     /**
      * A potion that can be thrown on the ground and stays there for a bit.
      */
-    LINGERING(XMaterial.LINGERING_POTION)
-    ;
+    LINGERING(XMaterial.LINGERING_POTION);
 
     private final XMaterial material;
 

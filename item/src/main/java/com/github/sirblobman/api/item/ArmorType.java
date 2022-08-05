@@ -11,8 +11,7 @@ public enum ArmorType {
     HELMET(EquipmentSlot.HEAD),
     CHESTPLATE(EquipmentSlot.CHEST),
     LEGGINGS(EquipmentSlot.LEGS),
-    BOOTS(EquipmentSlot.FEET)
-    ;
+    BOOTS(EquipmentSlot.FEET);
 
     private final EquipmentSlot equipmentSlot;
 

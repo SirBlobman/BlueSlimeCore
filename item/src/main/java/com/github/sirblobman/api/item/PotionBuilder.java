@@ -20,7 +20,7 @@ public final class PotionBuilder extends ItemBuilder {
         Validate.notNull(potionType, "potionType must not be null!");
 
         ItemMeta itemMeta = getItemMeta();
-        if(!(itemMeta instanceof PotionMeta)) {
+        if (!(itemMeta instanceof PotionMeta)) {
             return this;
         }
 
@@ -35,7 +35,7 @@ public final class PotionBuilder extends ItemBuilder {
         Validate.notNull(potionEffect, "potionEffect must not be null!");
 
         ItemMeta itemMeta = getItemMeta();
-        if(!(itemMeta instanceof PotionMeta)) {
+        if (!(itemMeta instanceof PotionMeta)) {
             return this;
         }
 
@@ -49,7 +49,7 @@ public final class PotionBuilder extends ItemBuilder {
         Validate.notNull(color, "color must not be null!");
 
         ItemMeta itemMeta = getItemMeta();
-        if(!(itemMeta instanceof PotionMeta)) {
+        if (!(itemMeta instanceof PotionMeta)) {
             return this;
         }
 

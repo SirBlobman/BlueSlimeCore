@@ -36,8 +36,7 @@ public enum ArmorMaterialType {
     GOLDEN(GOLDEN_HELMET, GOLDEN_CHESTPLATE, GOLDEN_LEGGINGS, GOLDEN_BOOTS),
     CHAINMAIL(CHAINMAIL_HELMET, CHAINMAIL_CHESTPLATE, CHAINMAIL_LEGGINGS, CHAINMAIL_BOOTS),
     DIAMOND(DIAMOND_HELMET, DIAMOND_CHESTPLATE, DIAMOND_LEGGINGS, DIAMOND_BOOTS),
-    NETHERITE(NETHERITE_HELMET, NETHERITE_CHESTPLATE, NETHERITE_LEGGINGS, NETHERITE_BOOTS)
-    ;
+    NETHERITE(NETHERITE_HELMET, NETHERITE_CHESTPLATE, NETHERITE_LEGGINGS, NETHERITE_BOOTS);
 
     private final XMaterial helmet;
     private final XMaterial chestplate;
@@ -75,12 +74,17 @@ public enum ArmorMaterialType {
     public XMaterial getArmorMaterial(ArmorType armorType) {
         Validate.notNull(armorType, "armorType must not be null!");
 
-        switch(armorType) {
-            case HELMET: return getHelmet();
-            case CHESTPLATE: return getChestplate();
-            case LEGGINGS: return getLeggings();
-            case BOOTS: return getBoots();
-            default: break;
+        switch (armorType) {
+            case HELMET:
+                return getHelmet();
+            case CHESTPLATE:
+                return getChestplate();
+            case LEGGINGS:
+                return getLeggings();
+            case BOOTS:
+                return getBoots();
+            default:
+                break;
         }
 
         throw new IllegalStateException("Unknown armorType '" + armorType + "'.");
