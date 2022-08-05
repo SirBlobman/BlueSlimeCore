@@ -1,5 +1,8 @@
 package com.github.sirblobman.api.plugin;
 
+import java.util.Locale;
+import java.util.logging.Logger;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -78,5 +81,19 @@ public abstract class ConfigurablePlugin extends JavaPlugin {
     @NotNull
     public final LanguageManager getLanguageManager() {
         return this.languageManager;
+    }
+
+    public boolean isDebugMode() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        return configuration.getBoolean("debug-mode", false);
+    }
+
+    public void printDebug(String message) {
+        if (isDebugMode()) {
+            Logger logger = getLogger();
+            String logMessage = String.format(Locale.US, "[Debug] %s", message);
+            logger.info(logMessage);
+        }
     }
 }

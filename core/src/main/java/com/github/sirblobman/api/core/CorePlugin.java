@@ -3,9 +3,10 @@ package com.github.sirblobman.api.core;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
@@ -46,24 +47,14 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onEnable() {
-        if (isDebugMode()) {
-            Logger logger = getLogger();
-            logger.info("[Debug] Plugin version: " + getDescription().getVersion());
-            logger.info("[Debug] Server Version: " + Bukkit.getVersion());
-            logger.info("[Debug] Bukkit Version: " + Bukkit.getBukkitVersion());
-            logger.info("[Debug] Minecraft Version: " + VersionUtility.getMinecraftVersion());
-            logger.info("[Debug] NMS Version: " + VersionUtility.getNetMinecraftServerVersion());
-            logger.info("[Debug] Major.Minor Version: " + VersionUtility.getMajorMinorVersion());
-            logger.info("[Debug] Major Version: " + VersionUtility.getMajorVersion());
-            logger.info("[Debug] Minor Version: " + VersionUtility.getMinorVersion());
-        }
-
-        LanguageManager languageManager = getLanguageManager();
-        languageManager.reloadLanguageFiles();
+        reloadConfiguration();
 
         registerCommands();
         registerListeners();
-        printMultiVersionInformation();
+
+        if (isDebugMode()) {
+            printMultiVersionInformation();
+        }
 
         UpdateManager updateManager = getUpdateManager();
         updateManager.addResource(this, 83189L);
@@ -75,10 +66,12 @@ public final class CorePlugin extends ConfigurablePlugin {
         HandlerList.unregisterAll(this);
     }
 
-    public boolean isDebugMode() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        return configuration.getBoolean("debug-mode", false);
+    @Override
+    protected void reloadConfiguration() {
+        super.reloadConfiguration();
+
+        LanguageManager languageManager = getLanguageManager();
+        languageManager.reloadLanguageFiles();
     }
 
     public UpdateManager getUpdateManager() {
@@ -86,19 +79,29 @@ public final class CorePlugin extends ConfigurablePlugin {
     }
 
     private void printMultiVersionInformation() {
-        if (!isDebugMode()) {
-            return;
-        }
+        PluginDescriptionFile description = getDescription();
+        String pluginVersion = description.getVersion();
+        printDebug("Plugin Version: " + pluginVersion);
 
-        Logger logger = getLogger();
+        Server server = getServer();
+        String serverVersion = server.getVersion();
+        String bukkitVersion = server.getBukkitVersion();
+        printDebug("Server Version: " + serverVersion);
+        printDebug("Bukkit Version: " + bukkitVersion);
+
         String minecraftVersion = VersionUtility.getMinecraftVersion();
-        logger.info("Minecraft Version: " + minecraftVersion);
-
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
-        logger.info("NMS Version: " + nmsVersion);
+        String majorMinorVersion = VersionUtility.getMajorMinorVersion();
+        int majorVersion = VersionUtility.getMajorVersion();
+        int minorVersion = VersionUtility.getMinorVersion();
+        printDebug("Minecraft Version: " + minecraftVersion);
+        printDebug("Major.Minor: " + majorMinorVersion);
+        printDebug("Major: " + majorVersion);
+        printDebug("Minor: " + minorVersion);
+        printDebug("Detected NMS Version: " + nmsVersion);
 
         MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
-        logger.info("Attempting for find NMS handlers for version '" + nmsVersion + "'...");
+        printDebug("Attempting for find NMS handlers for version '" + nmsVersion + "'...");
 
         BossBarHandler bossBarHandler = multiVersionHandler.getBossBarHandler();
         EntityHandler entityHandler = multiVersionHandler.getEntityHandler();
@@ -107,10 +110,10 @@ public final class CorePlugin extends ConfigurablePlugin {
         PlayerHandler playerHandler = multiVersionHandler.getPlayerHandler();
         ScoreboardHandler scoreboardHandler = multiVersionHandler.getScoreboardHandler();
 
-        logger.info("Successfully linked with the following handlers:");
+        printDebug("Successfully linked with the following handlers:");
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
 
-        logger.info("Boss Bar Wrapper:");
+        printDebug("Boss Bar Wrapper:");
         printClassNames(bossBarHandler.getWrapperClass());
     }
 

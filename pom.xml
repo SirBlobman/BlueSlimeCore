@@ -10,12 +10,13 @@
 
     <name>SirBlobmanAPI Parent</name>
     <description>The parent pom for SirBlobmanAPI</description>
+    <url>https://www.sirblobman.xyz/</url>
 
     <properties>
-        <!-- This is the minimum supported Java version -->
+        <!-- This is the minimum Java version -->
         <java.version>1.8</java.version>
 
-        <!-- This is the minimum supported Spigot version -->
+        <!-- This is the minimum Spigot version -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -41,7 +42,7 @@
         <module>plugin</module>
         <module>command</module>
 
-        <!-- BungeeCord Only Modules -->
+        <!-- BungeeCord-Only Modules -->
         <module>bungeecord</module>
 
         <!-- Core / Plugin Module -->
