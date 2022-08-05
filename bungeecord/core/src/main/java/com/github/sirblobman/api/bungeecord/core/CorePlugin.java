@@ -7,6 +7,7 @@ import net.md_5.bungee.config.Configuration;
 import com.github.sirblobman.api.bungeecord.bungeeperms.BungeePermsHook;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurablePlugin;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
+import com.github.sirblobman.api.bungeecord.configuration.IHookPlugin;
 import com.github.sirblobman.api.bungeecord.core.command.CommandSBCoreHide;
 import com.github.sirblobman.api.bungeecord.core.command.CommandSBCoreReload;
 import com.github.sirblobman.api.bungeecord.core.hook.DefaultPermissionHook;
@@ -18,7 +19,7 @@ import com.github.sirblobman.api.bungeecord.premiumvanish.PremiumVanishHook;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class CorePlugin extends ConfigurablePlugin {
+public final class CorePlugin extends ConfigurablePlugin implements IHookPlugin {
     private final IPermissionHook defaultPermissionHook;
     private final IVanishHook defaultVanishHook;
 
@@ -50,6 +51,14 @@ public final class CorePlugin extends ConfigurablePlugin {
         PluginManager pluginManager = proxy.getPluginManager();
         pluginManager.registerCommand(this, new CommandSBCoreReload(this));
         pluginManager.registerCommand(this, new CommandSBCoreHide(this));
+
+        if (this.permissionHook.hasListener()) {
+            this.permissionHook.registerListener();
+        }
+
+        if (this.vanishHook.hasListener()) {
+            this.vanishHook.registerListener();
+        }
     }
 
     @Override
@@ -67,21 +76,25 @@ public final class CorePlugin extends ConfigurablePlugin {
     }
 
     @NotNull
+    @Override
     public IPermissionHook getDefaultPermissionHook() {
         return this.defaultPermissionHook;
     }
 
     @NotNull
+    @Override
     public IVanishHook getDefaultVanishHook() {
         return this.defaultVanishHook;
     }
 
     @NotNull
+    @Override
     public IPermissionHook getPermissionHook() {
         return this.permissionHook;
     }
 
     @NotNull
+    @Override
     public IVanishHook getVanishHook() {
         return this.vanishHook;
     }

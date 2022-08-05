@@ -14,4 +14,12 @@ public interface IHook {
      * @return {@code true} if the hook doesn't exist on the proxy, otherwise {@code false}.
      */
     boolean isDisabled();
+
+    default boolean hasListener() {
+        return false;
+    }
+
+    default void registerListener() {
+        // Do Nothing
+    }
 }

@@ -8,6 +8,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 
+import com.github.sirblobman.api.bungeecord.configuration.ConfigurablePlugin;
 import com.github.sirblobman.api.bungeecord.hook.vanish.IVanishHook;
 import com.github.sirblobman.api.utility.Validate;
 
@@ -61,5 +62,22 @@ public final class PremiumVanishHook implements IVanishHook {
         ProxyServer proxy = plugin.getProxy();
         ProxiedPlayer player = proxy.getPlayer(playerId);
         setHidden(player, hidden);
+    }
+
+    @Override
+    public boolean hasListener() {
+        return true;
+    }
+
+    @Override
+    public void registerListener() {
+        Plugin plugin = getPlugin();
+        if (!(plugin instanceof ConfigurablePlugin configurablePlugin)) {
+            return;
+        }
+
+        ProxyServer proxy = plugin.getProxy();
+        PluginManager pluginManager = proxy.getPluginManager();
+        pluginManager.registerListener(plugin, new PremiumVanishListener(configurablePlugin));
     }
 }
