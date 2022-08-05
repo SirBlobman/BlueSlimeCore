@@ -8,10 +8,14 @@ import org.bukkit.command.CommandSender;
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
 
-// TODO
-public class CommandSirBlobmanCoreReload extends Command {
-    public CommandSirBlobmanCoreReload(CorePlugin plugin) {
+public final class SubCommandReload extends Command {
+    private final CorePlugin plugin;
+
+    public SubCommandReload(CorePlugin plugin) {
         super(plugin, "reload");
+        this.plugin = plugin;
+
+        setPermissionName("sirblobman.core.command.sirblobmancore.reload");
     }
 
     @Override
@@ -21,6 +25,14 @@ public class CommandSirBlobmanCoreReload extends Command {
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        return false;
+        CorePlugin corePlugin = getCorePlugin();
+        corePlugin.reloadConfig();
+
+        sendMessage(sender, "command.sirblobmancore.reload-success", null, true);
+        return true;
+    }
+
+    private CorePlugin getCorePlugin() {
+        return this.plugin;
     }
 }

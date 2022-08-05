@@ -23,6 +23,7 @@ public final class CommandItemInfo extends PlayerCommand {
 
     public CommandItemInfo(CorePlugin plugin) {
         super(plugin, "item-info");
+        setPermissionName("sirblobman.core.command.item-info");
         this.plugin = plugin;
     }
 

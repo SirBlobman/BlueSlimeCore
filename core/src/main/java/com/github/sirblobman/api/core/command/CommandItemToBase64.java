@@ -17,6 +17,7 @@ public final class CommandItemToBase64 extends PlayerCommand {
 
     public CommandItemToBase64(CorePlugin plugin) {
         super(plugin, "item-to-base64");
+        setPermissionName("sirblobman.core.command.item-to-base64");
         this.plugin = plugin;
     }
 

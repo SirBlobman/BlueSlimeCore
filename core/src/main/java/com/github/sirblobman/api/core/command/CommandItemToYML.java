@@ -15,6 +15,7 @@ import com.github.sirblobman.api.utility.ItemUtility;
 public final class CommandItemToYML extends PlayerCommand {
     public CommandItemToYML(CorePlugin plugin) {
         super(plugin, "item-to-yml");
+        setPermissionName("sirblobman.core.command.item-to-yml");
     }
 
     @Override

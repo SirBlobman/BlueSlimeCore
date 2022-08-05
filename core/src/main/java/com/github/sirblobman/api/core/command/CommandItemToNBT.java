@@ -26,6 +26,8 @@ public final class CommandItemToNBT extends PlayerCommand {
         super(plugin, "item-to-nbt");
         this.plugin = plugin;
         this.prettyGson = new GsonBuilder().setPrettyPrinting().create();
+
+        setPermissionName("sirblobman.core.command.item-to-nbt");
     }
 
     @Override

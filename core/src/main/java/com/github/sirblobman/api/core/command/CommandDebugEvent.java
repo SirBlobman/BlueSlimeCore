@@ -1,6 +1,7 @@
 package com.github.sirblobman.api.core.command;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,10 +31,12 @@ import org.bukkit.plugin.RegisteredListener;
 import com.github.sirblobman.api.command.ConsoleCommand;
 import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.language.Replacer;
+import com.github.sirblobman.api.language.SimpleReplacer;
 
 public final class CommandDebugEvent extends ConsoleCommand {
     public CommandDebugEvent(CorePlugin plugin) {
         super(plugin, "debug-event");
+        setPermissionName("sirblobman.core.command.debug-event");
     }
 
     @Override
@@ -60,7 +63,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         String eventPriorityName = args[0].toUpperCase(Locale.US);
         EventPriority eventPriority = matchEnum(EventPriority.class, eventPriorityName);
         if (eventPriority == null) {
-            Replacer replacer = message -> message.replace("{value}", eventPriorityName);
+            Replacer replacer = new SimpleReplacer("{value}", eventPriorityName);
             sendMessage(sender, "command.debug-event.invalid-priority", replacer, true);
             return true;
         }
@@ -68,7 +71,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         String className = args[1];
         Class<? extends Event> eventClass = getEventClass(className);
         if (eventClass == null) {
-            Replacer replacer = message -> message.replace("{value}", className);
+            Replacer replacer = new SimpleReplacer("{value}", className);
             sendMessage(sender, "command.debug-event.invalid-event-class", replacer, true);
             return true;
         }
@@ -89,7 +92,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         try {
             Class<?> namedClass = Class.forName(className);
             return namedClass.asSubclass(Event.class);
-        } catch (ReflectiveOperationException ex) {
+        } catch (ReflectiveOperationException | ClassCastException ex) {
             return null;
         }
     }
@@ -154,9 +157,8 @@ public final class CommandDebugEvent extends ConsoleCommand {
     }
 
     private Set<String> getExampleEventClasses() {
-        Set<Class<? extends Event>> eventClassSet = new HashSet<>();
-        Collections.addAll(eventClassSet, PlayerInteractEvent.class, PlayerDeathEvent.class,
+        List<Class<?>> exampleClassList = Arrays.asList(PlayerInteractEvent.class, PlayerDeathEvent.class,
                 PlayerTeleportEvent.class, EntitySpawnEvent.class);
-        return eventClassSet.stream().map(Class::getName).collect(Collectors.toSet());
+        return exampleClassList.parallelStream().map(Class::getName).collect(Collectors.toSet());
     }
 }

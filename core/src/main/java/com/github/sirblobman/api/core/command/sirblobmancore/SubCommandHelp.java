@@ -8,13 +8,10 @@ import org.bukkit.command.CommandSender;
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
 
-public final class CommandSirBlobmanCore extends Command {
-    public CommandSirBlobmanCore(CorePlugin plugin) {
-        super(plugin, "sirblobmancore");
-        setPermissionName("sirblobman.core.command.sirblobmancore");
-
-        addSubCommand(new SubCommandHelp(plugin));
-        addSubCommand(new SubCommandReload(plugin));
+public class SubCommandHelp extends Command {
+    public SubCommandHelp(CorePlugin plugin) {
+        super(plugin, "help");
+        setPermissionName("sirblobman.core.command.sirblobmancore.help");
     }
 
     @Override
@@ -24,6 +21,8 @@ public final class CommandSirBlobmanCore extends Command {
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        return false;
+        sendMessage(sender, "command.sirblobmancore.help.title", null, true);
+        sendMessage(sender, "command.sirblobmancore.help.command-list", null, true);
+        return true;
     }
 }

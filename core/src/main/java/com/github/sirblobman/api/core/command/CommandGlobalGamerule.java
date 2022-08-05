@@ -11,12 +11,14 @@ import org.bukkit.command.CommandSender;
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.language.Replacer;
+import com.github.sirblobman.api.language.SimpleReplacer;
 
 import org.jetbrains.annotations.Nullable;
 
 public class CommandGlobalGamerule extends Command {
     public CommandGlobalGamerule(CorePlugin plugin) {
         super(plugin, "global-gamerule");
+        setPermissionName("sirblobman.core.command.global-gamerule");
     }
 
     @Override
@@ -71,7 +73,7 @@ public class CommandGlobalGamerule extends Command {
     }
 
     private void showPerWorldValueList(CommandSender sender, String gameRuleString) {
-        Replacer titleReplacer = message -> message.replace("{rule}", gameRuleString);
+        Replacer titleReplacer = new SimpleReplacer("{rule}", gameRuleString);
         sendMessage(sender, "command.global-gamerule.list-title", titleReplacer, true);
 
         List<World> worldList = Bukkit.getWorlds();

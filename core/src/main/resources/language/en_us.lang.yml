@@ -6,6 +6,7 @@ error:
   console-only: "&cThat command can only be executed in the server console."
   invalid-held-item: "&cYou must be holding a valid item to use this command."
   invalid-world: "&cYou must be in a valid world to execute this command."
+  no-permission: "&cMissing Permission: &7{permission}&c."
 
 command:
   global-gamerule:
@@ -20,3 +21,18 @@ command:
     invalid-event-class: "&cUnknown or invalid event class &7{value}&c."
     reflection-error: "&cFailed to debug that event. Check the server console for errors."
     results-title: "Debug Results for event '{event}' and priority '{priority}':"
+
+  sirblobmancore:
+    help:
+      title: "&f&lSirBlobmanCore Commands:"
+      command-list:
+        - "&b/sb help&7: Show this list of commands."
+        - "&b/sb reload&7: Reload the configuration files for SirBlobmanCore."
+        - "&b/debug-event&7: Show information about which classes are listing to an event (console only)"
+        - "&b/global-gamerule&7: Change a gamerule for every world on the server."
+        - "&b/item-info&7: Show information about the material and damage of an item."
+        - "&b/item-to-base64&7: Convert an item to a binary base64 string."
+        - "&b/item-to-nbt&7: Convert an item to its NBT format."
+        - "&b/item-to-yml&7: Convert an item to a serialized Bukkit YAML format.",
+        - ""
+    reload-success: "&aSuccessfully reloaded the configuration file."
