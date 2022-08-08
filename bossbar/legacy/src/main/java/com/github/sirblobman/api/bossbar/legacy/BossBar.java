@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.legacy;
+package com.github.sirblobman.api.bossbar.legacy;
 
 import java.util.Random;
 
@@ -7,8 +7,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.sirblobman.bossbar.legacy.reflection.ClassBuilder;
-import com.github.sirblobman.bossbar.legacy.reflection.NMSClass;
+import com.github.sirblobman.api.bossbar.legacy.reflection.ClassBuilder;
+import com.github.sirblobman.api.bossbar.legacy.reflection.NMSClass;
 
 public final class BossBar extends BukkitRunnable {
     protected static int ENTITY_DISTANCE;

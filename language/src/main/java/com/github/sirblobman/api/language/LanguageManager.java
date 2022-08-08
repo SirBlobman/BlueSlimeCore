@@ -19,12 +19,16 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
-import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +37,7 @@ public final class LanguageManager {
 
     static {
         // Last Updated: June 28, 2022 18:03
-        KNOWN_LANGUAGE_ARRAY = new String[]{
+        KNOWN_LANGUAGE_ARRAY = new String[] {
                 "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar", "be_by", "bg_bg", "br_fr", "brb", "bs_ba",
                 "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de", "el_gr", "en_au", "en_ca", "en_gb",
                 "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar", "es_cl", "es_ec", "es_es",
@@ -51,6 +55,8 @@ public final class LanguageManager {
 
     private final ConfigurationManager configurationManager;
     private final Map<String, Language> languageMap;
+    private final BukkitAudiences audiences;
+    private final MiniMessage miniMessage;
 
     private String defaultLanguageName;
     private String consoleLanguageName;
@@ -62,6 +68,15 @@ public final class LanguageManager {
         Validate.notNull(configurationManager, "configurationManager must not be null!");
         this.configurationManager = configurationManager;
         this.languageMap = new ConcurrentHashMap<>();
+        this.miniMessage = MiniMessage.miniMessage();
+
+        IResourceHolder resourceHolder = configurationManager.getResourceHolder();
+        if(resourceHolder instanceof Plugin) {
+            Plugin plugin = (Plugin) resourceHolder;
+            this.audiences = BukkitAudiences.create(plugin);
+        } else {
+            this.audiences = null;
+        }
 
         this.defaultLanguageName = null;
         this.consoleLanguageName = null;
@@ -85,6 +100,16 @@ public final class LanguageManager {
     public Logger getLogger() {
         IResourceHolder resourceHolder = getResourceHolder();
         return resourceHolder.getLogger();
+    }
+
+    @NotNull
+    public MiniMessage getMiniMessage() {
+        return this.miniMessage;
+    }
+
+    @Nullable
+    public BukkitAudiences getAudiences() {
+        return this.audiences;
     }
 
     @Nullable
@@ -253,17 +278,17 @@ public final class LanguageManager {
     }
 
     @Nullable
-    public Language getLanguage(CommandSender audience) {
-        if (audience == null || isForceDefaultLanguage()) {
+    public Language getLanguage(CommandSender commandSender) {
+        if (isForceDefaultLanguage()) {
             return getDefaultLanguage();
         }
 
-        if (audience instanceof ConsoleCommandSender) {
+        if (commandSender == null || commandSender instanceof ConsoleCommandSender) {
             return getConsoleLanguage();
         }
 
-        if (audience instanceof Player) {
-            String cachedLocale = LanguageCache.getCachedLocale((Player) audience);
+        if (commandSender instanceof Player) {
+            String cachedLocale = LanguageCache.getCachedLocale((Player) commandSender);
             return getLanguage(cachedLocale);
         }
 
@@ -271,10 +296,11 @@ public final class LanguageManager {
     }
 
     @NotNull
-    public String getMessage(@Nullable CommandSender audience, @NotNull String key, @Nullable Replacer replacer,
-                             boolean color) {
+    public String getMessageString(@Nullable CommandSender commandSender, @NotNull String key,
+                                   @Nullable Replacer replacer) {
         Validate.notEmpty(key, "key must not be empty!");
-        Language language = getLanguage(audience);
+
+        Language language = getLanguage(commandSender);
         if (language == null) {
             Logger logger = getLogger();
             logger.warning("There are no languages available.");
@@ -290,32 +316,50 @@ public final class LanguageManager {
             message = replacer.replace(message);
         }
 
-        if (color) {
-            message = MessageUtility.color(message);
-        }
-
         return message;
     }
 
-    public void sendMessage(@NotNull CommandSender audience, @NotNull String key, @Nullable Replacer replacer,
-                            boolean color) {
-        String message = getMessage(audience, key, replacer, color);
-        if (message.isEmpty()) {
+    @NotNull
+    public Component getMessage(@Nullable CommandSender commandSender, @NotNull String key,
+                                @Nullable Replacer replacer) {
+        String messageString = getMessageString(commandSender, key, replacer);
+        if(messageString.isEmpty()) {
+            return Component.empty();
+        }
+
+        MiniMessage miniMessageHandler = getMiniMessage();
+        return miniMessageHandler.deserialize(messageString);
+    }
+
+    public void sendMessage(@NotNull CommandSender commandSender, @NotNull String key, @Nullable Replacer replacer) {
+        Component message = getMessage(commandSender, key, replacer);
+        if (Component.empty().equals(message)) {
             return;
         }
 
+        BukkitAudiences audiences = getAudiences();
+        if(audiences == null) {
+            return;
+        }
+
+        Audience audience = audiences.sender(commandSender);
         audience.sendMessage(message);
     }
 
-    public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, boolean color,
-                                 @Nullable String permission) {
+    public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, @Nullable String permission) {
         Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayerCollection) {
-            if (permission != null && !permission.isEmpty() && !player.hasPermission(permission)) {
-                continue;
+            if (hasPermission(player, permission)) {
+                sendMessage(player, key, replacer);
             }
-
-            sendMessage(player, key, replacer, color);
         }
+    }
+
+    private boolean hasPermission(@NotNull Player player, @Nullable String permission) {
+        if(permission == null || permission.isEmpty()) {
+            return true;
+        }
+
+        return player.hasPermission(permission);
     }
 }

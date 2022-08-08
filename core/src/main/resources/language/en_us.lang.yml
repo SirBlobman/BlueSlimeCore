@@ -2,37 +2,37 @@
 language-name: "en_us"
 
 error:
-  player-only: "&cThat command can only be executed by a player."
-  console-only: "&cThat command can only be executed in the server console."
-  invalid-held-item: "&cYou must be holding a valid item to use this command."
-  invalid-world: "&cYou must be in a valid world to execute this command."
-  no-permission: "&cMissing Permission: &7{permission}&c."
+  player-only: "<red>That command can only be executed by a player.</red>"
+  console-only: "<red>That command can only be executed in the server console.</red>"
+  invalid-held-item: "<red>You must be holding a valid item to use this command.</red>"
+  invalid-world: "<red>You must be in a valid world to execute this command.</red>"
+  no-permission: "<red>Missing Permission: <gray>{permission}&c."
 
 command:
   global-gamerule:
-    unknown-gamerule: "&cUnknown gamerule type &7{value}&c."
-    list-title: "&f&lGame Rule Values for &7{rule}&f&l:"
-    list-line-format: "&7&l{world}: &f{value}"
-    success-count: "&aSuccessfully changed game rule &7{rule}&a to value &7{value}&a in &7{count}&a worlds."
-    failure-count: "&cFailed to change game rule &7{rule}&c in &7{count}&c worlds."
+    unknown-gamerule: "<red>Unknown gamerule type <gray>{value}</gray>.</red>"
+    list-title: "<white><bold>Game Rule Values for <gray>{rule}</gray>:</bold></white>"
+    list-line-format: "<gray><bold>{world}:</bold></gray> <white>{value}</white>"
+    success-count: "<green>Successfully changed game rule <gray>{rule}</gray> to value <gray>{value}</gray> in <gray>{count}</gray> worlds.</green>"
+    failure-count: "<red>Failed to change game rule <gray>{rule}</gray> in <gray>{count}</gray> worlds.</red>"
 
   debug-event:
-    invalid-priority: "&cUnknown EventPriority type &7{value}&c."
-    invalid-event-class: "&cUnknown or invalid event class &7{value}&c."
-    reflection-error: "&cFailed to debug that event. Check the server console for errors."
+    invalid-priority: "<red>Unknown EventPriority type <gray>{value}</gray>.</red>"
+    invalid-event-class: "<red>Unknown or invalid event class <gray>{value}</gray>.</red>"
+    reflection-error: "<red>Failed to debug that event. Check the server console for errors.</red>"
     results-title: "Debug Results for event '{event}' and priority '{priority}':"
 
   sirblobmancore:
     help:
-      title: "&f&lSirBlobmanCore Commands:"
+      title: "<white><bold>SirBlobmanCore Commands:</bold></white>"
       command-list:
-        - "&b/sb help&7: Show this list of commands."
-        - "&b/sb reload&7: Reload the configuration files for SirBlobmanCore."
-        - "&b/debug-event&7: Show information about which classes are listing to an event (console only)"
-        - "&b/global-gamerule&7: Change a gamerule for every world on the server."
-        - "&b/item-info&7: Show information about the material and damage of an item."
-        - "&b/item-to-base64&7: Convert an item to a binary base64 string."
-        - "&b/item-to-nbt&7: Convert an item to its NBT format."
-        - "&b/item-to-yml&7: Convert an item to a serialized Bukkit YAML format.",
+        - "<aqua>/sb help</aqua><gray>: Show this list of commands.</gray>"
+        - "<aqua>/sb reload</aqua><gray>: Reload the configuration files for SirBlobmanCore.</gray>"
+        - "<aqua>/debug-event</aqua><gray>: Show information about which classes are listing to an event (console only)</gray>"
+        - "<aqua>/global-gamerule</aqua><gray>: Change a gamerule for every world on the server.</gray>"
+        - "<aqua>/item-info</aqua><gray>: Show information about the material and damage of an item.</gray>"
+        - "<aqua>/item-to-base64</aqua><gray>: Convert an item to a binary base64 string.</gray>"
+        - "<aqua>/item-to-nbt</aqua><gray>: Convert an item to its NBT format.</gray>"
+        - "<aqua>/item-to-yml</aqua><gray>: Convert an item to a serialized Bukkit YAML format.</gray>",
         - ""
-    reload-success: "&aSuccessfully reloaded the configuration file."
+    reload-success: "<green>Successfully reloaded the configuration file</green>"

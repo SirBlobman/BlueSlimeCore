@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.modern;
+package com.github.sirblobman.api.bossbar.modern;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
-import com.github.sirblobman.bossbar.BossBarWrapper;
+import com.github.sirblobman.api.bossbar.BossBarWrapper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

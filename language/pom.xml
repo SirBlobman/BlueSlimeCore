@@ -58,6 +58,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Adventure Plain Seriliazer -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-plain</artifactId>
+            <version>4.11.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Adventure MiniMessage -->
         <dependency>
             <groupId>net.kyori</groupId>

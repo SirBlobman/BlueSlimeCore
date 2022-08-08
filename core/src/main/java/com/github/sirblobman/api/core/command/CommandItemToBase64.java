@@ -30,7 +30,7 @@ public final class CommandItemToBase64 extends PlayerCommand {
     protected boolean execute(Player player, String[] args) {
         ItemStack item = getHeldItem(player);
         if (ItemUtility.isAir(item)) {
-            sendMessage(player, "error.invalid-held-item", null, true);
+            sendMessage(player, "error.invalid-held-item", null);
             return true;
         }
 

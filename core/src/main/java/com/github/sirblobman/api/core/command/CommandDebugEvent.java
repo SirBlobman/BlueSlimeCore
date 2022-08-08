@@ -64,7 +64,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         EventPriority eventPriority = matchEnum(EventPriority.class, eventPriorityName);
         if (eventPriority == null) {
             Replacer replacer = new SimpleReplacer("{value}", eventPriorityName);
-            sendMessage(sender, "command.debug-event.invalid-priority", replacer, true);
+            sendMessage(sender, "command.debug-event.invalid-priority", replacer);
             return true;
         }
 
@@ -72,7 +72,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         Class<? extends Event> eventClass = getEventClass(className);
         if (eventClass == null) {
             Replacer replacer = new SimpleReplacer("{value}", className);
-            sendMessage(sender, "command.debug-event.invalid-event-class", replacer, true);
+            sendMessage(sender, "command.debug-event.invalid-event-class", replacer);
             return true;
         }
 
@@ -82,7 +82,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
             return true;
         } catch (ReflectiveOperationException ex) {
             Logger logger = getLogger();
-            sendMessage(sender, "command.debug-event.reflection-error", null, true);
+            sendMessage(sender, "command.debug-event.reflection-error", null);
             logger.log(Level.WARNING, "Failed to debug an event because an error occurred:", ex);
             return true;
         }
@@ -140,18 +140,15 @@ public final class CommandDebugEvent extends ConsoleCommand {
                 .replace("{priority}", priorityName);
 
         CommandSender console = Bukkit.getConsoleSender();
-        String title = getMessage(console, "command.debug-event.results-title", replacer, false);
-
-        Logger logger = getLogger();
-        logger.info(title);
+        sendMessage(console, "command.debug-event.results-title", replacer);
 
         for (Entry<String, Set<String>> entry : entrySet) {
             String pluginName = entry.getKey();
-            logger.info("  " + pluginName + ":");
+            console.sendMessage("  " + pluginName + ":");
 
             Set<String> listenerClassNameSet = entry.getValue();
             for (String listenerClassName : listenerClassNameSet) {
-                logger.info("  - " + listenerClassName);
+                console.sendMessage("  - " + listenerClassName);
             }
         }
     }

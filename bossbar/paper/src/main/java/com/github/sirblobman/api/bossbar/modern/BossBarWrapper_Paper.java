@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.modern;
+package com.github.sirblobman.api.bossbar.modern;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.github.sirblobman.bossbar.BossBarWrapper;
+import com.github.sirblobman.api.bossbar.BossBarWrapper;
 
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.bossbar.BossBar.Color;

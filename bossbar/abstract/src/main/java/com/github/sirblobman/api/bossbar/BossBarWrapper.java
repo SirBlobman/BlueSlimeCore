@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar;
+package com.github.sirblobman.api.bossbar;
 
 import java.util.Set;
 

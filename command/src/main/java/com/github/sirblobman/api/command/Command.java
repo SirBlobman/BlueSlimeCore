@@ -42,6 +42,9 @@ import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -254,19 +257,38 @@ public abstract class Command implements TabExecutor {
         return new Location(mainWorld, 0, 0, 0, 0, 0);
     }
 
-    @Nullable
-    protected final String getMessage(CommandSender audience, String key, Replacer replacer, boolean color) {
+    @NotNull
+    protected final Audience getAudience(@NotNull CommandSender commandSender) {
         LanguageManager languageManager = getLanguageManager();
-        return (languageManager == null ? null : languageManager.getMessage(audience, key, replacer, color));
+        if(languageManager == null) {
+            return Audience.empty();
+        }
+
+        BukkitAudiences audiences = languageManager.getAudiences();
+        if(audiences == null) {
+            return Audience.empty();
+        }
+
+        return audiences.sender(commandSender);
     }
 
-    protected final void sendMessage(CommandSender audience, String key, Replacer replacer, boolean color) {
+    @NotNull
+    protected final Component getMessage(CommandSender sender, String key, Replacer replacer) {
+        LanguageManager languageManager = getLanguageManager();
+        if(languageManager == null) {
+            return Component.text(key);
+        }
+
+        return languageManager.getMessage(sender, key, replacer);
+    }
+
+    protected final void sendMessage(CommandSender sender, String key, Replacer replacer) {
         LanguageManager languageManager = getLanguageManager();
         if (languageManager == null) {
             return;
         }
 
-        languageManager.sendMessage(audience, key, replacer, color);
+        languageManager.sendMessage(sender, key, replacer);
     }
 
     /**
@@ -285,7 +307,7 @@ public abstract class Command implements TabExecutor {
         if (sendMessage && sender instanceof CommandSender) {
             CommandSender audience = (CommandSender) sender;
             Replacer replacer = message -> message.replace("{permission}", permissionName);
-            sendMessage(audience, "error.no-permission", replacer, true);
+            sendMessage(audience, "error.no-permission", replacer);
         }
 
         return false;
@@ -308,7 +330,7 @@ public abstract class Command implements TabExecutor {
             CommandSender audience = (CommandSender) sender;
             String permissionName = permission.getName();
             Replacer replacer = message -> message.replace("{permission}", permissionName);
-            sendMessage(audience, "error.no-permission", replacer, true);
+            sendMessage(audience, "error.no-permission", replacer);
         }
 
         return false;
@@ -337,7 +359,7 @@ public abstract class Command implements TabExecutor {
             return new BigInteger(value);
         } catch (NumberFormatException ex) {
             Replacer replacer = message -> message.replace("{value}", value);
-            sendMessage(sender, "error.invalid-integer", replacer, true);
+            sendMessage(sender, "error.invalid-integer", replacer);
             return null;
         }
     }
@@ -353,7 +375,7 @@ public abstract class Command implements TabExecutor {
             return new BigDecimal(value);
         } catch (NumberFormatException ex) {
             Replacer replacer = message -> message.replace("{value}", value);
-            sendMessage(sender, "error.invalid-decimal", replacer, true);
+            sendMessage(sender, "error.invalid-decimal", replacer);
             return null;
         }
     }
@@ -369,7 +391,7 @@ public abstract class Command implements TabExecutor {
         if (target != null) return target;
 
         Replacer replacer = message -> message.replace("{target}", targetName);
-        sendMessage(sender, "error.invalid-target", replacer, true);
+        sendMessage(sender, "error.invalid-target", replacer);
         return null;
     }
 
@@ -386,7 +408,7 @@ public abstract class Command implements TabExecutor {
 
         World world = player.getWorld();
         Location location = player.getLocation();
-        sendMessage(player, "error.inventory-full", null, true);
+        sendMessage(player, "error.inventory-full", null);
 
         Collection<ItemStack> dropCollection = leftover.values();
         for (ItemStack item : dropCollection) {

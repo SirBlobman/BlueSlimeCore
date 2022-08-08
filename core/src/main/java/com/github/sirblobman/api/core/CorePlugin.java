@@ -28,7 +28,7 @@ import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
-import com.github.sirblobman.bossbar.BossBarHandler;
+import com.github.sirblobman.api.bossbar.BossBarHandler;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final UpdateManager updateManager;

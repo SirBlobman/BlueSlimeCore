@@ -27,14 +27,14 @@ public final class CommandItemToYML extends PlayerCommand {
     public boolean execute(Player player, String[] args) {
         ItemStack item = getHeldItem(player);
         if (ItemUtility.isAir(item)) {
-            sendMessage(player, "error.invalid-held-item", null, true);
+            sendMessage(player, "error.invalid-held-item", null);
             return true;
         }
 
         YamlConfiguration configuration = new YamlConfiguration();
         configuration.set("item", item);
-        String configurationString = configuration.saveToString();
 
+        String configurationString = configuration.saveToString();
         String[] split = configurationString.split(Pattern.quote("\n"));
         player.sendMessage(split);
         return true;

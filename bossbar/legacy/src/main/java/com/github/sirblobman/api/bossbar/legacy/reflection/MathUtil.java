@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.legacy.reflection;
+package com.github.sirblobman.api.bossbar.legacy.reflection;
 
 public abstract class MathUtil {
     public static int floorDouble(double value) {

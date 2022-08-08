@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
-import com.github.sirblobman.bossbar.BossBarHandler;
+import com.github.sirblobman.api.bossbar.BossBarHandler;
 
 public final class MultiVersionHandler {
     private final JavaPlugin plugin;

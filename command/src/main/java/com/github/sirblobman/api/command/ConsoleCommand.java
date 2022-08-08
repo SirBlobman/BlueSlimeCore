@@ -29,7 +29,7 @@ public abstract class ConsoleCommand extends Command {
             return execute(console, args);
         }
 
-        sendMessage(sender, "error.console-only", null, true);
+        sendMessage(sender, "error.console-only", null);
         return true;
     }
 

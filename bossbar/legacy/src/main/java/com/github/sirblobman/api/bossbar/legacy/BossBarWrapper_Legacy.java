@@ -1,11 +1,11 @@
-package com.github.sirblobman.bossbar.legacy;
+package com.github.sirblobman.api.bossbar.legacy;
 
 import java.util.Collections;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-import com.github.sirblobman.bossbar.BossBarWrapper;
+import com.github.sirblobman.api.bossbar.BossBarWrapper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

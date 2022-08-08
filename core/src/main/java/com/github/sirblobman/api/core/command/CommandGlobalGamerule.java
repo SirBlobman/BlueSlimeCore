@@ -46,14 +46,14 @@ public class CommandGlobalGamerule extends Command {
 
         World senderWorld = getWorld(sender);
         if (senderWorld == null) {
-            sendMessage(sender, "error.world-required", null, true);
+            sendMessage(sender, "error.world-required", null);
             return true;
         }
 
         String gameRuleString = args[0];
         if (!senderWorld.isGameRule(gameRuleString)) {
             Replacer replacer = message -> message.replace("{value}", gameRuleString);
-            sendMessage(sender, "command.global-gamerule.invalid-gamerule", replacer, true);
+            sendMessage(sender, "command.global-gamerule.invalid-gamerule", replacer);
             return true;
         }
 
@@ -74,7 +74,7 @@ public class CommandGlobalGamerule extends Command {
 
     private void showPerWorldValueList(CommandSender sender, String gameRuleString) {
         Replacer titleReplacer = new SimpleReplacer("{rule}", gameRuleString);
-        sendMessage(sender, "command.global-gamerule.list-title", titleReplacer, true);
+        sendMessage(sender, "command.global-gamerule.list-title", titleReplacer);
 
         List<World> worldList = Bukkit.getWorlds();
         for (World world : worldList) {
@@ -82,7 +82,7 @@ public class CommandGlobalGamerule extends Command {
             String gameRuleValue = world.getGameRuleValue(gameRuleString);
             Replacer replacer = message -> message.replace("{world}", worldName)
                     .replace("{value}", gameRuleValue);
-            sendMessage(sender, "command.global-gamerule.list-line-format", replacer, true);
+            sendMessage(sender, "command.global-gamerule.list-line-format", replacer);
         }
     }
 
@@ -102,13 +102,13 @@ public class CommandGlobalGamerule extends Command {
         if (successCount > 0) {
             String finalSuccessCount = Integer.toString(successCount);
             Replacer replacer = message -> message.replace("{count}", finalSuccessCount);
-            sendMessage(sender, "command.global-gamerule.success-count", replacer, true);
+            sendMessage(sender, "command.global-gamerule.success-count", replacer);
         }
 
         if (failureCount > 0) {
             String finalFailureCount = Integer.toString(successCount);
             Replacer replacer = message -> message.replace("{count}", finalFailureCount);
-            sendMessage(sender, "command.global-gamerule.failure-count", replacer, true);
+            sendMessage(sender, "command.global-gamerule.failure-count", replacer);
         }
     }
 }

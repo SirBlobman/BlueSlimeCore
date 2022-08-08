@@ -28,7 +28,7 @@ public final class SubCommandReload extends Command {
         CorePlugin corePlugin = getCorePlugin();
         corePlugin.reloadConfig();
 
-        sendMessage(sender, "command.sirblobmancore.reload-success", null, true);
+        sendMessage(sender, "command.sirblobmancore.reload-success", null);
         return true;
     }
 

@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.legacy;
+package com.github.sirblobman.api.bossbar.legacy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

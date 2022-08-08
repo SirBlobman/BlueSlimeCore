@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.legacy;
+package com.github.sirblobman.api.bossbar.legacy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 
+import com.github.sirblobman.api.bossbar.legacy.reflection.Reflection;
 import com.github.sirblobman.api.utility.Validate;
-import com.github.sirblobman.bossbar.legacy.reflection.Reflection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

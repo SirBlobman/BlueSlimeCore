@@ -21,8 +21,8 @@ public class SubCommandHelp extends Command {
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        sendMessage(sender, "command.sirblobmancore.help.title", null, true);
-        sendMessage(sender, "command.sirblobmancore.help.command-list", null, true);
+        sendMessage(sender, "command.sirblobmancore.help.title", null);
+        sendMessage(sender, "command.sirblobmancore.help.command-list", null);
         return true;
     }
 }

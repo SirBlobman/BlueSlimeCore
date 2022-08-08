@@ -1,4 +1,4 @@
-package com.github.sirblobman.bossbar.legacy.reflection;
+package com.github.sirblobman.api.bossbar.legacy.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
