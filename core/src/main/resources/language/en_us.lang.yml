@@ -33,6 +33,6 @@ command:
         - "<aqua>/item-info</aqua><gray>: Show information about the material and damage of an item.</gray>"
         - "<aqua>/item-to-base64</aqua><gray>: Convert an item to a binary base64 string.</gray>"
         - "<aqua>/item-to-nbt</aqua><gray>: Convert an item to its NBT format.</gray>"
-        - "<aqua>/item-to-yml</aqua><gray>: Convert an item to a serialized Bukkit YAML format.</gray>",
+        - "<aqua>/item-to-yml</aqua><gray>: Convert an item to a serialized Bukkit YAML format.</gray>"
         - ""
     reload-success: "<green>Successfully reloaded the configuration file</green>"

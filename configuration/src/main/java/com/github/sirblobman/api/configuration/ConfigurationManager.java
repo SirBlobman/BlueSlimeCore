@@ -73,7 +73,9 @@ public final class ConfigurationManager {
     public YamlConfiguration getInternal(String fileName) {
         IResourceHolder resourceHolder = getResourceHolder();
         InputStream inputStream = resourceHolder.getResource(fileName);
-        if (inputStream == null) return null;
+        if (inputStream == null) {
+            return null;
+        }
 
         try {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
@@ -81,6 +83,8 @@ public final class ConfigurationManager {
             configuration.load(inputStreamReader);
             return configuration;
         } catch (IOException | InvalidConfigurationException ex) {
+            Logger logger = resourceHolder.getLogger();
+            logger.log(Level.WARNING, "Failed to load internal configuration from classpath:", ex);
             return null;
         }
     }
@@ -92,7 +96,9 @@ public final class ConfigurationManager {
      */
     public YamlConfiguration get(String fileName) {
         YamlConfiguration configuration = this.configurationMap.getOrDefault(fileName, null);
-        if (configuration != null) return configuration;
+        if (configuration != null) {
+            return configuration;
+        }
 
         reload(fileName);
         return this.configurationMap.getOrDefault(fileName, new YamlConfiguration());
@@ -106,7 +112,9 @@ public final class ConfigurationManager {
     public void save(String fileName) {
         try {
             YamlConfiguration configuration = this.configurationMap.getOrDefault(fileName, null);
-            if (configuration == null) return;
+            if (configuration == null) {
+                return;
+            }
 
             File file = getFile(fileName);
             configuration.save(file);
