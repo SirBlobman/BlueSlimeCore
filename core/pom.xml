@@ -27,14 +27,6 @@
         <bukkit.plugin.version>${sirblobman.core.version}</bukkit.plugin.version>
     </properties>
 
-    <pluginRepositories>
-        <!-- Apache Snapshots -->
-        <pluginRepository>
-            <id>apache.snapshots</id>
-            <url>https://repository.apache.org/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <repositories>
         <!-- SpigotMC Repository -->
         <repository>
@@ -165,15 +157,6 @@
                             <shadedPattern>com.github.sirblobman.api.adventure</shadedPattern>
                         </relocation>
                     </relocations>
-
-                    <filters>
-                        <filter>
-                            <artifact>*</artifact>
-                            <excludes>
-                                <exclude>META-INF/MANIFEST.MF</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
                 </configuration>
 
                 <executions>
