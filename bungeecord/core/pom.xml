@@ -15,7 +15,7 @@
     <name>BungeeCord Core</name>
 
     <properties>
-        <bungee.plugin.name>SirBlobmanBungeeCore</bungee.plugin.name>
+        <bungee.plugin.name>BlueSlimeBungeeCore</bungee.plugin.name>
         <bungee.plugin.main>com.github.sirblobman.api.bungeecord.core.CorePlugin</bungee.plugin.main>
         <bungee.plugin.version>${project.version}</bungee.plugin.version>
     </properties>

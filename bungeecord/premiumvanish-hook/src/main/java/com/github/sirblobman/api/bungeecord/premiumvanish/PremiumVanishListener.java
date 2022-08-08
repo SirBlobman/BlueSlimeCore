@@ -44,7 +44,7 @@ public final class PremiumVanishListener implements Listener {
     private IVanishHook getDefaultVanishHook() {
         ProxyServer proxy = getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
-        IHookPlugin corePlugin = (IHookPlugin) pluginManager.getPlugin("SirBlobmanBungeeCore");
+        IHookPlugin corePlugin = (IHookPlugin) pluginManager.getPlugin("BlueSlimeBungeeCore");
         return corePlugin.getDefaultVanishHook();
     }
 }
