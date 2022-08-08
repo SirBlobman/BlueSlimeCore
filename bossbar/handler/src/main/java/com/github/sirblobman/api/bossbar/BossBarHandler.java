@@ -9,11 +9,11 @@ import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.bossbar.legacy.BossBarWrapper_Legacy;
 import com.github.sirblobman.api.bossbar.modern.BossBarWrapper_Modern;
+import com.github.sirblobman.api.bossbar.modern.BossBarWrapper_Paper;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
-import com.github.sirblobman.api.bossbar.legacy.BossBarWrapper_Legacy;
-import com.github.sirblobman.api.bossbar.modern.BossBarWrapper_Paper;
 
 import org.jetbrains.annotations.Nullable;
 

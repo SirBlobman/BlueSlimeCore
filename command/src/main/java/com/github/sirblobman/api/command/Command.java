@@ -260,12 +260,12 @@ public abstract class Command implements TabExecutor {
     @NotNull
     protected final Audience getAudience(@NotNull CommandSender commandSender) {
         LanguageManager languageManager = getLanguageManager();
-        if(languageManager == null) {
+        if (languageManager == null) {
             return Audience.empty();
         }
 
         BukkitAudiences audiences = languageManager.getAudiences();
-        if(audiences == null) {
+        if (audiences == null) {
             return Audience.empty();
         }
 
@@ -275,7 +275,7 @@ public abstract class Command implements TabExecutor {
     @NotNull
     protected final Component getMessage(CommandSender sender, String key, Replacer replacer) {
         LanguageManager languageManager = getLanguageManager();
-        if(languageManager == null) {
+        if (languageManager == null) {
             return Component.text(key);
         }
 

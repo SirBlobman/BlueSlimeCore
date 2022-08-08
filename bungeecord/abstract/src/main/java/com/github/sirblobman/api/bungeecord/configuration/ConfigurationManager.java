@@ -70,8 +70,8 @@ public final class ConfigurationManager {
 
     /**
      * @param fileName The name of the internal file.
-     * @return A configuration stored inside of the resource holder ({@code null} if the file does not exist or an error
-     * occurred.)
+     * @return A configuration stored inside the resource holder.
+     * ({@code null} if the file does not exist or an error occurred.)
      * @see IResourceHolder#getResource(String)
      */
     public Configuration getInternal(String fileName) {

@@ -11,24 +11,24 @@ import com.github.sirblobman.api.bossbar.legacy.reflection.ClassBuilder;
 import com.github.sirblobman.api.bossbar.legacy.reflection.NMSClass;
 
 public final class BossBar extends BukkitRunnable {
-    protected static int ENTITY_DISTANCE;
+    private static int ENTITY_DISTANCE;
 
     static {
         BossBar.ENTITY_DISTANCE = 32;
     }
 
-    protected final int ID;
-    protected final Player receiver;
-    protected String message;
-    protected float health;
-    protected float healthMinus;
-    protected float minHealth;
-    protected Location location;
-    protected World world;
-    protected boolean visible;
-    protected Object dataWatcher;
+    private final int ID;
+    private final Player receiver;
+    private final World world;
+    String message;
+    float health;
+    private float healthMinus;
+    private float minHealth;
+    private Location location;
+    private boolean visible;
+    private Object dataWatcher;
 
-    protected BossBar(Player player, String message, float percentage, float minHealth) {
+    BossBar(Player player, String message, float percentage, float minHealth) {
         this.minHealth = 1.0F;
         this.visible = false;
         this.ID = new Random().nextInt();
@@ -44,7 +44,7 @@ public final class BossBar extends BukkitRunnable {
         }
     }
 
-    protected Location makeLocation(Location base) {
+    private Location makeLocation(Location base) {
         return base.getDirection().multiply(BossBar.ENTITY_DISTANCE).add(base.toVector()).toLocation(this.world);
     }
 
@@ -105,7 +105,7 @@ public final class BossBar extends BukkitRunnable {
         }
     }
 
-    protected void updateMovement() {
+    void updateMovement() {
         if (!this.visible) {
             return;
         }
@@ -119,7 +119,7 @@ public final class BossBar extends BukkitRunnable {
         }
     }
 
-    protected void updateDataWatcher() {
+    private void updateDataWatcher() {
         if (this.dataWatcher == null) {
             try {
                 ClassBuilder.setDataWatcherValue(this.dataWatcher = ClassBuilder.buildDataWatcher(null), 17, 0);
@@ -142,7 +142,7 @@ public final class BossBar extends BukkitRunnable {
         }
     }
 
-    protected void sendMetadata() {
+    private void sendMetadata() {
         this.updateDataWatcher();
         try {
             Object metaPacket = ClassBuilder.buildNameMetadataPacket(this.ID, this.dataWatcher, 2, 3, this.message);
@@ -152,7 +152,7 @@ public final class BossBar extends BukkitRunnable {
         }
     }
 
-    protected void spawn() {
+    private void spawn() {
         try {
             this.updateMovement();
             this.updateDataWatcher();
@@ -167,7 +167,7 @@ public final class BossBar extends BukkitRunnable {
     }
 
     @SuppressWarnings("JavaReflectionInvocation")
-    protected void destroy() {
+    private void destroy() {
         try {
             this.cancel();
         } catch (IllegalStateException ignored) {

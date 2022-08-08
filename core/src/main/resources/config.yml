@@ -1,4 +1,4 @@
-# Set this to false to prevent the update checker from running.
+# Set this option to false if you do not want the update checker to run.
 # Default: true
 update-checker: true
 

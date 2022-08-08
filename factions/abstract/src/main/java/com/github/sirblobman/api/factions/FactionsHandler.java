@@ -18,6 +18,10 @@ public abstract class FactionsHandler {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
     }
 
+    public JavaPlugin getJavaPlugin() {
+        return this.plugin;
+    }
+
     public Object getFactionAt(Entity entity) {
         Location location = entity.getLocation();
         return getFactionAt(location);
@@ -43,7 +47,8 @@ public abstract class FactionsHandler {
      * @param player1 The first player
      * @param player2 The second player
      * @return {@code true} if player2 is the same as player1. {@code false} if either player is not in a faction.
-     * {@code true} if player2 has an ally relationship with player1. {@code true} if player2 is in the same faction as
+     * {@code true} if player2 has an ally/friend relationship with player1.
+     * {@code true} if player2 is in the same faction as
      * player1. {@code false} otherwise
      */
     public abstract boolean isMemberOrAlly(OfflinePlayer player1, OfflinePlayer player2);
