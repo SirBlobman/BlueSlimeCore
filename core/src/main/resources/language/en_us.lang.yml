@@ -20,7 +20,8 @@ command:
     invalid-priority: "<red>Unknown EventPriority type <gray>{value}</gray>.</red>"
     invalid-event-class: "<red>Unknown or invalid event class <gray>{value}</gray>.</red>"
     reflection-error: "<red>Failed to debug that event. Check the server console for errors.</red>"
-    results-title: "Debug Results for event '{event}' and priority '{priority}':"
+    results-title: "<white>Debug Results for event <gray>{event}</gray> and priority <gray>{priority}</gray>:</white>"
+    results-none: "<red>Event <gray>{event}</gray> does not have any listeners with priority <gray>{priority}</gray>.</white>"
 
   sirblobmancore:
     help:

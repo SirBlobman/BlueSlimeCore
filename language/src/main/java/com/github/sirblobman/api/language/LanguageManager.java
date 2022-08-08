@@ -56,7 +56,7 @@ public final class LanguageManager {
 
     private final ConfigurationManager configurationManager;
     private final Map<String, Language> languageMap;
-    private final BukkitAudiences audiences;
+    private BukkitAudiences audiences;
     private final MiniMessage miniMessage;
 
     private String defaultLanguageName;
@@ -70,15 +70,6 @@ public final class LanguageManager {
         this.configurationManager = configurationManager;
         this.languageMap = new ConcurrentHashMap<>();
         this.miniMessage = MiniMessage.miniMessage();
-
-        IResourceHolder resourceHolder = configurationManager.getResourceHolder();
-        if (resourceHolder instanceof WrapperPluginResourceHolder) {
-            WrapperPluginResourceHolder pluginHolder = (WrapperPluginResourceHolder) resourceHolder;
-            Plugin plugin = pluginHolder.getPlugin();
-            this.audiences = BukkitAudiences.create(plugin);
-        } else {
-            this.audiences = null;
-        }
 
         this.defaultLanguageName = null;
         this.consoleLanguageName = null;
@@ -229,6 +220,14 @@ public final class LanguageManager {
         this.forceDefaultLanguage = configuration.getBoolean("enforce-default-locale");
         this.defaultLanguageName = configuration.getString("default-locale");
         this.consoleLanguageName = configuration.getString("console-locale");
+
+        if (resourceHolder instanceof WrapperPluginResourceHolder) {
+            WrapperPluginResourceHolder pluginHolder = (WrapperPluginResourceHolder) resourceHolder;
+            Plugin plugin = pluginHolder.getPlugin();
+            this.audiences = BukkitAudiences.create(plugin);
+        } else {
+            this.audiences = null;
+        }
 
         int languageCount = this.languageMap.size();
         logger.info("Successfully loaded " + languageCount + " language(s).");

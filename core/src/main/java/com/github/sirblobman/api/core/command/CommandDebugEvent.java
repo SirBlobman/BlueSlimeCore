@@ -142,6 +142,11 @@ public final class CommandDebugEvent extends ConsoleCommand {
         CommandSender console = Bukkit.getConsoleSender();
         sendMessage(console, "command.debug-event.results-title", replacer);
 
+        if(pluginListenerMap.isEmpty()) {
+            sendMessage(console, "command.debug-event.results-none", replacer);
+            return;
+        }
+
         for (Entry<String, Set<String>> entry : entrySet) {
             String pluginName = entry.getKey();
             console.sendMessage("  " + pluginName + ":");

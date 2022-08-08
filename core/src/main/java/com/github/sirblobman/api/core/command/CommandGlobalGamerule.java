@@ -101,13 +101,15 @@ public class CommandGlobalGamerule extends Command {
 
         if (successCount > 0) {
             String finalSuccessCount = Integer.toString(successCount);
-            Replacer replacer = message -> message.replace("{count}", finalSuccessCount);
+            Replacer replacer = message -> message.replace("{count}", finalSuccessCount)
+                    .replace("{rule}", gameRuleString).replace("{value}", value);
             sendMessage(sender, "command.global-gamerule.success-count", replacer);
         }
 
         if (failureCount > 0) {
             String finalFailureCount = Integer.toString(successCount);
-            Replacer replacer = message -> message.replace("{count}", finalFailureCount);
+            Replacer replacer = message -> message.replace("{count}", finalFailureCount)
+                    .replace("{rule}", gameRuleString).replace("{value}", value);
             sendMessage(sender, "command.global-gamerule.failure-count", replacer);
         }
     }

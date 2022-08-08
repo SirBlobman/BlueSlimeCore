@@ -16,6 +16,7 @@ import com.github.sirblobman.api.core.command.CommandItemInfo;
 import com.github.sirblobman.api.core.command.CommandItemToBase64;
 import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
+import com.github.sirblobman.api.core.command.sirblobmancore.CommandSirBlobmanCore;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
 import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
@@ -145,6 +146,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         new CommandItemToBase64(this).register();
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
+        new CommandSirBlobmanCore(this).register();
     }
 
     private void registerListeners() {
