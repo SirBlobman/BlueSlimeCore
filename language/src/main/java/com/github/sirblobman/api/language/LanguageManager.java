@@ -23,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
+import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
 import com.github.sirblobman.api.utility.Validate;
 
 import net.kyori.adventure.audience.Audience;
@@ -71,8 +72,9 @@ public final class LanguageManager {
         this.miniMessage = MiniMessage.miniMessage();
 
         IResourceHolder resourceHolder = configurationManager.getResourceHolder();
-        if (resourceHolder instanceof Plugin) {
-            Plugin plugin = (Plugin) resourceHolder;
+        if (resourceHolder instanceof WrapperPluginResourceHolder) {
+            WrapperPluginResourceHolder pluginHolder = (WrapperPluginResourceHolder) resourceHolder;
+            Plugin plugin = pluginHolder.getPlugin();
             this.audiences = BukkitAudiences.create(plugin);
         } else {
             this.audiences = null;

@@ -46,7 +46,7 @@ public final class WrapperPluginResourceHolder implements IResourceHolder {
         return plugin.getLogger();
     }
 
-    private Plugin getPlugin() {
+    public Plugin getPlugin() {
         return this.plugin;
     }
 }
