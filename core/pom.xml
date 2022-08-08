@@ -12,16 +12,15 @@
     </parent>
 
     <artifactId>core</artifactId>
-    <name>SirBlobmanAPI Core Plugin</name>
+    <name>BlueSlimeCore Plugin</name>
     <description>This plugin contains all modules of SirBlobmanAPI and can be installed on Bukkit servers.</description>
 
     <properties>
         <spigot.version>1.12.2-R0.1-SNAPSHOT</spigot.version>
 
-        <bukkit.plugin.name>SirBlobmanCore</bukkit.plugin.name>
-        <bukkit.plugin.prefix>SirBlobman Core</bukkit.plugin.prefix>
-        <bukkit.plugin.description>A core plugin with a lot of useful classes for other projects.
-        </bukkit.plugin.description>
+        <bukkit.plugin.name>BlueSlimeCore</bukkit.plugin.name>
+        <bukkit.plugin.prefix>BlueSlimeCore</bukkit.plugin.prefix>
+        <bukkit.plugin.description>A core plugin with useful libraries.</bukkit.plugin.description>
 
         <bukkit.plugin.main>com.github.sirblobman.api.core.CorePlugin</bukkit.plugin.main>
         <bukkit.plugin.version>${sirblobman.core.version}</bukkit.plugin.version>
