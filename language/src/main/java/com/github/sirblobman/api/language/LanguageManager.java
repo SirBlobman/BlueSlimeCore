@@ -350,12 +350,30 @@ public final class LanguageManager {
     }
 
     public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, @Nullable String permission) {
+        CommandSender console = Bukkit.getConsoleSender();
+        sendMessage(console, key, replacer);
+
         Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayerCollection) {
             if (hasPermission(player, permission)) {
                 sendMessage(player, key, replacer);
             }
         }
+    }
+
+    public void sendActionBar(@NotNull Player player, @NotNull String key, @Nullable Replacer replacer) {
+        Component message = getMessage(player, key, replacer);
+        if (Component.empty().equals(message)) {
+            return;
+        }
+
+        BukkitAudiences audiences = getAudiences();
+        if (audiences == null) {
+            return;
+        }
+
+        Audience audience = audiences.player(player);
+        audience.sendActionBar(message);
     }
 
     private boolean hasPermission(@NotNull Player player, @Nullable String permission) {
