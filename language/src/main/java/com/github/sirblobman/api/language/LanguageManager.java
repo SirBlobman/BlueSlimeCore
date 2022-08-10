@@ -165,6 +165,9 @@ public final class LanguageManager {
 
     public void reloadLanguageFiles() {
         this.languageMap.clear();
+        this.defaultLanguage = null;
+        this.consoleLanguage = null;
+
         IResourceHolder resourceHolder = getResourceHolder();
         Logger logger = getLogger();
 
@@ -235,8 +238,10 @@ public final class LanguageManager {
 
     @Nullable
     private Language loadLanguage(YamlConfiguration configuration) throws InvalidConfigurationException {
+        Logger logger = getLogger();
         String languageName = configuration.getString("language-name");
         if (languageName == null) {
+            logger.warning("Missing 'language-name' setting in configuration.");
             return null;
         }
 
