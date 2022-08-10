@@ -38,7 +38,7 @@ public final class LanguageManager {
 
     static {
         // Last Updated: June 28, 2022 18:03
-        KNOWN_LANGUAGE_ARRAY = new String[] {
+        KNOWN_LANGUAGE_ARRAY = new String[]{
                 "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar", "be_by", "bg_bg", "br_fr", "brb", "bs_ba",
                 "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de", "el_gr", "en_au", "en_ca", "en_gb",
                 "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar", "es_cl", "es_ec", "es_es",
@@ -56,9 +56,8 @@ public final class LanguageManager {
 
     private final ConfigurationManager configurationManager;
     private final Map<String, Language> languageMap;
-    private BukkitAudiences audiences;
     private final MiniMessage miniMessage;
-
+    private BukkitAudiences audiences;
     private String defaultLanguageName;
     private String consoleLanguageName;
     private Language defaultLanguage;
@@ -145,7 +144,7 @@ public final class LanguageManager {
 
         File dataFolder = configurationManager.getBaseFolder();
         File languageFolder = new File(dataFolder, "language");
-        if(languageFolder.exists()) {
+        if (languageFolder.exists()) {
             return;
         }
 

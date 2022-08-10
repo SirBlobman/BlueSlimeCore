@@ -142,7 +142,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         CommandSender console = Bukkit.getConsoleSender();
         sendMessage(console, "command.debug-event.results-title", replacer);
 
-        if(pluginListenerMap.isEmpty()) {
+        if (pluginListenerMap.isEmpty()) {
             sendMessage(console, "command.debug-event.results-none", replacer);
             return;
         }
