@@ -20,6 +20,7 @@ import com.github.sirblobman.api.core.command.sirblobmancore.CommandSirBlobmanCo
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
 import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
+import com.github.sirblobman.api.language.Language;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.EntityHandler;
 import com.github.sirblobman.api.nms.HeadHandler;
@@ -30,6 +31,9 @@ import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
+
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final UpdateManager updateManager;
@@ -60,6 +64,13 @@ public final class CorePlugin extends ConfigurablePlugin {
         UpdateManager updateManager = getUpdateManager();
         updateManager.addResource(this, 83189L);
         updateManager.checkForUpdates();
+
+        Metrics metrics = new Metrics(this, 16089);
+        metrics.addCustomChart(new SimplePie("selected_language", () -> {
+            LanguageManager languageManager = getLanguageManager();
+            Language defaultLanguage = languageManager.getDefaultLanguage();
+            return (defaultLanguage == null ? "none" : defaultLanguage.getLanguageCode());
+        }));
     }
 
     @Override

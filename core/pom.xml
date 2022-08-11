@@ -122,6 +122,14 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- bStats -->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -154,6 +162,12 @@
                         <relocation>
                             <pattern>net.kyori</pattern>
                             <shadedPattern>com.github.sirblobman.api.adventure</shadedPattern>
+                        </relocation>
+
+                        <!-- bStats -->
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>com.github.sirblobman.api.bstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
