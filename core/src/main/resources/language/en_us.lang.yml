@@ -1,4 +1,18 @@
-# English (United States)
+## Extra Information:
+## This is the default language file for BlueSlimeCore.
+## The default language is "en_us", also known as English (United States).
+## Context will be added as YAML comments above the string.
+
+## The color scheme for messages is white, aqua, and sometimes red.
+## Command feedback that is successful should always be green.
+## Error messages should always be red.
+## Variables in messages can be gray or white.
+
+## Messages use the MiniMessage format in non-strict mode.
+## More information about MiniMessage can be found here:
+## https://docs.adventure.kyori.net/minimessage/format.html
+
+---
 language-name: "en_us"
 
 error:
@@ -6,7 +20,7 @@ error:
   console-only: "<red>That command can only be executed in the server console.</red>"
   invalid-held-item: "<red>You must be holding a valid item to use this command.</red>"
   invalid-world: "<red>You must be in a valid world to execute this command.</red>"
-  no-permission: "<red>Missing Permission: <gray>{permission}&c."
+  no-permission: "<red>Missing Permission: <gray>{permission}</gray>.</red>"
 
 command:
   global-gamerule:
