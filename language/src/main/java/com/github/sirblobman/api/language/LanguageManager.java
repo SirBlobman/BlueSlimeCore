@@ -365,8 +365,20 @@ public final class LanguageManager {
         return miniMessageHandler.deserialize(messageString);
     }
 
+    @NotNull
+    @Deprecated
+    public String getMessageLegacy(@Nullable CommandSender commandSender, @NotNull String key,
+                                   @Nullable Replacer replacer) {
+        Component component = getMessage(commandSender, key, replacer);
+        return ComponentHelper.toLegacy(component);
+    }
+
     public void sendMessage(@NotNull CommandSender commandSender, @NotNull String key, @Nullable Replacer replacer) {
         Component message = getMessage(commandSender, key, replacer);
+        sendMessage(commandSender, message);
+    }
+
+    public void sendMessage(@NotNull CommandSender commandSender, @NotNull Component message) {
         if (Component.empty().equals(message)) {
             return;
         }
