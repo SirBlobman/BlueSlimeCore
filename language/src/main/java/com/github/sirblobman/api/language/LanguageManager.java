@@ -139,12 +139,16 @@ public final class LanguageManager {
     }
 
     public void saveDefaultLanguageFiles() {
+        printDebug("Save Default Language Files Start");
+
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.saveDefault("language.yml");
+        printDebug("Triggered saveDefault for 'language.yml'.");
 
         File dataFolder = configurationManager.getBaseFolder();
         File languageFolder = new File(dataFolder, "language");
         if (languageFolder.exists()) {
+            printDebug("language folder already exists, not necessary to create any default language files.");
             return;
         }
 
@@ -154,18 +158,27 @@ public final class LanguageManager {
         }
 
         for (String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
+            printDebug("Checking if jar contains language for '" + languageName + "'.");
             String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
             YamlConfiguration jarLanguageConfiguration = configurationManager.getInternal(languageFileName);
             if (jarLanguageConfiguration != null) {
+                printDebug("Jar contains default '" + languageFileName + "'. Saving...");
                 configurationManager.saveDefault(languageFileName);
+            } else {
+                printDebug("Language '" + languageName + "' is missing from jar.");
             }
         }
+
+        printDebug("Save Default Language Files End");
     }
 
     public void reloadLanguageFiles() {
+        printDebug("Reload Language Files Start");
+
         this.languageMap.clear();
         this.defaultLanguage = null;
         this.consoleLanguage = null;
+        printDebug("Cleared current language map and default languages.");
 
         IResourceHolder resourceHolder = getResourceHolder();
         Logger logger = getLogger();
@@ -187,6 +200,7 @@ public final class LanguageManager {
         List<YamlConfiguration> configurationList = new ArrayList<>();
         for (File languageFile : fileArray) {
             try {
+                printDebug("Trying to load configuration file '" + languageFile + "'.");
                 YamlConfiguration configuration = new YamlConfiguration();
                 configuration.load(languageFile);
 
@@ -195,6 +209,7 @@ public final class LanguageManager {
                 configuration.set("language-name", languageName);
 
                 configurationList.add(configuration);
+                printDebug("Successfully loaded configuration from file '" + languageFile + "'.");
             } catch (IOException | InvalidConfigurationException ex) {
                 logger.log(Level.WARNING, "An error occurred while loading a language file:", ex);
             }
@@ -205,10 +220,15 @@ public final class LanguageManager {
 
         for (YamlConfiguration configuration : configurationList) {
             try {
+                printDebug("Trying to load a language from a configuration...");
+
                 Language language = loadLanguage(configuration);
                 if (language != null) {
                     String languageCode = language.getLanguageCode();
                     this.languageMap.put(languageCode, language);
+                    printDebug("Successfully loaded language '" + languageCode + "'.");
+                } else {
+                    printDebug("Language was null for some reason.");
                 }
             } catch (InvalidConfigurationException ex) {
                 logger.log(Level.WARNING, "An error occurred while loading a language configuration:", ex);
@@ -217,22 +237,29 @@ public final class LanguageManager {
 
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.reload("language.yml");
+        printDebug("Successfully reloaded language.yml configuration.");
 
         YamlConfiguration configuration = configurationManager.get("language.yml");
         this.forceDefaultLanguage = configuration.getBoolean("enforce-default-locale");
         this.defaultLanguageName = configuration.getString("default-locale");
         this.consoleLanguageName = configuration.getString("console-locale");
+        printDebug("Forced Default: " + this.forceDefaultLanguage);
+        printDebug("Default Language Name: " + this.defaultLanguageName);
+        printDebug("Console Language Name: " + this.consoleLanguageName);
 
         if (resourceHolder instanceof WrapperPluginResourceHolder) {
             WrapperPluginResourceHolder pluginHolder = (WrapperPluginResourceHolder) resourceHolder;
             Plugin plugin = pluginHolder.getPlugin();
             this.audiences = BukkitAudiences.create(plugin);
+            printDebug("Successfully setup adventures audiences.");
         } else {
             this.audiences = null;
+            printDebug("Current resource holder is not a plugin, ignoring adventure audiences.");
         }
 
         int languageCount = this.languageMap.size();
-        logger.info("Successfully loaded " + languageCount + " language(s).");
+        printDebug("Successfully loaded " + languageCount + " language(s).");
+        printDebug("Reload Language Files End");
     }
 
     @Nullable
@@ -386,5 +413,20 @@ public final class LanguageManager {
         }
 
         return player.hasPermission(permission);
+    }
+
+    private boolean isDebugModeDisabled() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        return !configuration.getBoolean("debug-mode", false);
+    }
+
+    private void printDebug(String message) {
+        if(isDebugModeDisabled()) {
+            return;
+        }
+
+        Logger logger = getLogger();
+        logger.info("[Debug] [Language] " + message);
     }
 }
