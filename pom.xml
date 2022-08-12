@@ -13,14 +13,12 @@
     <url>https://www.sirblobman.xyz/</url>
 
     <properties>
-        <!-- This is the minimum Java version -->
         <java.version>1.8</java.version>
-
-        <!-- This is the minimum Spigot version -->
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+        <build.number>unofficial</build.number>
 
         <!-- This is the current version for releases -->
-        <sirblobman.core.version>2.5.0</sirblobman.core.version>
+        <sirblobman.core.version>2.5.1.Dev-${build.number}</sirblobman.core.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
