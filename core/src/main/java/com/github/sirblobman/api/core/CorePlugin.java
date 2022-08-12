@@ -61,16 +61,8 @@ public final class CorePlugin extends ConfigurablePlugin {
             printMultiVersionInformation();
         }
 
-        UpdateManager updateManager = getUpdateManager();
-        updateManager.addResource(this, 83189L);
-        updateManager.checkForUpdates();
-
-        Metrics metrics = new Metrics(this, 16089);
-        metrics.addCustomChart(new SimplePie("selected_language", () -> {
-            LanguageManager languageManager = getLanguageManager();
-            Language defaultLanguage = languageManager.getDefaultLanguage();
-            return (defaultLanguage == null ? "none" : defaultLanguage.getLanguageCode());
-        }));
+        registerUpdateChecker();
+        registerbStats();
     }
 
     @Override
@@ -173,5 +165,22 @@ public final class CorePlugin extends ConfigurablePlugin {
         if (minorVersion >= 12) {
             new ListenerLocaleChange(this).register();
         }
+    }
+
+    private void registerUpdateChecker() {
+        UpdateManager updateManager = getUpdateManager();
+        updateManager.addResource(this, 83189L);
+        updateManager.checkForUpdates();
+    }
+
+    private void registerbStats() {
+        Metrics metrics = new Metrics(this, 16089);
+        metrics.addCustomChart(new SimplePie("selected_language", this::getDefaultLanguageCode));
+    }
+
+    private String getDefaultLanguageCode() {
+        LanguageManager languageManager = getLanguageManager();
+        Language defaultLanguage = languageManager.getDefaultLanguage();
+        return (defaultLanguage == null ? "none" : defaultLanguage.getLanguageCode());
     }
 }
