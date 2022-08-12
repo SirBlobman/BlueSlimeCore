@@ -20,7 +20,7 @@
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
 
         <!-- This is the current version for releases -->
-        <sirblobman.core.version>2.5.0-Dev</sirblobman.core.version>
+        <sirblobman.core.version>2.5.0</sirblobman.core.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
