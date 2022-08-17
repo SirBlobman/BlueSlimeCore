@@ -3,6 +3,8 @@ package com.github.sirblobman.api.language;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -373,11 +375,6 @@ public final class LanguageManager {
         return ComponentHelper.toLegacy(component);
     }
 
-    public void sendMessage(@NotNull CommandSender commandSender, @NotNull String key, @Nullable Replacer replacer) {
-        Component message = getMessage(commandSender, key, replacer);
-        sendMessage(commandSender, message);
-    }
-
     public void sendMessage(@NotNull CommandSender commandSender, @NotNull Component message) {
         if (Component.empty().equals(message)) {
             return;
@@ -392,6 +389,24 @@ public final class LanguageManager {
         audience.sendMessage(message);
     }
 
+    public void sendMessage(@NotNull CommandSender commandSender, @NotNull String key, @Nullable Replacer replacer) {
+        Component message = getMessage(commandSender, key, replacer);
+        sendMessage(commandSender, message);
+    }
+
+    public void broadcastMessage(@NotNull CommandSender commandSender, @NotNull Component message,
+                                 @Nullable String permission) {
+        CommandSender console = Bukkit.getConsoleSender();
+        sendMessage(console, message);
+
+        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
+        for (Player player : onlinePlayerCollection) {
+            if (hasPermission(player, permission)) {
+                sendMessage(player, message);
+            }
+        }
+    }
+
     public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, @Nullable String permission) {
         CommandSender console = Bukkit.getConsoleSender();
         sendMessage(console, key, replacer);
@@ -404,8 +419,7 @@ public final class LanguageManager {
         }
     }
 
-    public void sendActionBar(@NotNull Player player, @NotNull String key, @Nullable Replacer replacer) {
-        Component message = getMessage(player, key, replacer);
+    public void sendActionBar(@NotNull Player player, @NotNull Component message) {
         if (Component.empty().equals(message)) {
             return;
         }
@@ -417,6 +431,24 @@ public final class LanguageManager {
 
         Audience audience = audiences.player(player);
         audience.sendActionBar(message);
+    }
+
+    public void sendActionBar(@NotNull Player player, @NotNull String key, @Nullable Replacer replacer) {
+        Component message = getMessage(player, key, replacer);
+        sendActionBar(player, message);
+    }
+
+    @NotNull
+    public String formatDecimal(@Nullable CommandSender commandSender, @NotNull Number decimal) {
+        Language language = getLanguage(commandSender);
+        if(language == null) {
+            DecimalFormatSymbols usSymbols = DecimalFormatSymbols.getInstance(Locale.US);
+            DecimalFormat decimalFormat = new DecimalFormat("0.00", usSymbols);
+            return decimalFormat.format(decimal);
+        }
+
+        DecimalFormat decimalFormat = language.getDecimalFormat();
+        return decimalFormat.format(decimal);
     }
 
     private boolean hasPermission(@NotNull Player player, @Nullable String permission) {
