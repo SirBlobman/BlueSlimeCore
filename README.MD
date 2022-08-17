@@ -6,7 +6,7 @@ This API is used in many of my other projects, such as CombatLogX or Disco Armor
 Only Spigot and Paper are supported. Other forks may work, but we do not provide support or test with them.
 
 The following Minecraft versions are supported:
-- 1.17.10
+- 1.7.10
 - 1.8.8
 - 1.9.4
 - 1.10.2
@@ -18,7 +18,7 @@ The following Minecraft versions are supported:
 - 1.16.5
 - 1.17.1
 - 1.18.2
-- 1.19
+- 1.19.2
 
 ## Maven Information
 You can use SirBlobmanAPI in your projects.  
