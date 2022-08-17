@@ -31,6 +31,7 @@ public final class HexColorUtility {
                 String hexCode = parseHexColor(hexCodeString);
                 matcher.appendReplacement(buffer, hexCode);
             } catch (NumberFormatException ignored) {
+                // Ignored Exception
             }
         }
 

@@ -26,28 +26,32 @@
     </properties>
 
     <modules>
-        <!-- Regular Modules -->
+        <!-- Utility classes for all modules -->
         <module>utility</module>
+
+        <!-- NMS classes -->
+        <module>nms</module>
+
+        <!-- BossBar Classes -->
+        <module>bossbar</module>
+
+        <!-- Factions Helper -->
+        <module>factions</module>
+
+        <!-- Regular Modules -->
         <module>configuration</module>
         <module>language</module>
         <module>update</module>
-
-        <!-- Version Specific Modules -->
-        <module>factions</module>
-        <module>bossbar</module>
-        <module>nms</module>
-
-        <!-- Modules that require version specific modules -->
         <module>item</module>
         <module>menu</module>
         <module>plugin</module>
         <module>command</module>
 
-        <!-- BungeeCord-Only Modules -->
-        <module>bungeecord</module>
-
         <!-- Core / Plugin Module -->
         <module>core</module>
+
+        <!-- BungeeCord Modules -->
+        <module>bungeecord</module>
     </modules>
 
     <distributionManagement>
@@ -67,10 +71,10 @@
     <!-- Global Repositories -->
     <repositories>
         <!-- SirBlobman Public -->
-        <repository>
-            <id>sirblobman-public</id>
-            <url>https://nexus.sirblobman.xyz/repository/public/</url>
-        </repository>
+<!--        <repository>-->
+<!--            <id>sirblobman-public</id>-->
+<!--            <url>https://nexus.sirblobman.xyz/repository/public/</url>-->
+<!--        </repository>-->
     </repositories>
 
     <!-- Global Dependencies -->
@@ -88,6 +92,30 @@
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
             <version>9.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Adventure Bukkit -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-platform-bukkit</artifactId>
+            <version>4.1.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Adventure Plain Text Serializer -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-plain</artifactId>
+            <version>4.11.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Adventure MiniMessage -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.11.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

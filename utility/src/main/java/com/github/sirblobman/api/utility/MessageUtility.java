@@ -20,13 +20,12 @@ public final class MessageUtility {
             return "";
         }
 
-        int minorVersion = VersionUtility.getMinorVersion();
-        if (minorVersion < 16) {
+        try {
+            Class.forName("net.md_5.bungee.api.ChatColor");
+            return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
+        } catch(ReflectiveOperationException ex) {
             return org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
         }
-
-        String messageReplaced = HexColorUtility.replaceHexColors('&', message);
-        return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', messageReplaced);
     }
 
     /**

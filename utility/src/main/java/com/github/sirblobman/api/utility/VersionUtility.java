@@ -58,7 +58,6 @@ public final class VersionUtility {
         return Integer.parseInt(majorString);
     }
 
-
     /**
      * @return The current minor version of the server as an integer (Example: {@code 16})
      */

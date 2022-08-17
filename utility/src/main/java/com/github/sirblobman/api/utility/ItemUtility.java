@@ -13,7 +13,10 @@ public final class ItemUtility {
      * @return {@code true} if the item is null or has an AIR material, {@code false} otherwise.
      */
     public static boolean isAir(ItemStack item) {
-        if (item == null) return true;
+        if (item == null) {
+            return true;
+        }
+
         Material material = item.getType();
         String materialName = material.name();
 
@@ -33,7 +36,11 @@ public final class ItemUtility {
      * @return {@code false} if the item is null or is missing {@link ItemMeta}, {@code true} otherwise.
      */
     public static boolean hasItemMeta(ItemStack item) {
-        return (item != null && item.hasItemMeta());
+        if (isAir(item)) {
+            return false;
+        }
+
+        return item.hasItemMeta();
     }
 
     /**
@@ -41,12 +48,16 @@ public final class ItemUtility {
      * @return {@code false} if the item is null or is missing a display name, {@code true} otherwise.
      */
     public static boolean hasDisplayName(ItemStack item) {
-        if (hasItemMeta(item)) {
-            ItemMeta meta = item.getItemMeta();
-            return (meta != null && meta.hasDisplayName());
+        if (!hasItemMeta(item)) {
+            return false;
         }
 
-        return false;
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        }
+
+        return itemMeta.hasDisplayName();
     }
 
     /**
@@ -54,12 +65,16 @@ public final class ItemUtility {
      * @return {@code false} if the item is null or is missing a lore, {@code true} otherwise.
      */
     public static boolean hasLore(ItemStack item) {
-        if (hasItemMeta(item)) {
-            ItemMeta meta = item.getItemMeta();
-            return (meta != null && meta.hasLore());
+        if (!hasItemMeta(item)) {
+            return false;
         }
 
-        return false;
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) {
+            return false;
+        }
+
+        return itemMeta.hasLore();
     }
 
     /**
@@ -68,15 +83,23 @@ public final class ItemUtility {
      * @return {@code true} if a line contains the string, {@code false} otherwise.
      */
     public static boolean doesAnyLoreContain(ItemStack item, String query) {
-        if (hasLore(item)) {
-            ItemMeta meta = item.getItemMeta();
-            if (meta == null) return false;
+        if (!hasLore(item)) {
+            return false;
+        }
 
-            List<String> loreList = meta.getLore();
-            if (loreList == null || loreList.isEmpty()) return false;
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        }
 
-            for (String line : loreList) {
-                if (line.contains(query)) return true;
+        List<String> loreList = itemMeta.getLore();
+        if(loreList == null || loreList.isEmpty()) {
+            return false;
+        }
+
+        for (String line : loreList) {
+            if (line.contains(query)) {
+                return true;
             }
         }
 
