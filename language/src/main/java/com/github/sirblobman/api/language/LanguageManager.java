@@ -509,12 +509,16 @@ public final class LanguageManager {
     }
 
     public void sendTitle(@NotNull Player player, @NotNull String path, @Nullable Replacer replacer) {
+        Title title = getTitle(player, path, replacer);
+        sendTitle(player, title);
+    }
+
+    public void sendTitle(@NotNull Player player, @NotNull Title title) {
         BukkitAudiences audiences = getAudiences();
         if (audiences == null) {
             return;
         }
 
-        Title title = getTitle(player, path, replacer);
         Audience audience = audiences.player(player);
         audience.showTitle(title);
     }
