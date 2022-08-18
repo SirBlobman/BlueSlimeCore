@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,8 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.Title.Times;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,6 +97,21 @@ public final class LanguageManager {
     public Logger getLogger() {
         IResourceHolder resourceHolder = getResourceHolder();
         return resourceHolder.getLogger();
+    }
+
+    private boolean isDebugModeDisabled() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        return !configuration.getBoolean("debug-mode", false);
+    }
+
+    private void printDebug(String message) {
+        if(isDebugModeDisabled()) {
+            return;
+        }
+
+        Logger logger = getLogger();
+        logger.info("[Debug] [Language] " + message);
     }
 
     @NotNull
@@ -419,6 +437,14 @@ public final class LanguageManager {
         }
     }
 
+    private boolean hasPermission(@NotNull Player player, @Nullable String permission) {
+        if (permission == null || permission.isEmpty()) {
+            return true;
+        }
+
+        return player.hasPermission(permission);
+    }
+
     public void sendActionBar(@NotNull Player player, @NotNull Component message) {
         if (Component.empty().equals(message)) {
             return;
@@ -451,26 +477,50 @@ public final class LanguageManager {
         return decimalFormat.format(decimal);
     }
 
-    private boolean hasPermission(@NotNull Player player, @Nullable String permission) {
-        if (permission == null || permission.isEmpty()) {
-            return true;
+    @NotNull
+    public Title getTitle(@Nullable CommandSender commandSender, @NotNull String path, @Nullable Replacer replacer) {
+        String titleKey = (path + ".title");
+        String subtitleKey = (path + ".subtitle");
+        Component title = getMessage(commandSender, titleKey, replacer);
+        Component subtitle = getMessage(commandSender, subtitleKey, replacer);
+
+        Times times;
+        try {
+            String fadeInString = getMessageString(commandSender, path + ".fadein", replacer);
+            String stayString = getMessageString(commandSender, path + ".fadein", replacer);
+            String fadeOutString = getMessageString(commandSender, path + ".fadein", replacer);
+
+            int fadeInTicks = Integer.parseInt(fadeInString);
+            int stayTicks = Integer.parseInt(stayString);
+            int fadeOutTicks = Integer.parseInt(fadeOutString);
+
+            Duration fadeIn = ofTicks(fadeInTicks);
+            Duration stay = ofTicks(stayTicks);
+            Duration fadeOut = ofTicks(fadeOutTicks);
+            times = Times.times(fadeIn, stay, fadeOut);
+        } catch(NumberFormatException ex) {
+            Duration defaultFadeIn = ofTicks(10);
+            Duration defaultStay = ofTicks(70);
+            Duration defaultFadeOut = ofTicks(20);
+            times = Times.times(defaultFadeIn, defaultStay, defaultFadeOut);
         }
 
-        return player.hasPermission(permission);
+        return Title.title(title, subtitle, times);
     }
 
-    private boolean isDebugModeDisabled() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        return !configuration.getBoolean("debug-mode", false);
-    }
-
-    private void printDebug(String message) {
-        if(isDebugModeDisabled()) {
+    public void sendTitle(@NotNull Player player, @NotNull String path, @Nullable Replacer replacer) {
+        BukkitAudiences audiences = getAudiences();
+        if (audiences == null) {
             return;
         }
 
-        Logger logger = getLogger();
-        logger.info("[Debug] [Language] " + message);
+        Title title = getTitle(player, path, replacer);
+        Audience audience = audiences.player(player);
+        audience.showTitle(title);
+    }
+
+    private Duration ofTicks(int ticks) {
+        long millis = (ticks * 50L);
+        return Duration.ofMillis(millis);
     }
 }
