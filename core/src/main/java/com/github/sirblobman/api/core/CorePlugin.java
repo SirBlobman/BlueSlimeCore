@@ -116,9 +116,6 @@ public final class CorePlugin extends ConfigurablePlugin {
 
         printDebug("Successfully linked with the following handlers:");
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
-
-        printDebug("Boss Bar Wrapper:");
-        printClassNames(bossBarHandler.getWrapperClass());
     }
 
     private void printClassNames(Object... objects) {

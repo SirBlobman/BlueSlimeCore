@@ -46,7 +46,8 @@ public final class MultiVersionHandler {
             return constructor.newInstance(plugin);
         } catch (ReflectiveOperationException ex) {
             Logger logger = plugin.getLogger();
-            logger.warning("Could not find '" + classType + "' for version '" + nmsVersion + "'. Searching for fallback handler...");
+            logger.warning("Could not find '" + classType + "' for version '" + nmsVersion
+                    + "'. Searching for fallback handler...");
             String className = ("com.github.sirblobman.api.nms." + classType + "_Fallback");
 
             try {
@@ -80,25 +81,37 @@ public final class MultiVersionHandler {
     }
 
     public EntityHandler getEntityHandler() {
-        if (this.entityHandler != null) return this.entityHandler;
+        if (this.entityHandler != null) {
+            return this.entityHandler;
+        }
+
         this.entityHandler = getHandler(EntityHandler.class, "EntityHandler");
         return getEntityHandler();
     }
 
     public PlayerHandler getPlayerHandler() {
-        if (this.playerHandler != null) return this.playerHandler;
+        if (this.playerHandler != null) {
+            return this.playerHandler;
+        }
+
         this.playerHandler = getHandler(PlayerHandler.class, "PlayerHandler");
         return getPlayerHandler();
     }
 
     public HeadHandler getHeadHandler() {
-        if (this.headHandler != null) return this.headHandler;
+        if (this.headHandler != null) {
+            return this.headHandler;
+        }
+
         this.headHandler = getHandler(HeadHandler.class, "HeadHandler");
         return getHeadHandler();
     }
 
     public ItemHandler getItemHandler() {
-        if (this.itemHandler != null) return this.itemHandler;
+        if (this.itemHandler != null) {
+            return this.itemHandler;
+        }
+
         this.itemHandler = getHandler(ItemHandler.class, "ItemHandler");
         return getItemHandler();
     }
