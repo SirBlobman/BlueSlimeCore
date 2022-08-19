@@ -1,4 +1,7 @@
 # BlueSlimeCore
+![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.sirblobman.xyz%2Fjob%2FSirBlobman%2Fjob%2FBlueSlimeCore%2F&style=plastic)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=version&metadataUrl=https%3A%2F%2Fnexus.sirblobman.xyz%2Frepository%2Fpublic%2Fcom%2Fgithub%2Fsirblobman%2Fapi%2Fcore%2Fmaven-metadata.xml&style=plastic)
+
 
 BlueSlimeCore is a library plugin that helps with Minecraft NMS and other features to support multiple Spigot versions.
 This library is used in many of my projects, such as CombatLogX or Disco Armor.
@@ -22,9 +25,8 @@ The following Minecraft versions are currently supported:
 - 1.19.2
 
 ## Dependency Information
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=version&metadataUrl=https%3A%2F%2Fnexus.sirblobman.xyz%2Frepository%2Fpublic%2Fcom%2Fgithub%2Fsirblobman%2Fapi%2Fcore%2Fmaven-metadata.xml&style=plastic)
 
-You can use my library in your projects as well.
+BlueSlimeCore can also be used as a library in your own plugins.
 Just make sure to install the BlueSlimeCore jar on your server!
 
 [Wiki: Basic Usage](https://github.com/SirBlobman/BlueSlimeCore/wiki/Basic-Usage)
