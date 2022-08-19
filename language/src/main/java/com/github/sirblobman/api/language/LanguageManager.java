@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -27,8 +28,10 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
+import com.github.sirblobman.api.language.sound.SoundInfo;
 import com.github.sirblobman.api.utility.Validate;
 
+import com.cryptomorin.xseries.XSound;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -526,5 +529,53 @@ public final class LanguageManager {
     private Duration ofTicks(int ticks) {
         long millis = (ticks * 50L);
         return Duration.ofMillis(millis);
+    }
+
+    @Nullable
+    public SoundInfo getSound(@Nullable CommandSender commandSender, @NotNull String path) {
+        String nameKey = (path + ".name");
+        String volumeKey = (path + ".volume");
+        String pitchKey = (path + ".pitch");
+
+        String soundName = getMessageString(commandSender, nameKey, null);
+        String volumeString = getMessageString(commandSender, volumeKey, null);
+        String pitchString = getMessageString(commandSender, pitchKey, null);
+
+        try {
+            Optional<XSound> optionalSound = XSound.matchXSound(soundName);
+            if(!optionalSound.isPresent()) {
+                throw new IllegalArgumentException("Invalid sound name '" + soundName + "'.");
+            }
+
+            XSound sound = optionalSound.get();
+            float volume = Float.parseFloat(volumeString);
+            float pitch = Float.parseFloat(pitchString);
+
+            SoundInfo soundInfo = new SoundInfo(sound);
+            soundInfo.setVolume(volume);
+            soundInfo.setPitch(pitch);
+            return soundInfo;
+        } catch(IllegalArgumentException ex) {
+            if(!isDebugModeDisabled()) {
+                printDebug("Invalid language sound at path '" + path + "'.");
+                ex.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    public void sendSound(@NotNull Player player, @NotNull SoundInfo soundInfo) {
+        XSound sound = soundInfo.getSound();
+        float volume = soundInfo.getVolume();
+        float pitch = soundInfo.getPitch();
+        sound.play(player, volume, pitch);
+    }
+
+    public void sendSound(@NotNull Player player, @NotNull String path) {
+        SoundInfo soundInfo = getSound(player, path);
+        if(soundInfo != null) {
+            sendSound(player, soundInfo);
+        }
     }
 }
