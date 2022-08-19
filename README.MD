@@ -21,9 +21,9 @@ The following Minecraft versions are currently supported:
 - 1.18.2
 - 1.19.2
 
-## Maven Information
+## Dependency Information
 
-You can use SirBlobmanAPI in your projects.  
+You can use my library in your projects as well.
 Just make sure to install the BlueSlimeCore jar on your server!
 
 ### Repositories
@@ -53,7 +53,17 @@ Just make sure to install the BlueSlimeCore jar on your server!
 ```
 
 ### Bukkit plugin.yml
+
 ```yml
 depend:
   - "BlueSlimeCore"
+```
+
+## Compilation Instructions
+
+If you wish to compile the plugin yourself, you can run the following commands:
+```shell
+git clone "https://github.com/SirBlobman/BlueSlimeCore.git"
+cd BlueSlimeCore
+mvn package
 ```
