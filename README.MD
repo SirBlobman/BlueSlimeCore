@@ -22,42 +22,12 @@ The following Minecraft versions are currently supported:
 - 1.19.2
 
 ## Dependency Information
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=version&metadataUrl=https%3A%2F%2Fnexus.sirblobman.xyz%2Frepository%2Fpublic%2Fcom%2Fgithub%2Fsirblobman%2Fapi%2Fcore%2Fmaven-metadata.xml&style=plastic)
 
 You can use my library in your projects as well.
 Just make sure to install the BlueSlimeCore jar on your server!
 
-### Repositories
-
-```xml
-<repositories>
-    <!-- SirBlobman Public Repository -->
-    <repository>
-        <id>sirblobman-public</id>
-        <url>https://nexus.sirblobman.xyz/repository/public/</url>
-    </repository>
-</repositories>
-```
-
-### Dependencies
-
-```xml
-<dependencies>
-    <!-- BlueSlimeCore Plugin -->
-    <dependency>
-        <groupId>com.github.sirblobman.api</groupId>
-        <artifactId>core</artifactId>
-        <version>2.3-SNAPSHOT</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
-
-### Bukkit plugin.yml
-
-```yml
-depend:
-  - "BlueSlimeCore"
-```
+[Wiki: Basic Usage](https://github.com/SirBlobman/BlueSlimeCore/wiki/Basic-Usage)
 
 ## Compilation Instructions
 
