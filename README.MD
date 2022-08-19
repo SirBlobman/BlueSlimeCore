@@ -42,7 +42,7 @@ Just make sure to install the BlueSlimeCore jar on your server!
 
 ```xml
 <dependencies>
-    <!-- SirBlobmanCore Plugin -->
+    <!-- BlueSlimeCore Plugin -->
     <dependency>
         <groupId>com.github.sirblobman.api</groupId>
         <artifactId>core</artifactId>
@@ -67,3 +67,8 @@ git clone "https://github.com/SirBlobman/BlueSlimeCore.git"
 cd BlueSlimeCore
 mvn package
 ```
+
+## Further Instructions
+If you want to review API examples and other information,
+please visit the [wiki](https://github.com/SirBlobman/BlueSlimeCore/wiki/) tab for this project.
+You can also ask questions on my [Discord](https://discord.gg/XMq2agT) or create an issue on this page.
