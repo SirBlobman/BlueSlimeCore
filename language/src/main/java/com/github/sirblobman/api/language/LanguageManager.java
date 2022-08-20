@@ -502,6 +502,11 @@ public final class LanguageManager {
             Duration fadeOut = ofTicks(fadeOutTicks);
             times = Times.times(fadeIn, stay, fadeOut);
         } catch(NumberFormatException ex) {
+            if(!isDebugModeDisabled()) {
+                printDebug("Invalid language title timings at path '" + path + "'.");
+                ex.printStackTrace();
+            }
+
             Duration defaultFadeIn = ofTicks(10);
             Duration defaultStay = ofTicks(70);
             Duration defaultFadeOut = ofTicks(20);
