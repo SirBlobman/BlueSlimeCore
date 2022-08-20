@@ -489,9 +489,9 @@ public final class LanguageManager {
 
         Times times;
         try {
-            String fadeInString = getMessageString(commandSender, path + ".fadein", replacer);
-            String stayString = getMessageString(commandSender, path + ".fadein", replacer);
-            String fadeOutString = getMessageString(commandSender, path + ".fadein", replacer);
+            String fadeInString = getMessageString(commandSender, path + ".fade-in", replacer);
+            String stayString = getMessageString(commandSender, path + ".stay", replacer);
+            String fadeOutString = getMessageString(commandSender, path + ".fade-out", replacer);
 
             int fadeInTicks = Integer.parseInt(fadeInString);
             int stayTicks = Integer.parseInt(stayString);
@@ -533,13 +533,17 @@ public final class LanguageManager {
 
     @Nullable
     public SoundInfo getSound(@Nullable CommandSender commandSender, @NotNull String path) {
+        printDebug("Loading sound for sender '" + commandSender + "' and path '" + path + "'");
+
         String nameKey = (path + ".name");
         String volumeKey = (path + ".volume");
         String pitchKey = (path + ".pitch");
+        printDebug("Key: Name: " + nameKey + ", Volume: " + volumeKey + ", Pitch: " + pitchKey);
 
         String soundName = getMessageString(commandSender, nameKey, null);
         String volumeString = getMessageString(commandSender, volumeKey, null);
         String pitchString = getMessageString(commandSender, pitchKey, null);
+        printDebug("Value: Name: " + soundName + ", Volume: " + volumeString + ", Pitch: " + pitchString);
 
         try {
             Optional<XSound> optionalSound = XSound.matchXSound(soundName);
@@ -550,6 +554,7 @@ public final class LanguageManager {
             XSound sound = optionalSound.get();
             float volume = Float.parseFloat(volumeString);
             float pitch = Float.parseFloat(pitchString);
+            printDebug("Converted: Name: " + sound + ", Volume: " + volume + ", Pitch: " + pitch);
 
             SoundInfo soundInfo = new SoundInfo(sound);
             soundInfo.setVolume(volume);
