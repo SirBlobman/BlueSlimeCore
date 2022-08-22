@@ -109,7 +109,7 @@ public final class LanguageManager {
     }
 
     private void printDebug(String message) {
-        if(isDebugModeDisabled()) {
+        if (isDebugModeDisabled()) {
             return;
         }
 
@@ -470,7 +470,7 @@ public final class LanguageManager {
     @NotNull
     public String formatDecimal(@Nullable CommandSender commandSender, @NotNull Number decimal) {
         Language language = getLanguage(commandSender);
-        if(language == null) {
+        if (language == null) {
             DecimalFormatSymbols usSymbols = DecimalFormatSymbols.getInstance(Locale.US);
             DecimalFormat decimalFormat = new DecimalFormat("0.00", usSymbols);
             return decimalFormat.format(decimal);
@@ -501,8 +501,8 @@ public final class LanguageManager {
             Duration stay = ofTicks(stayTicks);
             Duration fadeOut = ofTicks(fadeOutTicks);
             times = Times.times(fadeIn, stay, fadeOut);
-        } catch(NumberFormatException ex) {
-            if(!isDebugModeDisabled()) {
+        } catch (NumberFormatException ex) {
+            if (!isDebugModeDisabled()) {
                 printDebug("Invalid language title timings at path '" + path + "'.");
                 ex.printStackTrace();
             }
@@ -552,7 +552,7 @@ public final class LanguageManager {
 
         try {
             Optional<XSound> optionalSound = XSound.matchXSound(soundName);
-            if(!optionalSound.isPresent()) {
+            if (!optionalSound.isPresent()) {
                 throw new IllegalArgumentException("Invalid sound name '" + soundName + "'.");
             }
 
@@ -565,8 +565,8 @@ public final class LanguageManager {
             soundInfo.setVolume(volume);
             soundInfo.setPitch(pitch);
             return soundInfo;
-        } catch(IllegalArgumentException ex) {
-            if(!isDebugModeDisabled()) {
+        } catch (IllegalArgumentException ex) {
+            if (!isDebugModeDisabled()) {
                 printDebug("Invalid language sound at path '" + path + "'.");
                 ex.printStackTrace();
             }
@@ -584,7 +584,7 @@ public final class LanguageManager {
 
     public void sendSound(@NotNull Player player, @NotNull String path) {
         SoundInfo soundInfo = getSound(player, path);
-        if(soundInfo != null) {
+        if (soundInfo != null) {
             sendSound(player, soundInfo);
         }
     }

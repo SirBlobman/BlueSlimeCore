@@ -16,6 +16,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockLocation {
+    private final UUID worldId;
+    private final int x, y, z;
+
+    public BlockLocation(UUID worldId, int x, int y, int z) {
+        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     @NotNull
     public static BlockLocation from(World world, int x, int y, int z) {
         Validate.notNull(world, "world must not be null!");
@@ -40,7 +50,7 @@ public class BlockLocation {
         Validate.notNull(location, "location must not be null!");
 
         World world = location.getWorld();
-        if(world == null) {
+        if (world == null) {
             return null;
         }
 
@@ -54,16 +64,6 @@ public class BlockLocation {
 
         Location location = entity.getLocation();
         return from(location);
-    }
-
-    private final UUID worldId;
-    private final int x, y, z;
-
-    public BlockLocation(UUID worldId, int x, int y, int z) {
-        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
-        this.x = x;
-        this.y = y;
-        this.z = z;
     }
 
     @NotNull
@@ -105,7 +105,7 @@ public class BlockLocation {
     @Nullable
     public Block asBlock() {
         World world = getWorld();
-        if(world == null) {
+        if (world == null) {
             return null;
         }
 

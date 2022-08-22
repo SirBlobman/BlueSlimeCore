@@ -106,7 +106,7 @@ public abstract class BaseMenu implements IMenu {
 
         String displayNameString = section.getString("display-name");
         if (displayNameString != null) {
-            if(itemHandler != null && languageManager != null) {
+            if (itemHandler != null && languageManager != null) {
                 MiniMessage miniMessage = languageManager.getMiniMessage();
                 Component displayName = miniMessage.deserialize(displayNameString);
 
@@ -122,7 +122,7 @@ public abstract class BaseMenu implements IMenu {
 
         List<String> loreStringList = section.getStringList("lore");
         if (!loreStringList.isEmpty()) {
-            if(itemHandler != null && languageManager != null) {
+            if (itemHandler != null && languageManager != null) {
                 MiniMessage miniMessage = languageManager.getMiniMessage();
                 List<Component> lore = new ArrayList<>();
 
@@ -157,7 +157,7 @@ public abstract class BaseMenu implements IMenu {
         }
 
         String textureUrl = section.getString("texture-url");
-        if(textureUrl != null) {
+        if (textureUrl != null) {
             SkullBuilder skullBuilder = new SkullBuilder(headHandler);
             return skullBuilder.withTextureUrl(textureUrl);
         }

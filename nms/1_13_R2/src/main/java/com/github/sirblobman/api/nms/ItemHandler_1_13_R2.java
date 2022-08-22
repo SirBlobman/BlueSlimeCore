@@ -111,7 +111,7 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
         }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        if(!nmsItem.hasTag()) {
+        if (!nmsItem.hasTag()) {
             return defaultValue;
         }
 
@@ -136,7 +136,7 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
         }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        if(!nmsItem.hasTag()) {
+        if (!nmsItem.hasTag()) {
             return item;
         }
 

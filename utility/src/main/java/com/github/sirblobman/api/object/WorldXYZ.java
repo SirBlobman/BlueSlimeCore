@@ -21,6 +21,16 @@ import org.jetbrains.annotations.Nullable;
  */
 @Deprecated
 public final class WorldXYZ {
+    private final UUID worldId;
+    private final int x, y, z;
+
+    private WorldXYZ(UUID worldId, int x, int y, int z) {
+        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public static WorldXYZ from(World world, int x, int y, int z) {
         Validate.notNull(world, "world must not be null!");
         UUID worldId = world.getUID();
@@ -46,16 +56,6 @@ public final class WorldXYZ {
         Validate.notNull(entity, "entity must not be null!");
         Location location = entity.getLocation();
         return from(location);
-    }
-
-    private final UUID worldId;
-    private final int x, y, z;
-
-    private WorldXYZ(UUID worldId, int x, int y, int z) {
-        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
-        this.x = x;
-        this.y = y;
-        this.z = z;
     }
 
     @NotNull

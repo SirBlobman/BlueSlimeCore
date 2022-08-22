@@ -21,7 +21,7 @@ public final class ComponentHelper {
 
     public static GsonComponentSerializer getGsonSerializer() {
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 16) {
+        if (minorVersion < 16) {
             return GsonComponentSerializer.colorDownsamplingGson();
         } else {
             return GsonComponentSerializer.gson();

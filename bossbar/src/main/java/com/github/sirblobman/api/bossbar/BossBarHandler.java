@@ -67,7 +67,7 @@ public final class BossBarHandler {
     public BossBar getBossBar(String key) {
         Key adventureKey = getKey(key);
         BossBar bossBar = this.bossBarMap.get(adventureKey);
-        if(bossBar != null) {
+        if (bossBar != null) {
             return bossBar;
         }
 
@@ -80,7 +80,7 @@ public final class BossBarHandler {
     public void removeBossBar(String key) {
         Key adventureKey = getKey(key);
         BossBar bossBar = this.bossBarMap.get(adventureKey);
-        if(bossBar == null) {
+        if (bossBar == null) {
             return;
         }
 

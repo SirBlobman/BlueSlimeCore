@@ -48,7 +48,7 @@ public final class CustomNbtContainer_1_7_R4 implements CustomNbtContainer {
         Validate.notNull(type, "type must not be null!");
 
         NBTBase value = this.customDataTags.get(key);
-        if(value == null) {
+        if (value == null) {
             return false;
         }
 
@@ -62,7 +62,7 @@ public final class CustomNbtContainer_1_7_R4 implements CustomNbtContainer {
         Validate.notNull(type, "type must not be null!");
 
         NBTBase value = this.customDataTags.get(key);
-        if(value == null) {
+        if (value == null) {
             return null;
         }
 

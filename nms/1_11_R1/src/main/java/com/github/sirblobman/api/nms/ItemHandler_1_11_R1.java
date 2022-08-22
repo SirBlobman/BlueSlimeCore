@@ -115,7 +115,7 @@ public class ItemHandler_1_11_R1 extends ItemHandler {
         }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        if(!nmsItem.hasTag()) {
+        if (!nmsItem.hasTag()) {
             return defaultValue;
         }
 
@@ -140,7 +140,7 @@ public class ItemHandler_1_11_R1 extends ItemHandler {
         }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        if(!nmsItem.hasTag()) {
+        if (!nmsItem.hasTag()) {
             return item;
         }
 
@@ -214,7 +214,7 @@ public class ItemHandler_1_11_R1 extends ItemHandler {
     public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
                                                          net.kyori.adventure.text.Component displayName) {
         ItemMeta itemMeta = item.getItemMeta();
-        if(itemMeta == null) {
+        if (itemMeta == null) {
             return item;
         }
 
@@ -229,7 +229,7 @@ public class ItemHandler_1_11_R1 extends ItemHandler {
     public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
                                                   List<Component> lore) {
         ItemMeta itemMeta = item.getItemMeta();
-        if(itemMeta == null) {
+        if (itemMeta == null) {
             return item;
         }
 

@@ -15,6 +15,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class EntityLocation {
+    private final UUID worldId;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final double yaw;
+    private final double pitch;
+    public EntityLocation(UUID worldId, double x, double y, double z, double yaw, double pitch) {
+        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.yaw = yaw;
+        this.pitch = pitch;
+    }
+
     @NotNull
     public static EntityLocation from(World world, double x, double y, double z, double yaw, double pitch) {
         Validate.notNull(world, "world must not be null!");
@@ -27,7 +42,7 @@ public final class EntityLocation {
         Validate.notNull(location, "location must not be null!");
 
         World world = location.getWorld();
-        if(world == null) {
+        if (world == null) {
             return null;
         }
 
@@ -44,22 +59,6 @@ public final class EntityLocation {
         Validate.notNull(entity, "entity must not be null!");
         Location location = entity.getLocation();
         return from(location);
-    }
-
-    private final UUID worldId;
-    private final double x;
-    private final double y;
-    private final double z;
-    private final double yaw;
-    private final double pitch;
-
-    public EntityLocation(UUID worldId, double x, double y, double z, double yaw, double pitch) {
-        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.yaw = yaw;
-        this.pitch = pitch;
     }
 
     @NotNull
@@ -96,7 +95,7 @@ public final class EntityLocation {
     @Nullable
     public Location asLocation() {
         World world = getWorld();
-        if(world == null) {
+        if (world == null) {
             return null;
         }
 
@@ -132,7 +131,7 @@ public final class EntityLocation {
         double otherZ = other.getZ();
         double otherYaw = other.getYaw();
         double otherPitch = other.getPitch();
-        
+
         boolean checkId = Objects.equals(thisWorldId, otherWorldId);
         boolean checkCoordinates = (thisX == otherX && thisY == otherY && thisZ == otherZ);
         boolean checkFacing = (thisYaw == otherYaw && thisPitch == otherPitch);

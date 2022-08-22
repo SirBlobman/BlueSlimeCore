@@ -18,7 +18,8 @@ import com.github.sirblobman.api.utility.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.github.sirblobman.api.nbt.modern.PersistentDataConverter.*;
+import static com.github.sirblobman.api.nbt.modern.PersistentDataConverter.convertContext;
+import static com.github.sirblobman.api.nbt.modern.PersistentDataConverter.convertType;
 
 public final class CustomNbtPersistentDataContainerWrapper implements CustomNbtContainer {
     private final Plugin plugin;
@@ -78,7 +79,7 @@ public final class CustomNbtPersistentDataContainerWrapper implements CustomNbtC
             Method method_getKeys = containerClass.getMethod("getKeys");
             Set<NamespacedKey> realKeys = (Set<NamespacedKey>) method_getKeys.invoke(container);
             return realKeys.parallelStream().map(NamespacedKey::getKey).collect(Collectors.toSet());
-        } catch(ReflectiveOperationException | ClassCastException ignored) {
+        } catch (ReflectiveOperationException | ClassCastException ignored) {
             return Collections.emptySet();
         }
     }

@@ -10,7 +10,7 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 public final class ComponentBungeeConverter {
     public static BungeeComponentSerializer getSerializer() {
         int minorVersion = VersionUtility.getMinorVersion();
-        if(minorVersion < 16) {
+        if (minorVersion < 16) {
             return BungeeComponentSerializer.legacy();
         }
 

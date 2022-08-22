@@ -70,7 +70,7 @@ public final class ItemUtility {
         }
 
         ItemMeta itemMeta = item.getItemMeta();
-        if(itemMeta == null) {
+        if (itemMeta == null) {
             return false;
         }
 
@@ -93,7 +93,7 @@ public final class ItemUtility {
         }
 
         List<String> loreList = itemMeta.getLore();
-        if(loreList == null || loreList.isEmpty()) {
+        if (loreList == null || loreList.isEmpty()) {
             return false;
         }
 

@@ -80,7 +80,7 @@ public final class CustomNbtTypeRegistry_1_7_R4 {
     private NBTTagString longArrayToNBT(long[] longArray) {
         StringBuilder builder = new StringBuilder();
         for (long part : longArray) {
-            if(builder.length() > 0) {
+            if (builder.length() > 0) {
                 builder.append(';');
             }
 
@@ -104,7 +104,7 @@ public final class CustomNbtTypeRegistry_1_7_R4 {
             }
 
             return longArray;
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             return new long[0];
         }
     }

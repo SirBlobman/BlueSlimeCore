@@ -23,7 +23,7 @@ public final class MessageUtility {
         try {
             Class.forName("net.md_5.bungee.api.ChatColor");
             return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
-        } catch(ReflectiveOperationException ex) {
+        } catch (ReflectiveOperationException ex) {
             return org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
         }
     }

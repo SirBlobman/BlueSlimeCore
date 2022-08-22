@@ -1,14 +1,9 @@
 package com.github.sirblobman.api.menu;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,20 +19,11 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.github.sirblobman.api.item.ComponentItemBuilder;
-import com.github.sirblobman.api.item.ItemBuilder;
-import com.github.sirblobman.api.item.SkullBuilder;
-import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.menu.button.AbstractButton;
 import com.github.sirblobman.api.menu.button.BaseMenu;
-import com.github.sirblobman.api.nms.HeadHandler;
-import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 
-import com.cryptomorin.xseries.XMaterial;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractMenu extends BaseMenu {
