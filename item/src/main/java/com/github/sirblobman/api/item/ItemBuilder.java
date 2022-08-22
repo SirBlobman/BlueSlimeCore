@@ -15,6 +15,7 @@ import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
 
 import com.cryptomorin.xseries.XMaterial;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemBuilder {
@@ -108,7 +109,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withName(String name) {
+    public ItemBuilder withName(@Nullable String name) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -118,7 +119,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withLore(List<String> loreList) {
+    public ItemBuilder withLore(@Nullable List<String> loreList) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -134,7 +135,7 @@ public class ItemBuilder {
         return withLore(loreList);
     }
 
-    public ItemBuilder appendLore(String line) {
+    public ItemBuilder appendLore(@NotNull String line) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null || !itemMeta.hasLore()) {
             return withLore(line);
@@ -148,7 +149,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withEnchantment(Enchantment enchantment, int level) {
+    public ItemBuilder withEnchantment(@NotNull Enchantment enchantment, int level) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -158,7 +159,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withFlags(ItemFlag... flagArray) {
+    public ItemBuilder withFlags(@NotNull ItemFlag... flagArray) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;

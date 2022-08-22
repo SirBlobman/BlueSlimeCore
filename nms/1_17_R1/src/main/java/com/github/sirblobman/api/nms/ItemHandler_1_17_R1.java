@@ -3,6 +3,7 @@ package com.github.sirblobman.api.nms;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,15 +15,19 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.util.CraftChatMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.utility.ItemUtility;
 
 public class ItemHandler_1_17_R1 extends ItemHandler {
@@ -177,5 +182,49 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
 
         byte[] encode = outputStream.toByteArray();
         return Base64.getEncoder().encodeToString(encode);
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
+                                                         net.kyori.adventure.text.Component displayName) {
+        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        Component nmsComponent = getNmsComponent(displayName);
+        nmsItem.setHoverName(nmsComponent);
+        return CraftItemStack.asBukkitCopy(nmsItem);
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
+                                                  List<net.kyori.adventure.text.Component> lore) {
+        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        CompoundTag nmsTag = nmsItem.getOrCreateTag();
+        CompoundTag displayTag = nmsTag.getCompound("display");
+
+        ListTag jsonList = getJsonList(lore);
+        displayTag.put("Lore", jsonList);
+        nmsTag.put("display", displayTag);
+
+        nmsItem.setTag(nmsTag);
+        return CraftItemStack.asBukkitCopy(nmsItem);
+    }
+
+    private String getJsonComponent(net.kyori.adventure.text.Component adventure) {
+        return ComponentHelper.toGson(adventure);
+    }
+
+    private Component getNmsComponent(net.kyori.adventure.text.Component adventure) {
+        String json = ComponentHelper.toGson(adventure);
+        return Serializer.fromJson(json);
+    }
+
+    private ListTag getJsonList(List<net.kyori.adventure.text.Component> adventureList) {
+        ListTag jsonList = new ListTag();
+        for (net.kyori.adventure.text.Component adventure : adventureList) {
+            String json = getJsonComponent(adventure);
+            StringTag stringTag = StringTag.valueOf(json);
+            jsonList.add(stringTag);
+        }
+
+        return jsonList;
     }
 }

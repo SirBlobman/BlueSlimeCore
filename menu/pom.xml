@@ -32,6 +32,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- SirBlobmanAPI Language -->
+        <dependency>
+            <groupId>com.github.sirblobman.api</groupId>
+            <artifactId>language</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- SirBlobmanAPI Item -->
         <dependency>
             <groupId>com.github.sirblobman.api</groupId>

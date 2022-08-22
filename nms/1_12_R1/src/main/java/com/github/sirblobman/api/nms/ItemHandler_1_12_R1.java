@@ -2,7 +2,9 @@ package com.github.sirblobman.api.nms;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +21,10 @@ import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 
+import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.utility.ItemUtility;
+
+import net.kyori.adventure.text.Component;
 
 public class ItemHandler_1_12_R1 extends ItemHandler {
     public ItemHandler_1_12_R1(JavaPlugin plugin) {
@@ -28,10 +33,14 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public String getLocalizedName(org.bukkit.inventory.ItemStack item) {
-        if (item == null) return "Air";
+        if (item == null) {
+            return "Air";
+        }
 
-        ItemMeta meta = item.getItemMeta();
-        if (meta.hasDisplayName()) return meta.getDisplayName();
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta != null && itemMeta.hasDisplayName()) {
+            return itemMeta.getDisplayName();
+        }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getName();
@@ -39,12 +48,18 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public String getKeyString(org.bukkit.inventory.ItemStack item) {
-        if (item == null) return "minecraft:air";
+        if (item == null) {
+            return "minecraft:air";
+        }
+
         ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
         Item nmsItem = nmsItemStack.getItem();
 
         MinecraftKey minecraftKey = Item.REGISTRY.b(nmsItem);
-        if (minecraftKey == null) return "minecraft:air";
+        if (minecraftKey == null) {
+            return "minecraft:air";
+        }
+
         return minecraftKey.toString();
     }
 
@@ -52,7 +67,6 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
     public String toNBT(org.bukkit.inventory.ItemStack item) {
         NBTTagCompound nbtData = new NBTTagCompound();
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-
         nmsItem.save(nbtData);
         return nbtData.toString();
     }
@@ -73,11 +87,15 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key, String value) {
-        if (item == null || key == null || key.isEmpty() || value == null) return item;
+        if (item == null || key == null || key.isEmpty() || value == null) {
+            return item;
+        }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
-        if (nbtData == null) nbtData = new NBTTagCompound();
+        if (nbtData == null) {
+            nbtData = new NBTTagCompound();
+        }
 
         JavaPlugin plugin = getPlugin();
         String pluginName = plugin.getName();
@@ -92,11 +110,20 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public String getCustomNBT(org.bukkit.inventory.ItemStack item, String key, String defaultValue) {
-        if (item == null || key == null || key.isEmpty()) return defaultValue;
+        if (item == null || key == null || key.isEmpty()) {
+            return defaultValue;
+        }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
-        if (nbtData == null) nbtData = new NBTTagCompound();
+        if(!nmsItem.hasTag()) {
+            return defaultValue;
+        }
+
+
+        NBTTagCompound nbtData = nmsItem.getTag();
+        if (nbtData == null) {
+            return defaultValue;
+        }
 
         JavaPlugin plugin = getPlugin();
         String pluginName = plugin.getName();
@@ -108,11 +135,20 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key) {
-        if (item == null || key == null || key.isEmpty()) return item;
+        if (item == null || key == null || key.isEmpty()) {
+            return item;
+        }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
-        if (nbtData == null) nbtData = new NBTTagCompound();
+        if(!nmsItem.hasTag()) {
+            return item;
+        }
+
+
+        NBTTagCompound nbtData = nmsItem.getTag();
+        if (nbtData == null) {
+            return item;
+        }
 
         JavaPlugin plugin = getPlugin();
         String pluginName = plugin.getName();
@@ -120,8 +156,11 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
         NBTTagCompound customData = nbtData.getCompound(pluginName);
         customData.remove(key);
 
-        if (customData.isEmpty()) nbtData.remove(pluginName);
-        else nbtData.set(pluginName, customData);
+        if (customData.isEmpty()) {
+            nbtData.remove(pluginName);
+        } else {
+            nbtData.set(pluginName, customData);
+        }
 
         nmsItem.setTag(nbtData);
         return CraftItemStack.asBukkitCopy(nmsItem);
@@ -129,7 +168,9 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public org.bukkit.inventory.ItemStack fromBase64String(String string) {
-        if (string == null || string.isEmpty()) return null;
+        if (string == null || string.isEmpty()) {
+            return null;
+        }
 
         NBTTagCompound nbtTagCompound;
         byte[] decode = Base64.getDecoder().decode(string);
@@ -149,7 +190,9 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
     @Override
     public String toBase64String(org.bukkit.inventory.ItemStack item) {
-        if (ItemUtility.isAir(item)) return null;
+        if (ItemUtility.isAir(item)) {
+            return null;
+        }
 
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -165,5 +208,39 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
 
         byte[] encode = byteArrayOutputStream.toByteArray();
         return Base64.getEncoder().encodeToString(encode);
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
+                                                         net.kyori.adventure.text.Component displayName) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) {
+            return item;
+        }
+
+        String legacy = ComponentHelper.toLegacy(displayName);
+        itemMeta.setDisplayName(legacy);
+
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
+                                                  List<Component> lore) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) {
+            return item;
+        }
+
+        List<String> legacyLore = new ArrayList<>();
+        for (Component line : lore) {
+            String legacy = ComponentHelper.toLegacy(line);
+            legacyLore.add(legacy);
+        }
+
+        itemMeta.setLore(legacyLore);
+        item.setItemMeta(itemMeta);
+        return item;
     }
 }

@@ -150,6 +150,7 @@
                 <configuration>
                     <createSourcesJar>true</createSourcesJar>
                     <shadeSourcesContent>true</shadeSourcesContent>
+                    <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
 
                     <relocations>
                         <!-- XSeries -->

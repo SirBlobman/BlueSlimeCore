@@ -1,9 +1,13 @@
 package com.github.sirblobman.api.nms;
 
+import java.util.List;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ItemHandler_Fallback extends ItemHandler {
+import net.kyori.adventure.text.Component;
+
+public final class ItemHandler_Fallback extends ItemHandler {
     public ItemHandler_Fallback(JavaPlugin plugin) {
         super(plugin);
     }
@@ -53,4 +57,27 @@ public class ItemHandler_Fallback extends ItemHandler {
         return item;
     }
 
+    @Override
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
+                                                         net.kyori.adventure.text.Component displayName) {
+        return item;
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
+                                                  List<Component> lore) {
+        return item;
+    }
+
+    // TODO
+//    @Override
+//    public CustomNbtContainer createNewCustomNbtContainer() {
+//        Plugin plugin = getPlugin();
+//        return new CustomNbtContainer_Fallback(plugin);
+//    }
+//
+//    @Override
+//    public org.bukkit.inventory.ItemStack setCustomNbt(ItemStack item, CustomNbtContainer customNbtContainer) {
+//        return item;
+//    }
 }

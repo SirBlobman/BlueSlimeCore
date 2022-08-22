@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class EntityHandler_Fallback extends EntityHandler {
+public final class EntityHandler_Fallback extends EntityHandler {
     public EntityHandler_Fallback(JavaPlugin plugin) {
         super(plugin);
     }
@@ -36,7 +36,9 @@ public class EntityHandler_Fallback extends EntityHandler {
     @Override
     public <T extends Entity> T spawnEntity(Location location, Class<T> entityClass, Consumer<T> beforeSpawn) {
         World world = location.getWorld();
-        if (world == null) throw new IllegalArgumentException("location must not have a null world!");
+        if (world == null) {
+            throw new IllegalArgumentException("location must not have a null world!");
+        }
 
         T entity = world.spawn(location, entityClass);
         beforeSpawn.accept(entity);

@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class PlayerHandler_Fallback extends PlayerHandler {
+public final class PlayerHandler_Fallback extends PlayerHandler {
     public PlayerHandler_Fallback(JavaPlugin plugin) {
         super(plugin);
     }

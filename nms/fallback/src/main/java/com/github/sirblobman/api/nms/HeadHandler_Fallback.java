@@ -6,7 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class HeadHandler_Fallback extends HeadHandler {
+public final class HeadHandler_Fallback extends HeadHandler {
     public HeadHandler_Fallback(JavaPlugin plugin) {
         super(plugin);
     }

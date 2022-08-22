@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.Validate;
 
-public class EntityHandler_1_7_R4 extends EntityHandler {
+public final class EntityHandler_1_7_R4 extends EntityHandler {
     public EntityHandler_1_7_R4(JavaPlugin plugin) {
         super(plugin);
     }
@@ -27,7 +27,9 @@ public class EntityHandler_1_7_R4 extends EntityHandler {
         if (entity instanceof LivingEntity) {
             LivingEntity living = (LivingEntity) entity;
             String customName = living.getCustomName();
-            if (customName != null) return customName;
+            if (customName != null) {
+                return customName;
+            }
         }
 
         EntityType entityType = entity.getType();
@@ -59,7 +61,9 @@ public class EntityHandler_1_7_R4 extends EntityHandler {
         Validate.notNull(entityClass, "entityClass must not be null!");
 
         World world = location.getWorld();
-        if (world == null) throw new IllegalArgumentException("location must have a valid bukkit world!");
+        if (world == null) {
+            throw new IllegalArgumentException("location must have a valid bukkit world!");
+        }
 
         T entity = world.spawn(location, entityClass);
         beforeSpawn.accept(entity);

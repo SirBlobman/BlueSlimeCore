@@ -1,5 +1,6 @@
 package com.github.sirblobman.api.menu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -24,17 +24,23 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import com.github.sirblobman.api.item.ComponentItemBuilder;
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
+import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.menu.button.AbstractButton;
+import com.github.sirblobman.api.menu.button.BaseMenu;
 import com.github.sirblobman.api.nms.HeadHandler;
+import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XMaterial;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractMenu implements IMenu, Listener {
+public abstract class AbstractMenu extends BaseMenu {
     private final JavaPlugin plugin;
     private final Player player;
     private final Map<Integer, AbstractButton> buttonMap;
@@ -172,13 +178,6 @@ public abstract class AbstractMenu implements IMenu, Listener {
     }
 
     /**
-     * @return The head handler for the current Bukkit version.
-     */
-    public HeadHandler getHeadHandler() {
-        return null;
-    }
-
-    /**
      * @return {@code true} if the event should be cancelled, otherwise {@code false}.
      */
     public boolean shouldCancelShiftClickFromPlayerInventory() {
@@ -200,86 +199,9 @@ public abstract class AbstractMenu implements IMenu, Listener {
         this.buttonMap.put(slot, button);
     }
 
-    /**
-     * Load an ItemStack from a configuration file or section.
-     *
-     * @param config The configuration or section to load the item from.
-     * @param path   The path in the configuration or section.
-     * @return An {@link ItemStack} read from the section, or {@code null} if one could not be read.
-     */
-    @Nullable
-    protected final ItemStack loadItemStack(ConfigurationSection config, String path) {
-        if (config.isItemStack(path)) {
-            return config.getItemStack(path);
-        }
-
-        ConfigurationSection section = config.getConfigurationSection(path);
-        return loadItemStack(section);
-    }
-
-    private ItemStack loadItemStack(ConfigurationSection section) {
-        if (section == null) {
-            return null;
-        }
-
-        String materialName = section.getString("material");
-        Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(materialName);
-        if (!xMaterial.isPresent()) {
-            Logger logger = this.plugin.getLogger();
-            logger.warning("Unknown material name '" + materialName + "'.");
-            return null;
-        }
-
-        XMaterial realMaterial = xMaterial.get();
-        ItemBuilder builder = new ItemBuilder(realMaterial);
-        builder = checkSkull(builder, realMaterial, section);
-
-        int amount = section.getInt("quantity", 1);
-        builder.withAmount(amount);
-
-        int damage = section.getInt("damage", 0);
-        builder.withDamage(damage);
-
-        Integer model = section.isSet("model") ? section.getInt("model") : null;
-        builder.withModel(model);
-
-        String displayName = section.getString("display-name");
-        if (displayName != null) {
-            String displayNameColored = MessageUtility.color(displayName);
-            builder.withName(displayNameColored);
-        }
-
-        List<String> loreList = section.getStringList("lore");
-        if (!loreList.isEmpty()) {
-            List<String> loreListColored = MessageUtility.colorList(loreList);
-            builder.withLore(loreListColored);
-        }
-
-        if (section.getBoolean("glowing")) builder.withGlowing();
-        return builder.build();
-    }
-
-    private ItemBuilder checkSkull(ItemBuilder builder, XMaterial xMaterial, ConfigurationSection section) {
-        HeadHandler headHandler = getHeadHandler();
-        if (xMaterial != XMaterial.PLAYER_HEAD || headHandler == null) {
-            return builder;
-        }
-
-        String texture = section.getString("texture");
-        if (texture != null) {
-            return SkullBuilder.withTexture(headHandler, texture);
-        }
-
-        String username = section.getString("skull-owner");
-        if (username != null) {
-            return SkullBuilder.withOwner(headHandler, username);
-        }
-
-        return builder;
-    }
-
     private void internalOpen() {
         this.buttonMap.clear();
+
         JavaPlugin plugin = getPlugin();
         Inventory inventory = getInventory();
 
