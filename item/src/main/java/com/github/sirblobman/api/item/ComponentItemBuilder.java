@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
 
+import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.utility.Validate;
 
@@ -36,14 +37,18 @@ public final class ComponentItemBuilder {
     public ComponentItemBuilder withName(Component displayName) {
         ItemStack item = getItem();
         ItemHandler itemHandler = getItemHandler();
-        this.item = itemHandler.setDisplayName(item, displayName);
+
+        Component realDisplayName = ComponentHelper.wrapNoItalics(displayName);
+        this.item = itemHandler.setDisplayName(item, realDisplayName);
         return this;
     }
 
     public ComponentItemBuilder withLore(List<Component> lore) {
         ItemStack item = getItem();
         ItemHandler itemHandler = getItemHandler();
-        this.item = itemHandler.setLore(item, lore);
+
+        List<Component> realLore = ComponentHelper.wrapNoItalics(lore);
+        this.item = itemHandler.setLore(item, realLore);
         return this;
     }
 

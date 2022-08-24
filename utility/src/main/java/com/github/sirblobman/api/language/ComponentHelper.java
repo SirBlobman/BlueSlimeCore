@@ -1,5 +1,8 @@
 package com.github.sirblobman.api.language;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.VersionUtility;
 
@@ -54,5 +57,15 @@ public final class ComponentHelper {
         builder.decoration(TextDecoration.ITALIC, false);
         builder.append(component);
         return builder.build();
+    }
+
+    public static List<Component> wrapNoItalics(Iterable<Component> components) {
+        List<Component> newList = new ArrayList<>();
+        for (Component component : components) {
+            Component noItalics = wrapNoItalics(component);
+            newList.add(noItalics);
+        }
+
+        return newList;
     }
 }
