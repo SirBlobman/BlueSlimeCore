@@ -5,6 +5,8 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.nbt.CustomNbtContainer;
+
 import net.kyori.adventure.text.Component;
 
 public final class ItemHandler_Fallback extends ItemHandler {
@@ -33,16 +35,6 @@ public final class ItemHandler_Fallback extends ItemHandler {
     }
 
     @Override
-    public ItemStack setCustomNBT(ItemStack item, String key, String value) {
-        return item;
-    }
-
-    @Override
-    public String getCustomNBT(ItemStack item, String key, String defaultValue) {
-        return defaultValue;
-    }
-
-    @Override
     public ItemStack fromBase64String(String string) {
         return null;
     }
@@ -50,11 +42,6 @@ public final class ItemHandler_Fallback extends ItemHandler {
     @Override
     public String toBase64String(ItemStack item) {
         return null;
-    }
-
-    @Override
-    public ItemStack removeCustomNBT(ItemStack item, String key) {
-        return item;
     }
 
     @Override
@@ -69,15 +56,19 @@ public final class ItemHandler_Fallback extends ItemHandler {
         return item;
     }
 
-    // TODO
-//    @Override
-//    public CustomNbtContainer createNewCustomNbtContainer() {
-//        Plugin plugin = getPlugin();
-//        return new CustomNbtContainer_Fallback(plugin);
-//    }
-//
-//    @Override
-//    public org.bukkit.inventory.ItemStack setCustomNbt(ItemStack item, CustomNbtContainer customNbtContainer) {
-//        return item;
-//    }
+    @Override
+    public CustomNbtContainer createNewCustomNbtContainer() {
+        return null;
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
+                                                       CustomNbtContainer customNbtContainer) {
+        return item;
+    }
+
+    @Override
+    public CustomNbtContainer getCustomNbt(org.bukkit.inventory.ItemStack item) {
+        return null;
+    }
 }

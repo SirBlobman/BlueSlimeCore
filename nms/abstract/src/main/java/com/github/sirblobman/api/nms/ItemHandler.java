@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.nbt.CustomNbtContainer;
+
 import net.kyori.adventure.text.Component;
 
 public abstract class ItemHandler extends Handler {
@@ -19,20 +21,12 @@ public abstract class ItemHandler extends Handler {
 
     public abstract org.bukkit.inventory.ItemStack fromNBT(String nbtJSON);
 
-    // TODO @Deprecated
-    public abstract org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key,
-                                                                String value);
+    public abstract CustomNbtContainer createNewCustomNbtContainer();
 
-    // TODO @Deprecated
-    public abstract org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key);
+    public abstract CustomNbtContainer getCustomNbt(org.bukkit.inventory.ItemStack item);
 
-    // TODO public abstract CustomNbtContainer createNewCustomNbtContainer();
-
-    // TODO
-//    public abstract org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
-//                                                                CustomNbtContainer customNbtContainer);
-
-    public abstract String getCustomNBT(org.bukkit.inventory.ItemStack item, String key, String defaultValue);
+    public abstract org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
+                                                                CustomNbtContainer customNbtContainer);
 
     public abstract org.bukkit.inventory.ItemStack fromBase64String(String string);
 

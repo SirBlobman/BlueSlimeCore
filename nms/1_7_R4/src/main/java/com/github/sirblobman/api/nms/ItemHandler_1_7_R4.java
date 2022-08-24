@@ -21,17 +21,20 @@ import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
 import com.github.sirblobman.api.language.ComponentHelper;
+import com.github.sirblobman.api.nbt.CustomNbtContainer;
+import com.github.sirblobman.api.nbt.CustomNbtContainer_1_7_R4;
+import com.github.sirblobman.api.nbt.CustomNbtTypeRegistry_1_7_R4;
 import com.github.sirblobman.api.utility.ItemUtility;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 
 public final class ItemHandler_1_7_R4 extends ItemHandler {
-    // private final CustomNbtTypeRegistry_1_7_R4 nbtRegistry;
+    private final CustomNbtTypeRegistry_1_7_R4 nbtRegistry;
 
     public ItemHandler_1_7_R4(JavaPlugin plugin) {
         super(plugin);
-        // this.nbtRegistry = new CustomNbtTypeRegistry_1_7_R4();
+        this.nbtRegistry = new CustomNbtTypeRegistry_1_7_R4();
     }
 
     @Override
@@ -95,96 +98,44 @@ public final class ItemHandler_1_7_R4 extends ItemHandler {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key, String value) {
-        if (item == null || key == null || key.isEmpty() || value == null) {
-            return item;
+    public CustomNbtContainer createNewCustomNbtContainer() {
+        return new CustomNbtContainer_1_7_R4(this.nbtRegistry);
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
+                                                       CustomNbtContainer customNbtContainer) {
+        if (item == null) {
+            return null;
         }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
-        if (nbtData == null) {
-            nbtData = new NBTTagCompound();
-        }
+        NBTTagCompound nbtData = createNBT(nmsItem);
 
         JavaPlugin plugin = getPlugin();
         String pluginName = plugin.getName();
 
-        NBTTagCompound customData = nbtData.getCompound(pluginName);
-        customData.setString(key, value);
-        nbtData.set(pluginName, customData);
+        NBTBase wrap = this.nbtRegistry.wrap(CustomNbtContainer.class, customNbtContainer);
+        nbtData.set(pluginName, wrap);
 
         nmsItem.setTag(nbtData);
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
     @Override
-    public String getCustomNBT(org.bukkit.inventory.ItemStack item, String key, String defaultValue) {
-        if (item == null || key == null || key.isEmpty()) {
-            return defaultValue;
+    public CustomNbtContainer getCustomNbt(org.bukkit.inventory.ItemStack item) {
+        if (item == null) {
+            return null;
         }
 
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
-        if (nbtData == null) {
-            nbtData = new NBTTagCompound();
-        }
+        NBTTagCompound nbtData = createNBT(nmsItem);
 
         JavaPlugin plugin = getPlugin();
         String pluginName = plugin.getName();
-
-        NBTTagCompound customData = nbtData.getCompound(pluginName);
-        String string = customData.getString(key);
-        return (string == null ? defaultValue : string);
+        NBTTagCompound compound = nbtData.getCompound(pluginName);
+        return this.nbtRegistry.extract(CustomNbtContainer.class, compound);
     }
-
-    @Override
-    public org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key) {
-        if (item == null || key == null || key.isEmpty()) {
-            return item;
-        }
-
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = nmsItem.hasTag() ? nmsItem.getTag() : new NBTTagCompound();
-        if (nbtData == null) nbtData = new NBTTagCompound();
-
-        JavaPlugin plugin = getPlugin();
-        String pluginName = plugin.getName();
-
-        NBTTagCompound customData = nbtData.getCompound(pluginName);
-        customData.remove(key);
-
-        if (customData.isEmpty()) nbtData.remove(pluginName);
-        else nbtData.set(pluginName, customData);
-
-        nmsItem.setTag(nbtData);
-        return CraftItemStack.asBukkitCopy(nmsItem);
-    }
-
-    // TODO
-//    @Override
-//    public CustomNbtContainer createNewCustomNbtContainer() {
-//        return new CustomNbtContainer_1_7_R4(this.nbtRegistry);
-//    }
-//
-//    @Override
-//    public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
-//                                                       CustomNbtContainer customNbtContainer) {
-//        if (item == null) {
-//            return null;
-//        }
-//
-//        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-//        NBTTagCompound nbtData = createNBT(nmsItem);
-//
-//        JavaPlugin plugin = getPlugin();
-//        String pluginName = plugin.getName();
-//
-//        NBTBase wrap = this.nbtRegistry.wrap(CustomNbtContainer.class, customNbtContainer);
-//        nbtData.set(pluginName, wrap);
-//
-//        nmsItem.setTag(nbtData);
-//        return CraftItemStack.asBukkitCopy(nmsItem);
-//    }
 
     @Contract("null -> null")
     private NBTTagCompound createNBT(ItemStack nmsItem) {

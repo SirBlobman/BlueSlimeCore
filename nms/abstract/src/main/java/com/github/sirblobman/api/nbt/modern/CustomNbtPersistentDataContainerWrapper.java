@@ -104,7 +104,7 @@ public final class CustomNbtPersistentDataContainerWrapper implements CustomNbtC
         return convertContext(plugin, container.getAdapterContext());
     }
 
-    private PersistentDataContainer getContainer() {
+    public PersistentDataContainer getContainer() {
         return this.container;
     }
 

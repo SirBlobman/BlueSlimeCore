@@ -4,12 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,9 +28,13 @@ import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import com.github.sirblobman.api.language.ComponentHelper;
+import com.github.sirblobman.api.nbt.CustomNbtContainer;
+import com.github.sirblobman.api.nbt.modern.CustomNbtPersistentDataContainerWrapper;
+import com.github.sirblobman.api.nbt.modern.PersistentDataConverter;
 import com.github.sirblobman.api.utility.ItemUtility;
 
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemHandler_1_16_R3 extends ItemHandler {
     public ItemHandler_1_16_R3(JavaPlugin plugin) {
@@ -81,63 +87,6 @@ public class ItemHandler_1_16_R3 extends ItemHandler {
             logger.log(Level.WARNING, "Failed to parse an NBT string to an item, returning AIR...", ex);
             return new org.bukkit.inventory.ItemStack(Material.AIR);
         }
-    }
-
-    @Override
-    public org.bukkit.inventory.ItemStack setCustomNBT(org.bukkit.inventory.ItemStack item, String key, String value) {
-        if (item == null || key == null || key.isEmpty() || value == null) {
-            return item;
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) {
-            return item;
-        }
-
-        JavaPlugin plugin = getPlugin();
-        NamespacedKey namespacedKey = new NamespacedKey(plugin, key);
-        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        persistentDataContainer.set(namespacedKey, PersistentDataType.STRING, value);
-
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    @Override
-    public String getCustomNBT(org.bukkit.inventory.ItemStack item, String key, String defaultValue) {
-        if (item == null || key == null || key.isEmpty()) {
-            return defaultValue;
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) {
-            return defaultValue;
-        }
-
-        JavaPlugin plugin = getPlugin();
-        NamespacedKey namespacedKey = new NamespacedKey(plugin, key);
-        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        return persistentDataContainer.getOrDefault(namespacedKey, PersistentDataType.STRING, defaultValue);
-    }
-
-    @Override
-    public org.bukkit.inventory.ItemStack removeCustomNBT(org.bukkit.inventory.ItemStack item, String key) {
-        if (item == null || key == null || key.isEmpty()) {
-            return item;
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) {
-            return item;
-        }
-
-        JavaPlugin plugin = getPlugin();
-        NamespacedKey namespacedKey = new NamespacedKey(plugin, key);
-        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        persistentDataContainer.remove(namespacedKey);
-
-        item.setItemMeta(itemMeta);
-        return item;
     }
 
     @Override
@@ -226,5 +175,72 @@ public class ItemHandler_1_16_R3 extends ItemHandler {
         }
 
         return jsonList;
+    }
+
+    @Override
+    public CustomNbtContainer createNewCustomNbtContainer() {
+        return getCustomNbt(new org.bukkit.inventory.ItemStack(Material.BARRIER));
+    }
+
+    @Override
+    public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
+                                                       CustomNbtContainer customNbtContainer) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null) {
+            return null;
+        }
+
+        PersistentDataContainer container = createNBT(itemMeta);
+        if(container == null) {
+            return item;
+        }
+
+        if(customNbtContainer instanceof CustomNbtPersistentDataContainerWrapper) {
+            CustomNbtPersistentDataContainerWrapper wrapper = (CustomNbtPersistentDataContainerWrapper) customNbtContainer;
+            PersistentDataContainer internalContainer = wrapper.getContainer();
+
+            JavaPlugin plugin = getPlugin();
+            NamespacedKey pluginKey = new NamespacedKey(plugin, plugin.getName().toLowerCase(Locale.US));
+            container.set(pluginKey, PersistentDataType.TAG_CONTAINER, internalContainer);
+        }
+
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    @Override
+    public CustomNbtContainer getCustomNbt(org.bukkit.inventory.ItemStack item) {
+        if (item == null) {
+            return null;
+        }
+
+        ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer dataContainer = createNBT(itemMeta);
+        if(dataContainer == null) {
+            return null;
+        }
+
+        JavaPlugin plugin = getPlugin();
+        return PersistentDataConverter.convertContainer(plugin, dataContainer);
+    }
+
+    @Nullable
+    private PersistentDataContainer createNBT(ItemMeta itemMeta) {
+        if(itemMeta == null) {
+            return null;
+        }
+
+        JavaPlugin plugin = getPlugin();
+        NamespacedKey pluginKey = new NamespacedKey(plugin, plugin.getName().toLowerCase(Locale.US));
+        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+
+        if(dataContainer.has(pluginKey, PersistentDataType.TAG_CONTAINER)) {
+            return dataContainer.get(pluginKey, PersistentDataType.TAG_CONTAINER);
+        }
+
+        PersistentDataAdapterContext context = dataContainer.getAdapterContext();
+        PersistentDataContainer newContainer = context.newPersistentDataContainer();
+        dataContainer.set(pluginKey, PersistentDataType.TAG_CONTAINER, newContainer);
+        return newContainer;
     }
 }

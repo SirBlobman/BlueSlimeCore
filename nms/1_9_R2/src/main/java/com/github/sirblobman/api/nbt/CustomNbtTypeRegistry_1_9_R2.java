@@ -8,26 +8,26 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import net.minecraft.server.v1_7_R4.NBTBase;
-import net.minecraft.server.v1_7_R4.NBTTagByte;
-import net.minecraft.server.v1_7_R4.NBTTagByteArray;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.NBTTagDouble;
-import net.minecraft.server.v1_7_R4.NBTTagFloat;
-import net.minecraft.server.v1_7_R4.NBTTagInt;
-import net.minecraft.server.v1_7_R4.NBTTagIntArray;
-import net.minecraft.server.v1_7_R4.NBTTagLong;
-import net.minecraft.server.v1_7_R4.NBTTagShort;
-import net.minecraft.server.v1_7_R4.NBTTagString;
-import net.minecraft.util.org.apache.commons.lang3.Validate;
+import net.minecraft.server.v1_9_R2.NBTBase;
+import net.minecraft.server.v1_9_R2.NBTTagByte;
+import net.minecraft.server.v1_9_R2.NBTTagByteArray;
+import net.minecraft.server.v1_9_R2.NBTTagCompound;
+import net.minecraft.server.v1_9_R2.NBTTagDouble;
+import net.minecraft.server.v1_9_R2.NBTTagFloat;
+import net.minecraft.server.v1_9_R2.NBTTagInt;
+import net.minecraft.server.v1_9_R2.NBTTagIntArray;
+import net.minecraft.server.v1_9_R2.NBTTagLong;
+import net.minecraft.server.v1_9_R2.NBTTagShort;
+import net.minecraft.server.v1_9_R2.NBTTagString;
 
 import com.google.common.primitives.Primitives;
+import org.apache.commons.lang3.Validate;
 
-public final class CustomNbtTypeRegistry_1_7_R4 {
-    private final Function<Class<?>, CustomNbtTagAdapter_1_7_R4<?, ?>> CREATE_ADAPTER = this::createAdapter;
-    private final Map<Class<?>, CustomNbtTagAdapter_1_7_R4<?, ?>> adapters = new HashMap<>();
+public final class CustomNbtTypeRegistry_1_9_R2 {
+    private final Function<Class<?>, CustomNbtTagAdapter_1_9_R2<?, ?>> CREATE_ADAPTER = this::createAdapter;
+    private final Map<Class<?>, CustomNbtTagAdapter_1_9_R2<?, ?>> adapters = new HashMap<>();
 
-    private <T> CustomNbtTagAdapter_1_7_R4<?, ?> createAdapter(Class<T> type) {
+    private <T> CustomNbtTagAdapter_1_9_R2<?, ?> createAdapter(Class<T> type) {
         if (!Primitives.isWrapperType(type)) {
             type = Primitives.wrap(type);
         }
@@ -57,18 +57,17 @@ public final class CustomNbtTypeRegistry_1_7_R4 {
         } else if (Objects.equals(long[].class, type)) {
             return createAdapter(long[].class, NBTTagString.class, this::longArrayToNBT, this::nbtToLongArray);
         } else if (Objects.equals(CustomNbtContainer.class, type)) {
-            return createAdapter(CustomNbtContainer_1_7_R4.class, NBTTagCompound.class,
-                    CustomNbtContainer_1_7_R4::toTagCompound, this::tagToContainer);
+            return createAdapter(CustomNbtContainer_1_9_R2.class, NBTTagCompound.class,
+                    CustomNbtContainer_1_9_R2::toTagCompound, this::tagToContainer);
         } else {
             throw new IllegalArgumentException("Could not find a valid CustomNbtTagAdapter implementation for the " +
                     "requested type " + type.getSimpleName());
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private CustomNbtContainer_1_7_R4 tagToContainer(NBTTagCompound tag) {
-        CustomNbtContainer_1_7_R4 container = new CustomNbtContainer_1_7_R4(this);
-        Set<String> keySet = (Set<String>) tag.c();
+    private CustomNbtContainer_1_9_R2 tagToContainer(NBTTagCompound tag) {
+        CustomNbtContainer_1_9_R2 container = new CustomNbtContainer_1_9_R2(this);
+        Set<String> keySet = tag.c();
         for (String key : keySet) {
             NBTBase value = tag.get(key);
             container.put(key, value);
@@ -109,11 +108,11 @@ public final class CustomNbtTypeRegistry_1_7_R4 {
         }
     }
 
-    private <T, Z extends NBTBase> CustomNbtTagAdapter_1_7_R4<T, Z> createAdapter(Class<T> primitiveType,
+    private <T, Z extends NBTBase> CustomNbtTagAdapter_1_9_R2<T, Z> createAdapter(Class<T> primitiveType,
                                                                                   Class<Z> nbtBaseType,
                                                                                   Function<T, Z> builder,
                                                                                   Function<Z, T> extractor) {
-        return new CustomNbtTagAdapter_1_7_R4<>(primitiveType, nbtBaseType, builder, extractor);
+        return new CustomNbtTagAdapter_1_9_R2<>(primitiveType, nbtBaseType, builder, extractor);
     }
 
     public <T> NBTBase wrap(Class<T> type, T value) {
@@ -125,7 +124,7 @@ public final class CustomNbtTypeRegistry_1_7_R4 {
     }
 
     public <T> T extract(Class<T> type, NBTBase tag) throws ClassCastException, IllegalArgumentException {
-        CustomNbtTagAdapter_1_7_R4<?, ?> adapter = this.adapters.computeIfAbsent(type, this.CREATE_ADAPTER);
+        CustomNbtTagAdapter_1_9_R2<?, ?> adapter = this.adapters.computeIfAbsent(type, this.CREATE_ADAPTER);
         Validate.isTrue(adapter.isInstance(tag), "`The found tag instance cannot store %s as it is a %s",
                 type.getSimpleName(), tag.getClass().getSimpleName());
         Object foundValue = adapter.extract(tag);

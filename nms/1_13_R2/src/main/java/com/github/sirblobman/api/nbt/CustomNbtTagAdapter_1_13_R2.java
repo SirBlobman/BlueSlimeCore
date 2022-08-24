@@ -2,17 +2,18 @@ package com.github.sirblobman.api.nbt;
 
 import java.util.function.Function;
 
-import net.minecraft.server.v1_7_R4.NBTBase;
-import net.minecraft.util.org.apache.commons.lang3.Validate;
+import net.minecraft.server.v1_13_R2.NBTBase;
 
-public final class CustomNbtTagAdapter<T, Z extends NBTBase> {
+import org.apache.commons.lang3.Validate;
+
+public final class CustomNbtTagAdapter_1_13_R2<T, Z extends NBTBase> {
     private final Function<T, Z> builder;
     private final Function<Z, T> extractor;
     private final Class<T> primitiveType;
     private final Class<Z> nbtBaseType;
 
-    public CustomNbtTagAdapter(Class<T> primitiveType, Class<Z> nbtBaseType, Function<T, Z> builder,
-                               Function<Z, T> extractor) {
+    public CustomNbtTagAdapter_1_13_R2(Class<T> primitiveType, Class<Z> nbtBaseType, Function<T, Z> builder,
+                                       Function<Z, T> extractor) {
         this.primitiveType = primitiveType;
         this.nbtBaseType = nbtBaseType;
         this.builder = builder;
