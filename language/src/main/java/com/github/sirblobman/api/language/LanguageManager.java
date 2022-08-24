@@ -28,7 +28,9 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
+import com.github.sirblobman.api.language.sound.CustomSoundInfo;
 import com.github.sirblobman.api.language.sound.SoundInfo;
+import com.github.sirblobman.api.language.sound.XSoundInfo;
 import com.github.sirblobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XSound;
@@ -551,17 +553,26 @@ public final class LanguageManager {
         printDebug("Value: Name: " + soundName + ", Volume: " + volumeString + ", Pitch: " + pitchString);
 
         try {
-            Optional<XSound> optionalSound = XSound.matchXSound(soundName);
-            if (!optionalSound.isPresent()) {
-                throw new IllegalArgumentException("Invalid sound name '" + soundName + "'.");
+            SoundInfo soundInfo;
+            if(soundName.startsWith("custom:")) {
+                String realSoundName = soundName.substring("custom:".length());
+                soundInfo = new CustomSoundInfo(realSoundName);
+                printDebug("Custom Sound: Name: " + realSoundName);
+            } else {
+                Optional<XSound> optionalSound = XSound.matchXSound(soundName);
+                if (!optionalSound.isPresent()) {
+                    throw new IllegalArgumentException("Invalid sound name '" + soundName + "'.");
+                }
+
+                XSound sound = optionalSound.get();
+                soundInfo = new XSoundInfo(sound);
+                printDebug("XSound: Name: " + sound);
             }
 
-            XSound sound = optionalSound.get();
             float volume = Float.parseFloat(volumeString);
             float pitch = Float.parseFloat(pitchString);
-            printDebug("Converted: Name: " + sound + ", Volume: " + volume + ", Pitch: " + pitch);
+            printDebug("Volume: " + volume + ", Pitch: " + pitch);
 
-            SoundInfo soundInfo = new SoundInfo(sound);
             soundInfo.setVolume(volume);
             soundInfo.setPitch(pitch);
             return soundInfo;
@@ -576,10 +587,7 @@ public final class LanguageManager {
     }
 
     public void sendSound(@NotNull Player player, @NotNull SoundInfo soundInfo) {
-        XSound sound = soundInfo.getSound();
-        float volume = soundInfo.getVolume();
-        float pitch = soundInfo.getPitch();
-        sound.play(player, volume, pitch);
+        soundInfo.play(player);
     }
 
     public void sendSound(@NotNull Player player, @NotNull String path) {
