@@ -191,11 +191,7 @@ public class ItemHandler_1_18_R2 extends ItemHandler {
             return null;
         }
 
-        PersistentDataContainer container = createNBT(itemMeta);
-        if(container == null) {
-            return item;
-        }
-
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
         if(customNbtContainer instanceof CustomNbtPersistentDataContainerWrapper wrapper) {
             PersistentDataContainer internalContainer = wrapper.getContainer();
 

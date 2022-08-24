@@ -184,19 +184,15 @@ public class ItemHandler_1_16_R3 extends ItemHandler {
 
     @Override
     public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
-                                                       CustomNbtContainer customNbtContainer) {
+                                                       CustomNbtContainer tag) {
         ItemMeta itemMeta = item.getItemMeta();
         if(itemMeta == null) {
             return null;
         }
 
-        PersistentDataContainer container = createNBT(itemMeta);
-        if(container == null) {
-            return item;
-        }
-
-        if(customNbtContainer instanceof CustomNbtPersistentDataContainerWrapper) {
-            CustomNbtPersistentDataContainerWrapper wrapper = (CustomNbtPersistentDataContainerWrapper) customNbtContainer;
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        if(tag instanceof CustomNbtPersistentDataContainerWrapper) {
+            CustomNbtPersistentDataContainerWrapper wrapper = (CustomNbtPersistentDataContainerWrapper) tag;
             PersistentDataContainer internalContainer = wrapper.getContainer();
 
             JavaPlugin plugin = getPlugin();
