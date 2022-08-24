@@ -1,11 +1,14 @@
-package com.github.sirblobman.api.menu.button;
+package com.github.sirblobman.api.menu;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,7 +16,6 @@ import com.github.sirblobman.api.item.ComponentItemBuilder;
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
 import com.github.sirblobman.api.language.LanguageManager;
-import com.github.sirblobman.api.menu.IMenu;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
@@ -46,6 +48,35 @@ public abstract class BaseMenu implements IMenu {
     @Nullable
     public LanguageManager getLanguageManager() {
         return null;
+    }
+
+    /**
+     * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
+     *              nine for a chest menu.
+     * @param title The title of the GUI.
+     *              (legacy color codes with the '&amp;' symbol will be translated automatically)
+     * @return An empty {@link Inventory} instance with this menu instance as its holder.
+     */
+    public Inventory getInventory(int size, String title) {
+        String realTitle = MessageUtility.color(title);
+
+        if (size == 5) {
+            return Bukkit.createInventory(this, InventoryType.HOPPER, realTitle);
+        }
+
+        if (size < 9) {
+            throw new IllegalArgumentException("size must be equal to 5 or at least 9");
+        }
+
+        if (size > 54) {
+            throw new IllegalArgumentException("size cannot be more than 54");
+        }
+
+        if (size % 9 != 0) {
+            throw new IllegalArgumentException("size must be equal to 5 or divisible by 9");
+        }
+
+        return Bukkit.createInventory(this, size, realTitle);
     }
 
     /**

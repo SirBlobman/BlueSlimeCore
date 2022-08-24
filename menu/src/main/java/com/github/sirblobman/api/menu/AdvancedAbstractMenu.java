@@ -16,8 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.github.sirblobman.api.menu.button.BaseMenu;
-import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 
 public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends BaseMenu implements Runnable {
@@ -100,15 +98,6 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
 
     public final Player getPlayer() {
         return this.player;
-    }
-
-    protected final Inventory getInventory(int size, String title) {
-        if (title != null && !title.isEmpty()) {
-            String coloredTitle = MessageUtility.color(title);
-            return Bukkit.createInventory(this, size, coloredTitle);
-        }
-
-        return Bukkit.createInventory(this, size, title);
     }
 
     public void open() {

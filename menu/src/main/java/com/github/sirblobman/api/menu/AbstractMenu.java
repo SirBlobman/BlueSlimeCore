@@ -20,7 +20,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.github.sirblobman.api.menu.button.AbstractButton;
-import com.github.sirblobman.api.menu.button.BaseMenu;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 
@@ -122,35 +121,6 @@ public abstract class AbstractMenu extends BaseMenu {
      */
     public final Player getPlayer() {
         return this.player;
-    }
-
-    /**
-     * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
-     *              nine for a chest menu.
-     * @param title The title of the GUI.
-     *              (legacy color codes with the '&amp;' symbol will be translated automatically)
-     * @return An empty {@link Inventory} instance with this menu instance as its holder.
-     */
-    public final Inventory getInventory(int size, String title) {
-        String realTitle = MessageUtility.color(title);
-
-        if (size == 5) {
-            return Bukkit.createInventory(this, InventoryType.HOPPER, realTitle);
-        }
-
-        if (size < 9) {
-            throw new IllegalArgumentException("size must be equal to 5 or at least 9");
-        }
-
-        if (size > 54) {
-            throw new IllegalArgumentException("size cannot be more than 54");
-        }
-
-        if (size % 9 != 0) {
-            throw new IllegalArgumentException("size must be equal to 5 or divisible by 9");
-        }
-
-        return Bukkit.createInventory(this, size, realTitle);
     }
 
     @Override
