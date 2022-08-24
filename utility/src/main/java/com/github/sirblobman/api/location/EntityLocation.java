@@ -21,6 +21,7 @@ public final class EntityLocation {
     private final double z;
     private final double yaw;
     private final double pitch;
+
     public EntityLocation(UUID worldId, double x, double y, double z, double yaw, double pitch) {
         this.worldId = Validate.notNull(worldId, "worldId must not be null!");
         this.x = x;

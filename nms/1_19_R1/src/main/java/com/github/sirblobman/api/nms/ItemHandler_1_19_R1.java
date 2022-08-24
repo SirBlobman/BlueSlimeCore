@@ -186,12 +186,12 @@ public final class ItemHandler_1_19_R1 extends ItemHandler {
     public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
                                                        CustomNbtContainer customNbtContainer) {
         ItemMeta itemMeta = item.getItemMeta();
-        if(itemMeta == null) {
+        if (itemMeta == null) {
             return null;
         }
 
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-        if(customNbtContainer instanceof CustomNbtPersistentDataContainerWrapper wrapper) {
+        if (customNbtContainer instanceof CustomNbtPersistentDataContainerWrapper wrapper) {
             PersistentDataContainer internalContainer = wrapper.getContainer();
 
             JavaPlugin plugin = getPlugin();
@@ -211,7 +211,7 @@ public final class ItemHandler_1_19_R1 extends ItemHandler {
 
         ItemMeta itemMeta = item.getItemMeta();
         PersistentDataContainer dataContainer = createNBT(itemMeta);
-        if(dataContainer == null) {
+        if (dataContainer == null) {
             return null;
         }
 
@@ -221,7 +221,7 @@ public final class ItemHandler_1_19_R1 extends ItemHandler {
 
     @Nullable
     private PersistentDataContainer createNBT(ItemMeta itemMeta) {
-        if(itemMeta == null) {
+        if (itemMeta == null) {
             return null;
         }
 
@@ -229,7 +229,7 @@ public final class ItemHandler_1_19_R1 extends ItemHandler {
         NamespacedKey pluginKey = new NamespacedKey(plugin, plugin.getName().toLowerCase(Locale.US));
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
 
-        if(dataContainer.has(pluginKey, PersistentDataType.TAG_CONTAINER)) {
+        if (dataContainer.has(pluginKey, PersistentDataType.TAG_CONTAINER)) {
             return dataContainer.get(pluginKey, PersistentDataType.TAG_CONTAINER);
         }
 
