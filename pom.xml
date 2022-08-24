@@ -18,7 +18,7 @@
         <build.number>unofficial</build.number>
 
         <!-- This is the current version for releases -->
-        <sirblobman.core.version>2.5.3.Dev-${build.number}</sirblobman.core.version>
+        <sirblobman.core.version>2.5.3.${build.number}</sirblobman.core.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -71,10 +71,10 @@
     <!-- Global Repositories -->
     <repositories>
         <!-- SirBlobman Public -->
-<!--        <repository>-->
-<!--            <id>sirblobman-public</id>-->
-<!--            <url>https://nexus.sirblobman.xyz/repository/public/</url>-->
-<!--        </repository>-->
+        <repository>
+            <id>sirblobman-public</id>
+            <url>https://nexus.sirblobman.xyz/repository/public/</url>
+        </repository>
     </repositories>
 
     <!-- Global Dependencies -->
@@ -123,16 +123,6 @@
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-
-                <configuration>
-                    <compilerArgument>-Xlint:deprecation</compilerArgument>
-                </configuration>
-            </plugin>
-
             <!-- Create Sources Jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
