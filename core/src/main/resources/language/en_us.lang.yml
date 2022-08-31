@@ -20,6 +20,7 @@ error:
   console-only: "<red>That command can only be executed in the server console.</red>"
   invalid-held-item: "<red>You must be holding a valid item to use this command.</red>"
   invalid-world: "<red>You must be in a valid world to execute this command.</red>"
+  world-required: "<red>The server must have at least one world to use this command.</red>"
   no-permission: "<red>Missing Permission: <gray>{permission}</gray>.</red>"
 
 command:
@@ -51,3 +52,14 @@ command:
         - "<aqua>/item-to-yml</aqua><gray>: Convert an item to a serialized Bukkit YAML format.</gray>"
         - ""
     reload-success: "<green>Successfully reloaded the configuration file</green>"
+
+  item-info:
+    modern:
+      - ""
+      - "<white><bold>XMaterial:</bold></aqua> <gray>{xmaterial}</gray>"
+      - "<white><bold>Bukkit Material:</bold></aqua> <gray>{material}</gray>"
+      - "<white><bold>Vanilla ID:</bold></aqua> <gray>{vanilla}</gray>"
+    legacy:
+      - ""
+      - "<aqua><bold>Deprecated ID:</bold></aqua> <gray>{material_id}</gray>"
+      - "<aqua><bold>Deprecated Data:</bold></aqua> <gray>{data}</gray>"

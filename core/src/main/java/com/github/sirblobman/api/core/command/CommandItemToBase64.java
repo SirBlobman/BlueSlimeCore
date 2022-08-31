@@ -34,11 +34,16 @@ public final class CommandItemToBase64 extends PlayerCommand {
             return true;
         }
 
-        MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
+        CorePlugin plugin = getCorePlugin();
+        MultiVersionHandler multiVersionHandler = plugin.getMultiVersionHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         String base64String = itemHandler.toBase64String(item);
 
         player.sendMessage(base64String);
         return true;
+    }
+
+    private CorePlugin getCorePlugin() {
+        return this.plugin;
     }
 }

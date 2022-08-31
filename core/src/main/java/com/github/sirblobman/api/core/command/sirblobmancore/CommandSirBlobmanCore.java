@@ -12,7 +12,6 @@ public final class CommandSirBlobmanCore extends Command {
     public CommandSirBlobmanCore(CorePlugin plugin) {
         super(plugin, "sirblobmancore");
         setPermissionName("sirblobman.core.command.sirblobmancore");
-
         addSubCommand(new SubCommandHelp(plugin));
         addSubCommand(new SubCommandReload(plugin));
     }

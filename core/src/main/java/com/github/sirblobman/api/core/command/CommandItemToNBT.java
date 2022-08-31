@@ -24,10 +24,9 @@ public final class CommandItemToNBT extends PlayerCommand {
 
     public CommandItemToNBT(CorePlugin plugin) {
         super(plugin, "item-to-nbt");
-        this.plugin = plugin;
-        this.prettyGson = new GsonBuilder().setPrettyPrinting().create();
-
         setPermissionName("sirblobman.core.command.item-to-nbt");
+        this.plugin = plugin;
+        this.prettyGson = new GsonBuilder().setPrettyPrinting().setLenient().create();
     }
 
     @Override
@@ -47,7 +46,8 @@ public final class CommandItemToNBT extends PlayerCommand {
             return true;
         }
 
-        MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
+        CorePlugin plugin = getCorePlugin();
+        MultiVersionHandler multiVersionHandler = plugin.getMultiVersionHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         String nbtString = itemHandler.toNBT(item);
 
@@ -60,11 +60,20 @@ public final class CommandItemToNBT extends PlayerCommand {
         return true;
     }
 
+    private CorePlugin getCorePlugin() {
+        return this.plugin;
+    }
+
+    private Gson getPrettyGson() {
+        return this.prettyGson;
+    }
+
     private String prettyJSON(Player player, String json) {
         try {
+            Gson prettyGson = getPrettyGson();
             JsonParser jsonParser = new JsonParser();
             JsonElement jsonElement = jsonParser.parse(json);
-            return this.prettyGson.toJson(jsonElement);
+            return prettyGson.toJson(jsonElement);
         } catch (NoClassDefFoundError | Exception ex) {
             player.sendMessage("Could not parse into pretty JSON, sending normal...");
             return json;

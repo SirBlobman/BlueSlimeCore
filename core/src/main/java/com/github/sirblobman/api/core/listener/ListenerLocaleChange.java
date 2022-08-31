@@ -30,7 +30,7 @@ public final class ListenerLocaleChange extends PluginListener<CorePlugin> {
         CorePlugin corePlugin = getPlugin();
         BukkitScheduler scheduler = Bukkit.getScheduler();
         Runnable task = () -> LanguageCache.updateCachedLocale(player);
-        scheduler.scheduleSyncDelayedTask(corePlugin, task);
+        scheduler.runTaskLater(corePlugin, task, 2L);
     }
 
     private YamlConfiguration getConfiguration() {

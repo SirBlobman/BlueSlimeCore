@@ -13,9 +13,8 @@ public final class SubCommandReload extends Command {
 
     public SubCommandReload(CorePlugin plugin) {
         super(plugin, "reload");
-        this.plugin = plugin;
-
         setPermissionName("sirblobman.core.command.sirblobmancore.reload");
+        this.plugin = plugin;
     }
 
     @Override

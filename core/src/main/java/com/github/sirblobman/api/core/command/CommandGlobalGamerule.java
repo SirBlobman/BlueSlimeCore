@@ -25,10 +25,12 @@ public class CommandGlobalGamerule extends Command {
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
             World world = getWorld(sender);
-            if (world != null) {
-                String[] gameRuleArray = world.getGameRules();
-                return getMatching(args[0], gameRuleArray);
+            if(world == null) {
+                return Collections.emptyList();
             }
+
+            String[] gameRuleArray = world.getGameRules();
+            return getMatching(args[0], gameRuleArray);
         }
 
         if (args.length == 2) {
@@ -52,7 +54,7 @@ public class CommandGlobalGamerule extends Command {
 
         String gameRuleString = args[0];
         if (!senderWorld.isGameRule(gameRuleString)) {
-            Replacer replacer = message -> message.replace("{value}", gameRuleString);
+            Replacer replacer = new SimpleReplacer("{value}", gameRuleString);
             sendMessage(sender, "command.global-gamerule.invalid-gamerule", replacer);
             return true;
         }

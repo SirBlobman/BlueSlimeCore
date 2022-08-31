@@ -1,6 +1,5 @@
 package com.github.sirblobman.api.core.command;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,10 +9,10 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.language.Replacer;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.utility.ItemUtility;
-import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.VersionUtility;
 
 import com.cryptomorin.xseries.XMaterial;
@@ -40,34 +39,47 @@ public final class CommandItemInfo extends PlayerCommand {
             return true;
         }
 
-        List<String> messageList = getInformation(item);
+        String materialNameX = getXMaterialName(item);
+        String materialNameBukkit = getBukkitMaterialName(item);
+        String vanillaId = getVanillaId(item);
+        Replacer replacer = message -> message.replace("{material}", materialNameBukkit)
+                .replace("{xmaterial}", materialNameX)
+                .replace("{vanilla}", vanillaId);
+        sendMessage(player, "command.item-info.modern", replacer);
+
         int minorVersion = VersionUtility.getMinorVersion();
         if (minorVersion < 13) {
-            addLegacyInformation(item, messageList);
+            String materialIdString = getMaterialIdString(item);
+            String dataString = getDataString(item);
+            Replacer legacyReplacer = message -> message.replace("{material_id}", materialIdString)
+                    .replace("{data}", dataString);
+            sendMessage(player, "command.item-info.legacy", legacyReplacer);
         }
 
-        String[] messageArray = messageList.toArray(new String[0]);
-        String[] coloredArray = MessageUtility.colorArray(messageArray);
-        player.sendMessage(coloredArray);
         return true;
     }
 
-    private String getMaterialNameX(ItemStack item) {
+    private CorePlugin getCorePlugin() {
+        return this.plugin;
+    }
+
+    private String getXMaterialName(ItemStack item) {
         try {
             XMaterial material = XMaterial.matchXMaterial(item);
             return material.name();
-        } catch (IllegalArgumentException ex) {
+        } catch(IllegalArgumentException ex) {
             return "N/A";
         }
     }
 
-    private String getMaterialNameBukkit(ItemStack item) {
+    private String getBukkitMaterialName(ItemStack item) {
         Material material = item.getType();
         return material.name();
     }
 
-    private String getInternalName(ItemStack item) {
-        MultiVersionHandler multiVersionHandler = this.plugin.getMultiVersionHandler();
+    private String getVanillaId(ItemStack item) {
+        CorePlugin corePlugin = getCorePlugin();
+        MultiVersionHandler multiVersionHandler = corePlugin.getMultiVersionHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         return itemHandler.getKeyString(item);
     }
@@ -78,24 +90,13 @@ public final class CommandItemInfo extends PlayerCommand {
         return material.getId();
     }
 
-    private List<String> getInformation(ItemStack item) {
-        String materialNameX = getMaterialNameX(item);
-        String materialNameBukkit = getMaterialNameBukkit(item);
-        String internalName = getInternalName(item);
-
-        List<String> messageList = new ArrayList<>();
-        messageList.add("");
-        messageList.add("&f&lXMaterial: &7" + materialNameX);
-        messageList.add("&f&lBukkit Material: &7" + materialNameBukkit);
-        messageList.add("&f&lInternal Name: &7" + internalName);
-        return messageList;
+    private String getMaterialIdString(ItemStack item) {
+        int materialId = getMaterialId(item);
+        return Integer.toString(materialId);
     }
 
-    private void addLegacyInformation(ItemStack item, List<String> messageList) {
-        int id = getMaterialId(item);
+    private String getDataString(ItemStack item) {
         short data = item.getDurability();
-
-        messageList.add("&f&lDeprecated ID: &7" + id);
-        messageList.add("&f&lData/Meta Value: &7" + data);
+        return Short.toString(data);
     }
 }
