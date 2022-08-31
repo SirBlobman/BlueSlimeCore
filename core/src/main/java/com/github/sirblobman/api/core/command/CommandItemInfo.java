@@ -67,7 +67,7 @@ public final class CommandItemInfo extends PlayerCommand {
         try {
             XMaterial material = XMaterial.matchXMaterial(item);
             return material.name();
-        } catch(IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             return "N/A";
         }
     }

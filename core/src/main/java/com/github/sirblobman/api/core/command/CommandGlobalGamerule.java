@@ -25,7 +25,7 @@ public class CommandGlobalGamerule extends Command {
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
             World world = getWorld(sender);
-            if(world == null) {
+            if (world == null) {
                 return Collections.emptyList();
             }
 

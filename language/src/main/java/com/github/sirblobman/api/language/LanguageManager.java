@@ -417,8 +417,7 @@ public final class LanguageManager {
         sendMessage(commandSender, message);
     }
 
-    public void broadcastMessage(@NotNull CommandSender commandSender, @NotNull Component message,
-                                 @Nullable String permission) {
+    public void broadcastMessage(@NotNull Component message, @Nullable String permission) {
         CommandSender console = Bukkit.getConsoleSender();
         sendMessage(console, message);
 
@@ -554,7 +553,7 @@ public final class LanguageManager {
 
         try {
             SoundInfo soundInfo;
-            if(soundName.startsWith("custom:")) {
+            if (soundName.startsWith("custom:")) {
                 String realSoundName = soundName.substring("custom:".length());
                 soundInfo = new CustomSoundInfo(realSoundName);
                 printDebug("Custom Sound: Name: " + realSoundName);
