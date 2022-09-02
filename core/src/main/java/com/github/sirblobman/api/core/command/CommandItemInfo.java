@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.language.MultiReplacer;
 import com.github.sirblobman.api.language.Replacer;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
@@ -42,17 +43,17 @@ public final class CommandItemInfo extends PlayerCommand {
         String materialNameX = getXMaterialName(item);
         String materialNameBukkit = getBukkitMaterialName(item);
         String vanillaId = getVanillaId(item);
-        Replacer replacer = message -> message.replace("{material}", materialNameBukkit)
-                .replace("{xmaterial}", materialNameX)
-                .replace("{vanilla}", vanillaId);
+        Replacer replacer = new MultiReplacer("{material}", materialNameBukkit)
+                .addReplacement("{xmaterial}", materialNameX)
+                .addReplacement("{vanilla}", vanillaId);
         sendMessage(player, "command.item-info.modern", replacer);
 
         int minorVersion = VersionUtility.getMinorVersion();
         if (minorVersion < 13) {
             String materialIdString = getMaterialIdString(item);
             String dataString = getDataString(item);
-            Replacer legacyReplacer = message -> message.replace("{material_id}", materialIdString)
-                    .replace("{data}", dataString);
+            Replacer legacyReplacer = new MultiReplacer("{material_id}", materialIdString)
+                    .addReplacement("{data}", dataString);
             sendMessage(player, "command.item-info.legacy", legacyReplacer);
         }
 

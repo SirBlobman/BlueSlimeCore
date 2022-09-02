@@ -14,6 +14,25 @@
 
 ---
 language-name: "en_us"
+decimal-format: "0.00"
+
+language-test:
+  invalid-language: "<red>The target does not have a valid language.</red>"
+  language-code: "<green>Language Code: <gray>{language_code}</gray></green>"
+  java-locale: "<green>Java Locale: <gray>{java_locale}</gray></green>"
+  message: "<green>Message Test</green>"
+  broadcast: "<bold><green>Broadcast Test</green></bold>"
+  action-bar: "<green>Action Bar Test</green>"
+  sound:
+    name: "BLOCK_BEACON_ACTIVATE"
+    volume: "1.0"
+    pitch: "1.0"
+  title:
+    title: "<green>Title Test</green>"
+    subtitle: "<green>Subtitle Test</green>"
+    fade-in: "20"
+    stay: "20"
+    fade-out: "20"
 
 error:
   player-only: "<red>That command can only be executed by a player.</red>"
@@ -22,6 +41,7 @@ error:
   invalid-world: "<red>You must be in a valid world to execute this command.</red>"
   world-required: "<red>The server must have at least one world to use this command.</red>"
   no-permission: "<red>Missing Permission: <gray>{permission}</gray>.</red>"
+  invalid-target: "<red><gray>{target}</gray> is not online or does not exist.</red>"
 
 command:
   global-gamerule:
@@ -44,6 +64,7 @@ command:
       command-list:
         - "<aqua>/sb help</aqua><gray>: Show this list of commands.</gray>"
         - "<aqua>/sb reload</aqua><gray>: Reload the configuration files for SirBlobmanCore.</gray>"
+        - "<aqua>/sb language-test [player]</aqua><gray>: Send language test messages."
         - "<aqua>/debug-event</aqua><gray>: Show information about which classes are listing to an event (console only)</gray>"
         - "<aqua>/global-gamerule</aqua><gray>: Change a gamerule for every world on the server.</gray>"
         - "<aqua>/item-info</aqua><gray>: Show information about the material and damage of an item.</gray>"

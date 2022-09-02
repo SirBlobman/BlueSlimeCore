@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.language.MultiReplacer;
 import com.github.sirblobman.api.language.Replacer;
 import com.github.sirblobman.api.language.SimpleReplacer;
 
@@ -82,8 +83,9 @@ public class CommandGlobalGamerule extends Command {
         for (World world : worldList) {
             String worldName = world.getName();
             String gameRuleValue = world.getGameRuleValue(gameRuleString);
-            Replacer replacer = message -> message.replace("{world}", worldName)
-                    .replace("{value}", gameRuleValue);
+
+            Replacer replacer = new MultiReplacer("{world}", worldName)
+                    .addReplacement("{value}", gameRuleValue);
             sendMessage(sender, "command.global-gamerule.list-line-format", replacer);
         }
     }
@@ -103,15 +105,17 @@ public class CommandGlobalGamerule extends Command {
 
         if (successCount > 0) {
             String finalSuccessCount = Integer.toString(successCount);
-            Replacer replacer = message -> message.replace("{count}", finalSuccessCount)
-                    .replace("{rule}", gameRuleString).replace("{value}", value);
+            Replacer replacer = new MultiReplacer("{count}", finalSuccessCount)
+                    .addReplacement("{rule}", gameRuleString)
+                    .addReplacement("{value}", value);
             sendMessage(sender, "command.global-gamerule.success-count", replacer);
         }
 
         if (failureCount > 0) {
             String finalFailureCount = Integer.toString(successCount);
-            Replacer replacer = message -> message.replace("{count}", finalFailureCount)
-                    .replace("{rule}", gameRuleString).replace("{value}", value);
+            Replacer replacer = new MultiReplacer("{count}", finalFailureCount)
+                    .addReplacement("{rule}", gameRuleString)
+                    .addReplacement("{value}", value);
             sendMessage(sender, "command.global-gamerule.failure-count", replacer);
         }
     }

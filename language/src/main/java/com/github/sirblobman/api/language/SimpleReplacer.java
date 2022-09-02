@@ -12,7 +12,7 @@ public final class SimpleReplacer implements Replacer {
     private final String replacement;
 
     public SimpleReplacer(String target, String replacement) {
-        this.target = Validate.notNull(target, "target must not be null!");
+        this.target = Validate.notEmpty(target, "target must not be empty!");
         this.replacement = Validate.notNull(replacement, "replacement must not be null!");
     }
 
