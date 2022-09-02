@@ -24,7 +24,7 @@ public final class MultiReplacer implements Replacer {
     }
 
     public MultiReplacer addReplacement(String target, String replacement) {
-        if(this.replacementMap.containsKey(target)) {
+        if (this.replacementMap.containsKey(target)) {
             String mapReplacement = this.replacementMap.get(target);
             throw new IllegalArgumentException("'" + target + "' is already being replaced with '"
                     + mapReplacement + "'.");

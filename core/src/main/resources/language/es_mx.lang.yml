@@ -1,0 +1,16 @@
+parent: "en_us"
+language-name: "es_mx"
+decimal-format: "0.00"
+
+language-test:
+  invalid-language: "<red>el jugador no tiene un idioma selecionado.</red>"
+  language-code: "<green>Codigo de Idioma: <gray>{language_code}</gray></green>"
+  java-locale: "<green>Java Locale: <gray>{java_locale}</gray></green>"
+  message: "<green>mensaje de prueba</green>"
+  broadcast: "<bold><green>anuncio de prueba</green></bold>"
+  action-bar: "<green>barra de aciones de prueba</green>"
+  sound:
+    name: "ENTITY_COW_HURT"
+  title:
+    title: "<green>título de prueba</green>"
+    subtitle: "<green>subtítulo de prueba</green>"

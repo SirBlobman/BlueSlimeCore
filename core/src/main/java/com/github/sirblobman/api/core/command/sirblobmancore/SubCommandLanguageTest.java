@@ -36,7 +36,7 @@ public final class SubCommandLanguageTest extends Command {
 
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        if(args.length == 1) {
+        if (args.length == 1) {
             Set<String> valueSet = getOnlinePlayerNames();
             return getMatching(args[0], valueSet);
         }
@@ -47,10 +47,10 @@ public final class SubCommandLanguageTest extends Command {
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
         CommandSender target = sender;
-        if(args.length > 0) {
+        if (args.length > 0) {
             String targetName = args[0];
             target = findTarget(sender, targetName);
-            if(target == null) {
+            if (target == null) {
                 Replacer replacer = new SimpleReplacer("{target}", targetName);
                 sendMessage(sender, "error.invalid-target", replacer);
                 return true;
@@ -59,7 +59,7 @@ public final class SubCommandLanguageTest extends Command {
 
         LanguageManager languageManager = getLanguageManager();
         Language language = languageManager.getLanguage(target);
-        if(language == null) {
+        if (language == null) {
             languageManager.sendMessage(sender, "language-test.invalid-language", null);
             return true;
         }
@@ -69,14 +69,14 @@ public final class SubCommandLanguageTest extends Command {
         languageManager.sendMessage(target, "language-test.language-code", languageCodeReplacer);
 
         Optional<Locale> optionalJavaLocale = language.getJavaLocale();
-        if(optionalJavaLocale.isPresent()) {
+        if (optionalJavaLocale.isPresent()) {
             Locale javaLocale = optionalJavaLocale.get();
             String javaLocaleTag = javaLocale.toLanguageTag();
             Replacer javaLocaleReplacer = new SimpleReplacer("{java_locale}", javaLocaleTag);
             languageManager.sendMessage(target, "language-test.java-locale", javaLocaleReplacer);
         }
-        
-        if(target instanceof Player) {
+
+        if (target instanceof Player) {
             Player targetPlayer = (Player) target;
             languageManager.sendActionBar(targetPlayer, "language-test.action-bar", null);
             languageManager.sendSound(targetPlayer, "language-test.sound");
