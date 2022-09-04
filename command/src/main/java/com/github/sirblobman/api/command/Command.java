@@ -291,6 +291,15 @@ public abstract class Command implements TabExecutor {
         languageManager.sendMessage(sender, key, replacer);
     }
 
+    protected final void sendMessageWithPrefix(CommandSender sender, String key, Replacer replacer) {
+        LanguageManager languageManager = getLanguageManager();
+        if (languageManager == null) {
+            return;
+        }
+
+        languageManager.sendMessageWithPrefix(sender, key, replacer);
+    }
+
     /**
      * Check if a sender has access to a permission.
      *
