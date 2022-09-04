@@ -391,6 +391,23 @@ public final class LanguageManager {
     }
 
     @NotNull
+    public Component getMessageWithPrefix(@Nullable CommandSender commandSender, @NotNull String key,
+                                          @Nullable Replacer replacer) {
+        String messageString = getMessageString(commandSender, key, replacer);
+        if (messageString.isEmpty()) {
+            return Component.empty();
+        }
+
+        String prefixString = getMessageString(commandSender, "prefix", replacer);
+        if (!prefixString.isEmpty()) {
+            messageString = (prefixString + " " + messageString);
+        }
+
+        MiniMessage miniMessageHandler = getMiniMessage();
+        return miniMessageHandler.deserialize(messageString);
+    }
+
+    @NotNull
     @Deprecated
     public String getMessageLegacy(@Nullable CommandSender commandSender, @NotNull String key,
                                    @Nullable Replacer replacer) {
@@ -414,6 +431,12 @@ public final class LanguageManager {
 
     public void sendMessage(@NotNull CommandSender commandSender, @NotNull String key, @Nullable Replacer replacer) {
         Component message = getMessage(commandSender, key, replacer);
+        sendMessage(commandSender, message);
+    }
+
+    public void sendMessageWithPrefix(@NotNull CommandSender commandSender, @NotNull String key,
+                                      @Nullable Replacer replacer) {
+        Component message = getMessageWithPrefix(commandSender, key, replacer);
         sendMessage(commandSender, message);
     }
 

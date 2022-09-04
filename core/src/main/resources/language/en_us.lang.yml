@@ -33,6 +33,7 @@ language-test:
     fade-in: "20"
     stay: "20"
     fade-out: "20"
+  complete: "<green>The language test is finished.</green>"
 
 error:
   player-only: "<red>That command can only be executed by a player.</red>"

@@ -14,3 +14,4 @@ language-test:
   title:
     title: "<green>título de prueba</green>"
     subtitle: "<green>subtítulo de prueba</green>"
+  complete: "<green>la prueba de idioma ha terminado.</green>"

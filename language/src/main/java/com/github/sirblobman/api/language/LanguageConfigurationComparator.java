@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.sirblobman.api.utility.Validate;
 
-public class LanguageConfigurationComparator implements Comparator<ConfigurationSection> {
+public final class LanguageConfigurationComparator implements Comparator<ConfigurationSection> {
     @Override
     public int compare(ConfigurationSection section1, ConfigurationSection section2) {
         Validate.notNull(section1, "section1 must not be null!");
