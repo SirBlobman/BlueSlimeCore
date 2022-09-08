@@ -26,7 +26,18 @@ public final class CommandItemToNBT extends PlayerCommand {
         super(plugin, "item-to-nbt");
         setPermissionName("sirblobman.core.command.item-to-nbt");
         this.plugin = plugin;
-        this.prettyGson = new GsonBuilder().setPrettyPrinting().setLenient().create();
+
+        // 1.8 doesn't have the setLenient() method in GsonBuilder.
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setPrettyPrinting();
+
+        try {
+            gsonBuilder.setLenient();
+        } catch(NoSuchMethodError error) {
+            // 1.8 doesn't have the setLenient method in GsonBuilder.
+        }
+
+        this.prettyGson = gsonBuilder.create();
     }
 
     @Override
