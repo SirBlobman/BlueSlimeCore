@@ -26,6 +26,9 @@
         <repository>
             <id>ender-zone</id>
             <url>https://ci.ender.zone/plugin/repository/everything/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
