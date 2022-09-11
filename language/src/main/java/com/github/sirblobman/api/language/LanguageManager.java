@@ -18,12 +18,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
@@ -34,6 +36,7 @@ import com.github.sirblobman.api.language.sound.XSoundInfo;
 import com.github.sirblobman.api.utility.Validate;
 
 import com.cryptomorin.xseries.XSound;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -48,7 +51,7 @@ public final class LanguageManager {
 
     static {
         // Last Updated: June 28, 2022 18:03
-        KNOWN_LANGUAGE_ARRAY = new String[]{
+        KNOWN_LANGUAGE_ARRAY = new String[] {
                 "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar", "be_by", "bg_bg", "br_fr", "brb", "bs_ba",
                 "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de", "el_gr", "en_au", "en_ca", "en_gb",
                 "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar", "es_cl", "es_ec", "es_es",
@@ -73,6 +76,7 @@ public final class LanguageManager {
     private Language defaultLanguage;
     private Language consoleLanguage;
     private boolean forceDefaultLanguage;
+    private boolean usePlaceholderAPI;
 
     public LanguageManager(ConfigurationManager configurationManager) {
         Validate.notNull(configurationManager, "configurationManager must not be null!");
@@ -85,6 +89,7 @@ public final class LanguageManager {
         this.defaultLanguage = null;
         this.consoleLanguage = null;
         this.forceDefaultLanguage = false;
+        this.usePlaceholderAPI = false;
     }
 
     @NotNull
@@ -131,14 +136,21 @@ public final class LanguageManager {
 
     @Nullable
     public Language getDefaultLanguage() {
-        if (this.defaultLanguage == null) {
-            if (this.defaultLanguageName != null) {
-                this.defaultLanguage = this.languageMap.get(this.defaultLanguageName);
-                if (this.defaultLanguage == null) {
-                    Logger logger = getLogger();
-                    logger.warning("Missing default language with name '" + this.defaultLanguageName + "'.");
-                }
-            }
+        if(this.defaultLanguage != null) {
+            return this.defaultLanguage;
+        }
+
+        if(this.defaultLanguageName == null) {
+            Logger logger = getLogger();
+            logger.warning("Default language name is not properly defined.");
+            return null;
+        }
+
+        this.defaultLanguage = this.languageMap.get(this.defaultLanguageName);
+        if(this.defaultLanguage == null) {
+            Logger logger = getLogger();
+            logger.warning("Missing default language with name '" + this.defaultLanguageName + "'.");
+            return null;
         }
 
         return this.defaultLanguage;
@@ -146,14 +158,26 @@ public final class LanguageManager {
 
     @Nullable
     public Language getConsoleLanguage() {
-        if (this.consoleLanguage == null) {
-            if (this.consoleLanguageName != null) {
-                this.consoleLanguage = this.languageMap.get(this.consoleLanguageName);
-                if (this.consoleLanguage == null) {
-                    Logger logger = getLogger();
-                    logger.warning("Missing console language with name '" + this.consoleLanguageName + "'.");
-                }
-            }
+        if(isForceDefaultLanguage()) {
+            return getDefaultLanguage();
+        }
+
+        if(this.consoleLanguage != null) {
+            return this.consoleLanguage;
+        }
+
+        if(this.consoleLanguageName == null) {
+            Logger logger = getLogger();
+            logger.warning("Console language name is not properly defined, using default.");
+            return getDefaultLanguage();
+        }
+
+        this.consoleLanguage = this.languageMap.get(this.consoleLanguageName);
+        if(this.consoleLanguage == null) {
+            Logger logger = getLogger();
+            logger.warning("Missing console language with name '" + this.consoleLanguageName
+                    + "', using default.");
+            return getDefaultLanguage();
         }
 
         return this.consoleLanguage;
@@ -161,6 +185,24 @@ public final class LanguageManager {
 
     public boolean isForceDefaultLanguage() {
         return this.forceDefaultLanguage;
+    }
+
+    public boolean isUsePlaceholderAPI() {
+        return this.usePlaceholderAPI;
+    }
+
+    @NotNull
+    public String replacePlaceholderAPI(CommandSender commandSender, String message) {
+        if (message == null || message.isEmpty()) {
+            return "";
+        }
+
+        if(!(commandSender instanceof OfflinePlayer)) {
+            return message;
+        }
+
+        OfflinePlayer player = (OfflinePlayer) commandSender;
+        return PlaceholderAPI.setPlaceholders(player, message);
     }
 
     public void saveDefaultLanguageFiles() {
@@ -282,6 +324,14 @@ public final class LanguageManager {
             printDebug("Current resource holder is not a plugin, ignoring adventure audiences.");
         }
 
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        boolean usePlaceholderAPI = configuration.getBoolean("use-placeholder-api", false);
+        boolean existsPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
+        this.usePlaceholderAPI = (usePlaceholderAPI && existsPlaceholderAPI);
+        printDebug("Config Use PlaceholderAPI: " + usePlaceholderAPI);
+        printDebug("PlaceholderAPI exists: " + existsPlaceholderAPI);
+        printDebug("Use PlaceholderAPI: " + this.usePlaceholderAPI);
+
         int languageCount = this.languageMap.size();
         printDebug("Successfully loaded " + languageCount + " language(s).");
         printDebug("Reload Language Files End");
@@ -355,8 +405,7 @@ public final class LanguageManager {
     }
 
     @NotNull
-    public String getMessageString(@Nullable CommandSender commandSender, @NotNull String key,
-                                   @Nullable Replacer replacer) {
+    public String getMessageRaw(@Nullable CommandSender commandSender, @NotNull String key) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(commandSender);
@@ -366,16 +415,19 @@ public final class LanguageManager {
             return "";
         }
 
-        String message = language.getTranslation(key);
-        if (message.isEmpty()) {
+        return language.getTranslation(key);
+    }
+
+    @NotNull
+    public String getMessageString(@Nullable CommandSender commandSender, @NotNull String key,
+                                   @Nullable Replacer replacer) {
+        String messageRaw = getMessageRaw(commandSender, key);
+        if(messageRaw.isEmpty()) {
             return "";
         }
 
-        if (replacer != null) {
-            message = replacer.replace(message);
-        }
-
-        return message;
+        String message = (isUsePlaceholderAPI() ? replacePlaceholderAPI(commandSender, messageRaw) : messageRaw);
+        return (replacer == null ? message : replacer.replace(message));
     }
 
     @NotNull

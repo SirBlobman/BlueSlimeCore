@@ -13,7 +13,7 @@ public final class DecimalReplacer implements Replacer {
     private final Number number;
 
     public DecimalReplacer(LanguageManager languageManager, CommandSender audience, String target,
-                            Number number) {
+                           Number number) {
         this.languageManager = Validate.notNull(languageManager, "languageManager must not be null!");
         this.target = Validate.notEmpty(target, "target must not be empty!");
         this.number = Validate.notNull(number, "number must not be null!");

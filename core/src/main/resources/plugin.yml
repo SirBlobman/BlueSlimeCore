@@ -20,6 +20,7 @@ softdepend:
   - "Factions"
   - "FactionsX"
   - "LegacyFactions"
+  - "PlaceholderAPI"
 
 commands:
   sirblobmancore:
