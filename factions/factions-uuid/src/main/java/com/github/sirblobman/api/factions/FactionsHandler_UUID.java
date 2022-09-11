@@ -45,7 +45,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public boolean isSafeZone(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return false;
         }
 
@@ -55,7 +55,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public boolean isWarZone(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return false;
         }
 
@@ -65,7 +65,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public boolean isWilderness(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return true;
         }
 
@@ -76,7 +76,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     public boolean hasFaction(OfflinePlayer player) {
         FPlayers factionPlayers = FPlayers.getInstance();
         FPlayer factionPlayer = factionPlayers.getByOfflinePlayer(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -87,7 +87,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     public Faction getFactionFor(OfflinePlayer player) {
         FPlayers factionPlayers = FPlayers.getInstance();
         FPlayer factionPlayer = factionPlayers.getByOfflinePlayer(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return null;
         }
 
@@ -97,7 +97,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     @Override
     public String getFactionNameFor(OfflinePlayer player) {
         Faction playerFaction = getFactionFor(player);
-        if(playerFaction == null) {
+        if (playerFaction == null) {
             return null;
         }
 
@@ -140,7 +140,7 @@ public final class FactionsHandler_UUID extends FactionsHandler {
     public boolean hasBypass(OfflinePlayer player) {
         FPlayers factionPlayers = FPlayers.getInstance();
         FPlayer factionPlayer = factionPlayers.getByOfflinePlayer(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 

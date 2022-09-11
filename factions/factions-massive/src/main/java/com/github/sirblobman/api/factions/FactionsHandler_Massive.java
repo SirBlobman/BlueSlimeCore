@@ -34,7 +34,7 @@ public final class FactionsHandler_Massive extends FactionsHandler {
     @Override
     public String getFactionNameAt(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return null;
         }
 
@@ -77,7 +77,7 @@ public final class FactionsHandler_Massive extends FactionsHandler {
     @Override
     public boolean hasFaction(OfflinePlayer player) {
         MPlayer factionPlayer = MPlayer.get(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -87,7 +87,7 @@ public final class FactionsHandler_Massive extends FactionsHandler {
     @Override
     public Faction getFactionFor(OfflinePlayer player) {
         MPlayer factionPlayer = MPlayer.get(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return null;
         }
 
@@ -97,7 +97,7 @@ public final class FactionsHandler_Massive extends FactionsHandler {
     @Override
     public String getFactionNameFor(OfflinePlayer player) {
         Faction playerFaction = getFactionFor(player);
-        if(playerFaction == null) {
+        if (playerFaction == null) {
             return null;
         }
 
@@ -137,7 +137,7 @@ public final class FactionsHandler_Massive extends FactionsHandler {
     @Override
     public boolean hasBypass(OfflinePlayer player) {
         MPlayer factionPlayer = MPlayer.get(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 

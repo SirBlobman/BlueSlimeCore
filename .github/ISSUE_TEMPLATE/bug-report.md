@@ -19,10 +19,12 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots or videos to help explain your problem.
 
 **Minecraft Version**
- - Do `/bukkit:version` to find out
+
+- Do `/bukkit:version` to find out
 
 **SirBlobmanCore Version:**
- - Do `/about SirBlobmanCore` to find out
+
+- Do `/about SirBlobmanCore` to find out
 
 **Additional context**
 Add any other information about the problem here.

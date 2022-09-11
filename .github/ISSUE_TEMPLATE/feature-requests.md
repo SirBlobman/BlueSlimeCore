@@ -1,6 +1,6 @@
 ---
 name: Feature Requests
-about: Make a suggestion or submit  a feature you already coded
+about: Make a suggestion or submit a feature you already coded
 title: ''
 labels: Feature Request
 assignees: ''

@@ -17,7 +17,7 @@ public final class ComplexReplacer implements Replacer {
     public String replace(String string) {
         Replacer[] replacerArray = getReplacerArray();
         for (Replacer replacer : replacerArray) {
-            if(replacer == null) {
+            if (replacer == null) {
                 continue;
             }
 

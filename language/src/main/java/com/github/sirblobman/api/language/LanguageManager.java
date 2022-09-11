@@ -51,7 +51,7 @@ public final class LanguageManager {
 
     static {
         // Last Updated: June 28, 2022 18:03
-        KNOWN_LANGUAGE_ARRAY = new String[] {
+        KNOWN_LANGUAGE_ARRAY = new String[]{
                 "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar", "be_by", "bg_bg", "br_fr", "brb", "bs_ba",
                 "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de", "el_gr", "en_au", "en_ca", "en_gb",
                 "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar", "es_cl", "es_ec", "es_es",
@@ -136,18 +136,18 @@ public final class LanguageManager {
 
     @Nullable
     public Language getDefaultLanguage() {
-        if(this.defaultLanguage != null) {
+        if (this.defaultLanguage != null) {
             return this.defaultLanguage;
         }
 
-        if(this.defaultLanguageName == null) {
+        if (this.defaultLanguageName == null) {
             Logger logger = getLogger();
             logger.warning("Default language name is not properly defined.");
             return null;
         }
 
         this.defaultLanguage = this.languageMap.get(this.defaultLanguageName);
-        if(this.defaultLanguage == null) {
+        if (this.defaultLanguage == null) {
             Logger logger = getLogger();
             logger.warning("Missing default language with name '" + this.defaultLanguageName + "'.");
             return null;
@@ -158,22 +158,22 @@ public final class LanguageManager {
 
     @Nullable
     public Language getConsoleLanguage() {
-        if(isForceDefaultLanguage()) {
+        if (isForceDefaultLanguage()) {
             return getDefaultLanguage();
         }
 
-        if(this.consoleLanguage != null) {
+        if (this.consoleLanguage != null) {
             return this.consoleLanguage;
         }
 
-        if(this.consoleLanguageName == null) {
+        if (this.consoleLanguageName == null) {
             Logger logger = getLogger();
             logger.warning("Console language name is not properly defined, using default.");
             return getDefaultLanguage();
         }
 
         this.consoleLanguage = this.languageMap.get(this.consoleLanguageName);
-        if(this.consoleLanguage == null) {
+        if (this.consoleLanguage == null) {
             Logger logger = getLogger();
             logger.warning("Missing console language with name '" + this.consoleLanguageName
                     + "', using default.");
@@ -197,7 +197,7 @@ public final class LanguageManager {
             return "";
         }
 
-        if(!(commandSender instanceof OfflinePlayer)) {
+        if (!(commandSender instanceof OfflinePlayer)) {
             return message;
         }
 
@@ -422,7 +422,7 @@ public final class LanguageManager {
     public String getMessageString(@Nullable CommandSender commandSender, @NotNull String key,
                                    @Nullable Replacer replacer) {
         String messageRaw = getMessageRaw(commandSender, key);
-        if(messageRaw.isEmpty()) {
+        if (messageRaw.isEmpty()) {
             return "";
         }
 

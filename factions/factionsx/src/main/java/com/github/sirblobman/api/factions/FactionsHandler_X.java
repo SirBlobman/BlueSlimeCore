@@ -31,7 +31,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     @Override
     public String getFactionNameAt(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return null;
         }
 
@@ -41,7 +41,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     @Override
     public boolean isSafeZone(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return false;
         }
 
@@ -51,7 +51,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     @Override
     public boolean isWarZone(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return false;
         }
 
@@ -61,7 +61,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     @Override
     public boolean isWilderness(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return true;
         }
 
@@ -72,7 +72,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     public boolean hasFaction(OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -83,7 +83,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     public Faction getFactionFor(OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return null;
         }
 
@@ -93,7 +93,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     @Override
     public String getFactionNameFor(OfflinePlayer player) {
         Faction playerFaction = getFactionFor(player);
-        if(playerFaction == null) {
+        if (playerFaction == null) {
             return null;
         }
 
@@ -152,7 +152,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     public boolean hasBypass(OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -167,7 +167,7 @@ public final class FactionsHandler_X extends FactionsHandler {
 
         Faction playerFaction = getFactionFor(player);
         Faction locationFaction = getFactionAt(location);
-        if(playerFaction == null || locationFaction == null) {
+        if (playerFaction == null || locationFaction == null) {
             return false;
         }
 
@@ -208,7 +208,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     public boolean canBuild(OfflinePlayer player, Location location) {
         UUID playerId = player.getUniqueId();
         FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -219,7 +219,7 @@ public final class FactionsHandler_X extends FactionsHandler {
     public boolean canDestroy(OfflinePlayer player, Location location) {
         UUID playerId = player.getUniqueId();
         FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -240,11 +240,16 @@ public final class FactionsHandler_X extends FactionsHandler {
 
         Relation relation = viewerFaction.getRelationTo(playerFaction);
         switch (relation) {
-            case ALLY: return ChatColor.LIGHT_PURPLE;
-            case ENEMY: return ChatColor.RED;
-            case TRUCE: return ChatColor.YELLOW;
-            case NEUTRAL: return ChatColor.WHITE;
-            default: break;
+            case ALLY:
+                return ChatColor.LIGHT_PURPLE;
+            case ENEMY:
+                return ChatColor.RED;
+            case TRUCE:
+                return ChatColor.YELLOW;
+            case NEUTRAL:
+                return ChatColor.WHITE;
+            default:
+                break;
         }
 
         return null;

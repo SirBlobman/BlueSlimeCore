@@ -32,7 +32,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public String getFactionNameAt(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return null;
         }
 
@@ -42,7 +42,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean isSafeZone(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return false;
         }
 
@@ -52,7 +52,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean isWarZone(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return false;
         }
 
@@ -62,7 +62,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean isWilderness(Location location) {
         Faction locationFaction = getFactionAt(location);
-        if(locationFaction == null) {
+        if (locationFaction == null) {
             return true;
         }
 
@@ -72,7 +72,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean hasFaction(OfflinePlayer player) {
         FPlayer factionPlayer = FPlayerColl.get(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 
@@ -82,7 +82,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public Faction getFactionFor(OfflinePlayer player) {
         FPlayer factionPlayer = FPlayerColl.get(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return null;
         }
 
@@ -92,7 +92,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public String getFactionNameFor(OfflinePlayer player) {
         Faction playerFaction = getFactionFor(player);
-        if(playerFaction == null) {
+        if (playerFaction == null) {
             return null;
         }
 
@@ -132,7 +132,7 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean hasBypass(OfflinePlayer player) {
         FPlayer factionPlayer = FPlayerColl.get(player);
-        if(factionPlayer == null) {
+        if (factionPlayer == null) {
             return false;
         }
 

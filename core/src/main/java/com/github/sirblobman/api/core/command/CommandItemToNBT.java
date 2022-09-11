@@ -33,7 +33,7 @@ public final class CommandItemToNBT extends PlayerCommand {
 
         try {
             gsonBuilder.setLenient();
-        } catch(NoSuchMethodError error) {
+        } catch (NoSuchMethodError error) {
             // 1.8 doesn't have the setLenient method in GsonBuilder.
         }
 
