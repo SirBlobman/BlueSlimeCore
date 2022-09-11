@@ -25,50 +25,78 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
 
     @Override
     public Faction getFactionAt(Location location) {
-        Locality locality = Locality.of(location);
-        return locality.getFactionHere();
+        Locality factionLocation = Locality.of(location);
+        return factionLocation.getFactionHere();
     }
 
     @Override
     public String getFactionNameAt(Location location) {
-        Faction faction = getFactionAt(location);
-        return (faction == null ? null : faction.getTag());
+        Faction locationFaction = getFactionAt(location);
+        if(locationFaction == null) {
+            return null;
+        }
+
+        return locationFaction.getTag();
     }
 
     @Override
     public boolean isSafeZone(Location location) {
-        Faction faction = getFactionAt(location);
-        return (faction != null && faction.isSafeZone());
+        Faction locationFaction = getFactionAt(location);
+        if(locationFaction == null) {
+            return false;
+        }
+
+        return locationFaction.isSafeZone();
     }
 
     @Override
     public boolean isWarZone(Location location) {
-        Faction faction = getFactionAt(location);
-        return (faction != null && faction.isWarZone());
+        Faction locationFaction = getFactionAt(location);
+        if(locationFaction == null) {
+            return false;
+        }
+
+        return locationFaction.isWarZone();
     }
 
     @Override
     public boolean isWilderness(Location location) {
-        Faction faction = getFactionAt(location);
-        return (faction == null || faction.isWilderness());
+        Faction locationFaction = getFactionAt(location);
+        if(locationFaction == null) {
+            return true;
+        }
+
+        return locationFaction.isWilderness();
     }
 
     @Override
     public boolean hasFaction(OfflinePlayer player) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        return (fplayer != null && fplayer.hasFaction());
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        if(factionPlayer == null) {
+            return false;
+        }
+
+        return factionPlayer.hasFaction();
     }
 
     @Override
     public Faction getFactionFor(OfflinePlayer player) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        return (fplayer == null ? null : fplayer.getFaction());
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        if(factionPlayer == null) {
+            return null;
+        }
+
+        return factionPlayer.getFaction();
     }
 
     @Override
     public String getFactionNameFor(OfflinePlayer player) {
-        Faction faction = getFactionFor(player);
-        return (faction == null ? null : faction.getTag());
+        Faction playerFaction = getFactionFor(player);
+        if(playerFaction == null) {
+            return null;
+        }
+
+        return playerFaction.getTag();
     }
 
     @Override
@@ -104,7 +132,11 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean hasBypass(OfflinePlayer player) {
         FPlayer factionPlayer = FPlayerColl.get(player);
-        return (factionPlayer != null && factionPlayer.isAdminBypassing());
+        if(factionPlayer == null) {
+            return false;
+        }
+
+        return factionPlayer.isAdminBypassing();
     }
 
     @Override
@@ -114,12 +146,12 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
             return false;
         }
 
-        Faction faction = getFactionAt(location);
-        if (faction == null) {
+        Faction locationFaction = getFactionAt(location);
+        if (locationFaction == null) {
             return false;
         }
 
-        Relation relation = factionPlayer.getRelationTo(faction);
+        Relation relation = factionPlayer.getRelationTo(locationFaction);
         return (relation == Relation.ENEMY);
     }
 
@@ -129,29 +161,29 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
             return false;
         }
 
-        Faction factionPlayer = getFactionFor(player);
-        if (factionPlayer == null) {
+        Faction playerFaction = getFactionFor(player);
+        if (playerFaction == null) {
             return false;
         }
 
-        Faction factionLocation = getFactionAt(location);
-        if (factionLocation == null) {
+        Faction locationFaction = getFactionAt(location);
+        if (locationFaction == null) {
             return false;
         }
 
-        String factionPlayerId = factionPlayer.getId();
-        String factionLocationId = factionLocation.getId();
+        String factionPlayerId = playerFaction.getId();
+        String factionLocationId = locationFaction.getId();
         return factionPlayerId.equals(factionLocationId);
     }
 
     @Override
     public boolean isLeader(OfflinePlayer player, Location location) {
-        Faction faction = getFactionAt(location);
-        if (faction == null) {
+        Faction locationFaction = getFactionAt(location);
+        if (locationFaction == null) {
             return false;
         }
 
-        FPlayer factionOwner = faction.getOwner();
+        FPlayer factionOwner = locationFaction.getOwner();
         if (factionOwner == null) {
             return false;
         }
@@ -169,8 +201,8 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
             return false;
         }
 
-        Locality locality = Locality.of(location);
-        LocalityOwnership ownership = locality.getOwnership();
+        Locality factionLocation = Locality.of(location);
+        LocalityOwnership ownership = factionLocation.getOwnership();
         return ownership.hasAccess(factionPlayer);
     }
 
@@ -181,8 +213,8 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
             return false;
         }
 
-        Locality locality = Locality.of(location);
-        LocalityOwnership ownership = locality.getOwnership();
+        Locality factionLocation = Locality.of(location);
+        LocalityOwnership ownership = factionLocation.getOwnership();
         return ownership.hasAccess(factionPlayer);
     }
 
@@ -211,14 +243,14 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
 
     @Override
     public Set<UUID> getMembersForFactionAt(Location location) {
-        Faction faction = getFactionAt(location);
-        return getMembersForFaction(faction);
+        Faction locationFaction = getFactionAt(location);
+        return getMembersForFaction(locationFaction);
     }
 
     @Override
     public Set<UUID> getMembersForFactionOf(OfflinePlayer player) {
-        Faction faction = getFactionFor(player);
-        return getMembersForFaction(faction);
+        Faction playerFaction = getFactionFor(player);
+        return getMembersForFaction(playerFaction);
     }
 
     private Set<UUID> getMembersForFaction(Faction faction) {

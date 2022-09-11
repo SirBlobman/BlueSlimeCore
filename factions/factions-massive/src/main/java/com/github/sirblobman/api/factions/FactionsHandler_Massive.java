@@ -33,45 +33,45 @@ public final class FactionsHandler_Massive extends FactionsHandler {
 
     @Override
     public String getFactionNameAt(Location location) {
-        Faction faction = getFactionAt(location);
-        if(faction == null) {
+        Faction locationFaction = getFactionAt(location);
+        if(locationFaction == null) {
             return null;
         }
 
-        return faction.getName();
+        return locationFaction.getName();
     }
 
     @Override
     public boolean isSafeZone(Location location) {
-        Faction faction = getFactionAt(location);
-        if (faction == null) {
+        Faction locationFaction = getFactionAt(location);
+        if (locationFaction == null) {
             return false;
         }
 
-        String factionId = faction.getId();
+        String factionId = locationFaction.getId();
         return Factions.ID_SAFEZONE.equals(factionId);
     }
 
     @Override
     public boolean isWarZone(Location location) {
-        Faction faction = getFactionAt(location);
-        if (faction == null) {
+        Faction locationFaction = getFactionAt(location);
+        if (locationFaction == null) {
             return false;
         }
 
-        String factionId = faction.getId();
+        String factionId = locationFaction.getId();
         return Factions.ID_WARZONE.equals(factionId);
     }
 
     @Override
     public boolean isWilderness(Location location) {
-        Faction faction = getFactionAt(location);
-        if (faction == null) {
+        Faction locationFaction = getFactionAt(location);
+        if (locationFaction == null) {
             return true;
         }
 
-        String factionId = faction.getId();
-        return Factions.ID_NONE.equals(factionId);
+        String locationFactionId = locationFaction.getId();
+        return Factions.ID_NONE.equals(locationFactionId);
     }
 
     @Override
@@ -96,12 +96,12 @@ public final class FactionsHandler_Massive extends FactionsHandler {
 
     @Override
     public String getFactionNameFor(OfflinePlayer player) {
-        Faction faction = getFactionFor(player);
-        if(faction == null) {
+        Faction playerFaction = getFactionFor(player);
+        if(playerFaction == null) {
             return null;
         }
 
-        return faction.getName();
+        return playerFaction.getName();
     }
 
     @Override
