@@ -73,61 +73,71 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
 
     @Override
     public boolean isMemberOrAlly(OfflinePlayer player1, OfflinePlayer player2) {
-        UUID uuid1 = player1.getUniqueId();
-        UUID uuid2 = player2.getUniqueId();
-        if (uuid1.equals(uuid2) || !hasFaction(player1) || !hasFaction(player2)) {
+        UUID playerId1 = player1.getUniqueId();
+        UUID playerId2 = player2.getUniqueId();
+        if (playerId1.equals(playerId2) || !hasFaction(player1) || !hasFaction(player2)) {
             return true;
         }
 
-        FPlayer fplayer1 = FPlayerColl.get(player1);
-        FPlayer fplayer2 = FPlayerColl.get(player2);
+        FPlayer factionPlayer1 = FPlayerColl.get(player1);
+        FPlayer factionPlayer2 = FPlayerColl.get(player2);
 
-        Relation relation = fplayer1.getRelationTo(fplayer2);
+        Relation relation = factionPlayer1.getRelationTo(factionPlayer2);
         return (relation == Relation.ALLY || relation == Relation.MEMBER);
     }
 
     @Override
     public boolean isEnemy(OfflinePlayer player1, OfflinePlayer player2) {
-        UUID uuid1 = player1.getUniqueId();
-        UUID uuid2 = player2.getUniqueId();
-        if (uuid1.equals(uuid2) || !hasFaction(player1) || !hasFaction(player2)) {
+        UUID playerId1 = player1.getUniqueId();
+        UUID playerId2 = player2.getUniqueId();
+        if (playerId1.equals(playerId2) || !hasFaction(player1) || !hasFaction(player2)) {
             return false;
         }
 
-        FPlayer fplayer1 = FPlayerColl.get(player1);
-        FPlayer fplayer2 = FPlayerColl.get(player2);
+        FPlayer factionPlayer1 = FPlayerColl.get(player1);
+        FPlayer factionPlayer2 = FPlayerColl.get(player2);
 
-        Relation relation = fplayer1.getRelationTo(fplayer2);
+        Relation relation = factionPlayer1.getRelationTo(factionPlayer2);
         return (relation == Relation.ENEMY);
     }
 
     @Override
     public boolean hasBypass(OfflinePlayer player) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        return (fplayer != null && fplayer.isAdminBypassing());
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        return (factionPlayer != null && factionPlayer.isAdminBypassing());
     }
 
     @Override
     public boolean isInEnemyLand(OfflinePlayer player, Location location) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        if (fplayer == null) return false;
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        if (factionPlayer == null) {
+            return false;
+        }
 
         Faction faction = getFactionAt(location);
-        if (faction == null) return false;
+        if (faction == null) {
+            return false;
+        }
 
-        Relation relation = fplayer.getRelationTo(faction);
+        Relation relation = factionPlayer.getRelationTo(faction);
         return (relation == Relation.ENEMY);
     }
 
     @Override
     public boolean isInOwnFaction(OfflinePlayer player, Location location) {
-        if (!hasFaction(player)) return false;
+        if (!hasFaction(player)) {
+            return false;
+        }
 
         Faction factionPlayer = getFactionFor(player);
-        if (factionPlayer == null) return false;
+        if (factionPlayer == null) {
+            return false;
+        }
 
         Faction factionLocation = getFactionAt(location);
-        if (factionLocation == null) return false;
+        if (factionLocation == null) {
+            return false;
+        }
 
         String factionPlayerId = factionPlayer.getId();
         String factionLocationId = factionLocation.getId();
@@ -137,85 +147,92 @@ public final class FactionsHandler_Legacy extends FactionsHandler {
     @Override
     public boolean isLeader(OfflinePlayer player, Location location) {
         Faction faction = getFactionAt(location);
-        if (faction == null) return false;
+        if (faction == null) {
+            return false;
+        }
 
-        FPlayer fowner = faction.getOwner();
-        if (fowner == null) return false;
+        FPlayer factionOwner = faction.getOwner();
+        if (factionOwner == null) {
+            return false;
+        }
 
         UUID playerId = player.getUniqueId();
         String playerIdString = playerId.toString();
-        String ownerIdString = fowner.getId();
+        String ownerIdString = factionOwner.getId();
         return playerIdString.equals(ownerIdString);
     }
 
     @Override
     public boolean canBuild(OfflinePlayer player, Location location) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        if (fplayer == null) return false;
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        if (factionPlayer == null) {
+            return false;
+        }
 
         Locality locality = Locality.of(location);
         LocalityOwnership ownership = locality.getOwnership();
-        return ownership.hasAccess(fplayer);
+        return ownership.hasAccess(factionPlayer);
     }
 
     @Override
     public boolean canDestroy(OfflinePlayer player, Location location) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        if (fplayer == null) return false;
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        if (factionPlayer == null) {
+            return false;
+        }
 
         Locality locality = Locality.of(location);
         LocalityOwnership ownership = locality.getOwnership();
-        return ownership.hasAccess(fplayer);
+        return ownership.hasAccess(factionPlayer);
     }
 
     @Override
     public ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        FPlayer fviewer = FPlayerColl.get(viewer);
-        if (fplayer == null || fviewer == null) return null;
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        FPlayer factionViewer = FPlayerColl.get(viewer);
+        if (factionPlayer == null || factionViewer == null) {
+            return null;
+        }
 
-        Relation relation = fviewer.getRelationTo(fplayer);
+        Relation relation = factionViewer.getRelationTo(factionPlayer);
         return relation.getColor();
     }
 
     @Override
     public String getRolePrefix(OfflinePlayer player) {
-        FPlayer fplayer = FPlayerColl.get(player);
-        if (fplayer == null) return null;
+        FPlayer factionPlayer = FPlayerColl.get(player);
+        if (factionPlayer == null) {
+            return null;
+        }
 
-        Role role = fplayer.getRole();
+        Role role = factionPlayer.getRole();
         return role.getPrefix();
     }
 
     @Override
     public Set<UUID> getMembersForFactionAt(Location location) {
         Faction faction = getFactionAt(location);
-        if (faction == null) return Collections.emptySet();
-
-        Set<FPlayer> memberSet = faction.getMembers();
-        Set<UUID> memberIdSet = new HashSet<>();
-
-        for (FPlayer fplayer : memberSet) {
-            String fplayerIdString = fplayer.getId();
-            UUID fplayerId = UUID.fromString(fplayerIdString);
-            memberIdSet.add(fplayerId);
-        }
-
-        return Collections.unmodifiableSet(memberIdSet);
+        return getMembersForFaction(faction);
     }
 
     @Override
     public Set<UUID> getMembersForFactionOf(OfflinePlayer player) {
         Faction faction = getFactionFor(player);
-        if (faction == null) return Collections.emptySet();
+        return getMembersForFaction(faction);
+    }
+
+    private Set<UUID> getMembersForFaction(Faction faction) {
+        if (faction == null) {
+            return Collections.emptySet();
+        }
 
         Set<FPlayer> memberSet = faction.getMembers();
         Set<UUID> memberIdSet = new HashSet<>();
 
-        for (FPlayer fplayer : memberSet) {
-            String fplayerIdString = fplayer.getId();
-            UUID fplayerId = UUID.fromString(fplayerIdString);
-            memberIdSet.add(fplayerId);
+        for (FPlayer member : memberSet) {
+            String memberIdString = member.getId();
+            UUID memberId = UUID.fromString(memberIdString);
+            memberIdSet.add(memberId);
         }
 
         return Collections.unmodifiableSet(memberIdSet);

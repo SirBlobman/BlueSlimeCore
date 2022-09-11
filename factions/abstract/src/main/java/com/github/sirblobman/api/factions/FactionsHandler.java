@@ -44,20 +44,24 @@ public abstract class FactionsHandler {
     public abstract String getFactionNameFor(OfflinePlayer player);
 
     /**
-     * @param player1 The first player
-     * @param player2 The second player
-     * @return {@code true} if player2 is the same as player1. {@code false} if either player is not in a faction.
-     * {@code true} if player2 has an ally/friend relationship with player1.
-     * {@code true} if player2 is in the same faction as
-     * player1. {@code false} otherwise
+     * Check if the second player has an ALLY relationship to the first player.
+     * Players in the same faction are considered allies.
+     * A player is always an ally to themselves.
+     *
+     * @param player1 The first player.
+     * @param player2 The second player.
+     * @return {@code true} if the second player is considered an ally of the first, otherwise {@code false}.
      */
     public abstract boolean isMemberOrAlly(OfflinePlayer player1, OfflinePlayer player2);
 
     /**
+     * Check if the second player has an ENEMY relationship to the first player.
+     * Players in the same faction are not considered enemies.
+     * A player is never an enemy to themselves.
+     *
      * @param player1 The first player
      * @param player2 The second player
-     * @return {@code false} if player2 is the same as player1. {@code false} if either player is not in a faction.
-     * {@code true} if player2 has an enemy relationship with player1. {@code false} otherwise
+     * @return {@code true} if the second player is considered an enemy of the first, otherwise {@code false}.
      */
     public abstract boolean isEnemy(OfflinePlayer player1, OfflinePlayer player2);
 
