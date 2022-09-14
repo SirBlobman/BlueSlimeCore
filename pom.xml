@@ -18,7 +18,7 @@
         <build.number>unofficial</build.number>
 
         <!-- This is the current version for releases -->
-        <sirblobman.core.version>2.5.6.${build.number}</sirblobman.core.version>
+        <sirblobman.core.version>2.5.7.Beta-${build.number}</sirblobman.core.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
