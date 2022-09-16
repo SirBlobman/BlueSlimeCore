@@ -16,7 +16,8 @@ import com.github.sirblobman.api.core.command.CommandItemInfo;
 import com.github.sirblobman.api.core.command.CommandItemToBase64;
 import com.github.sirblobman.api.core.command.CommandItemToNBT;
 import com.github.sirblobman.api.core.command.CommandItemToYML;
-import com.github.sirblobman.api.core.command.sirblobmancore.CommandSirBlobmanCore;
+import com.github.sirblobman.api.core.command.blueslimecore.CommandBlueSlimeCore;
+import com.github.sirblobman.api.core.configuration.CoreConfiguration;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
 import com.github.sirblobman.api.core.listener.ListenerLanguage;
 import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
@@ -36,9 +37,12 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 
 public final class CorePlugin extends ConfigurablePlugin {
+    private final CoreConfiguration coreConfiguration;
+
     private final UpdateManager updateManager;
 
     public CorePlugin() {
+        this.coreConfiguration = new CoreConfiguration();
         this.updateManager = new UpdateManager(this);
     }
 
@@ -54,13 +58,13 @@ public final class CorePlugin extends ConfigurablePlugin {
     public void onEnable() {
         reloadConfiguration();
 
-        registerCommands();
-        registerListeners();
-
-        if (isDebugMode()) {
+        CoreConfiguration coreConfiguration = getCoreConfiguration();
+        if (coreConfiguration.isDebugModeEnabled()) {
             printMultiVersionInformation();
         }
 
+        registerCommands();
+        registerListeners();
         registerUpdateChecker();
         registerbStats();
     }
@@ -72,10 +76,22 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     protected void reloadConfiguration() {
-        super.reloadConfiguration();
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.reload("config.yml");
 
         LanguageManager languageManager = getLanguageManager();
         languageManager.reloadLanguageFiles();
+
+        YamlConfiguration configuration = configurationManager.get("config.yml");
+        CoreConfiguration coreConfiguration = getCoreConfiguration();
+        coreConfiguration.load(configuration);
+
+        HandlerList.unregisterAll(this);
+        registerListeners();
+    }
+
+    public CoreConfiguration getCoreConfiguration() {
+        return this.coreConfiguration;
     }
 
     public UpdateManager getUpdateManager() {
@@ -146,15 +162,14 @@ public final class CorePlugin extends ConfigurablePlugin {
         new CommandItemToBase64(this).register();
         new CommandItemToNBT(this).register();
         new CommandItemToYML(this).register();
-        new CommandSirBlobmanCore(this).register();
+        new CommandBlueSlimeCore(this).register();
     }
 
     private void registerListeners() {
         new ListenerLanguage(this).register();
 
-        ConfigurationManager configurationManager = getConfigurationManager();
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        if (configuration.getBoolean("command-logger", false)) {
+        CoreConfiguration coreConfiguration = getCoreConfiguration();
+        if (coreConfiguration.isCommandLoggerEnabled()) {
             new ListenerCommandLogger(this).register();
         }
 

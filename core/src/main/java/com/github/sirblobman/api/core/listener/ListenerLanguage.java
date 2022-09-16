@@ -1,7 +1,6 @@
 package com.github.sirblobman.api.core.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,8 +8,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.core.configuration.CoreConfiguration;
 import com.github.sirblobman.api.language.LanguageCache;
 import com.github.sirblobman.api.plugin.listener.PluginListener;
 
@@ -21,7 +20,7 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
-        if (shouldCacheOnJoin()) {
+        if (isCacheOnJoin()) {
             Player player = e.getPlayer();
             updateLater(player);
         }
@@ -29,7 +28,7 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent e) {
-        if (shouldRemoveOnQuit()) {
+        if (isRemoveOnQuit()) {
             Player player = e.getPlayer();
             LanguageCache.removeCachedLocale(player);
         }
@@ -42,19 +41,18 @@ public final class ListenerLanguage extends PluginListener<CorePlugin> {
         scheduler.scheduleSyncDelayedTask(corePlugin, task);
     }
 
-    private YamlConfiguration getConfiguration() {
+    private CoreConfiguration getConfiguration() {
         CorePlugin plugin = getPlugin();
-        ConfigurationManager configurationManager = plugin.getConfigurationManager();
-        return configurationManager.get("config.yml");
+        return plugin.getCoreConfiguration();
     }
 
-    private boolean shouldCacheOnJoin() {
-        YamlConfiguration configuration = getConfiguration();
-        return configuration.getBoolean("cache-language-on-join");
+    private boolean isCacheOnJoin() {
+        CoreConfiguration configuration = getConfiguration();
+        return configuration.isCacheLanguageOnJoin();
     }
 
-    private boolean shouldRemoveOnQuit() {
-        YamlConfiguration configuration = getConfiguration();
-        return configuration.getBoolean("cache-language-remove-on-quit");
+    private boolean isRemoveOnQuit() {
+        CoreConfiguration configuration = getConfiguration();
+        return configuration.isRemoveCacheLanguageOnQuit();
     }
 }

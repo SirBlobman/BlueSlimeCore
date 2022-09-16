@@ -1,15 +1,14 @@
 package com.github.sirblobman.api.core.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.core.configuration.CoreConfiguration;
 import com.github.sirblobman.api.language.LanguageCache;
 import com.github.sirblobman.api.plugin.listener.PluginListener;
 
@@ -20,7 +19,7 @@ public final class ListenerLocaleChange extends PluginListener<CorePlugin> {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChange(PlayerLocaleChangeEvent e) {
-        if (shouldUpdate()) {
+        if (isUpdateOnChange()) {
             Player player = e.getPlayer();
             updateLater(player);
         }
@@ -33,14 +32,13 @@ public final class ListenerLocaleChange extends PluginListener<CorePlugin> {
         scheduler.runTaskLater(corePlugin, task, 2L);
     }
 
-    private YamlConfiguration getConfiguration() {
+    private CoreConfiguration getConfiguration() {
         CorePlugin plugin = getPlugin();
-        ConfigurationManager configurationManager = plugin.getConfigurationManager();
-        return configurationManager.get("config.yml");
+        return plugin.getCoreConfiguration();
     }
 
-    private boolean shouldUpdate() {
-        YamlConfiguration configuration = getConfiguration();
-        return configuration.getBoolean("cache-language-update-on-change");
+    private boolean isUpdateOnChange() {
+        CoreConfiguration configuration = getConfiguration();
+        return configuration.isUpdateCacheLanguageOnChange();
     }
 }
