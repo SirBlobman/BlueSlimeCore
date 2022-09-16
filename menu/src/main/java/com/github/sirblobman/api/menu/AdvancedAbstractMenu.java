@@ -24,6 +24,12 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
     private BukkitTask currentTask;
 
     public AdvancedAbstractMenu(Plugin plugin, Player player) {
+        this(null, plugin, player);
+    }
+
+    public AdvancedAbstractMenu(IMenu parentMenu, Plugin plugin, Player player) {
+        super(parentMenu);
+
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.player = Validate.notNull(player, "player must not be null!");
         this.currentTask = null;

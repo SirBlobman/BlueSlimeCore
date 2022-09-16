@@ -26,6 +26,26 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMenu implements IMenu {
+    private IMenu parentMenu;
+
+    public BaseMenu() {
+        this(null);
+    }
+
+    public BaseMenu(IMenu parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
+    @Override
+    public Optional<IMenu> getParentMenu() {
+        return Optional.ofNullable(this.parentMenu);
+    }
+
+    @Override
+    public void setParentMenu(IMenu parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
     /**
      * @return The head handler for the current Bukkit version if there is one.
      */

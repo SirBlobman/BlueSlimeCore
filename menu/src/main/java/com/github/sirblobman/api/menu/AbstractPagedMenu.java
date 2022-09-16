@@ -7,7 +7,11 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
     private int currentPage;
 
     public AbstractPagedMenu(JavaPlugin plugin, Player player) {
-        super(plugin, player);
+        this(null, plugin, player);
+    }
+
+    public AbstractPagedMenu(IMenu parentMenu, JavaPlugin plugin, Player player) {
+        super(parentMenu, plugin, player);
         this.currentPage = 1;
     }
 

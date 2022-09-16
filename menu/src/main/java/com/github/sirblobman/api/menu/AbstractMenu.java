@@ -30,6 +30,12 @@ public abstract class AbstractMenu extends BaseMenu {
     private final Map<Integer, AbstractButton> buttonMap;
 
     public AbstractMenu(JavaPlugin plugin, Player player) {
+        this(null, plugin, player);
+    }
+
+    public AbstractMenu(IMenu parentMenu, JavaPlugin plugin, Player player) {
+        super(parentMenu);
+
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
         this.player = Validate.notNull(player, "player must not be null!");
 
