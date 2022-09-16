@@ -25,14 +25,18 @@ public final class PlayerDataManager {
     }
 
     /**
+     * Fetch the data configuration for the specified player.
+     * If the player does not have any data, the configuration will be empty.
+     *
      * @param player The player who owns the configuration
-     * @return A configuration for the player from memory. If the configuration is not in memory it will be loaded from
-     * a file.
+     * @return A configuration from memory. If the configuration is not in memory it will be loaded from a file.
      */
     public YamlConfiguration get(OfflinePlayer player) {
-        UUID uuid = player.getUniqueId();
-        YamlConfiguration configuration = this.configurationMap.getOrDefault(uuid, null);
-        if (configuration != null) return configuration;
+        UUID playerId = player.getUniqueId();
+        YamlConfiguration configuration = this.configurationMap.getOrDefault(playerId, null);
+        if (configuration != null) {
+            return configuration;
+        }
 
         reload(player);
         return get(player);
@@ -44,16 +48,19 @@ public final class PlayerDataManager {
      * @param player The player who owns the configuration
      */
     public void save(OfflinePlayer player) {
-        UUID uuid = player.getUniqueId();
-        YamlConfiguration configuration = this.configurationMap.getOrDefault(uuid, null);
-        if (configuration == null) return;
+        UUID playerId = player.getUniqueId();
+        YamlConfiguration configuration = this.configurationMap.getOrDefault(playerId, null);
+        if (configuration == null) {
+            return;
+        }
 
         try {
             File file = getFile(player);
             configuration.save(file);
         } catch (IOException ex) {
             Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "Failed to save data for player '" + uuid + "' because an error occurred:", ex);
+            logger.log(Level.WARNING, "Failed to save data for player '" + playerId
+                    + "' because an error occurred:", ex);
         }
     }
 
@@ -63,19 +70,22 @@ public final class PlayerDataManager {
      * @param player The player who owns the configuration
      */
     public void reload(OfflinePlayer player) {
-        UUID uuid = player.getUniqueId();
+        UUID playerId = player.getUniqueId();
         try {
             YamlConfiguration configuration = load(player);
-            this.configurationMap.put(uuid, configuration);
+            this.configurationMap.put(playerId, configuration);
         } catch (IOException | InvalidConfigurationException ex) {
             Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "Failed to load data for player '" + uuid + "' because an error occurred:", ex);
+            logger.log(Level.WARNING, "Failed to load data for player '" + playerId
+                    + "' because an error occurred:", ex);
         }
     }
 
     /**
+     * Check if the specified player has any data.
+     *
      * @param player The player to check
-     * @return {@code true} if the data file exists, otherwise {@code false}
+     * @return {@code true} if the data file exists, otherwise {@code false}.
      * @see File#exists()
      */
     public boolean hasData(OfflinePlayer player) {
@@ -87,17 +97,20 @@ public final class PlayerDataManager {
         File dataFolder = this.plugin.getDataFolder();
         File playerDataFolder = new File(dataFolder, "playerdata");
 
-        UUID uuid = player.getUniqueId();
-        String fileName = (uuid.toString() + ".data.yml");
+        UUID playerId = player.getUniqueId();
+        String playerIdString = playerId.toString();
+        String fileName = (playerIdString + ".data.yml");
         return new File(playerDataFolder, fileName);
     }
 
     private YamlConfiguration load(OfflinePlayer player) throws IOException, InvalidConfigurationException {
-        File file = getFile(player);
-        if (!file.exists()) return new YamlConfiguration();
+        File playerFile = getFile(player);
+        if (!playerFile.exists()) {
+            return new YamlConfiguration();
+        }
 
         YamlConfiguration configuration = new YamlConfiguration();
-        configuration.load(file);
+        configuration.load(playerFile);
         return configuration;
     }
 }
