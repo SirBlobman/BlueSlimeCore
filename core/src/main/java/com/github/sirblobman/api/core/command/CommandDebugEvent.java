@@ -36,7 +36,7 @@ import com.github.sirblobman.api.language.SimpleReplacer;
 public final class CommandDebugEvent extends ConsoleCommand {
     public CommandDebugEvent(CorePlugin plugin) {
         super(plugin, "debug-event");
-        setPermissionName("sirblobman.core.command.debug-event");
+        setPermissionName("blue.slime.core.command.debug-event");
     }
 
     @Override

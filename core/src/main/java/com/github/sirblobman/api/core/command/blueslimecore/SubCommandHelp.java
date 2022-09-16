@@ -1,4 +1,4 @@
-package com.github.sirblobman.api.core.command.sirblobmancore;
+package com.github.sirblobman.api.core.command.blueslimecore;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.github.sirblobman.api.core.CorePlugin;
 public class SubCommandHelp extends Command {
     public SubCommandHelp(CorePlugin plugin) {
         super(plugin, "help");
-        setPermissionName("sirblobman.core.command.sirblobmancore.help");
+        setPermissionName("blue.slime.core.command.blueslimecore.help");
     }
 
     @Override
@@ -21,8 +21,8 @@ public class SubCommandHelp extends Command {
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        sendMessage(sender, "command.sirblobmancore.help.title", null);
-        sendMessage(sender, "command.sirblobmancore.help.command-list", null);
+        sendMessage(sender, "command.blueslimecore.help.title", null);
+        sendMessage(sender, "command.blueslimecore.help.command-list", null);
         return true;
     }
 }

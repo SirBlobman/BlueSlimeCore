@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class CommandGlobalGamerule extends Command {
     public CommandGlobalGamerule(CorePlugin plugin) {
         super(plugin, "global-gamerule");
-        setPermissionName("sirblobman.core.command.global-gamerule");
+        setPermissionName("blue.slime.core.command.global-gamerule");
     }
 
     @Override

@@ -24,7 +24,7 @@ public final class CommandItemToNBT extends PlayerCommand {
 
     public CommandItemToNBT(CorePlugin plugin) {
         super(plugin, "item-to-nbt");
-        setPermissionName("sirblobman.core.command.item-to-nbt");
+        setPermissionName("blue.slime.core.command.item-to-nbt");
         this.plugin = plugin;
 
         // 1.8 doesn't have the setLenient() method in GsonBuilder.

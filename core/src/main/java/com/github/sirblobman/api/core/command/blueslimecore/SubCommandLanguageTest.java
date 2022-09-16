@@ -1,4 +1,4 @@
-package com.github.sirblobman.api.core.command.sirblobmancore;
+package com.github.sirblobman.api.core.command.blueslimecore;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public final class SubCommandLanguageTest extends Command {
 
     public SubCommandLanguageTest(CorePlugin plugin) {
         super(plugin, "language-test");
-        setPermissionName("sirblobman.core.command.sirblobmancore.language-test");
+        setPermissionName("blue.slime.core.command.blueslimecore.language-test");
         this.plugin = plugin;
     }
 

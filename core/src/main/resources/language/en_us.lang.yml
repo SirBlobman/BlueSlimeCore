@@ -59,7 +59,7 @@ command:
     results-title: "<white>Debug Results for event <gray>{event}</gray> and priority <gray>{priority}</gray>:</white>"
     results-none: "<red>Event <gray>{event}</gray> does not have any listeners with priority <gray>{priority}</gray>.</red>"
 
-  sirblobmancore:
+  blueslimecore:
     help:
       title: "<white><bold>SirBlobmanCore Commands:</bold></white>"
       command-list:

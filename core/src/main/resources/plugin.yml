@@ -23,11 +23,11 @@ softdepend:
   - "PlaceholderAPI"
 
 commands:
-  sirblobmancore:
-    description: "The main command for the SirBlobmanCore plugin."
-    # permission: "sirblobman.core.command.sirblobmancore"
+  blueslimecore:
+    description: "The main command for the BlueSlimeCore plugin."
     usage: "/<command> help"
     aliases:
+      - "sirblobmancore"
       - "sirblobmanapi"
       - "sirblobman"
       - "sbcore"
@@ -37,7 +37,6 @@ commands:
 
   item-info:
     description: "A debug command to show information about an item."
-    # permission: "sirblobman.core.command.item-info"
     usage: "/<command>"
     aliases:
       - "iteminfo"
@@ -46,7 +45,6 @@ commands:
 
   item-to-base64:
     description: "A debug command to show an item as a binary Base64 string."
-    # permission: "sirblobman.core.command.item-to-base64"
     usage: "/<command>"
     aliases:
       - "item-to-b64"
@@ -55,7 +53,6 @@ commands:
 
   item-to-nbt:
     description: "A debug command to show an item as an NBT/JSON string."
-    # permission: "sirblobman.core.command.item-to-nbt"
     usage: "/<command> [pretty]"
     aliases:
       - "itemtonbt"
@@ -64,21 +61,18 @@ commands:
 
   item-to-yml:
     description: "A debug command to show an item as a YML configuration value."
-    # permission: "sirblobman.core.command.item-to-yml"
     usage: "/<command>"
     aliases:
       - "itemtoyml"
 
   debug-event:
     description: "Show information about an event class."
-    # permission: "sirblobman.core.command.debug-event"
     usage: "/<command> <priority> <full.package.with.ClassName>"
     aliases:
       - "debugevent"
 
   global-gamerule:
     description: "Change a gamerule for every world on your server at once."
-    # permission: "sirblobman.core.command.global-gamerule"
     usage: "/<command> <gamerule> <value>"
     aliases:
       - "globalgamerule"
