@@ -20,7 +20,7 @@ public final class ExitButton extends QuickButton {
     public void onLeftClick(Player player, boolean shift) {
         JavaPlugin plugin = getPlugin();
         BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTask(plugin, player::closeInventory);
+        scheduler.runTaskLater(plugin, player::closeInventory, 2L);
     }
 
     private JavaPlugin getPlugin() {
