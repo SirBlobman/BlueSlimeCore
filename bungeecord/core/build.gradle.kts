@@ -1,4 +1,15 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.apache.tools.ant.filters.ReplaceTokens
+
+val jenkinsBuildNumber = System.getenv("BUILD_NUMBER") ?: "Unknown"
+val baseVersion = rootProject.property("version.base") as String
+val betaVersionString = rootProject.property("version.beta") as String
+val betaVersion = betaVersionString.toBoolean()
+
+var calculatedVersion = ("$baseVersion.$jenkinsBuildNumber")
+if (betaVersion) {
+    calculatedVersion += "-Beta"
+}
 
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -23,11 +34,29 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar"){
+        archiveFileName.set("BlueSlimeBungeeCore-$calculatedVersion.jar")
         archiveClassifier.set(null as String?)
     }
 
     build {
         dependsOn(shadowJar)
+    }
+
+    processResources {
+        filesMatching("bungee.yml") {
+            val bungeePluginName = rootProject.property("bungee.plugin.name") as String
+            val bungeePluginPrefix = rootProject.property("bungee.plugin.prefix") as String
+            val bungeePluginDescription = rootProject.property("plugin.description") as String
+            val bungeePluginMain = rootProject.property("bukkit.plugin.main") as String
+
+            filter<ReplaceTokens>("tokens" to mapOf(
+                "bungee.plugin.version" to calculatedVersion,
+                "bungee.plugin.name" to bungeePluginName,
+                "bungee.plugin.prefix" to bungeePluginPrefix,
+                "plugin.description" to bungeePluginDescription,
+                "bungee.plugin.main" to bungeePluginMain
+            ))
+        }
     }
 }
 

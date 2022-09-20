@@ -1,4 +1,15 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.apache.tools.ant.filters.ReplaceTokens
+
+val jenkinsBuildNumber = System.getenv("BUILD_NUMBER") ?: "Unknown"
+val baseVersion = rootProject.property("version.base") as String
+val betaVersionString = rootProject.property("version.beta") as String
+val betaVersion = betaVersionString.toBoolean()
+
+var calculatedVersion = ("$baseVersion.$jenkinsBuildNumber")
+if (betaVersion) {
+    calculatedVersion += "-Beta"
+}
 
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -71,11 +82,29 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar"){
+        archiveFileName.set("BlueSlimeCore-$calculatedVersion.jar")
         archiveClassifier.set(null as String?)
     }
 
     build {
         dependsOn(shadowJar)
+    }
+
+    processResources {
+        filesMatching("plugin.yml") {
+            val bukkitPluginName = rootProject.property("bukkit.plugin.name") as String
+            val bukkitPluginPrefix = rootProject.property("bukkit.plugin.prefix") as String
+            val bukkitPluginDescription = rootProject.property("plugin.description") as String
+            val bukkitPluginMain = rootProject.property("bukkit.plugin.main") as String
+
+            filter<ReplaceTokens>("tokens" to mapOf(
+                "bukkit.plugin.version" to calculatedVersion,
+                "bukkit.plugin.name" to bukkitPluginName,
+                "bukkit.plugin.prefix" to bukkitPluginPrefix,
+                "bukkit.plugin.description" to bukkitPluginDescription,
+                "bukkit.plugin.main" to bukkitPluginMain
+            ))
+        }
     }
 }
 

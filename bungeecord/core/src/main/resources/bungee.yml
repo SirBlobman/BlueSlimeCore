@@ -1,6 +1,7 @@
-name: "${bungee.plugin.name}"
-description: "${project.description}"
+name: "@bungee.plugin.name@"
+prefix: "@bungee.plugin.prefix@"
+description: "@project.description@"
 author: "SirBlobman"
 
-main: "${bungee.plugin.main}"
-version: "${bungee.plugin.version}"
+main: "@bungee.plugin.main@"
+version: "@bungee.plugin.version@"
