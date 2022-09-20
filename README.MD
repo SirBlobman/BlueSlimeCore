@@ -39,7 +39,7 @@ If you wish to compile the plugin yourself, you can run the following commands:
 ```shell
 git clone "https://github.com/SirBlobman/BlueSlimeCore.git"
 cd BlueSlimeCore
-mvn package
+./gradlew clean build
 ```
 
 ## Further Instructions
