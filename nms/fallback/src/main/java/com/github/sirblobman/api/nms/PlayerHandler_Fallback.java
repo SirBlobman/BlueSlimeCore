@@ -4,7 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.kyori.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+
 
 public final class PlayerHandler_Fallback extends PlayerHandler {
     public PlayerHandler_Fallback(JavaPlugin plugin) {

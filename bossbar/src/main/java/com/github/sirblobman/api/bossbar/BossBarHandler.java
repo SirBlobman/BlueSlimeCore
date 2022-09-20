@@ -9,16 +9,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.adventure.adventure.audience.Audience;
+import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar;
+import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar.Color;
+import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar.Flag;
+import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar.Overlay;
+import com.github.sirblobman.api.adventure.adventure.key.Key;
+import com.github.sirblobman.api.adventure.adventure.platform.bukkit.BukkitAudiences;
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.utility.Validate;
 
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.bossbar.BossBar.Color;
-import net.kyori.adventure.bossbar.BossBar.Flag;
-import net.kyori.adventure.bossbar.BossBar.Overlay;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,8 +52,9 @@ public final class BossBarHandler {
         Validate.notNull(key, "key must not be null!");
 
         JavaPlugin plugin = getPlugin();
-        @Subst("plugin") String pluginName = plugin.getName().toLowerCase(Locale.US);
-        return Key.key(pluginName, key);
+        String pluginName = plugin.getName();
+        @Subst("plugin") String pluginNameKey = pluginName.toLowerCase(Locale.US);
+        return Key.key(pluginNameKey, key);
     }
 
     @NotNull

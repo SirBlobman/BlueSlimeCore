@@ -14,11 +14,10 @@ import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
 import net.minecraft.server.v1_7_R4.PacketPlayOutOpenWindow;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 
-import net.kyori.adventure.text.Component;
-
-public class PlayerHandler_1_7_R4 extends PlayerHandler {
+public final class PlayerHandler_1_7_R4 extends PlayerHandler {
     public PlayerHandler_1_7_R4(JavaPlugin plugin) {
         super(plugin);
     }

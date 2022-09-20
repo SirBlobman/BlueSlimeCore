@@ -15,9 +15,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.MenuType;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
-
-import net.kyori.adventure.text.Component;
 
 public class PlayerHandler_1_17_R1 extends PlayerHandler {
     public PlayerHandler_1_17_R1(JavaPlugin plugin) {
@@ -25,6 +24,7 @@ public class PlayerHandler_1_17_R1 extends PlayerHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void sendActionBar(Player player, String message) {
         Spigot spigot = player.spigot();
         BaseComponent[] componentMessage = TextComponent.fromLegacyText(message);
@@ -32,6 +32,7 @@ public class PlayerHandler_1_17_R1 extends PlayerHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void sendTabInfo(Player player, String header, String footer) {
         player.setPlayerListHeaderFooter(header, footer);
     }

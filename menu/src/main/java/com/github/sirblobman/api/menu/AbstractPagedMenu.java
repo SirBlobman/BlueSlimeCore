@@ -3,8 +3,8 @@ package com.github.sirblobman.api.menu;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextReplacementConfig;
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.TextReplacementConfig;
 
 public abstract class AbstractPagedMenu extends AbstractMenu {
     private int currentPage;

@@ -9,6 +9,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import com.github.sirblobman.api.bossbar.BossBarHandler;
+import com.github.sirblobman.api.bstats.bukkit.Metrics;
+import com.github.sirblobman.api.bstats.charts.SimplePie;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.core.command.CommandDebugEvent;
 import com.github.sirblobman.api.core.command.CommandGlobalGamerule;
@@ -32,9 +34,6 @@ import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
 import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final CoreConfiguration coreConfiguration;

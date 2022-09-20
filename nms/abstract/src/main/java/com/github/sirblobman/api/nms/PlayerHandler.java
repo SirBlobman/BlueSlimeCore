@@ -4,8 +4,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+
 import com.google.gson.JsonObject;
-import net.kyori.adventure.text.Component;
 
 public abstract class PlayerHandler extends Handler {
     public PlayerHandler(JavaPlugin plugin) {

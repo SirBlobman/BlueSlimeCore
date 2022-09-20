@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
 
-public class SubCommandHelp extends Command {
+public final class SubCommandHelp extends Command {
     public SubCommandHelp(CorePlugin plugin) {
         super(plugin, "help");
         setPermissionName("blue.slime.core.command.blueslimecore.help");

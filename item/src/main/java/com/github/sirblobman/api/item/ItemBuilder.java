@@ -13,8 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
+import com.github.sirblobman.api.xseries.XMaterial;
 
-import com.cryptomorin.xseries.XMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -27,13 +27,13 @@ import net.minecraft.server.v1_15_R1.NBTTagString;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.modern.CustomNbtPersistentDataContainerWrapper;
 import com.github.sirblobman.api.nbt.modern.PersistentDataConverter;
 import com.github.sirblobman.api.utility.ItemUtility;
 
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemHandler_1_15_R1 extends ItemHandler {
@@ -134,8 +134,7 @@ public class ItemHandler_1_15_R1 extends ItemHandler {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
-                                                         net.kyori.adventure.text.Component displayName) {
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item, Component displayName) {
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         IChatBaseComponent nmsComponent = getNmsComponent(displayName);
         nmsItem.a(nmsComponent);
@@ -143,8 +142,7 @@ public class ItemHandler_1_15_R1 extends ItemHandler {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
-                                                  List<Component> lore) {
+    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item, List<Component> lore) {
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         NBTTagCompound nmsTag = nmsItem.getOrCreateTag();
         NBTTagCompound displayTag = nmsTag.getCompound("display");
@@ -157,18 +155,18 @@ public class ItemHandler_1_15_R1 extends ItemHandler {
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
-    private String getJsonComponent(net.kyori.adventure.text.Component adventure) {
+    private String getJsonComponent(Component adventure) {
         return ComponentHelper.toGson(adventure);
     }
 
-    private IChatBaseComponent getNmsComponent(net.kyori.adventure.text.Component adventure) {
+    private IChatBaseComponent getNmsComponent(Component adventure) {
         String json = ComponentHelper.toGson(adventure);
         return ChatSerializer.a(json);
     }
 
-    private NBTTagList getJsonList(List<net.kyori.adventure.text.Component> adventureList) {
+    private NBTTagList getJsonList(List<Component> adventureList) {
         NBTTagList jsonList = new NBTTagList();
-        for (net.kyori.adventure.text.Component adventure : adventureList) {
+        for (Component adventure : adventureList) {
             String json = getJsonComponent(adventure);
             NBTTagString stringTag = NBTTagString.a(json);
             jsonList.add(stringTag);

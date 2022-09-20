@@ -6,11 +6,10 @@ import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.utility.Validate;
-
-import net.kyori.adventure.text.Component;
 
 public final class ComponentItemBuilder {
     private final ItemHandler itemHandler;

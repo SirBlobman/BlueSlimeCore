@@ -2,10 +2,9 @@ package com.github.sirblobman.api.language;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 
 public final class ComponentBungeeConverter {
     public static BungeeComponentSerializer getSerializer() {

@@ -22,6 +22,7 @@ public class EntityHandler_1_18_R2 extends EntityHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public String getName(Entity entity) {
         if (entity instanceof Player player) {
             return player.getName();

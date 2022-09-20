@@ -28,10 +28,10 @@ import net.minecraft.server.v1_9_R2.PacketPlayOutSetCooldown;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_9_R2.util.CraftMagicNumbers;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 
 import io.netty.buffer.Unpooled;
-import net.kyori.adventure.text.Component;
 
 public class PlayerHandler_1_9_R2 extends PlayerHandler {
     public PlayerHandler_1_9_R2(JavaPlugin plugin) {

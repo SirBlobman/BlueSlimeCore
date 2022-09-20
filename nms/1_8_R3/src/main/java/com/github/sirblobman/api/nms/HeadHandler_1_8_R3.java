@@ -14,7 +14,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
-import com.cryptomorin.xseries.XMaterial;
+import com.github.sirblobman.api.xseries.XMaterial;
 
 public class HeadHandler_1_8_R3 extends HeadHandler {
     public HeadHandler_1_8_R3(JavaPlugin plugin) {
@@ -24,7 +24,9 @@ public class HeadHandler_1_8_R3 extends HeadHandler {
     @Override
     public ItemStack getPlayerHead(String username) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
-        if (item == null) return null;
+        if (item == null) {
+            return null;
+        }
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwner(username);

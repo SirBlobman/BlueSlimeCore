@@ -1,5 +1,6 @@
 package com.github.sirblobman.api.nms;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.UUID;
@@ -9,6 +10,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.google.gson.JsonObject;
+
 public abstract class HeadHandler extends Handler {
     public HeadHandler(JavaPlugin plugin) {
         super(plugin);
@@ -16,16 +19,23 @@ public abstract class HeadHandler extends Handler {
 
     protected final String encodeBase64(String original) {
         Encoder encoder = Base64.getEncoder();
-        byte[] originalByteArray = original.getBytes();
+        byte[] originalByteArray = original.getBytes(StandardCharsets.UTF_8);
         byte[] base64ByteArray = encoder.encode(originalByteArray);
         return new String(base64ByteArray);
     }
 
     protected final String encodeTextureURL(String url) {
-        String partOne = "{textures:{SKIN:{url:\"";
-        String partTwo = "\"}}}";
-        String original = (partOne + url + partTwo);
-        return encodeBase64(original);
+        JsonObject skin = new JsonObject();
+        skin.addProperty("url", url);
+
+        JsonObject textures = new JsonObject();
+        textures.add("SKIN", skin);
+
+        JsonObject parent = new JsonObject();
+        parent.add("textures", textures);
+
+        String jsonString = parent.toString();
+        return encodeBase64(jsonString);
     }
 
     public final ItemStack getTextureHead(String url) {
@@ -35,7 +45,7 @@ public abstract class HeadHandler extends Handler {
 
     public final ItemStack getTextureHead(String url, UUID customId) {
         String base64 = encodeTextureURL(url);
-        return getBase64Head(url, customId);
+        return getBase64Head(base64, customId);
     }
 
     @SuppressWarnings("deprecation")

@@ -3,15 +3,14 @@ package com.github.sirblobman.api.language;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.TextComponent;
+import com.github.sirblobman.api.adventure.adventure.text.format.TextDecoration;
+import com.github.sirblobman.api.adventure.adventure.text.serializer.gson.GsonComponentSerializer;
+import com.github.sirblobman.api.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import com.github.sirblobman.api.adventure.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent.Builder;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public final class ComponentHelper {
     public static LegacyComponentSerializer getLegacySerializer() {
@@ -53,7 +52,7 @@ public final class ComponentHelper {
     }
 
     public static Component wrapNoItalics(Component component) {
-        Builder builder = Component.text();
+        TextComponent.Builder builder = Component.text();
         builder.decoration(TextDecoration.ITALIC, false);
         builder.append(component);
         return builder.build();

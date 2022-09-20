@@ -17,8 +17,8 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import com.github.sirblobman.api.utility.ItemUtility;
+import com.github.sirblobman.api.xseries.XMaterial;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -53,6 +53,7 @@ public final class HeadHandler_1_19_R1 extends HeadHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemStack getBase64Head(String base64, UUID customId) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
         if (item == null) {
@@ -70,6 +71,7 @@ public final class HeadHandler_1_19_R1 extends HeadHandler {
         return item;
     }
 
+    @SuppressWarnings("deprecation")
     private PlayerProfile createPlayerProfile(String base64, UUID uniqueId) {
         PlayerProfile profile = Bukkit.createPlayerProfile(uniqueId, "custom");
         PlayerTextures textures = profile.getTextures();
