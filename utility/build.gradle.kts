@@ -4,5 +4,5 @@ version = "2.6-SNAPSHOT"
 dependencies {
     implementation(project(path = ":shaded", configuration = "shadow"))
     compileOnly("org.jetbrains:annotations:23.0.0")
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 }

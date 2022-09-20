@@ -18,7 +18,7 @@ plugins {
 
 dependencies {
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 
     // Utilities
     implementation(project(path = ":shaded", configuration = "shadow"))
