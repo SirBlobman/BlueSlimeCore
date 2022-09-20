@@ -1,6 +1,6 @@
-group = "com.github.sirblobman.api.nms"
-
 allprojects {
+    group = "com.github.sirblobman.api.nms"
+
     repositories {
         maven {
             name = "sirblobman-private"

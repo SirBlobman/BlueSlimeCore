@@ -1,11 +1,11 @@
-group = "com.github.sirblobman.api"
-version = "2.6-SNAPSHOT"
-
 plugins {
     id("java")
 }
 
 allprojects {
+    group = "com.github.sirblobman.api"
+    version = "2.6-SNAPSHOT"
+
     apply(plugin = "java")
 
     java {

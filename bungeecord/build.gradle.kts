@@ -1,6 +1,6 @@
-group = "com.github.sirblobman.api.bungeecord"
-
 allprojects {
+    group = "com.github.sirblobman.api.bungeecord"
+
     java {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
