@@ -15,8 +15,7 @@ import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import com.cryptomorin.xseries.XMaterial;
+import com.github.sirblobman.api.xseries.XMaterial;
 
 public final class CommandItemInfo extends PlayerCommand {
     private final CorePlugin plugin;

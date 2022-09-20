@@ -13,6 +13,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.item.ComponentItemBuilder;
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
@@ -22,10 +24,8 @@ import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
+import com.github.sirblobman.api.xseries.XMaterial;
 
-import com.cryptomorin.xseries.XMaterial;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMenu implements IMenu {
@@ -92,8 +92,8 @@ public abstract class BaseMenu implements IMenu {
     }
 
     /**
-     * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
-     *              nine for a chest menu.
+     * @param size The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
+     *             nine for a chest menu.
      * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
     public Inventory getInventory(int size) {

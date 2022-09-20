@@ -5,9 +5,9 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 
-import net.kyori.adventure.text.Component;
 
 public final class ItemHandler_Fallback extends ItemHandler {
     public ItemHandler_Fallback(JavaPlugin plugin) {
@@ -46,7 +46,7 @@ public final class ItemHandler_Fallback extends ItemHandler {
 
     @Override
     public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
-                                                         net.kyori.adventure.text.Component displayName) {
+                                                         Component displayName) {
         return item;
     }
 

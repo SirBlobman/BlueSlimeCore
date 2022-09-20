@@ -21,7 +21,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
@@ -29,6 +28,7 @@ import org.bukkit.craftbukkit.v1_17_R1.util.CraftChatMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.modern.CustomNbtPersistentDataContainerWrapper;
@@ -49,7 +49,7 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
             nmsItem = CraftItemStack.asNMSCopy(item);
         }
 
-        Component hoverName = nmsItem.getHoverName();
+        net.minecraft.network.chat.Component hoverName = nmsItem.getHoverName();
         return CraftChatMessage.fromComponent(hoverName);
     }
 
@@ -135,17 +135,15 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
-                                                         net.kyori.adventure.text.Component displayName) {
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item, Component displayName) {
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        Component nmsComponent = getNmsComponent(displayName);
+        net.minecraft.network.chat.Component nmsComponent = getNmsComponent(displayName);
         nmsItem.setHoverName(nmsComponent);
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
-                                                  List<net.kyori.adventure.text.Component> lore) {
+    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item, List<Component> lore) {
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         CompoundTag nmsTag = nmsItem.getOrCreateTag();
         CompoundTag displayTag = nmsTag.getCompound("display");
@@ -158,18 +156,18 @@ public class ItemHandler_1_17_R1 extends ItemHandler {
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
-    private String getJsonComponent(net.kyori.adventure.text.Component adventure) {
+    private String getJsonComponent(Component adventure) {
         return ComponentHelper.toGson(adventure);
     }
 
-    private Component getNmsComponent(net.kyori.adventure.text.Component adventure) {
+    private net.minecraft.network.chat.Component getNmsComponent(Component adventure) {
         String json = ComponentHelper.toGson(adventure);
         return Serializer.fromJson(json);
     }
 
-    private ListTag getJsonList(List<net.kyori.adventure.text.Component> adventureList) {
+    private ListTag getJsonList(List<Component> adventureList) {
         ListTag jsonList = new ListTag();
-        for (net.kyori.adventure.text.Component adventure : adventureList) {
+        for (Component adventure : adventureList) {
             String json = getJsonComponent(adventure);
             StringTag stringTag = StringTag.valueOf(json);
             jsonList.add(stringTag);

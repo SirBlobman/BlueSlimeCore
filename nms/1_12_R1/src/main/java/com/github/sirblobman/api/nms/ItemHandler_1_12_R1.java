@@ -22,13 +22,13 @@ import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_1_12_R1;
 import com.github.sirblobman.api.nbt.CustomNbtTypeRegistry_1_12_R1;
 import com.github.sirblobman.api.utility.ItemUtility;
 
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 
 public class ItemHandler_1_12_R1 extends ItemHandler {
@@ -138,8 +138,7 @@ public class ItemHandler_1_12_R1 extends ItemHandler {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
-                                                         net.kyori.adventure.text.Component displayName) {
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item, Component displayName) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return item;

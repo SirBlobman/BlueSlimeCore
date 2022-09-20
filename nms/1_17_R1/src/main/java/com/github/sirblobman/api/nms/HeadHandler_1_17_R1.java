@@ -16,8 +16,8 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
 import com.github.sirblobman.api.utility.ItemUtility;
+import com.github.sirblobman.api.xseries.XMaterial;
 
-import com.cryptomorin.xseries.XMaterial;
 
 public class HeadHandler_1_17_R1 extends HeadHandler {
     public HeadHandler_1_17_R1(JavaPlugin plugin) {

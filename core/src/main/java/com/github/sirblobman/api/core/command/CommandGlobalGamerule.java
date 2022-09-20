@@ -16,7 +16,7 @@ import com.github.sirblobman.api.language.SimpleReplacer;
 
 import org.jetbrains.annotations.Nullable;
 
-public class CommandGlobalGamerule extends Command {
+public final class CommandGlobalGamerule extends Command {
     public CommandGlobalGamerule(CorePlugin plugin) {
         super(plugin, "global-gamerule");
         setPermissionName("blue.slime.core.command.global-gamerule");

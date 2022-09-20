@@ -3,8 +3,8 @@ package com.github.sirblobman.api.language.sound;
 import org.bukkit.entity.Player;
 
 import com.github.sirblobman.api.utility.Validate;
+import com.github.sirblobman.api.xseries.XSound;
 
-import com.cryptomorin.xseries.XSound;
 import org.jetbrains.annotations.NotNull;
 
 public final class XSoundInfo extends SoundInfo {

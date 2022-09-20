@@ -16,9 +16,9 @@ import net.minecraft.server.v1_14_R1.Packet;
 import net.minecraft.server.v1_14_R1.PacketPlayOutOpenWindow;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 
-import net.kyori.adventure.text.Component;
 
 public class PlayerHandler_1_14_R1 extends PlayerHandler {
     public PlayerHandler_1_14_R1(JavaPlugin plugin) {

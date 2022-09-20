@@ -27,6 +27,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.github.sirblobman.api.adventure.adventure.audience.Audience;
+import com.github.sirblobman.api.adventure.adventure.platform.bukkit.BukkitAudiences;
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
+import com.github.sirblobman.api.adventure.adventure.title.Title;
+import com.github.sirblobman.api.adventure.adventure.title.Title.Times;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
@@ -34,15 +40,9 @@ import com.github.sirblobman.api.language.sound.CustomSoundInfo;
 import com.github.sirblobman.api.language.sound.SoundInfo;
 import com.github.sirblobman.api.language.sound.XSoundInfo;
 import com.github.sirblobman.api.utility.Validate;
+import com.github.sirblobman.api.xseries.XSound;
 
-import com.cryptomorin.xseries.XSound;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.title.Title;
-import net.kyori.adventure.title.Title.Times;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -23,10 +23,10 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 
 import io.netty.buffer.Unpooled;
-import net.kyori.adventure.text.Component;
 
 public class PlayerHandler_1_8_R3 extends PlayerHandler {
     public PlayerHandler_1_8_R3(JavaPlugin plugin) {

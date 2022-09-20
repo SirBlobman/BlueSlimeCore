@@ -24,13 +24,13 @@ import net.minecraft.server.v1_13_R2.NBTTagString;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_1_13_R2;
 import com.github.sirblobman.api.nbt.CustomNbtTypeRegistry_1_13_R2;
 import com.github.sirblobman.api.utility.ItemUtility;
 
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 
 public class ItemHandler_1_13_R2 extends ItemHandler {
@@ -134,8 +134,7 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
-                                                         net.kyori.adventure.text.Component displayName) {
+    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item, Component displayName) {
         ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         IChatBaseComponent nmsComponent = getNmsComponent(displayName);
         nmsItem.a(nmsComponent);
@@ -157,18 +156,18 @@ public class ItemHandler_1_13_R2 extends ItemHandler {
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
-    private String getJsonComponent(net.kyori.adventure.text.Component adventure) {
+    private String getJsonComponent(Component adventure) {
         return ComponentHelper.toGson(adventure);
     }
 
-    private IChatBaseComponent getNmsComponent(net.kyori.adventure.text.Component adventure) {
+    private IChatBaseComponent getNmsComponent(Component adventure) {
         String json = ComponentHelper.toGson(adventure);
         return ChatSerializer.a(json);
     }
 
-    private NBTTagList getJsonList(List<net.kyori.adventure.text.Component> adventureList) {
+    private NBTTagList getJsonList(List<Component> adventureList) {
         NBTTagList jsonList = new NBTTagList();
-        for (net.kyori.adventure.text.Component adventure : adventureList) {
+        for (Component adventure : adventureList) {
             String json = getJsonComponent(adventure);
             NBTTagString stringTag = new NBTTagString(json);
             jsonList.add(stringTag);
