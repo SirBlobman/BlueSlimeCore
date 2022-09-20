@@ -83,7 +83,7 @@ publishing {
     repositories {
         maven {
             name = "sirblobman-public"
-            url = uri("https://nexus.sirblobman.xyz/repository/public/")
+            url = uri("https://nexus.sirblobman.xyz/repository/public-snapshots/")
 
             credentials {
                 var currentUsername = System.getenv("MAVEN_DEPLOY_USERNAME")
