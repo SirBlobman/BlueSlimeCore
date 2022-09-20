@@ -14,6 +14,7 @@ pluginManagement {
 // Utilities
 include("shaded")
 include("utility")
+include("paper-helper")
 
 // BossBar
 include("bossbar")

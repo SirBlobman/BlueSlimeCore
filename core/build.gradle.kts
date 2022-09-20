@@ -23,6 +23,7 @@ dependencies {
     // Utilities
     implementation(project(path = ":shaded", configuration = "shadow"))
     implementation(project(":utility"))
+    implementation(project(":paper-helper"))
 
     // BossBar
     implementation(project(":bossbar"))
