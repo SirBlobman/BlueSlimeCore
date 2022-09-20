@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.kyori.adventure.text.Component;
+
 public final class PlayerHandler_Fallback extends PlayerHandler {
     public PlayerHandler_Fallback(JavaPlugin plugin) {
         super(plugin);
@@ -36,6 +38,11 @@ public final class PlayerHandler_Fallback extends PlayerHandler {
 
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
+        // Do Nothing
+    }
+
+    @Override
+    public void sendMenuTitleUpdate(Player player, Component title) {
         // Do Nothing
     }
 }

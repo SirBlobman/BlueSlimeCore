@@ -2,10 +2,17 @@ package com.github.sirblobman.api.menu;
 
 import java.util.Optional;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.github.sirblobman.api.language.LanguageManager;
+import com.github.sirblobman.api.nms.MultiVersionHandler;
+
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 public interface IMenu extends InventoryHolder, Listener {
     /**
@@ -17,6 +24,16 @@ public interface IMenu extends InventoryHolder, Listener {
      * Use this method to open the menu.
      */
     void open();
+
+    /**
+     * @return The title component for the menu.
+     */
+    @Nullable Component getTitle();
+
+    /**
+     * Use this method to update the menu title.
+     */
+    void updateTitle(Player player);
 
     /**
      * Override this method to use a custom close action.
@@ -40,4 +57,17 @@ public interface IMenu extends InventoryHolder, Listener {
      * @see #getParentMenu()
      */
     void setParentMenu(IMenu parentMenu);
+
+    @Nullable
+    default MultiVersionHandler getMultiVersionHandler() {
+        return null;
+    }
+
+    /**
+     * @return The language manager if your plugin has one.
+     */
+    @Nullable
+    default LanguageManager getLanguageManager() {
+        return null;
+    }
 }

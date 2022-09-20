@@ -3,6 +3,9 @@ package com.github.sirblobman.api.menu;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+
 public abstract class AbstractPagedMenu extends AbstractMenu {
     private int currentPage;
 
@@ -16,15 +19,16 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
     }
 
     @Override
-    public String getTitle() {
-        String titleFormat = getTitleFormat();
+    public Component getTitle() {
+        Component titleFormat = getTitleFormat();
         if (titleFormat == null) {
             return null;
         }
 
-        int currentPage = getCurrentPage();
-        String currentPageString = Integer.toString(currentPage);
-        return titleFormat.replace("{page}", currentPageString);
+        TextReplacementConfig.Builder replacementBuilder = TextReplacementConfig.builder();
+        replacementBuilder.matchLiteral("{page}").replacement(Component.text(currentPage));
+        TextReplacementConfig replacementConfig = replacementBuilder.build();
+        return titleFormat.replaceText(replacementConfig);
     }
 
     public final int getCurrentPage() {
@@ -61,5 +65,5 @@ public abstract class AbstractPagedMenu extends AbstractMenu {
 
     public abstract int getMaxPages();
 
-    public abstract String getTitleFormat();
+    public abstract Component getTitleFormat();
 }

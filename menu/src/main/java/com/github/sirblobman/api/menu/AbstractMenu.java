@@ -60,8 +60,7 @@ public abstract class AbstractMenu extends BaseMenu {
     @Override
     public Inventory getInventory() {
         int size = getSize();
-        String title = getTitle();
-        Inventory inventory = getInventory(size, title);
+        Inventory inventory = getInventory(size);
 
         ItemStack[] contents = inventory.getContents();
         for (int slot = 0; slot < size; slot++) {
@@ -135,7 +134,7 @@ public abstract class AbstractMenu extends BaseMenu {
         player.closeInventory();
 
         BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin, this::internalOpen);
+        scheduler.runTaskLater(plugin, this::internalOpen, 1L);
     }
 
     /**
@@ -171,6 +170,9 @@ public abstract class AbstractMenu extends BaseMenu {
 
         Player player = getPlayer();
         player.openInventory(inventory);
+
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        scheduler.runTaskLater(plugin, () -> updateTitle(player), 1L);
     }
 
     private AbstractButton internalGetButton(int slot) {
@@ -181,11 +183,6 @@ public abstract class AbstractMenu extends BaseMenu {
      * @return The size for the GUI (usually 54)
      */
     public abstract int getSize();
-
-    /**
-     * @return The title for the menu (legacy color codes with the '&amp;' symbol will be translated automatically)
-     */
-    public abstract String getTitle();
 
     /**
      * Get an ItemStack for a specific slot.

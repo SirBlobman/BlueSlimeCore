@@ -47,8 +47,8 @@
         <!-- SirBlobmanAPI NMS Abstract -->
         <dependency>
             <groupId>com.github.sirblobman.api.nms</groupId>
-            <artifactId>nms-abstract</artifactId>
-            <version>2.5-SNAPSHOT</version>
+            <artifactId>nms-handler</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

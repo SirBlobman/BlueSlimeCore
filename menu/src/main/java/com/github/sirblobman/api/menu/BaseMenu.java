@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,8 @@ import com.github.sirblobman.api.item.SkullBuilder;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
+import com.github.sirblobman.api.nms.MultiVersionHandler;
+import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
 
 import com.cryptomorin.xseries.XMaterial;
@@ -46,12 +49,33 @@ public abstract class BaseMenu implements IMenu {
         this.parentMenu = parentMenu;
     }
 
+    @Override
+    public void updateTitle(Player player) {
+        Component title = getTitle();
+        if (title == null) {
+            return;
+        }
+
+        MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
+        if (multiVersionHandler == null) {
+            return;
+        }
+
+        PlayerHandler playerHandler = multiVersionHandler.getPlayerHandler();
+        playerHandler.sendMenuTitleUpdate(player, title);
+    }
+
     /**
      * @return The head handler for the current Bukkit version if there is one.
      */
     @Nullable
     public HeadHandler getHeadHandler() {
-        return null;
+        MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
+        if (multiVersionHandler == null) {
+            return null;
+        }
+
+        return multiVersionHandler.getHeadHandler();
     }
 
     /**
@@ -59,15 +83,37 @@ public abstract class BaseMenu implements IMenu {
      */
     @Nullable
     public ItemHandler getItemHandler() {
-        return null;
+        MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
+        if (multiVersionHandler == null) {
+            return null;
+        }
+
+        return multiVersionHandler.getItemHandler();
     }
 
     /**
-     * @return The language manager if your plugin has one.
+     * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
+     *              nine for a chest menu.
+     * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
-    @Nullable
-    public LanguageManager getLanguageManager() {
-        return null;
+    public Inventory getInventory(int size) {
+        if (size == 5) {
+            return Bukkit.createInventory(this, InventoryType.HOPPER);
+        }
+
+        if (size < 9) {
+            throw new IllegalArgumentException("size must be equal to 5 or at least 9");
+        }
+
+        if (size > 54) {
+            throw new IllegalArgumentException("size cannot be more than 54");
+        }
+
+        if (size % 9 != 0) {
+            throw new IllegalArgumentException("size must be equal to 5 or divisible by 9");
+        }
+
+        return Bukkit.createInventory(this, size);
     }
 
     /**

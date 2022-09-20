@@ -1,12 +1,16 @@
 package com.github.sirblobman.api.nms;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -15,11 +19,16 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_11_R1.EntityPlayer;
 import net.minecraft.server.v1_11_R1.IChatBaseComponent;
 import net.minecraft.server.v1_11_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_11_R1.Packet;
 import net.minecraft.server.v1_11_R1.PacketDataSerializer;
+import net.minecraft.server.v1_11_R1.PacketPlayOutOpenWindow;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 
+import com.github.sirblobman.api.language.ComponentHelper;
+
 import io.netty.buffer.Unpooled;
+import net.kyori.adventure.text.Component;
 
 public class PlayerHandler_1_11_R1 extends PlayerHandler {
     public PlayerHandler_1_11_R1(JavaPlugin plugin) {
@@ -80,5 +89,46 @@ public class PlayerHandler_1_11_R1 extends PlayerHandler {
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
         player.setCooldown(material, ticksLeft);
+    }
+
+    @Override
+    public void sendMenuTitleUpdate(Player player, Component title) {
+        if (!(player instanceof CraftPlayer)) {
+            return;
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        if (entityPlayer.activeContainer == null) {
+            return;
+        }
+
+        InventoryView openInventoryView = player.getOpenInventory();
+        Inventory topInventory = openInventoryView.getTopInventory();
+        InventoryType inventoryType = topInventory.getType();
+        String inventoryTypeName = inventoryType.name().toLowerCase(Locale.US);
+        int inventorySize = topInventory.getSize();
+
+        int containerId = entityPlayer.activeContainer.windowId;
+        String inventoryTypeId = ("minecraft:" + inventoryTypeName);
+        IChatBaseComponent nmsTitle = convertComponent(title);
+
+        Packet<?> packet = new PacketPlayOutOpenWindow(containerId, inventoryTypeId, nmsTitle, inventorySize);
+        sendPacket(player, packet);
+    }
+
+    private void sendPacket(Player player, Packet<?> packet) {
+        if (!(player instanceof CraftPlayer)) {
+            return;
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.playerConnection.sendPacket(packet);
+    }
+
+    private IChatBaseComponent convertComponent(Component adventure) {
+        String json = ComponentHelper.toGson(adventure);
+        return ChatSerializer.a(json);
     }
 }

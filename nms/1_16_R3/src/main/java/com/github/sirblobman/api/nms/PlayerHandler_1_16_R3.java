@@ -8,6 +8,18 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import net.minecraft.server.v1_16_R3.Containers;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
+import net.minecraft.server.v1_16_R3.IChatBaseComponent;
+import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_16_R3.Packet;
+import net.minecraft.server.v1_16_R3.PacketPlayOutOpenWindow;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+
+import com.github.sirblobman.api.language.ComponentHelper;
+
+import net.kyori.adventure.text.Component;
+
 public class PlayerHandler_1_16_R3 extends PlayerHandler {
     public PlayerHandler_1_16_R3(JavaPlugin plugin) {
         super(plugin);
@@ -44,5 +56,40 @@ public class PlayerHandler_1_16_R3 extends PlayerHandler {
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
         player.setCooldown(material, ticksLeft);
+    }
+
+    @Override
+    public void sendMenuTitleUpdate(Player player, Component title) {
+        if (!(player instanceof CraftPlayer)) {
+            return;
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        if (entityPlayer.activeContainer == null) {
+            return;
+        }
+
+        int containerId = entityPlayer.activeContainer.windowId;
+        Containers<?> menuType = entityPlayer.activeContainer.getType();
+        IChatBaseComponent nmsTitle = convertComponent(title);
+
+        Packet<?> packet = new PacketPlayOutOpenWindow(containerId, menuType, nmsTitle);
+        sendPacket(player, packet);
+    }
+
+    private void sendPacket(Player player, Packet<?> packet) {
+        if (!(player instanceof CraftPlayer)) {
+            return;
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.playerConnection.sendPacket(packet);
+    }
+
+    private IChatBaseComponent convertComponent(Component adventure) {
+        String json = ComponentHelper.toGson(adventure);
+        return ChatSerializer.a(json);
     }
 }

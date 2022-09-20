@@ -2,12 +2,21 @@ package com.github.sirblobman.api.nms;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.EnumClientCommand;
+import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
+import net.minecraft.server.v1_7_R4.PacketPlayOutOpenWindow;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+
+import com.github.sirblobman.api.language.ComponentHelper;
+
+import net.kyori.adventure.text.Component;
 
 public class PlayerHandler_1_7_R4 extends PlayerHandler {
     public PlayerHandler_1_7_R4(JavaPlugin plugin) {
@@ -53,5 +62,47 @@ public class PlayerHandler_1_7_R4 extends PlayerHandler {
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
         // Do Nothing
+    }
+
+    @Override
+    public void sendMenuTitleUpdate(Player player, Component title) {
+        if (!(player instanceof CraftPlayer)) {
+            return;
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        if (entityPlayer.activeContainer == null) {
+            return;
+        }
+
+        InventoryView openInventoryView = player.getOpenInventory();
+        Inventory topInventory = openInventoryView.getTopInventory();
+        InventoryType inventoryType = topInventory.getType();
+        int inventorySize = topInventory.getSize();
+
+        if (inventoryType != InventoryType.CHEST) {
+            return;
+        }
+
+        int containerId = entityPlayer.activeContainer.windowId;
+        String nmsTitle = convertComponent(title);
+
+        Packet packet = new PacketPlayOutOpenWindow(containerId, 0, nmsTitle, inventorySize, true);
+        sendPacket(player, packet);
+    }
+
+    private void sendPacket(Player player, Packet packet) {
+        if (!(player instanceof CraftPlayer)) {
+            return;
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.playerConnection.sendPacket(packet);
+    }
+
+    private String convertComponent(Component adventure) {
+        return ComponentHelper.toLegacy(adventure);
     }
 }

@@ -5,22 +5,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.JsonObject;
+import net.kyori.adventure.text.Component;
 
 public abstract class PlayerHandler extends Handler {
     public PlayerHandler(JavaPlugin plugin) {
         super(plugin);
     }
 
-    protected final String asJSON(String message) {
-        if (message == null) message = "";
+    protected final String asJSON(String text) {
+        if (text == null) {
+            text = "";
+        }
+
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("text", message);
+        jsonObject.addProperty("text", text);
         return jsonObject.toString();
     }
-
-    public abstract void sendActionBar(Player player, String message);
-
-    public abstract void sendTabInfo(Player player, String header, String footer);
 
     public abstract void forceRespawn(Player player);
 
@@ -28,5 +28,11 @@ public abstract class PlayerHandler extends Handler {
 
     public abstract void setAbsorptionHearts(Player player, double hearts);
 
+    public abstract void sendActionBar(Player player, String message);
+
+    public abstract void sendTabInfo(Player player, String header, String footer);
+
     public abstract void sendCooldownPacket(Player player, Material material, int ticksLeft);
+
+    public abstract void sendMenuTitleUpdate(Player player, Component title);
 }
