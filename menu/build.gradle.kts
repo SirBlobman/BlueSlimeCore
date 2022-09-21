@@ -1,6 +1,7 @@
 dependencies {
     implementation(project(path = ":shaded", configuration = "shadow"))
     implementation(project(":utility"))
+    implementation(project(":paper-helper"))
     implementation(project(":language"))
     implementation(project(":item"))
     implementation(project(":nms:abstract"))

@@ -3,7 +3,11 @@ package com.github.sirblobman.api.utility.paper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -95,5 +99,27 @@ public final class PaperHelper {
                 .map(ComponentConverter::shadedToNormal).collect(Collectors.toList());
         itemMeta.lore(paperLore);
         item.setItemMeta(itemMeta);
+    }
+
+    public static Inventory createInventory(InventoryHolder holder, int size, Component title) {
+        net.kyori.adventure.text.Component paperTitle = shadedToNormal(title);
+
+        if (size == 5) {
+            return Bukkit.createInventory(holder, InventoryType.HOPPER, paperTitle);
+        }
+
+        if (size < 9) {
+            throw new IllegalArgumentException("size must be equal to 5 or at least 9");
+        }
+
+        if (size > 54) {
+            throw new IllegalArgumentException("size cannot be more than 54");
+        }
+
+        if (size % 9 != 0) {
+            throw new IllegalArgumentException("size must be equal to 5 or divisible by 9");
+        }
+
+        return Bukkit.createInventory(holder, size, paperTitle);
     }
 }

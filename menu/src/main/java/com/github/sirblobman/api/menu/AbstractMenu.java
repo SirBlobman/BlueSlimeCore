@@ -61,7 +61,8 @@ public abstract class AbstractMenu extends BaseMenu {
     @Override
     public Inventory getInventory() {
         int size = getSize();
-        Inventory inventory = getInventory(size);
+        Component title = getTitle();
+        Inventory inventory = getInventory(size, title);
 
         ItemStack[] contents = inventory.getContents();
         for (int slot = 0; slot < size; slot++) {

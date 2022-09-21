@@ -24,6 +24,8 @@ import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
+import com.github.sirblobman.api.utility.paper.PaperChecker;
+import com.github.sirblobman.api.utility.paper.PaperHelper;
 import com.github.sirblobman.api.xseries.XMaterial;
 
 import org.jetbrains.annotations.Nullable;
@@ -124,10 +126,14 @@ public abstract class BaseMenu implements IMenu {
      * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
     public Inventory getInventory(int size, String title) {
-        String realTitle = MessageUtility.color(title);
+        if (title == null) {
+            return getInventory(size);
+        }
+
+        String colorTitle = MessageUtility.color(title);
 
         if (size == 5) {
-            return Bukkit.createInventory(this, InventoryType.HOPPER, realTitle);
+            return Bukkit.createInventory(this, InventoryType.HOPPER, colorTitle);
         }
 
         if (size < 9) {
@@ -142,7 +148,26 @@ public abstract class BaseMenu implements IMenu {
             throw new IllegalArgumentException("size must be equal to 5 or divisible by 9");
         }
 
-        return Bukkit.createInventory(this, size, realTitle);
+        return Bukkit.createInventory(this, size, colorTitle);
+    }
+
+    /**
+     * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
+     *              nine for a chest menu.
+     * @param title The component title for the GUI.
+     * @return An empty {@link Inventory} instance with this menu instance as its holder.
+     */
+    public Inventory getInventory(int size, Component title) {
+        if (title == null) {
+            return getInventory(size);
+        }
+
+        if (PaperChecker.hasNativeComponentSupport()) {
+            return PaperHelper.createInventory(this, size, title);
+        } else {
+            String legacyTitle = ComponentHelper.toLegacy(title);
+            return getInventory(size, legacyTitle);
+        }
     }
 
     /**
