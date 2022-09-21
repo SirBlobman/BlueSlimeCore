@@ -11,15 +11,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
+import com.github.sirblobman.api.utility.paper.PaperChecker;
+import com.github.sirblobman.api.utility.paper.PaperHelper;
 import com.github.sirblobman.api.xseries.XMaterial;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemBuilder {
-    protected final ItemStack finalItem;
+    protected ItemStack finalItem;
 
     public ItemBuilder(ItemStack item) {
         this.finalItem = Validate.notNull(item, "item must not be null!");
@@ -119,6 +123,22 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
+    public ItemBuilder withName(ItemHandler itemHandler, @Nullable Component name) {
+        Validate.notNull(itemHandler, "itemHandler must not be null!");
+
+        if (name == null) {
+            return withName(null);
+        }
+
+        if (PaperChecker.hasNativeComponentSupport()) {
+            PaperHelper.setDisplayName(this.finalItem, name);
+        } else {
+            this.finalItem = itemHandler.setDisplayName(this.finalItem, name);
+        }
+
+        return this;
+    }
+
     public ItemBuilder withLore(@Nullable List<String> loreList) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
@@ -133,6 +153,28 @@ public class ItemBuilder {
         List<String> loreList = new ArrayList<>();
         Collections.addAll(loreList, loreArray);
         return withLore(loreList);
+    }
+
+    public ItemBuilder withLore(ItemHandler itemHandler, @Nullable List<Component> lore) {
+        Validate.notNull(itemHandler, "itemHandler must not be null!");
+
+        if (lore == null) {
+            return withLore((List<String>) null);
+        }
+
+        if (PaperChecker.hasNativeComponentSupport()) {
+            PaperHelper.setLore(this.finalItem, lore);
+        } else {
+            this.finalItem = itemHandler.setLore(this.finalItem, lore);
+        }
+
+        return this;
+    }
+
+    public ItemBuilder withLore(ItemHandler itemHandler, Component... lines) {
+        List<Component> lore = new ArrayList<>();
+        Collections.addAll(lore, lines);
+        return withLore(itemHandler, lore);
     }
 
     public ItemBuilder appendLore(@NotNull String line) {
