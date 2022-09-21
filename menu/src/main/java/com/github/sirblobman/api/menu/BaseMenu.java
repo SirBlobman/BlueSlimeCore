@@ -15,9 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
-import com.github.sirblobman.api.item.ComponentItemBuilder;
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
+import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
@@ -206,11 +206,7 @@ public abstract class BaseMenu implements IMenu {
             if (itemHandler != null && languageManager != null) {
                 MiniMessage miniMessage = languageManager.getMiniMessage();
                 Component displayName = miniMessage.deserialize(displayNameString);
-
-                ItemStack oldItem = builder.build();
-                ComponentItemBuilder newBuilder = new ComponentItemBuilder(itemHandler, oldItem);
-                newBuilder.withName(displayName);
-                builder = newBuilder.asItemBuilder();
+                builder.withName(itemHandler, ComponentHelper.wrapNoItalics(displayName));
             } else {
                 String displayName = MessageUtility.color(displayNameString);
                 return builder.withName(displayName);
@@ -228,10 +224,7 @@ public abstract class BaseMenu implements IMenu {
                     lore.add(line);
                 }
 
-                ItemStack oldItem = builder.build();
-                ComponentItemBuilder newBuilder = new ComponentItemBuilder(itemHandler, oldItem);
-                newBuilder.withLore(lore);
-                builder = newBuilder.asItemBuilder();
+                builder.withLore(itemHandler, ComponentHelper.wrapNoItalics(lore));
             } else {
                 List<String> lore = MessageUtility.colorList(loreStringList);
                 builder.withLore(lore);

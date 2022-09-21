@@ -28,7 +28,10 @@ public interface IMenu extends InventoryHolder, Listener {
     /**
      * @return The title component for the menu.
      */
-    @Nullable Component getTitle();
+    @Nullable
+    default Component getTitle() {
+        return null;
+    }
 
     /**
      * Use this method to update the menu title.

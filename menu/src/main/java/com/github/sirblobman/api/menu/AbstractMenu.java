@@ -19,6 +19,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.menu.button.AbstractButton;
 import com.github.sirblobman.api.utility.Validate;
 
@@ -204,6 +205,13 @@ public abstract class AbstractMenu extends BaseMenu {
     public abstract AbstractButton getButton(int slot);
 
     /**
+     * {@inheritDoc}
+     */
+    @Nullable
+    @Override
+    public abstract Component getTitle();
+
+    /**
      * Override this method to change whether a click is prevented or not.
      *
      * @param slot The slot that was clicked.
@@ -211,6 +219,9 @@ public abstract class AbstractMenu extends BaseMenu {
      */
     public abstract boolean shouldPreventClick(int slot);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCustomClose(InventoryCloseEvent e) {
         // Do Nothing
