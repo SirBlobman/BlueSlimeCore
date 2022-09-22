@@ -13,16 +13,6 @@ public final class PlayerHandler_Fallback extends PlayerHandler {
     }
 
     @Override
-    public void sendActionBar(Player player, String message) {
-        // Do Nothing
-    }
-
-    @Override
-    public void sendTabInfo(Player player, String header, String footer) {
-        // Do Nothing
-    }
-
-    @Override
     public void forceRespawn(Player player) {
         // Do Nothing
     }

@@ -670,4 +670,23 @@ public final class LanguageManager {
             sendSound(player, soundInfo);
         }
     }
+
+    public void sendTabInfo(@NotNull Player player, @NotNull String path, @Nullable Replacer replacer) {
+        String headerKey = (path + ".header");
+        String footerKey = (path + ".footer");
+
+        Component header = getMessage(player, headerKey, replacer);
+        Component footer = getMessage(player, footerKey, replacer);
+        sendTabInfo(player, header, footer);
+    }
+
+    public void sendTabInfo(@NotNull Player player, Component header, Component footer) {
+        BukkitAudiences audiences = getAudiences();
+        if (audiences == null) {
+            return;
+        }
+
+        Audience audience = audiences.player(player);
+        audience.sendPlayerListHeaderAndFooter(header, footer);
+    }
 }

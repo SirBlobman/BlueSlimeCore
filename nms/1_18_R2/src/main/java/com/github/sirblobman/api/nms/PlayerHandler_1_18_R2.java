@@ -4,9 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.network.protocol.Packet;
@@ -21,20 +18,6 @@ import com.github.sirblobman.api.language.ComponentHelper;
 public class PlayerHandler_1_18_R2 extends PlayerHandler {
     public PlayerHandler_1_18_R2(JavaPlugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void sendActionBar(Player player, String message) {
-        Spigot spigot = player.spigot();
-        BaseComponent[] componentMessage = TextComponent.fromLegacyText(message);
-        spigot.sendMessage(ChatMessageType.ACTION_BAR, componentMessage);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void sendTabInfo(Player player, String header, String footer) {
-        player.setPlayerListHeaderFooter(header, footer);
     }
 
     @Override

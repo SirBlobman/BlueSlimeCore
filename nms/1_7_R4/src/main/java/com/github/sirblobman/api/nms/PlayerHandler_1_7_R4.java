@@ -23,20 +23,6 @@ public final class PlayerHandler_1_7_R4 extends PlayerHandler {
     }
 
     @Override
-    public void sendActionBar(Player player, String message) {
-        String newMessage = ("[Action Bar] " + message);
-        player.sendMessage(newMessage);
-    }
-
-    @Override
-    public void sendTabInfo(Player player, String header, String footer) {
-        String newHeader = ("[Tab Header] " + header);
-        String newFooter = ("[Tab Footer] " + footer);
-        player.sendMessage(newHeader);
-        player.sendMessage(newFooter);
-    }
-
-    @Override
     public void forceRespawn(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer nmsPlayer = craftPlayer.getHandle();
