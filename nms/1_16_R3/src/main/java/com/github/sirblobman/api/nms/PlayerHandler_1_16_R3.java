@@ -5,12 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.minecraft.server.v1_16_R3.Containers;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_16_R3.Packet;
-import net.minecraft.server.v1_16_R3.PacketPlayOutOpenWindow;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 
 import com.github.sirblobman.api.adventure.adventure.text.Component;
@@ -41,26 +39,6 @@ public class PlayerHandler_1_16_R3 extends PlayerHandler {
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
         player.setCooldown(material, ticksLeft);
-    }
-
-    @Override
-    public void sendMenuTitleUpdate(Player player, Component title) {
-        if (!(player instanceof CraftPlayer)) {
-            return;
-        }
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-        if (entityPlayer.activeContainer == null) {
-            return;
-        }
-
-        int containerId = entityPlayer.activeContainer.windowId;
-        Containers<?> menuType = entityPlayer.activeContainer.getType();
-        IChatBaseComponent nmsTitle = convertComponent(title);
-
-        Packet<?> packet = new PacketPlayOutOpenWindow(containerId, menuType, nmsTitle);
-        sendPacket(player, packet);
     }
 
     private void sendPacket(Player player, Packet<?> packet) {

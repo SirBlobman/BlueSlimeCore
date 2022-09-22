@@ -1,20 +1,14 @@
 package com.github.sirblobman.api.nms;
 
-import java.util.Locale;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 
 import com.github.sirblobman.api.adventure.adventure.text.Component;
@@ -48,32 +42,6 @@ public class PlayerHandler_1_8_R3 extends PlayerHandler {
     @Override
     public void sendCooldownPacket(Player player, Material material, int ticksLeft) {
         // Do Nothing
-    }
-
-    @Override
-    public void sendMenuTitleUpdate(Player player, Component title) {
-        if (!(player instanceof CraftPlayer)) {
-            return;
-        }
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-        if (entityPlayer.activeContainer == null) {
-            return;
-        }
-
-        InventoryView openInventoryView = player.getOpenInventory();
-        Inventory topInventory = openInventoryView.getTopInventory();
-        InventoryType inventoryType = topInventory.getType();
-        String inventoryTypeName = inventoryType.name().toLowerCase(Locale.US);
-        int inventorySize = topInventory.getSize();
-
-        int containerId = entityPlayer.activeContainer.windowId;
-        String inventoryTypeId = ("minecraft:" + inventoryTypeName);
-        IChatBaseComponent nmsTitle = convertComponent(title);
-
-        Packet<?> packet = new PacketPlayOutOpenWindow(containerId, inventoryTypeId, nmsTitle, inventorySize);
-        sendPacket(player, packet);
     }
 
     private void sendPacket(Player player, Packet<?> packet) {

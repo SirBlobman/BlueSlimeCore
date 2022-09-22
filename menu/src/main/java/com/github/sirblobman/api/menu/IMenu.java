@@ -2,7 +2,6 @@ package com.github.sirblobman.api.menu;
 
 import java.util.Optional;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
@@ -32,11 +31,6 @@ public interface IMenu extends InventoryHolder, Listener {
     default Component getTitle() {
         return null;
     }
-
-    /**
-     * Use this method to update the menu title.
-     */
-    void updateTitle(Player player);
 
     /**
      * Override this method to use a custom close action.

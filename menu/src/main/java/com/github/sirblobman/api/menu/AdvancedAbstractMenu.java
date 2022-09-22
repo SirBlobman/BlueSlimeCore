@@ -125,7 +125,6 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
         player.openInventory(inventory);
 
         BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLater(plugin, () -> updateTitle(player), 1L);
         this.currentTask = scheduler.runTaskTimer(plugin, this, 20L, 20L);
     }
 

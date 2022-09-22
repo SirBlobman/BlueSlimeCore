@@ -1,13 +1,8 @@
 package com.github.sirblobman.api.nms;
 
-import java.util.Locale;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.server.v1_10_R1.EntityPlayer;
@@ -15,7 +10,6 @@ import net.minecraft.server.v1_10_R1.IChatBaseComponent;
 import net.minecraft.server.v1_10_R1.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_10_R1.Item;
 import net.minecraft.server.v1_10_R1.Packet;
-import net.minecraft.server.v1_10_R1.PacketPlayOutOpenWindow;
 import net.minecraft.server.v1_10_R1.PacketPlayOutSetCooldown;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_10_R1.util.CraftMagicNumbers;
@@ -56,32 +50,6 @@ public class PlayerHandler_1_10_R1 extends PlayerHandler {
         Item item = CraftMagicNumbers.getItem(material);
         PacketPlayOutSetCooldown packet = new PacketPlayOutSetCooldown(item, ticksLeft);
         nmsPlayer.playerConnection.sendPacket(packet);
-    }
-
-    @Override
-    public void sendMenuTitleUpdate(Player player, Component title) {
-        if (!(player instanceof CraftPlayer)) {
-            return;
-        }
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-        if (entityPlayer.activeContainer == null) {
-            return;
-        }
-
-        InventoryView openInventoryView = player.getOpenInventory();
-        Inventory topInventory = openInventoryView.getTopInventory();
-        InventoryType inventoryType = topInventory.getType();
-        String inventoryTypeName = inventoryType.name().toLowerCase(Locale.US);
-        int inventorySize = topInventory.getSize();
-
-        int containerId = entityPlayer.activeContainer.windowId;
-        String inventoryTypeId = ("minecraft:" + inventoryTypeName);
-        IChatBaseComponent nmsTitle = convertComponent(title);
-
-        Packet<?> packet = new PacketPlayOutOpenWindow(containerId, inventoryTypeId, nmsTitle, inventorySize);
-        sendPacket(player, packet);
     }
 
     private void sendPacket(Player player, Packet<?> packet) {

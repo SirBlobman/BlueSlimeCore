@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +21,6 @@ import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
-import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.paper.PaperChecker;
 import com.github.sirblobman.api.utility.paper.PaperHelper;
@@ -49,22 +47,6 @@ public abstract class BaseMenu implements IMenu {
     @Override
     public void setParentMenu(IMenu parentMenu) {
         this.parentMenu = parentMenu;
-    }
-
-    @Override
-    public void updateTitle(Player player) {
-        Component title = getTitle();
-        if (title == null) {
-            return;
-        }
-
-        MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
-        if (multiVersionHandler == null) {
-            return;
-        }
-
-        PlayerHandler playerHandler = multiVersionHandler.getPlayerHandler();
-        playerHandler.sendMenuTitleUpdate(player, title);
     }
 
     /**

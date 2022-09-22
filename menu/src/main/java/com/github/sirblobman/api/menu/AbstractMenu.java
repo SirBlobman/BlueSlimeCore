@@ -172,9 +172,6 @@ public abstract class AbstractMenu extends BaseMenu {
 
         Player player = getPlayer();
         player.openInventory(inventory);
-
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLater(plugin, () -> updateTitle(player), 1L);
     }
 
     private AbstractButton internalGetButton(int slot) {
