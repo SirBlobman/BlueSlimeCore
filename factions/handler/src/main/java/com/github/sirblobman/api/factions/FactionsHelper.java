@@ -95,7 +95,7 @@ public final class FactionsHelper {
             logger.warning("Failed to find any of the following plugins:");
             logger.warning("[Factions, FactionsX, LegacyFactions]");
             logger.warning("Please contact SirBlobman if you believe this is mistake.");
-            logger.warning("https://github.com/SirBlobman/SirBlobmanAPI/issues/new/choose");
+            logger.warning("https://github.com/SirBlobman/BlueSlimeCore/issues/new/choose");
             return null;
         } catch (Exception ex) {
             Logger logger = getLogger();

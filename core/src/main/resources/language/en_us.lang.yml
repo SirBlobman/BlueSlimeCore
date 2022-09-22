@@ -61,11 +61,11 @@ command:
 
   blueslimecore:
     help:
-      title: "<white><bold>SirBlobmanCore Commands:</bold></white>"
+      title: "<white><bold>BlueSlimeCore Commands:</bold></white>"
       command-list:
-        - "<aqua>/sb help</aqua><gray>: Show this list of commands.</gray>"
-        - "<aqua>/sb reload</aqua><gray>: Reload the configuration files for SirBlobmanCore.</gray>"
-        - "<aqua>/sb language-test [player]</aqua><gray>: Send language test messages."
+        - "<aqua>/bscore help</aqua><gray>: Show this list of commands.</gray>"
+        - "<aqua>/bscore reload</aqua><gray>: Reload the configuration files for BlueSlimeCore.</gray>"
+        - "<aqua>/bscore language-test [player]</aqua><gray>: Send language test messages."
         - "<aqua>/debug-event</aqua><gray>: Show information about which classes are listing to an event (console only)</gray>"
         - "<aqua>/global-gamerule</aqua><gray>: Change a gamerule for every world on the server.</gray>"
         - "<aqua>/item-info</aqua><gray>: Show information about the material and damage of an item.</gray>"

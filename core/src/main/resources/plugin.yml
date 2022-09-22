@@ -27,13 +27,10 @@ commands:
     description: "The main command for the BlueSlimeCore plugin."
     usage: "/<command> help"
     aliases:
-      - "sirblobmancore"
-      - "sirblobmanapi"
-      - "sirblobman"
-      - "sbcore"
-      - "sbapi"
-      - "sbc"
-      - "sb"
+      - "bscore"
+      - "bsapi"
+      - "bsc"
+      - "bs"
 
   item-info:
     description: "A debug command to show information about an item."
