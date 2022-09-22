@@ -45,7 +45,7 @@ public final class CustomNbtTypeRegistry_1_13_R2 {
         } else if (Objects.equals(Double.class, type)) {
             return this.createAdapter(Double.class, NBTTagDouble.class, NBTTagDouble::new, NBTTagDouble::asDouble);
         } else if (Objects.equals(String.class, type)) {
-            return this.createAdapter(String.class, NBTTagString.class, NBTTagString::new, NBTTagString::toString);
+            return this.createAdapter(String.class, NBTTagString.class, NBTTagString::new, NBTTagString::asString);
         } else if (Objects.equals(byte[].class, type)) {
             return this.createAdapter(byte[].class, NBTTagByteArray.class,
                     (array) -> new NBTTagByteArray(Arrays.copyOf(array, array.length)),
