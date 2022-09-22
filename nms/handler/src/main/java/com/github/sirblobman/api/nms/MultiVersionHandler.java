@@ -20,6 +20,7 @@ public final class MultiVersionHandler {
     private HeadHandler headHandler;
     private ItemHandler itemHandler;
     private PlayerHandler playerHandler;
+    private ServerHandler serverHandler;
 
     public MultiVersionHandler(JavaPlugin plugin) {
         this.plugin = Validate.notNull(plugin, "plugin must not be null!");
@@ -114,5 +115,14 @@ public final class MultiVersionHandler {
 
         this.itemHandler = getHandler(ItemHandler.class, "ItemHandler");
         return getItemHandler();
+    }
+
+    public ServerHandler getServerHandler() {
+        if (this.serverHandler != null) {
+            return this.serverHandler;
+        }
+
+        this.serverHandler = getHandler(ServerHandler.class, "ServerHandler");
+        return getServerHandler();
     }
 }
