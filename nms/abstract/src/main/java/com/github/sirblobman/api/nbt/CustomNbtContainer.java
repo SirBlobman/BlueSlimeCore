@@ -30,7 +30,7 @@ public interface CustomNbtContainer {
      * <p>
      * Storing a value using a custom {@link CustomNbtType} implementation
      * will not store the complex data type. Therefore storing a UUID (by
-     * storing a byte[]) will match has("key" , {@link CustomNbtType#BYTE_ARRAY}).
+     * storing a byte[]) will match has("key" , {@link CustomNbtTypes#BYTE_ARRAY}).
      * Likewise a stored byte[] will always match your UUID {@link CustomNbtType} even if it is not 16
      * bytes long.
      * <p>

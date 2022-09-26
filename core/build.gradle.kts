@@ -82,7 +82,7 @@ tasks {
         enabled = false
     }
 
-    named<ShadowJar>("shadowJar"){
+    named<ShadowJar>("shadowJar") {
         archiveFileName.set("BlueSlimeCore-$calculatedVersion.jar")
         archiveClassifier.set(null as String?)
     }

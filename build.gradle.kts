@@ -11,6 +11,9 @@ allprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
+        withSourcesJar()
+        withJavadocJar()
     }
 
     repositories {
@@ -39,6 +42,13 @@ allprojects {
     tasks {
         withType<JavaCompile> {
             options.encoding = "UTF-8"
+        }
+
+        javadoc {
+            options {
+                this as StandardJavadocDocletOptions
+                addStringOption("Xdoclint:none", "-quiet")
+            }
         }
     }
 }
