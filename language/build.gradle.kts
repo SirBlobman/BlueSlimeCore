@@ -1,6 +1,3 @@
-group = "com.github.sirblobman.api"
-version = "2.6-SNAPSHOT"
-
 repositories {
     maven {
         name = "placeholderapi"
