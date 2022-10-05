@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -436,6 +437,11 @@ public final class LanguageManager {
         String messageString = getMessageString(commandSender, key, replacer);
         if (messageString.isEmpty()) {
             return Component.empty();
+        }
+
+        if (messageString.contains("\u00A7")) {
+            messageString = ChatColor.stripColor(messageString);
+            messageString = messageString.replace("\u00A7", "");
         }
 
         MiniMessage miniMessageHandler = getMiniMessage();
