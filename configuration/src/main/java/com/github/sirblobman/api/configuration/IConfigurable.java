@@ -13,6 +13,15 @@ public interface IConfigurable {
     void load(ConfigurationSection section);
 
     /**
+     * Save the values to a configuration.
+     *
+     * @param section The configuration that wil contain the values.
+     */
+    default void save(ConfigurationSection section) {
+        // Do Nothing
+    }
+
+    /**
      * Get or create a configuration section.
      *
      * @param parent The parent section.
