@@ -1,6 +1,6 @@
 name: "@bukkit.plugin.name@"
 prefix: "@bukkit.plugin.prefix@"
-description: "@plugin.description@"
+description: "@bukkit.plugin.description@"
 website: "https://www.spigotmc.org/resources/83189/"
 
 main: "@bukkit.plugin.main@"
