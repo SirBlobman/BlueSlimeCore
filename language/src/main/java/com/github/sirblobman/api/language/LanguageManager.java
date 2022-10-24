@@ -83,7 +83,8 @@ public final class LanguageManager {
         Validate.notNull(configurationManager, "configurationManager must not be null!");
         this.configurationManager = configurationManager;
         this.languageMap = new ConcurrentHashMap<>();
-        this.miniMessage = MiniMessage.miniMessage();
+        this.miniMessage = MiniMessage.builder().strict(false).debug(message ->
+                printDebug("[MiniMessage] " + message)).build();
 
         this.defaultLanguageName = null;
         this.consoleLanguageName = null;
@@ -416,7 +417,20 @@ public final class LanguageManager {
             return "";
         }
 
-        return language.getTranslation(key);
+        String translation = language.getTranslation(key);
+        if (translation != null) {
+            return translation;
+        }
+
+        Language defaultLanguage = getDefaultLanguage();
+        if (defaultLanguage != null) {
+            String defaultTranslation = defaultLanguage.getTranslation(key);
+            if (defaultTranslation != null) {
+                return defaultTranslation;
+            }
+        }
+
+        return ("{" + key + "}");
     }
 
     @NotNull

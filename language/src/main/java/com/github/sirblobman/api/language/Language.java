@@ -86,7 +86,7 @@ public final class Language {
      * parent.
      * @throws StackOverflowError when there is a cyclic language dependency.
      */
-    @NotNull
+    @Nullable
     public String getTranslation(String key) {
         String translation = this.translationMap.get(key);
         if (translation != null) {
@@ -99,7 +99,7 @@ public final class Language {
             return language.getTranslation(key);
         }
 
-        return key;
+        return null;
     }
 
     void addTranslation(@NotNull String key, @NotNull String value) {

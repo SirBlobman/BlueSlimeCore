@@ -1,12 +1,12 @@
 ## Extra Information:
 ## This is the default language file for BlueSlimeCore.
 ## The default language is "en_us", also known as English (United States).
-## Context will be added as YAML comments above the string.
+## Context for translators will be added as YAML comments above the string.
 
-## The color scheme for messages is white, aqua, and sometimes red.
+## The color scheme for messages is white, green, and red.
 ## Command feedback that is successful should always be green.
 ## Error messages should always be red.
-## Variables in messages can be gray or white.
+## Variables in messages can be green or yellow.
 
 ## Messages use the MiniMessage format in non-strict mode.
 ## More information about MiniMessage can be found here:
