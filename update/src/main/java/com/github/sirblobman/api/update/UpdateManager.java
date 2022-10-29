@@ -26,8 +26,13 @@ import com.github.sirblobman.api.utility.Validate;
 import org.jetbrains.annotations.Nullable;
 
 public final class UpdateManager {
-    private static final String BASE_UPDATE_URL = "https://api.spigotmc.org/legacy/update.php?resource=%s";
-    private static final String BASE_RESOURCE_URL = "https://www.spigotmc.org/resources/%s/";
+    private static final String BASE_UPDATE_URL;
+    private static final String BASE_RESOURCE_URL;
+
+    static {
+        BASE_UPDATE_URL = "https://api.spigotmc.org/legacy/update.php?resource=%s";
+        BASE_RESOURCE_URL = "https://www.spigotmc.org/resources/%s/";
+    }
 
     private final JavaPlugin plugin;
     private final Map<String, Long> pluginResourceMap;
@@ -48,6 +53,15 @@ public final class UpdateManager {
     public void addResource(Plugin plugin, long resourceId) {
         String pluginName = plugin.getName();
         this.pluginResourceMap.put(pluginName, resourceId);
+    }
+
+    /**
+     * Remove a resource from this manager.
+     * @param plugin The plugin to remove.
+     */
+    public void removeResource(Plugin plugin) {
+        String pluginName = plugin.getName();
+        this.pluginResourceMap.remove(pluginName);
     }
 
     /**
@@ -77,18 +91,21 @@ public final class UpdateManager {
 
     private void internalCheckForUpdates() {
         retrieveSpigotVersions();
-
         Set<String> pluginNameSet = this.spigotVersionCache.keySet();
         pluginNameSet.forEach(this::printUpdateInformation);
     }
 
     private void printUpdateInformation(String pluginName) {
         Long resourceId = this.pluginResourceMap.getOrDefault(pluginName, null);
-        if (resourceId == null) return;
+        if (resourceId == null) {
+            return;
+        }
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         Plugin plugin = pluginManager.getPlugin(pluginName);
-        if (plugin == null) return;
+        if (plugin == null) {
+            return;
+        }
 
         PluginDescriptionFile pluginDescription = plugin.getDescription();
         String pluginVersion = pluginDescription.getVersion();
@@ -127,7 +144,9 @@ public final class UpdateManager {
     private void retrieveSpigotVersion(String pluginName) {
         try {
             Long resourceId = this.pluginResourceMap.getOrDefault(pluginName, null);
-            if (resourceId == null) return;
+            if (resourceId == null) {
+                return;
+            }
 
             String updateUrlString = String.format(BASE_UPDATE_URL, resourceId);
             URL url = new URL(updateUrlString);
@@ -148,7 +167,8 @@ public final class UpdateManager {
             inputStream.close();
         } catch (IOException ex) {
             Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "Update check failed for plugin '" + pluginName + "' because an error occurred:", ex);
+            logger.log(Level.WARNING, "Update check failed for plugin '" + pluginName
+                    + "' because an error occurred:", ex);
         }
     }
 }
