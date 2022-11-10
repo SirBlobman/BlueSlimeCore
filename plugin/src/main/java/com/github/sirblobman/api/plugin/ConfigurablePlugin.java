@@ -13,7 +13,7 @@ import com.github.sirblobman.api.nms.MultiVersionHandler;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ConfigurablePlugin extends JavaPlugin {
+public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVersionPlugin {
     private final ConfigurationManager configurationManager;
     private final MultiVersionHandler multiVersionHandler;
     private final PlayerDataManager playerDataManager;

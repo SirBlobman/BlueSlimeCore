@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
+import com.github.sirblobman.api.plugin.IMultiVersionPlugin;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +58,12 @@ public interface IMenu extends InventoryHolder, Listener {
 
     @Nullable
     default MultiVersionHandler getMultiVersionHandler() {
+        JavaPlugin plugin = getPlugin();
+        if (plugin instanceof IMultiVersionPlugin) {
+            IMultiVersionPlugin multiVersionPlugin = (IMultiVersionPlugin) plugin;
+            return multiVersionPlugin.getMultiVersionHandler();
+        }
+
         return null;
     }
 
