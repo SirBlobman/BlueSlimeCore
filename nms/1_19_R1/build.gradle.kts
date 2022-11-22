@@ -6,7 +6,7 @@ repositories {
 }
 
 plugins {
-    id("io.papermc.paperweight.userdev") version "1.3.9"
+    id("io.papermc.paperweight.userdev") version "1.3.11"
 }
 
 java {
