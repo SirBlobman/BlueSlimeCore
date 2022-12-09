@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":nms:1_17_R1"))
     implementation(project(":nms:1_18_R2"))
     implementation(project(":nms:1_19_R1"))
+    implementation(project(":nms:1_19_R2"))
 
     // NMS Handler
     implementation(project(":nms:scoreboard"))
