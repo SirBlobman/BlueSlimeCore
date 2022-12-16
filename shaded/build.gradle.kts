@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     // XSeries
-    implementation("com.github.cryptomorin:XSeries:9.1.0")
+    implementation("com.github.cryptomorin:XSeries:9.2.0")
 
     // Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.2.0")
