@@ -127,7 +127,7 @@ public final class FactionsHelper {
         String pluginVersion = pluginDescription.getVersion();
         List<String> pluginAuthorList = pluginDescription.getAuthors();
 
-        if (pluginAuthorList.contains("Driftay")) {
+        if (pluginAuthorList.contains("Driftay") || pluginAuthorList.contains("SaberDev")) {
             if (pluginVersion.endsWith("-X")) {
                 return true;
             }
