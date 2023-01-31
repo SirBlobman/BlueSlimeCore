@@ -6,6 +6,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":factions:abstract"))
+    compileOnly(project(":factions:abstract"))
     compileOnly("com.github.redstone:LegacyFactions:v1.4.4")
 }

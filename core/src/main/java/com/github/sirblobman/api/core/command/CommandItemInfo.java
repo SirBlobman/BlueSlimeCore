@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
-import com.github.sirblobman.api.language.MultiReplacer;
-import com.github.sirblobman.api.language.Replacer;
+import com.github.sirblobman.api.language.replacer.Replacer;
+import com.github.sirblobman.api.language.replacer.StringReplacer;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.utility.ItemUtility;
@@ -35,25 +35,27 @@ public final class CommandItemInfo extends PlayerCommand {
     public boolean execute(Player player, String[] args) {
         ItemStack item = getHeldItem(player);
         if (ItemUtility.isAir(item)) {
-            sendMessage(player, "error.invalid-held-item", null);
+            sendMessage(player, "error.invalid-held-item");
             return true;
         }
 
         String materialNameX = getXMaterialName(item);
         String materialNameBukkit = getBukkitMaterialName(item);
         String vanillaId = getVanillaId(item);
-        Replacer replacer = new MultiReplacer("{material}", materialNameBukkit)
-                .addReplacement("{xmaterial}", materialNameX)
-                .addReplacement("{vanilla}", vanillaId);
-        sendMessage(player, "command.item-info.modern", replacer);
+
+        Replacer materialReplacer = new StringReplacer("{material}", materialNameBukkit);
+        Replacer xmaterialReplacer = new StringReplacer("{xmaterial}", materialNameX);
+        Replacer vanillaIdReplacer = new StringReplacer("{vanilla}", vanillaId);
+        sendMessage(player, "command.item-info.modern", materialReplacer, xmaterialReplacer, vanillaIdReplacer);
 
         int minorVersion = VersionUtility.getMinorVersion();
         if (minorVersion < 13) {
             String materialIdString = getMaterialIdString(item);
             String dataString = getDataString(item);
-            Replacer legacyReplacer = new MultiReplacer("{material_id}", materialIdString)
-                    .addReplacement("{data}", dataString);
-            sendMessage(player, "command.item-info.legacy", legacyReplacer);
+
+            Replacer materialIdReplacer = new StringReplacer("{material_id}", materialIdString);
+            Replacer materialDataReplacer = new StringReplacer("{data}", dataString);
+            sendMessage(player, "command.item-info.legacy", materialIdReplacer, materialDataReplacer);
         }
 
         return true;

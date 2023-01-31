@@ -30,8 +30,8 @@ import org.bukkit.plugin.RegisteredListener;
 
 import com.github.sirblobman.api.command.ConsoleCommand;
 import com.github.sirblobman.api.core.CorePlugin;
-import com.github.sirblobman.api.language.Replacer;
-import com.github.sirblobman.api.language.SimpleReplacer;
+import com.github.sirblobman.api.language.replacer.Replacer;
+import com.github.sirblobman.api.language.replacer.StringReplacer;
 
 public final class CommandDebugEvent extends ConsoleCommand {
     public CommandDebugEvent(CorePlugin plugin) {
@@ -63,7 +63,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         String eventPriorityName = args[0].toUpperCase(Locale.US);
         EventPriority eventPriority = matchEnum(EventPriority.class, eventPriorityName);
         if (eventPriority == null) {
-            Replacer replacer = new SimpleReplacer("{value}", eventPriorityName);
+            Replacer replacer = new StringReplacer("{value}", eventPriorityName);
             sendMessage(sender, "command.debug-event.invalid-priority", replacer);
             return true;
         }
@@ -71,7 +71,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         String className = args[1];
         Class<? extends Event> eventClass = getEventClass(className);
         if (eventClass == null) {
-            Replacer replacer = new SimpleReplacer("{value}", className);
+            Replacer replacer = new StringReplacer("{value}", className);
             sendMessage(sender, "command.debug-event.invalid-event-class", replacer);
             return true;
         }
@@ -82,7 +82,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
             return true;
         } catch (ReflectiveOperationException ex) {
             Logger logger = getLogger();
-            sendMessage(sender, "command.debug-event.reflection-error", null);
+            sendMessage(sender, "command.debug-event.reflection-error");
             logger.log(Level.WARNING, "Failed to debug an event because an error occurred:", ex);
             return true;
         }
@@ -136,14 +136,15 @@ public final class CommandDebugEvent extends ConsoleCommand {
 
         String eventClassSimpleName = eventClass.getSimpleName();
         String priorityName = priority.name();
-        Replacer replacer = message -> message.replace("{event}", eventClassSimpleName)
-                .replace("{priority}", priorityName);
+
+        Replacer eventReplacer = new StringReplacer("{event}", eventClassSimpleName);
+        Replacer priorityReplacer = new StringReplacer("{priority}", priorityName);
 
         CommandSender console = Bukkit.getConsoleSender();
-        sendMessage(console, "command.debug-event.results-title", replacer);
+        sendMessage(console, "command.debug-event.results-title", eventReplacer, priorityReplacer);
 
         if (pluginListenerMap.isEmpty()) {
-            sendMessage(console, "command.debug-event.results-none", replacer);
+            sendMessage(console, "command.debug-event.results-none", eventReplacer, priorityReplacer);
             return;
         }
 

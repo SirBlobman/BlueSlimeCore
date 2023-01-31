@@ -3,22 +3,18 @@ package com.github.sirblobman.api.language;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.MatchResult;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -28,31 +24,40 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 import com.github.sirblobman.api.adventure.adventure.audience.Audience;
+import com.github.sirblobman.api.adventure.adventure.platform.AudienceProvider;
 import com.github.sirblobman.api.adventure.adventure.platform.bukkit.BukkitAudiences;
+import com.github.sirblobman.api.adventure.adventure.sound.Sound;
 import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.adventure.adventure.text.ComponentLike;
+import com.github.sirblobman.api.adventure.adventure.text.TextReplacementConfig;
 import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.adventure.adventure.title.Title;
 import com.github.sirblobman.api.adventure.adventure.title.Title.Times;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
-import com.github.sirblobman.api.language.sound.CustomSoundInfo;
-import com.github.sirblobman.api.language.sound.SoundInfo;
-import com.github.sirblobman.api.language.sound.XSoundInfo;
+import com.github.sirblobman.api.language.custom.PlayerListInfo;
+import com.github.sirblobman.api.language.listener.LanguageListener;
+import com.github.sirblobman.api.language.custom.ModifiableMessage;
+import com.github.sirblobman.api.language.custom.ModifiableMessageType;
+import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.utility.Validate;
-import com.github.sirblobman.api.xseries.XSound;
+import com.github.sirblobman.api.utility.VersionUtility;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 public final class LanguageManager {
     private static final String[] KNOWN_LANGUAGE_ARRAY;
 
     static {
         // Last Updated: June 28, 2022 18:03
-        KNOWN_LANGUAGE_ARRAY = new String[] {
+        KNOWN_LANGUAGE_ARRAY = new String[]{
                 "af_za", "ar_sa", "ast_es", "az_az", "ba_ru", "bar", "be_by", "bg_bg", "br_fr", "brb", "bs_ba",
                 "ca_es", "cs_cz", "cy_gb", "da_dk", "de_at", "de_ch", "de_de", "el_gr", "en_au", "en_ca", "en_gb",
                 "en_nz", "en_pt", "en_ud", "en_us", "enp", "enws", "eo_uy", "es_ar", "es_cl", "es_ec", "es_es",
@@ -68,62 +73,47 @@ public final class LanguageManager {
         };
     }
 
+    private final IResourceHolder plugin;
     private final ConfigurationManager configurationManager;
+
+    private final Map<UUID, String> localeMap;
     private final Map<String, Language> languageMap;
     private final MiniMessage miniMessage;
-    private BukkitAudiences audiences;
+
     private String defaultLanguageName;
     private String consoleLanguageName;
-    private Language defaultLanguage;
-    private Language consoleLanguage;
     private boolean forceDefaultLanguage;
     private boolean usePlaceholderAPI;
+    private boolean debugLanguage;
+
+    private AudienceProvider audienceProvider;
+    private Language defaultLanguage;
+    private Language consoleLanguage;
+
 
     public LanguageManager(ConfigurationManager configurationManager) {
-        Validate.notNull(configurationManager, "configurationManager must not be null!");
-        this.configurationManager = configurationManager;
-        this.languageMap = new ConcurrentHashMap<>();
-        this.miniMessage = MiniMessage.builder().strict(false).debug(message ->
-                printDebug("[MiniMessage] " + message)).build();
+        this.configurationManager = Validate.notNull(configurationManager,
+                "configurationManager must not be null!");
+        this.plugin = configurationManager.getResourceHolder();
 
-        this.defaultLanguageName = null;
-        this.consoleLanguageName = null;
-        this.defaultLanguage = null;
-        this.consoleLanguage = null;
-        this.forceDefaultLanguage = false;
-        this.usePlaceholderAPI = false;
+        this.localeMap = new HashMap<>();
+        this.languageMap = new HashMap<>();
+
+        MiniMessage.Builder builder = MiniMessage.builder();
+        builder.strict(false);
+        builder.debug(this::printMiniMessageDebug);
+        this.miniMessage = builder.build();
     }
 
     @NotNull
-    public ConfigurationManager getConfigurationManager() {
-        return this.configurationManager;
-    }
-
-    @NotNull
-    public IResourceHolder getResourceHolder() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        return configurationManager.getResourceHolder();
+    public IResourceHolder getPlugin() {
+        return this.plugin;
     }
 
     @NotNull
     public Logger getLogger() {
-        IResourceHolder resourceHolder = getResourceHolder();
-        return resourceHolder.getLogger();
-    }
-
-    private boolean isDebugModeDisabled() {
-        ConfigurationManager configurationManager = getConfigurationManager();
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        return !configuration.getBoolean("language-debug-mode", false);
-    }
-
-    private void printDebug(String message) {
-        if (isDebugModeDisabled()) {
-            return;
-        }
-
-        Logger logger = getLogger();
-        logger.info("[Debug] [Language] " + message);
+        IResourceHolder plugin = getPlugin();
+        return plugin.getLogger();
     }
 
     @NotNull
@@ -131,9 +121,23 @@ public final class LanguageManager {
         return this.miniMessage;
     }
 
-    @Nullable
-    public BukkitAudiences getAudiences() {
-        return this.audiences;
+    public ConfigurationManager getConfigurationManager() {
+        return this.configurationManager;
+    }
+
+    public String getCachedLocale(OfflinePlayer player) {
+        UUID playerId = player.getUniqueId();
+        return this.localeMap.get(playerId);
+    }
+
+    public void setLocale(Player player, String locale) {
+        UUID playerId = player.getUniqueId();
+        this.localeMap.put(playerId, locale);
+    }
+
+    public void removeLocale(Player player) {
+        UUID playerId = player.getUniqueId();
+        this.localeMap.remove(playerId);
     }
 
     @Nullable
@@ -144,23 +148,16 @@ public final class LanguageManager {
 
         if (this.defaultLanguageName == null) {
             Logger logger = getLogger();
-            logger.warning("Default language name is not properly defined.");
+            logger.warning("The default language name is not properly defined.");
             return null;
         }
 
-        this.defaultLanguage = this.languageMap.get(this.defaultLanguageName);
-        if (this.defaultLanguage == null) {
-            Logger logger = getLogger();
-            logger.warning("Missing default language with name '" + this.defaultLanguageName + "'.");
-            return null;
-        }
-
-        return this.defaultLanguage;
+        return getLanguage(this.defaultLanguageName);
     }
 
     @Nullable
     public Language getConsoleLanguage() {
-        if (isForceDefaultLanguage()) {
+        if (this.forceDefaultLanguage) {
             return getDefaultLanguage();
         }
 
@@ -168,370 +165,580 @@ public final class LanguageManager {
             return this.consoleLanguage;
         }
 
+        Logger logger = getLogger();
         if (this.consoleLanguageName == null) {
-            Logger logger = getLogger();
-            logger.warning("Console language name is not properly defined, using default.");
+            logger.warning("The console language name is not properly defined, using default.");
             return getDefaultLanguage();
         }
 
-        this.consoleLanguage = this.languageMap.get(this.consoleLanguageName);
+        this.consoleLanguage = getLanguage(this.consoleLanguageName);
         if (this.consoleLanguage == null) {
-            Logger logger = getLogger();
-            logger.warning("Missing console language with name '" + this.consoleLanguageName
-                    + "', using default.");
+            logger.warning("The console language name '" + this.consoleLanguageName
+                    + "' is not valid, using default.");
             return getDefaultLanguage();
         }
 
         return this.consoleLanguage;
     }
 
-    public boolean isForceDefaultLanguage() {
-        return this.forceDefaultLanguage;
-    }
-
-    public boolean isUsePlaceholderAPI() {
-        return this.usePlaceholderAPI;
-    }
-
-    @NotNull
-    public String replacePlaceholderAPI(CommandSender commandSender, String message) {
-        if (message == null || message.isEmpty()) {
-            return "";
+    @Nullable
+    public Language getLanguage(String name) {
+        Language defaultLanguage = getDefaultLanguage();
+        if (name == null || name.isEmpty() || name.equals("default")) {
+            return defaultLanguage;
         }
 
-        if (!(commandSender instanceof OfflinePlayer)) {
-            return message;
-        }
-
-        OfflinePlayer player = (OfflinePlayer) commandSender;
-        return PlaceholderAPI.setPlaceholders(player, message);
-    }
-
-    public void saveDefaultLanguageFiles() {
-        printDebug("Save Default Language Files Start");
-
-        ConfigurationManager configurationManager = getConfigurationManager();
-        configurationManager.saveDefault("language.yml");
-        printDebug("Triggered saveDefault for 'language.yml'.");
-
-        File dataFolder = configurationManager.getBaseFolder();
-        File languageFolder = new File(dataFolder, "language");
-        if (languageFolder.exists()) {
-            printDebug("language folder already exists, not necessary to create any default language files.");
-            return;
-        }
-
-        boolean makeFolder = languageFolder.mkdirs();
-        if (!makeFolder) {
-            throw new IllegalStateException("Failed to create language folder '" + languageFolder + "'.");
-        }
-
-        for (String languageName : LanguageManager.KNOWN_LANGUAGE_ARRAY) {
-            printDebug("Checking if jar contains language for '" + languageName + "'.");
-            String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
-            YamlConfiguration jarLanguageConfiguration = configurationManager.getInternal(languageFileName);
-            if (jarLanguageConfiguration != null) {
-                printDebug("Jar contains default '" + languageFileName + "'. Saving...");
-                configurationManager.saveDefault(languageFileName);
-            } else {
-                printDebug("Language '" + languageName + "' is missing from jar.");
-            }
-        }
-
-        printDebug("Save Default Language Files End");
-    }
-
-    public void reloadLanguageFiles() {
-        printDebug("Reload Language Files Start");
-
-        this.languageMap.clear();
-        this.defaultLanguage = null;
-        this.consoleLanguage = null;
-        printDebug("Cleared current language map and default languages.");
-
-        IResourceHolder resourceHolder = getResourceHolder();
-        Logger logger = getLogger();
-
-        File dataFolder = resourceHolder.getDataFolder();
-        File languageFolder = new File(dataFolder, "language");
-        if (!languageFolder.exists() || !languageFolder.isDirectory()) {
-            logger.warning("'language' folder does not exist or is not a directory.");
-            return;
-        }
-
-        FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
-        File[] fileArray = languageFolder.listFiles(filenameFilter);
-        if (fileArray == null || fileArray.length == 0) {
-            logger.warning("Failed to find any '.lang.yml' files in the language folder.");
-            return;
-        }
-
-        List<YamlConfiguration> configurationList = new ArrayList<>();
-        for (File languageFile : fileArray) {
-            try {
-                printDebug("Trying to load configuration file '" + languageFile + "'.");
-                YamlConfiguration configuration = new YamlConfiguration();
-                configuration.load(languageFile);
-
-                String languageFileName = languageFile.getName();
-                String languageName = languageFileName.replace(".lang.yml", "");
-                configuration.set("language-name", languageName);
-
-                configurationList.add(configuration);
-                printDebug("Successfully loaded configuration from file '" + languageFile + "'.");
-            } catch (IOException | InvalidConfigurationException ex) {
-                logger.log(Level.WARNING, "An error occurred while loading a language file:", ex);
-            }
-        }
-
-        LanguageConfigurationComparator languageConfigurationComparator = new LanguageConfigurationComparator();
-        configurationList.sort(languageConfigurationComparator);
-
-        for (YamlConfiguration configuration : configurationList) {
-            try {
-                printDebug("Trying to load a language from a configuration...");
-
-                Language language = loadLanguage(configuration);
-                if (language != null) {
-                    String languageCode = language.getLanguageCode();
-                    this.languageMap.put(languageCode, language);
-                    printDebug("Successfully loaded language '" + languageCode + "'.");
-                } else {
-                    printDebug("Language was null for some reason.");
-                }
-            } catch (InvalidConfigurationException ex) {
-                logger.log(Level.WARNING, "An error occurred while loading a language configuration:", ex);
-            }
-        }
-
-        ConfigurationManager configurationManager = getConfigurationManager();
-        configurationManager.reload("language.yml");
-        printDebug("Successfully reloaded language.yml configuration.");
-
-        YamlConfiguration configuration = configurationManager.get("language.yml");
-        this.forceDefaultLanguage = configuration.getBoolean("enforce-default-locale");
-        this.defaultLanguageName = configuration.getString("default-locale");
-        this.consoleLanguageName = configuration.getString("console-locale");
-        printDebug("Forced Default: " + this.forceDefaultLanguage);
-        printDebug("Default Language Name: " + this.defaultLanguageName);
-        printDebug("Console Language Name: " + this.consoleLanguageName);
-
-        if (resourceHolder instanceof WrapperPluginResourceHolder) {
-            WrapperPluginResourceHolder pluginHolder = (WrapperPluginResourceHolder) resourceHolder;
-            Plugin plugin = pluginHolder.getPlugin();
-            this.audiences = BukkitAudiences.create(plugin);
-            printDebug("Successfully setup adventures audiences.");
-        } else {
-            this.audiences = null;
-            printDebug("Current resource holder is not a plugin, ignoring adventure audiences.");
-        }
-
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        boolean usePlaceholderAPI = configuration.getBoolean("use-placeholder-api", false);
-        boolean existsPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
-        this.usePlaceholderAPI = (usePlaceholderAPI && existsPlaceholderAPI);
-        printDebug("Config Use PlaceholderAPI: " + usePlaceholderAPI);
-        printDebug("PlaceholderAPI exists: " + existsPlaceholderAPI);
-        printDebug("Use PlaceholderAPI: " + this.usePlaceholderAPI);
-
-        int languageCount = this.languageMap.size();
-        printDebug("Successfully loaded " + languageCount + " language(s).");
-        printDebug("Reload Language Files End");
+        return this.languageMap.getOrDefault(name, defaultLanguage);
     }
 
     @Nullable
-    private Language loadLanguage(YamlConfiguration configuration) throws InvalidConfigurationException {
-        Logger logger = getLogger();
-        String languageName = configuration.getString("language-name");
-        if (languageName == null) {
-            logger.warning("Missing 'language-name' setting in configuration.");
-            return null;
-        }
-
-        Language parentLanguage = null;
-        String parentLanguageName = configuration.getString("parent");
-        if (parentLanguageName != null) {
-            parentLanguage = this.languageMap.get(parentLanguageName);
-            if (parentLanguage == null) {
-                throw new InvalidConfigurationException("parent language not loaded correctly.");
-            }
-        }
-
-        Language language = new Language(parentLanguage, languageName, configuration);
-        Set<String> keySet = configuration.getKeys(true);
-        for (String key : keySet) {
-            if (configuration.isList(key)) {
-                List<String> messageList = configuration.getStringList(key);
-                if (!messageList.isEmpty()) {
-                    String message = String.join("\n", messageList);
-                    language.addTranslation(key, message);
-                }
-            }
-
-            if (configuration.isString(key)) {
-                String message = configuration.getString(key, key);
-                if (message != null) {
-                    language.addTranslation(key, message);
-                }
-            }
-        }
-
-        return language;
+    private Language getPlayerLanguage(Player player) {
+        String cachedLocale = getCachedLocale(player);
+        return getLanguage(cachedLocale);
     }
 
     @Nullable
-    public Language getLanguage(String localeName) {
-        if (localeName == null || localeName.isEmpty() || localeName.equals("default")) {
+    public Language getLanguage(CommandSender sender) {
+        if (this.forceDefaultLanguage) {
             return getDefaultLanguage();
         }
 
-        return this.languageMap.getOrDefault(localeName, getDefaultLanguage());
-    }
-
-    @Nullable
-    public Language getLanguage(CommandSender commandSender) {
-        if (isForceDefaultLanguage()) {
-            return getDefaultLanguage();
-        }
-
-        if (commandSender == null || commandSender instanceof ConsoleCommandSender) {
+        if (sender == null || sender instanceof ConsoleCommandSender) {
             return getConsoleLanguage();
         }
 
-        if (commandSender instanceof Player) {
-            String cachedLocale = LanguageCache.getCachedLocale((Player) commandSender);
-            return getLanguage(cachedLocale);
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            return getPlayerLanguage(player);
         }
 
         return getDefaultLanguage();
     }
 
-    @NotNull
-    public String getMessageRaw(@Nullable CommandSender commandSender, @NotNull String key) {
-        Validate.notEmpty(key, "key must not be empty!");
+    public void onPluginEnable() {
+        IResourceHolder resourceHolder = getPlugin();
+        if (resourceHolder instanceof WrapperPluginResourceHolder) {
+            WrapperPluginResourceHolder wrapper = (WrapperPluginResourceHolder) resourceHolder;
+            Plugin plugin = wrapper.getPlugin();
 
-        Language language = getLanguage(commandSender);
-        if (language == null) {
-            Logger logger = getLogger();
-            logger.warning("There are no languages available.");
-            return "";
+            int minorVersion = VersionUtility.getMinorVersion();
+            if (minorVersion >= 12) {
+                new LanguageListener(plugin, this).register();
+            }
+
+            this.audienceProvider = BukkitAudiences.create(plugin);
         }
+    }
 
-        String translation = language.getTranslation(key);
-        if (translation != null) {
-            return translation;
-        }
+    public void saveDefaultLanguageFiles() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.saveDefault("language.yml");
 
-        Language defaultLanguage = getDefaultLanguage();
-        if (defaultLanguage != null) {
-            String defaultTranslation = defaultLanguage.getTranslation(key);
-            if (defaultTranslation != null) {
-                return defaultTranslation;
+        File dataFolder = configurationManager.getBaseFolder();
+        File languageFolder = new File(dataFolder, "language");
+        if (languageFolder.exists()) {
+            FilenameFilter languageOnly = (folder, fileName) -> fileName.endsWith(".lang.yml");
+            File[] files = languageFolder.listFiles(languageOnly);
+            if(files != null && files.length > 0) {
+                return;
             }
         }
 
-        return ("{" + key + "}");
+        boolean makeFolder = languageFolder.mkdirs();
+        if (!makeFolder) {
+            throw new IllegalStateException("Failed to create language folder at path '" + languageFolder + "'.");
+        }
+
+        for (String languageName : KNOWN_LANGUAGE_ARRAY) {
+            String languageFileName = String.format(Locale.US, "language/%s.lang.yml", languageName);
+            YamlConfiguration jarConfiguration = configurationManager.getInternal(languageFileName);
+            if (jarConfiguration == null) {
+                continue;
+            }
+
+            configurationManager.saveDefault(languageFileName);
+        }
+    }
+
+    public void printMiniMessageDebug(String message) {
+        if (!this.debugLanguage) {
+            return;
+        }
+
+        Logger logger = getLogger();
+        logger.info("[Debug] [MiniMessage] " + message);
+    }
+
+    public void reloadLanguages() {
+        reloadLanguageSettings();
+        reloadLanguageFiles();
+
+        int languageCount = this.languageMap.size();
+        Logger logger = getLogger();
+        logger.info("Successfully loaded " + languageCount + " language(s).");
+    }
+
+    private void reloadLanguageSettings() {
+        ConfigurationManager configurationManager = getConfigurationManager();
+        configurationManager.reload("language.yml");
+
+        YamlConfiguration configuration = configurationManager.get("language.yml");
+        this.defaultLanguageName = configuration.getString("default-locale", "en_us");
+        this.consoleLanguageName = configuration.getString("console-locale", "en_us");
+        this.forceDefaultLanguage = configuration.getBoolean("enforce-default-locale", false);
+        this.debugLanguage = configuration.getBoolean("debug-mode", false);
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        boolean configPlaceholderAPI = configuration.getBoolean("use-placeholder-api", false);
+        boolean realPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
+        this.usePlaceholderAPI = (configPlaceholderAPI && realPlaceholderAPI);
+    }
+
+    private void reloadLanguageFiles() {
+        this.defaultLanguage = null;
+        this.consoleLanguage = null;
+        this.languageMap.clear();
+
+        File dataFolder = configurationManager.getBaseFolder();
+        File languageFolder = new File(dataFolder, "language");
+        if (!languageFolder.exists() || !languageFolder.isDirectory()) {
+            return;
+        }
+
+        FilenameFilter filenameFilter = (folder, fileName) -> fileName.endsWith(".lang.yml");
+        File[] fileArray = languageFolder.listFiles(filenameFilter);
+        if (fileArray == null || fileArray.length < 1) {
+            return;
+        }
+
+        List<YamlConfiguration> configurationList = new ArrayList<>();
+        for (File languageFile : fileArray) {
+            YamlConfiguration configuration = reloadLanguageFile(languageFile);
+            if (configuration == null) {
+                continue;
+            }
+
+            configurationList.add(configuration);
+        }
+
+        LanguageConfigurationComparator comparator = new LanguageConfigurationComparator();
+        configurationList.sort(comparator);
+
+        for (YamlConfiguration configuration : configurationList) {
+            LanguageConfiguration languageConfiguration = reloadLanguage(configuration);
+            String languageName = configuration.getString("language-name");
+            Language language = new Language(languageName, languageConfiguration);
+            this.languageMap.put(languageName, language);
+        }
+    }
+
+    private YamlConfiguration reloadLanguageFile(File file) {
+        String languageFileName = file.getName();
+        String languageName = languageFileName.replace(".lang.yml", "");
+
+        try {
+            YamlConfiguration configuration = new YamlConfiguration();
+            configuration.load(file);
+
+            configuration.set("language-name", languageName);
+            return configuration;
+        } catch(IOException | InvalidConfigurationException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "An error occurred while loading a language file:", ex);
+            return null;
+        }
+    }
+
+    private LanguageConfiguration reloadLanguage(YamlConfiguration configuration) {
+        MiniMessage miniMessage = getMiniMessage();
+        LanguageConfiguration languageConfiguration = new LanguageConfiguration(configuration, miniMessage);
+
+        String parentName = configuration.getString("parent");
+        if (parentName != null) {
+            Language language = getLanguage(parentName);
+            if (language != null) {
+                LanguageConfiguration parent = language.getConfiguration();
+                languageConfiguration.setParent(parent);
+            }
+        }
+
+        String languageName = configuration.getString("language-name");
+        if (!languageName.equals(this.defaultLanguageName) && !languageConfiguration.getParent().isPresent()) {
+            Language defaultLanguage = getDefaultLanguage();
+            if (defaultLanguage != null) {
+                LanguageConfiguration defaultLanguageConfiguration = defaultLanguage.getConfiguration();
+                languageConfiguration.setParent(defaultLanguageConfiguration);
+            }
+        }
+
+        return languageConfiguration;
     }
 
     @NotNull
-    public String getMessageString(@Nullable CommandSender commandSender, @NotNull String key,
-                                   @Nullable Replacer replacer) {
-        String messageRaw = getMessageRaw(commandSender, key);
-        if (messageRaw.isEmpty()) {
+    private String replacePlaceholderAPI(CommandSender audience, String message) {
+        if (message == null || message.isEmpty()) {
             return "";
         }
 
-        String message = (isUsePlaceholderAPI() ? replacePlaceholderAPI(commandSender, messageRaw) : messageRaw);
-        return (replacer == null ? message : replacer.replace(message));
+        if (!(audience instanceof OfflinePlayer)) {
+            return message;
+        }
+
+        OfflinePlayer player = (OfflinePlayer) audience;
+        return PlaceholderAPI.setPlaceholders(player, message);
     }
 
     @NotNull
-    public Component getMessage(@Nullable CommandSender commandSender, @NotNull String key,
-                                @Nullable Replacer replacer) {
-        String messageString = getMessageString(commandSender, key, replacer);
-        if (messageString.isEmpty()) {
+    private Component replacePlaceholderAPI(CommandSender audience, Component message) {
+        if (message == null) {
             return Component.empty();
         }
 
-        if (messageString.contains("\u00A7")) {
-            messageString = ChatColor.stripColor(messageString);
-            messageString = messageString.replace("\u00A7", "");
+        if (!(audience instanceof OfflinePlayer)) {
+            return message;
         }
 
-        MiniMessage miniMessageHandler = getMiniMessage();
-        return miniMessageHandler.deserialize(messageString);
+        OfflinePlayer player = (OfflinePlayer) audience;
+        TextReplacementConfig.Builder builder = TextReplacementConfig.builder();
+        builder.match(PlaceholderAPI.getPlaceholderPattern());
+        builder.replacement((matchResult, builderCopy) -> replacePlaceholderAPI(player, matchResult));
+
+        TextReplacementConfig textReplacementConfig = builder.build();
+        return message.replaceText(textReplacementConfig);
+    }
+
+    private ComponentLike replacePlaceholderAPI(OfflinePlayer player, MatchResult matchResult) {
+        String match = matchResult.group();
+        String replaced = PlaceholderAPI.setPlaceholders(player, match);
+        return Component.text(replaced);
     }
 
     @NotNull
-    public Component getMessageWithPrefix(@Nullable CommandSender commandSender, @NotNull String key,
-                                          @Nullable Replacer replacer) {
-        String messageString = getMessageString(commandSender, key, replacer);
-        if (messageString.isEmpty()) {
+    public String getMessageRaw(@Nullable CommandSender audience, @NotNull String key) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            return String.format(Locale.US, "{%s}", key);
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        return configuration.getRawMessage(key);
+    }
+
+    @NotNull
+    public String getMessageString(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        String message = getMessageRaw(audience, key);
+
+        if (this.usePlaceholderAPI) {
+            message = replacePlaceholderAPI(audience, message);
+        }
+
+        for (Replacer replacer : replacerArray) {
+            String target = replacer.getTarget();
+            String replacement = replacer.getReplacementString();
+            message = message.replace(target, replacement);
+        }
+
+        return message;
+    }
+
+    @NotNull
+    public Component getMessage(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            return Component.text(String.format(Locale.US, "{%s}", key));
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        Component message = configuration.getMessage(key);
+
+        if (this.usePlaceholderAPI) {
+            message = replacePlaceholderAPI(audience, message);
+        }
+
+        for (Replacer replacer : replacerArray) {
+            TextReplacementConfig replacementConfig = replacer.asReplacementConfig();
+            message = message.replaceText(replacementConfig);
+        }
+
+        return message;
+    }
+
+    @NotNull
+    public Component getMessageWithPrefix(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Component message = getMessage(audience, key, replacerArray);
+        if (Component.empty().equals(message)) {
             return Component.empty();
         }
 
-        String prefixString = getMessageString(commandSender, "prefix", replacer);
-        if (!prefixString.isEmpty()) {
-            messageString = (prefixString + " " + messageString);
+        Component prefix = getMessage(audience, "prefix", replacerArray);
+        if (!Component.empty().equals(prefix)) {
+            return prefix.append(Component.space()).append(message);
         }
 
-        MiniMessage miniMessageHandler = getMiniMessage();
-        return miniMessageHandler.deserialize(messageString);
+        return message;
     }
 
     @NotNull
-    @Deprecated
-    public String getMessageLegacy(@Nullable CommandSender commandSender, @NotNull String key,
-                                   @Nullable Replacer replacer) {
-        Component component = getMessage(commandSender, key, replacer);
-        return ComponentHelper.toLegacy(component);
+    public ModifiableMessage getMessageModifiable(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            ModifiableMessage modifiableMessage = new ModifiableMessage();
+            modifiableMessage.setMessage(Component.text(String.format(Locale.US, "{%s}", key)));
+            modifiableMessage.setType(ModifiableMessageType.CHAT);
+            return modifiableMessage;
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        ModifiableMessage modifiable = configuration.getModifiableMessage(key);
+        Component message = modifiable.getMessage();
+
+        if (this.usePlaceholderAPI) {
+            message = replacePlaceholderAPI(audience, message);
+        }
+
+        for (Replacer replacer : replacerArray) {
+            TextReplacementConfig replacementConfig = replacer.asReplacementConfig();
+            message = message.replaceText(replacementConfig);
+        }
+
+        ModifiableMessage newModifiable = new ModifiableMessage();
+        newModifiable.setType(modifiable.getType());
+        newModifiable.setMessage(message);
+        return newModifiable;
     }
 
-    public void sendMessage(@NotNull CommandSender commandSender, @NotNull Component message) {
+    @NotNull
+    public Title getTitle(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            return Title.title(Component.empty(), Component.empty());
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        Title title = configuration.getTitle(key);
+
+        Component titleMessage = title.title();
+        Component subtitleMessage = title.subtitle();
+
+        if (this.usePlaceholderAPI) {
+            titleMessage = replacePlaceholderAPI(audience, titleMessage);
+            subtitleMessage = replacePlaceholderAPI(audience, subtitleMessage);
+        }
+
+        for (Replacer replacer : replacerArray) {
+            TextReplacementConfig replacementConfig = replacer.asReplacementConfig();
+            titleMessage = titleMessage.replaceText(replacementConfig);
+            subtitleMessage = subtitleMessage.replaceText(replacementConfig);
+        }
+
+        Times times = title.times();
+        return Title.title(titleMessage, subtitleMessage, times);
+    }
+
+    @NotNull
+    public PlayerListInfo getPlayerListInfo(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            return new PlayerListInfo();
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        PlayerListInfo playerListInfo = configuration.getPlayerListInfo(key);
+
+        Component headerMessage = playerListInfo.getHeader();
+        Component footerMessage = playerListInfo.getFooter();
+
+        if (this.usePlaceholderAPI) {
+            headerMessage = replacePlaceholderAPI(audience, headerMessage);
+            footerMessage = replacePlaceholderAPI(audience, footerMessage);
+        }
+
+        for (Replacer replacer : replacerArray) {
+            TextReplacementConfig replacementConfig = replacer.asReplacementConfig();
+            headerMessage = headerMessage.replaceText(replacementConfig);
+            footerMessage = footerMessage.replaceText(replacementConfig);
+        }
+
+        PlayerListInfo newPlayerListInfo = new PlayerListInfo();
+        newPlayerListInfo.setHeader(headerMessage);
+        newPlayerListInfo.setFooter(footerMessage);
+        return newPlayerListInfo;
+    }
+
+    @Nullable
+    public Sound getSound(@Nullable CommandSender audience, @NotNull String key) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            return null;
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        return configuration.getSound(key);
+    }
+
+    @Nullable
+    public Audience getAudience(CommandSender sender) {
+        if (this.audienceProvider == null) {
+            return null;
+        }
+
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            UUID playerId = player.getUniqueId();
+            return this.audienceProvider.player(playerId);
+        }
+
+        return this.audienceProvider.console();
+    }
+
+    private void sendNoAudience(CommandSender sender, Component message) {
+        BaseComponent[] bungeeComponents = ComponentBungeeConverter.toBungee(message);
+        CommandSender.Spigot spigot = sender.spigot();
+        spigot.sendMessage(bungeeComponents);
+    }
+
+    public void sendMessage(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Component message = getMessage(audience, key, replacerArray);
+        sendMessage(audience, message);
+    }
+
+    public void sendMessage(@NotNull CommandSender audience, @NotNull Component message) {
         if (Component.empty().equals(message)) {
             return;
         }
 
-        BukkitAudiences audiences = getAudiences();
-        if (audiences == null) {
+        Audience realAudience = getAudience(audience);
+        if (realAudience == null) {
+            sendNoAudience(audience, message);
             return;
         }
 
-        Audience audience = audiences.sender(commandSender);
-        audience.sendMessage(message);
+        realAudience.sendMessage(message);
     }
 
-    public void sendMessage(@NotNull CommandSender commandSender, @NotNull String key, @Nullable Replacer replacer) {
-        Component message = getMessage(commandSender, key, replacer);
-        sendMessage(commandSender, message);
+    public void sendMessageWithPrefix(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Component message = getMessageWithPrefix(audience, key, replacerArray);
+        sendMessage(audience, message);
     }
 
-    public void sendMessageWithPrefix(@NotNull CommandSender commandSender, @NotNull String key,
-                                      @Nullable Replacer replacer) {
-        Component message = getMessageWithPrefix(commandSender, key, replacer);
-        sendMessage(commandSender, message);
+    public void sendActionBar(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Component message = getMessageWithPrefix(audience, key, replacerArray);
+        sendActionBar(audience, message);
     }
 
-    public void broadcastMessage(@NotNull Component message, @Nullable String permission) {
-        CommandSender console = Bukkit.getConsoleSender();
-        sendMessage(console, message);
+    public void sendActionBar(@NotNull CommandSender audience, @NotNull Component message) {
+        if (Component.empty().equals(message)) {
+            return;
+        }
 
-        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
-        for (Player player : onlinePlayerCollection) {
-            if (hasPermission(player, permission)) {
-                sendMessage(player, message);
-            }
+        Audience realAudience = getAudience(audience);
+        if (realAudience == null) {
+            return;
+        }
+
+        realAudience.sendActionBar(message);
+    }
+
+    public void sendModifiableMessage(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        ModifiableMessage modifiable = getMessageModifiable(audience, key, replacerArray);
+        Component message = modifiable.getMessage();
+
+        ModifiableMessageType type = modifiable.getType();
+        switch (type) {
+            case CHAT: sendMessage(audience, message);
+            case ACTION_BAR: sendActionBar(audience, message);
+            default: break;
         }
     }
 
-    public void broadcastMessage(@NotNull String key, @Nullable Replacer replacer, @Nullable String permission) {
+    public void sendTitle(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        Title title = getTitle(audience, key, replacerArray);
+        sendTitle(audience, title);
+    }
+
+    public void sendTitle(@NotNull CommandSender audience, @NotNull Title title) {
+        if (Component.empty().equals(title.title()) && Component.empty().equals(title.subtitle())) {
+            return;
+        }
+
+        Audience realAudience = getAudience(audience);
+        if (realAudience == null) {
+            return;
+        }
+
+        realAudience.showTitle(title);
+    }
+
+    public void sendPlayerListInfo(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+        PlayerListInfo playerListInfo = getPlayerListInfo(audience, key, replacerArray);
+        sendPlayerListInfo(audience, playerListInfo);
+    }
+
+    public void sendPlayerListInfo(@NotNull CommandSender audience, @NotNull PlayerListInfo info) {
+        if (Component.empty().equals(info.getHeader()) && Component.empty().equals(info.getFooter())) {
+            return;
+        }
+
+        Audience realAudience = getAudience(audience);
+        if (realAudience == null) {
+            return;
+        }
+
+        Component header = info.getHeader();
+        Component footer = info.getFooter();
+        realAudience.sendPlayerListHeaderAndFooter(header, footer);
+    }
+
+    public void sendSound(@NotNull CommandSender audience, @NotNull String key) {
+        Sound sound = getSound(audience, key);
+        if (sound == null) {
+            return;
+        }
+
+        sendSound(audience, sound);
+    }
+
+    public void sendSound(@NotNull CommandSender audience, @NotNull Sound sound) {
+        Audience realAudience = getAudience(audience);
+        if (realAudience == null) {
+            return;
+        }
+
+        realAudience.playSound(sound);
+    }
+
+    public void broadcastMessage(@NotNull String key, @Nullable String permission, Replacer... replacerArray) {
         CommandSender console = Bukkit.getConsoleSender();
-        sendMessage(console, key, replacer);
+        sendMessage(console, key, replacerArray);
 
         Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayerCollection) {
             if (hasPermission(player, permission)) {
-                sendMessage(player, key, replacer);
+                sendMessage(player, key, replacerArray);
             }
         }
     }
@@ -542,171 +749,5 @@ public final class LanguageManager {
         }
 
         return player.hasPermission(permission);
-    }
-
-    public void sendActionBar(@NotNull Player player, @NotNull Component message) {
-        if (Component.empty().equals(message)) {
-            return;
-        }
-
-        BukkitAudiences audiences = getAudiences();
-        if (audiences == null) {
-            return;
-        }
-
-        Audience audience = audiences.player(player);
-        audience.sendActionBar(message);
-    }
-
-    public void sendActionBar(@NotNull Player player, @NotNull String key, @Nullable Replacer replacer) {
-        Component message = getMessage(player, key, replacer);
-        sendActionBar(player, message);
-    }
-
-    @NotNull
-    public String formatDecimal(@Nullable CommandSender commandSender, @NotNull Number decimal) {
-        Language language = getLanguage(commandSender);
-        if (language == null) {
-            DecimalFormatSymbols usSymbols = DecimalFormatSymbols.getInstance(Locale.US);
-            DecimalFormat decimalFormat = new DecimalFormat("0.00", usSymbols);
-            return decimalFormat.format(decimal);
-        }
-
-        DecimalFormat decimalFormat = language.getDecimalFormat();
-        return decimalFormat.format(decimal);
-    }
-
-    @NotNull
-    public Title getTitle(@Nullable CommandSender commandSender, @NotNull String path, @Nullable Replacer replacer) {
-        String titleKey = (path + ".title");
-        String subtitleKey = (path + ".subtitle");
-        Component title = getMessage(commandSender, titleKey, replacer);
-        Component subtitle = getMessage(commandSender, subtitleKey, replacer);
-
-        Times times;
-        try {
-            String fadeInString = getMessageString(commandSender, path + ".fade-in", replacer);
-            String stayString = getMessageString(commandSender, path + ".stay", replacer);
-            String fadeOutString = getMessageString(commandSender, path + ".fade-out", replacer);
-
-            int fadeInTicks = Integer.parseInt(fadeInString);
-            int stayTicks = Integer.parseInt(stayString);
-            int fadeOutTicks = Integer.parseInt(fadeOutString);
-
-            Duration fadeIn = ofTicks(fadeInTicks);
-            Duration stay = ofTicks(stayTicks);
-            Duration fadeOut = ofTicks(fadeOutTicks);
-            times = Times.times(fadeIn, stay, fadeOut);
-        } catch (NumberFormatException ex) {
-            if (!isDebugModeDisabled()) {
-                printDebug("Invalid language title timings at path '" + path + "'.");
-                ex.printStackTrace();
-            }
-
-            Duration defaultFadeIn = ofTicks(10);
-            Duration defaultStay = ofTicks(70);
-            Duration defaultFadeOut = ofTicks(20);
-            times = Times.times(defaultFadeIn, defaultStay, defaultFadeOut);
-        }
-
-        return Title.title(title, subtitle, times);
-    }
-
-    public void sendTitle(@NotNull Player player, @NotNull String path, @Nullable Replacer replacer) {
-        Title title = getTitle(player, path, replacer);
-        sendTitle(player, title);
-    }
-
-    public void sendTitle(@NotNull Player player, @NotNull Title title) {
-        BukkitAudiences audiences = getAudiences();
-        if (audiences == null) {
-            return;
-        }
-
-        Audience audience = audiences.player(player);
-        audience.showTitle(title);
-    }
-
-    private Duration ofTicks(int ticks) {
-        long millis = (ticks * 50L);
-        return Duration.ofMillis(millis);
-    }
-
-    @Nullable
-    public SoundInfo getSound(@Nullable CommandSender commandSender, @NotNull String path) {
-        printDebug("Loading sound for sender '" + commandSender + "' and path '" + path + "'");
-
-        String nameKey = (path + ".name");
-        String volumeKey = (path + ".volume");
-        String pitchKey = (path + ".pitch");
-        printDebug("Key: Name: " + nameKey + ", Volume: " + volumeKey + ", Pitch: " + pitchKey);
-
-        String soundName = getMessageString(commandSender, nameKey, null);
-        String volumeString = getMessageString(commandSender, volumeKey, null);
-        String pitchString = getMessageString(commandSender, pitchKey, null);
-        printDebug("Value: Name: " + soundName + ", Volume: " + volumeString + ", Pitch: " + pitchString);
-
-        try {
-            SoundInfo soundInfo;
-            if (soundName.startsWith("custom:")) {
-                String realSoundName = soundName.substring("custom:".length());
-                soundInfo = new CustomSoundInfo(realSoundName);
-                printDebug("Custom Sound: Name: " + realSoundName);
-            } else {
-                Optional<XSound> optionalSound = XSound.matchXSound(soundName);
-                if (!optionalSound.isPresent()) {
-                    throw new IllegalArgumentException("Invalid sound name '" + soundName + "'.");
-                }
-
-                XSound sound = optionalSound.get();
-                soundInfo = new XSoundInfo(sound);
-                printDebug("XSound: Name: " + sound);
-            }
-
-            float volume = Float.parseFloat(volumeString);
-            float pitch = Float.parseFloat(pitchString);
-            printDebug("Volume: " + volume + ", Pitch: " + pitch);
-
-            soundInfo.setVolume(volume);
-            soundInfo.setPitch(pitch);
-            return soundInfo;
-        } catch (IllegalArgumentException ex) {
-            if (!isDebugModeDisabled()) {
-                printDebug("Invalid language sound at path '" + path + "'.");
-                ex.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    public void sendSound(@NotNull Player player, @NotNull SoundInfo soundInfo) {
-        soundInfo.play(player);
-    }
-
-    public void sendSound(@NotNull Player player, @NotNull String path) {
-        SoundInfo soundInfo = getSound(player, path);
-        if (soundInfo != null) {
-            sendSound(player, soundInfo);
-        }
-    }
-
-    public void sendTabInfo(@NotNull Player player, @NotNull String path, @Nullable Replacer replacer) {
-        String headerKey = (path + ".header");
-        String footerKey = (path + ".footer");
-
-        Component header = getMessage(player, headerKey, replacer);
-        Component footer = getMessage(player, footerKey, replacer);
-        sendTabInfo(player, header, footer);
-    }
-
-    public void sendTabInfo(@NotNull Player player, Component header, Component footer) {
-        BukkitAudiences audiences = getAudiences();
-        if (audiences == null) {
-            return;
-        }
-
-        Audience audience = audiences.player(player);
-        audience.sendPlayerListHeaderAndFooter(header, footer);
     }
 }

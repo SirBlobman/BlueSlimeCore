@@ -15,7 +15,7 @@ java {
 }
 
 dependencies {
-    implementation(project(":nms:abstract"))
+    compileOnly(project(":nms:abstract"))
     paperDevBundle("1.19.3-R0.1-SNAPSHOT")
 }
 

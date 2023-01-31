@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":utility"))
-    implementation(project(":bungeecord:abstract"))
+    compileOnly(project(":utility"))
+    compileOnly(project(":bungeecord:abstract"))
     compileOnly("net.luckperms:api:5.4")
 }

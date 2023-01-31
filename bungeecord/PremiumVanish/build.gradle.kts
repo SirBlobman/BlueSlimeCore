@@ -6,7 +6,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":utility"))
-    implementation(project(":bungeecord:abstract"))
+    compileOnly(project(":utility"))
+    compileOnly(project(":bungeecord:abstract"))
     compileOnly("com.github.LeonMangler:PremiumVanishAPI:2.7.11-2")
 }

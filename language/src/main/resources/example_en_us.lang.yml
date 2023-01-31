@@ -1,0 +1,27 @@
+# BlueSlimeCore uses MiniMessage and Adventure to send messages and sounds.
+
+# Example Message (type not custom)
+message-one: "<green>Hello!</green>"
+
+# Example Message (type is custom)
+# The type of message can be changed to ACTION_BAR or CHAT if the default is not what you want.
+message-two:
+  type: ACTION_BAR
+  content: "<green>Testing 123!</green>"
+
+# Example Sound
+sound-one:
+  sound: "minecraft:music_disc.13" # Sounds from resource packs can also be played
+  category: "master"
+  volume: 1.0
+  pitch: 1.0
+
+# Example Title
+# The 'title' and 'subtitle' are normal messages.
+# 'fade-in', 'stay', and 'fade-out' are integers for the amount of ticks.
+title-one:
+  title: "<green>Hello!</green>"
+  subtitle: "<gray>This is a subtitle.</gray>"
+  fade-in: 10
+  stay: 70
+  fade-out: 20

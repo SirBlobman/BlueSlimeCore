@@ -6,7 +6,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":utility"))
-    implementation(project(":bungeecord:abstract"))
+    compileOnly(project(":utility"))
+    compileOnly(project(":bungeecord:abstract"))
     compileOnly("net.alpenblock:BungeePerms:4.0-dev-140")
 }

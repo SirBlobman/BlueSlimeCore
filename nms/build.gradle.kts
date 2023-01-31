@@ -24,7 +24,7 @@ allprojects {
     }
 
     dependencies {
-        implementation(project(path = ":shaded", configuration = "shadow"))
-        implementation(project(":utility"))
+        compileOnly(project(path = ":shaded", configuration = "shadow"))
+        compileOnly(project(":utility"))
     }
 }

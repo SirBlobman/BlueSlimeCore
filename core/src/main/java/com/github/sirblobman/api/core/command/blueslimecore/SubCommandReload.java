@@ -26,7 +26,7 @@ public final class SubCommandReload extends Command {
         JavaPlugin plugin = getPlugin();
         plugin.reloadConfig();
 
-        sendMessage(sender, "command.blueslimecore.reload-success", null);
+        sendMessage(sender, "command.blueslimecore.reload-success");
         return true;
     }
 }

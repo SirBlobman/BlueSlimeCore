@@ -10,9 +10,9 @@ import org.bukkit.command.CommandSender;
 
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
-import com.github.sirblobman.api.language.MultiReplacer;
-import com.github.sirblobman.api.language.Replacer;
-import com.github.sirblobman.api.language.SimpleReplacer;
+import com.github.sirblobman.api.language.replacer.IntegerReplacer;
+import com.github.sirblobman.api.language.replacer.Replacer;
+import com.github.sirblobman.api.language.replacer.StringReplacer;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -49,13 +49,13 @@ public final class CommandGlobalGamerule extends Command {
 
         World senderWorld = getWorld(sender);
         if (senderWorld == null) {
-            sendMessage(sender, "error.world-required", null);
+            sendMessage(sender, "error.world-required");
             return true;
         }
 
         String gameRuleString = args[0];
         if (!senderWorld.isGameRule(gameRuleString)) {
-            Replacer replacer = new SimpleReplacer("{value}", gameRuleString);
+            Replacer replacer = new StringReplacer("{value}", gameRuleString);
             sendMessage(sender, "command.global-gamerule.invalid-gamerule", replacer);
             return true;
         }
@@ -76,7 +76,7 @@ public final class CommandGlobalGamerule extends Command {
     }
 
     private void showPerWorldValueList(CommandSender sender, String gameRuleString) {
-        Replacer titleReplacer = new SimpleReplacer("{rule}", gameRuleString);
+        Replacer titleReplacer = new StringReplacer("{rule}", gameRuleString);
         sendMessage(sender, "command.global-gamerule.list-title", titleReplacer);
 
         List<World> worldList = Bukkit.getWorlds();
@@ -84,9 +84,9 @@ public final class CommandGlobalGamerule extends Command {
             String worldName = world.getName();
             String gameRuleValue = world.getGameRuleValue(gameRuleString);
 
-            Replacer replacer = new MultiReplacer("{world}", worldName)
-                    .addReplacement("{value}", gameRuleValue);
-            sendMessage(sender, "command.global-gamerule.list-line-format", replacer);
+            Replacer worldReplacer = new StringReplacer("{world}", worldName);
+            Replacer valueReplacer = new StringReplacer("{value}", gameRuleValue);
+            sendMessage(sender, "command.global-gamerule.list-line-format", worldReplacer, valueReplacer);
         }
     }
 
@@ -104,19 +104,19 @@ public final class CommandGlobalGamerule extends Command {
         }
 
         if (successCount > 0) {
-            String finalSuccessCount = Integer.toString(successCount);
-            Replacer replacer = new MultiReplacer("{count}", finalSuccessCount)
-                    .addReplacement("{rule}", gameRuleString)
-                    .addReplacement("{value}", value);
-            sendMessage(sender, "command.global-gamerule.success-count", replacer);
+            Replacer countReplacer = new IntegerReplacer("{count}", successCount);
+            Replacer ruleReplacer = new StringReplacer("{rule}", gameRuleString);
+            Replacer valueReplacer = new StringReplacer("{value}", value);
+            sendMessage(sender, "command.global-gamerule.success-count", countReplacer, ruleReplacer,
+                    valueReplacer);
         }
 
         if (failureCount > 0) {
-            String finalFailureCount = Integer.toString(successCount);
-            Replacer replacer = new MultiReplacer("{count}", finalFailureCount)
-                    .addReplacement("{rule}", gameRuleString)
-                    .addReplacement("{value}", value);
-            sendMessage(sender, "command.global-gamerule.failure-count", replacer);
+            Replacer countReplacer = new IntegerReplacer("{count}", failureCount);
+            Replacer ruleReplacer = new StringReplacer("{rule}", gameRuleString);
+            Replacer valueReplacer = new StringReplacer("{value}", value);
+            sendMessage(sender, "command.global-gamerule.failure-count", countReplacer, ruleReplacer,
+                    valueReplacer);
         }
     }
 }

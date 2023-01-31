@@ -20,54 +20,14 @@ dependencies {
     // Spigot API
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
 
-    // Utilities
+    // Pre-Shaded Modules
     implementation(project(path = ":shaded", configuration = "shadow"))
+    implementation(project(path = ":nms:handler", configuration = "shadow"))
+    implementation(project(path = ":factions:handler", configuration = "shadow"))
+
+    // Included Modules
     implementation(project(":utility"))
     implementation(project(":paper-helper"))
-
-    // BossBar
-    implementation(project(":bossbar"))
-
-    // NMS Abstract
-    implementation(project(":nms"))
-    implementation(project(":nms:abstract"))
-
-    // NMS Versions
-    implementation(project(":nms:fallback"))
-    implementation(project(":nms:1_7_R4"))
-    implementation(project(":nms:1_8_R3"))
-    implementation(project(":nms:1_9_R2"))
-    implementation(project(":nms:1_10_R1"))
-    implementation(project(":nms:1_11_R1"))
-    implementation(project(":nms:1_12_R1"))
-    implementation(project(":nms:1_13_R2"))
-    implementation(project(":nms:1_14_R1"))
-    implementation(project(":nms:1_15_R1"))
-    implementation(project(":nms:1_16_R3"))
-    implementation(project(":nms:1_17_R1"))
-    implementation(project(":nms:1_18_R2"))
-    implementation(project(":nms:1_19_R2"))
-
-    // NMS Handler
-    implementation(project(":nms:scoreboard"))
-    implementation(project(":nms:handler"))
-
-    // Factions
-    implementation(project(":factions"))
-    implementation(project(":factions:abstract"))
-
-    // Factions Versions
-    implementation(project(":factions:LegacyFactions"))
-    implementation(project(":factions:MassiveCore-Factions"))
-    implementation(project(":factions:SaberFactions"))
-    implementation(project(":factions:FactionsUUID"))
-    implementation(project(":factions:FactionsUUID-Legacy"))
-    implementation(project(":factions:FactionsX"))
-
-    // Factions Handler
-    implementation(project(":factions:handler"))
-
-    // Regular Modules
     implementation(project(":configuration"))
     implementation(project(":language"))
     implementation(project(":update"))

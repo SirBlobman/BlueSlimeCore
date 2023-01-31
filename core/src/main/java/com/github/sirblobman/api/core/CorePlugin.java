@@ -21,8 +21,6 @@ import com.github.sirblobman.api.core.command.CommandItemToYML;
 import com.github.sirblobman.api.core.command.blueslimecore.CommandBlueSlimeCore;
 import com.github.sirblobman.api.core.configuration.CoreConfiguration;
 import com.github.sirblobman.api.core.listener.ListenerCommandLogger;
-import com.github.sirblobman.api.core.listener.ListenerLanguage;
-import com.github.sirblobman.api.core.listener.ListenerLocaleChange;
 import com.github.sirblobman.api.language.Language;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.EntityHandler;
@@ -55,6 +53,9 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onEnable() {
+        LanguageManager languageManager = getLanguageManager();
+        languageManager.onPluginEnable();
+
         reloadConfiguration();
 
         CoreConfiguration coreConfiguration = getCoreConfiguration();
@@ -65,7 +66,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         registerCommands();
         registerListeners();
         registerUpdateChecker();
-        registerbStats();
+        register_bStats();
     }
 
     @Override
@@ -79,7 +80,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         configurationManager.reload("config.yml");
 
         LanguageManager languageManager = getLanguageManager();
-        languageManager.reloadLanguageFiles();
+        languageManager.reloadLanguages();
 
         YamlConfiguration configuration = configurationManager.get("config.yml");
         CoreConfiguration coreConfiguration = getCoreConfiguration();
@@ -165,16 +166,9 @@ public final class CorePlugin extends ConfigurablePlugin {
     }
 
     private void registerListeners() {
-        new ListenerLanguage(this).register();
-
         CoreConfiguration coreConfiguration = getCoreConfiguration();
         if (coreConfiguration.isCommandLoggerEnabled()) {
             new ListenerCommandLogger(this).register();
-        }
-
-        int minorVersion = VersionUtility.getMinorVersion();
-        if (minorVersion >= 12) {
-            new ListenerLocaleChange(this).register();
         }
     }
 
@@ -184,14 +178,18 @@ public final class CorePlugin extends ConfigurablePlugin {
         updateManager.checkForUpdates();
     }
 
-    private void registerbStats() {
+    private void register_bStats() {
         Metrics metrics = new Metrics(this, 16089);
-        metrics.addCustomChart(new SimplePie("selected_language", this::getDefaultLanguageCode));
+        metrics.addCustomChart(new SimplePie("selected_language", this::getDefaultLanguageName));
     }
 
-    private String getDefaultLanguageCode() {
+    private String getDefaultLanguageName() {
         LanguageManager languageManager = getLanguageManager();
         Language defaultLanguage = languageManager.getDefaultLanguage();
-        return (defaultLanguage == null ? "none" : defaultLanguage.getLanguageCode());
+        if (defaultLanguage == null) {
+            return "none";
+        }
+
+        return defaultLanguage.getLanguageName();
     }
 }

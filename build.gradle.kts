@@ -46,8 +46,8 @@ allprojects {
 
         javadoc {
             options {
-                this as StandardJavadocDocletOptions
-                addStringOption("Xdoclint:none", "-quiet")
+                val standard = this as StandardJavadocDocletOptions
+                standard.addStringOption("Xdoclint:none", "-quiet")
             }
         }
     }

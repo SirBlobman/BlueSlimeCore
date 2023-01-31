@@ -7,10 +7,15 @@ repositories {
 }
 
 dependencies {
-    implementation(project(path = ":shaded", configuration = "shadow"))
-    implementation(project(":utility"))
-    implementation(project(":configuration"))
-    implementation(project(":language"))
-    implementation(project(":nms:handler"))
+    // Base Spigot API
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+
+    // Shaded Dependencies
+    compileOnly(project(path = ":shaded", configuration = "shadow"))
+    compileOnly(project(path = ":nms:handler", configuration = "shadow"))
+
+    // Normal Dependencies
+    compileOnly(project(":utility"))
+    compileOnly(project(":configuration"))
+    compileOnly(project(":language"))
 }
