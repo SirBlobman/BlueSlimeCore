@@ -18,7 +18,7 @@ public final class LanguageConfigurationComparator implements Comparator<Configu
         String parentName1 = section1.getString("parent");
         String parentName2 = section2.getString("parent");
 
-        if(Objects.equals(parentName2, languageName2) && Objects.equals(parentName2, languageName1)) {
+        if (Objects.equals(parentName2, languageName2) && Objects.equals(parentName2, languageName1)) {
             throw new IllegalStateException("Cyclic Language Dependency: " + languageName1 + ", " + languageName2);
         }
 

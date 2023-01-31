@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "com.github.sirblobman.api"
-    version = "2.6-SNAPSHOT"
+    version = findProperty("version.api") as String
 
     apply(plugin = "java")
 

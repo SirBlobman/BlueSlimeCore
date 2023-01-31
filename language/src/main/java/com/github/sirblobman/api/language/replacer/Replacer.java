@@ -17,9 +17,11 @@ public abstract class Replacer {
         return this.target;
     }
 
-    @NotNull public abstract Component getReplacement();
+    @NotNull
+    public abstract Component getReplacement();
 
-    @NotNull public abstract String getReplacementString();
+    @NotNull
+    public abstract String getReplacementString();
 
     @NotNull
     public final TextReplacementConfig asReplacementConfig() {

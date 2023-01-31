@@ -35,6 +35,9 @@ dependencies {
     implementation(project(":menu"))
     implementation(project(":plugin"))
     implementation(project(":command"))
+
+    // IntelliJ Bug Dependencies
+    compileOnly(project(":nms:abstract"))
 }
 
 tasks {
@@ -58,13 +61,15 @@ tasks {
             val bukkitPluginDescription = rootProject.property("plugin.description") as String
             val bukkitPluginMain = rootProject.property("bukkit.plugin.main") as String
 
-            filter<ReplaceTokens>("tokens" to mapOf(
-                "bukkit.plugin.version" to calculatedVersion,
-                "bukkit.plugin.name" to bukkitPluginName,
-                "bukkit.plugin.prefix" to bukkitPluginPrefix,
-                "bukkit.plugin.description" to bukkitPluginDescription,
-                "bukkit.plugin.main" to bukkitPluginMain
-            ))
+            filter<ReplaceTokens>(
+                "tokens" to mapOf(
+                    "bukkit.plugin.version" to calculatedVersion,
+                    "bukkit.plugin.name" to bukkitPluginName,
+                    "bukkit.plugin.prefix" to bukkitPluginPrefix,
+                    "bukkit.plugin.description" to bukkitPluginDescription,
+                    "bukkit.plugin.main" to bukkitPluginMain
+                )
+            )
         }
     }
 }
@@ -77,7 +82,7 @@ publishing {
 
             credentials {
                 var currentUsername = System.getenv("MAVEN_DEPLOY_USERNAME")
-                if(currentUsername == null) {
+                if (currentUsername == null) {
                     currentUsername = property("mavenUsernameSirBlobman") as String
                 }
 

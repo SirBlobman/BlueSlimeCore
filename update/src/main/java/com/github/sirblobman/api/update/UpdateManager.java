@@ -57,6 +57,7 @@ public final class UpdateManager {
 
     /**
      * Remove a resource from this manager.
+     *
      * @param plugin The plugin to remove.
      */
     public void removeResource(Plugin plugin) {

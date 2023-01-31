@@ -50,11 +50,15 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
     @Nullable
     @Override
     public ItemStack getItem(int slot) {
-        switch(slot) {
-            case 0: return getConfigItem();
-            case 1: return getLanguageItem();
-            case 4: return getExitItem();
-            default: break;
+        switch (slot) {
+            case 0:
+                return getConfigItem();
+            case 1:
+                return getLanguageItem();
+            case 4:
+                return getExitItem();
+            default:
+                break;
         }
 
         return getFillerItem();
@@ -63,11 +67,15 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
     @Nullable
     @Override
     public AbstractButton getButton(int slot) {
-        switch(slot) {
-            case 0: return getConfigButton();
-            case 1: return getLanguageButton();
-            case 4: return getExitButton();
-            default: break;
+        switch (slot) {
+            case 0:
+                return getConfigButton();
+            case 1:
+                return getLanguageButton();
+            case 4:
+                return getExitButton();
+            default:
+                break;
         }
 
         return null;

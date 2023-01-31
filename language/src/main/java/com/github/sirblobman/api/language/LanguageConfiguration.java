@@ -29,17 +29,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class LanguageConfiguration {
-    private LanguageConfiguration parent;
     private final YamlConfiguration configuration;
     private final MiniMessage miniMessage;
-
-    private DecimalFormat decimalFormat;
     private final Map<String, String> rawMessageMap;
     private final Map<String, Component> messageMap;
     private final Map<String, ModifiableMessage> modifiableMessageMap;
     private final Map<String, Sound> soundMap;
     private final Map<String, Title> titleMap;
     private final Map<String, PlayerListInfo> playerListInfoMap;
+    private LanguageConfiguration parent;
+    private DecimalFormat decimalFormat;
 
     public LanguageConfiguration(YamlConfiguration configuration, MiniMessage miniMessage) {
         this.parent = null;

@@ -33,7 +33,7 @@ tasks {
         enabled = false
     }
 
-    named<ShadowJar>("shadowJar"){
+    named<ShadowJar>("shadowJar") {
         archiveFileName.set("BlueSlimeBungeeCore-$calculatedVersion.jar")
         archiveClassifier.set(null as String?)
     }
@@ -49,13 +49,15 @@ tasks {
             val bungeePluginDescription = rootProject.property("plugin.description") as String
             val bungeePluginMain = rootProject.property("bukkit.plugin.main") as String
 
-            filter<ReplaceTokens>("tokens" to mapOf(
-                "bungee.plugin.version" to calculatedVersion,
-                "bungee.plugin.name" to bungeePluginName,
-                "bungee.plugin.prefix" to bungeePluginPrefix,
-                "plugin.description" to bungeePluginDescription,
-                "bungee.plugin.main" to bungeePluginMain
-            ))
+            filter<ReplaceTokens>(
+                "tokens" to mapOf(
+                    "bungee.plugin.version" to calculatedVersion,
+                    "bungee.plugin.name" to bungeePluginName,
+                    "bungee.plugin.prefix" to bungeePluginPrefix,
+                    "plugin.description" to bungeePluginDescription,
+                    "bungee.plugin.main" to bungeePluginMain
+                )
+            )
         }
     }
 }
@@ -68,7 +70,7 @@ publishing {
 
             credentials {
                 var currentUsername = System.getenv("MAVEN_DEPLOY_USERNAME")
-                if(currentUsername == null) {
+                if (currentUsername == null) {
                     currentUsername = property("mavenUsernameSirBlobman") as String
                 }
 

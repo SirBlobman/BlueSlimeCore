@@ -23,7 +23,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import com.github.sirblobman.api.adventure.adventure.audience.Audience;
@@ -39,10 +38,10 @@ import com.github.sirblobman.api.adventure.adventure.title.Title.Times;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
-import com.github.sirblobman.api.language.custom.PlayerListInfo;
-import com.github.sirblobman.api.language.listener.LanguageListener;
 import com.github.sirblobman.api.language.custom.ModifiableMessage;
 import com.github.sirblobman.api.language.custom.ModifiableMessageType;
+import com.github.sirblobman.api.language.custom.PlayerListInfo;
+import com.github.sirblobman.api.language.listener.LanguageListener;
 import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
@@ -239,7 +238,7 @@ public final class LanguageManager {
         if (languageFolder.exists()) {
             FilenameFilter languageOnly = (folder, fileName) -> fileName.endsWith(".lang.yml");
             File[] files = languageFolder.listFiles(languageOnly);
-            if(files != null && files.length > 0) {
+            if (files != null && files.length > 0) {
                 return;
             }
         }
@@ -342,7 +341,7 @@ public final class LanguageManager {
 
             configuration.set("language-name", languageName);
             return configuration;
-        } catch(IOException | InvalidConfigurationException ex) {
+        } catch (IOException | InvalidConfigurationException ex) {
             Logger logger = getLogger();
             logger.log(Level.WARNING, "An error occurred while loading a language file:", ex);
             return null;
@@ -669,9 +668,12 @@ public final class LanguageManager {
 
         ModifiableMessageType type = modifiable.getType();
         switch (type) {
-            case CHAT: sendMessage(audience, message);
-            case ACTION_BAR: sendActionBar(audience, message);
-            default: break;
+            case CHAT:
+                sendMessage(audience, message);
+            case ACTION_BAR:
+                sendActionBar(audience, message);
+            default:
+                break;
         }
     }
 

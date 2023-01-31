@@ -8,7 +8,7 @@ allprojects {
 
             credentials {
                 var currentUsername = System.getenv("MAVEN_DEPLOY_USERNAME")
-                if(currentUsername == null) {
+                if (currentUsername == null) {
                     currentUsername = property("mavenUsernameSirBlobman") as String
                 }
 

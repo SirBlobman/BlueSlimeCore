@@ -18,7 +18,7 @@ public enum ModifiableMessageType {
             String uppercase = value.toUpperCase(Locale.US);
             String underscore = uppercase.replace(' ', '_').replace('-', '_');
             return valueOf(underscore);
-        } catch(IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             return CHAT;
         }
     }
