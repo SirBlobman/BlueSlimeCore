@@ -36,6 +36,9 @@ public final class LanguageListener implements Listener {
         Plugin plugin = getPlugin();
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(this, plugin);
+
+        LanguageManager languageManager = getLanguageManager();
+        languageManager.printDebug("Registered language listener.");
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

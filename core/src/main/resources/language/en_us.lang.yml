@@ -24,15 +24,16 @@ language-test:
   broadcast: "<bold><green>Broadcast Test</green></bold>"
   action-bar: "<green>Action Bar Test</green>"
   sound:
-    name: "BLOCK_BEACON_ACTIVATE"
+    sound: "minecraft:block.beacon.activate"
+    category: "master"
     volume: "1.0"
     pitch: "1.0"
   title:
     title: "<green>Title Test</green>"
     subtitle: "<green>Subtitle Test</green>"
-    fade-in: "20"
-    stay: "20"
-    fade-out: "20"
+    fade-in: 20
+    stay: 20
+    fade-out: 20
   complete: "<green>The language test is finished.</green>"
 
 error:

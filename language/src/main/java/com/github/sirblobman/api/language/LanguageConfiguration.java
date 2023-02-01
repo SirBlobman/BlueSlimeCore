@@ -2,6 +2,7 @@ package com.github.sirblobman.api.language;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -18,12 +19,12 @@ import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.adventure.adventure.title.Title;
 import com.github.sirblobman.api.adventure.adventure.title.Title.Times;
+import com.github.sirblobman.api.adventure.adventure.util.Ticks;
 import com.github.sirblobman.api.language.custom.ModifiableMessage;
 import com.github.sirblobman.api.language.custom.ModifiableMessageType;
 import com.github.sirblobman.api.language.custom.PlayerListInfo;
 import com.github.sirblobman.api.utility.Validate;
 
-import me.clip.placeholderapi.libs.kyori.adventure.util.Ticks;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -209,11 +210,15 @@ public final class LanguageConfiguration {
         int fadeInTicks = section.getInt("fade-in", 10);
         int stayTicks = section.getInt("stay", 70);
         int fadeOutTicks = section.getInt("fade-out", 20);
-        Times times = Times.times(Ticks.duration(fadeInTicks), Ticks.duration(stayTicks), Ticks.duration(fadeOutTicks));
+        Times times = Times.times(ticks(fadeInTicks), ticks(stayTicks), ticks(fadeOutTicks));
 
         Component titleMessage = getMessage(path + ".title");
         Component subtitleMessage = getMessage(path + ".subtitle");
         return Title.title(titleMessage, subtitleMessage, times);
+    }
+
+    private Duration ticks(int ticks) {
+        return Ticks.duration(ticks);
     }
 
     @NotNull

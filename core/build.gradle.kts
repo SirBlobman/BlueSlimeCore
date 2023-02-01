@@ -37,7 +37,9 @@ dependencies {
     implementation(project(":command"))
 
     // IntelliJ Bug Dependencies
+    compileOnly(project(":bossbar"))
     compileOnly(project(":nms:abstract"))
+    compileOnly(project(":nms:scoreboard"))
 }
 
 tasks {

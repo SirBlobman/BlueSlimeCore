@@ -3,6 +3,8 @@ package com.github.sirblobman.api.language;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -130,11 +132,13 @@ public final class LanguageManager {
     }
 
     public void setLocale(Player player, String locale) {
+        printDebug("Detected setLocale for player '" + player.getName() + "' and locale '" + locale + "'.");
         UUID playerId = player.getUniqueId();
         this.localeMap.put(playerId, locale);
     }
 
     public void removeLocale(Player player) {
+        printDebug("Detected removeLocale for player '" + player.getName() + "'.");
         UUID playerId = player.getUniqueId();
         this.localeMap.remove(playerId);
     }
@@ -151,7 +155,8 @@ public final class LanguageManager {
             return null;
         }
 
-        return getLanguage(this.defaultLanguageName);
+        this.defaultLanguage = this.languageMap.get(this.defaultLanguageName);
+        return this.defaultLanguage;
     }
 
     @Nullable
@@ -182,17 +187,23 @@ public final class LanguageManager {
 
     @Nullable
     public Language getLanguage(String name) {
+        printDebug("Detected getLanguage for name '" + name + "'...");
+
         Language defaultLanguage = getDefaultLanguage();
         if (name == null || name.isEmpty() || name.equals("default")) {
+            printDebug("Name is not valid, using default language.");
             return defaultLanguage;
         }
 
+        printDebug("Getting name from language map.");
         return this.languageMap.getOrDefault(name, defaultLanguage);
     }
 
     @Nullable
     private Language getPlayerLanguage(Player player) {
+        printDebug("Detected getPlayerLanguage for player '" + player.getName() + "'.");
         String cachedLocale = getCachedLocale(player);
+        printDebug("Cached Locale Name: " + cachedLocale);
         return getLanguage(cachedLocale);
     }
 
@@ -215,16 +226,21 @@ public final class LanguageManager {
     }
 
     public void onPluginEnable() {
+        printDebug("Detected onPluginEnable...");
+
         IResourceHolder resourceHolder = getPlugin();
         if (resourceHolder instanceof WrapperPluginResourceHolder) {
+            printDebug("Plugin is a resource holder.");
             WrapperPluginResourceHolder wrapper = (WrapperPluginResourceHolder) resourceHolder;
             Plugin plugin = wrapper.getPlugin();
 
             int minorVersion = VersionUtility.getMinorVersion();
             if (minorVersion >= 12) {
+                printDebug("Version is 1.12 or greater, registering language listener...");
                 new LanguageListener(plugin, this).register();
             }
 
+            printDebug("Successfully created BukkitAudiences instance.");
             this.audienceProvider = BukkitAudiences.create(plugin);
         }
     }
@@ -259,13 +275,17 @@ public final class LanguageManager {
         }
     }
 
-    public void printMiniMessageDebug(String message) {
+    public void printDebug(String message) {
         if (!this.debugLanguage) {
             return;
         }
 
         Logger logger = getLogger();
-        logger.info("[Debug] [MiniMessage] " + message);
+        logger.info("[Debug] [Language] " + message);
+    }
+
+    public void printMiniMessageDebug(String message) {
+        printDebug("[MiniMessage] " + message);
     }
 
     public void reloadLanguages() {
@@ -368,6 +388,12 @@ public final class LanguageManager {
                 LanguageConfiguration defaultLanguageConfiguration = defaultLanguage.getConfiguration();
                 languageConfiguration.setParent(defaultLanguageConfiguration);
             }
+        }
+
+        String decimalFormatString = configuration.getString("decimal-format");
+        if (decimalFormatString != null && !decimalFormatString.isEmpty()) {
+            DecimalFormat decimalFormat = new DecimalFormat(decimalFormatString);
+            languageConfiguration.setDecimalFormat(decimalFormat);
         }
 
         return languageConfiguration;
@@ -645,7 +671,7 @@ public final class LanguageManager {
     }
 
     public void sendActionBar(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
-        Component message = getMessageWithPrefix(audience, key, replacerArray);
+        Component message = getMessage(audience, key, replacerArray);
         sendActionBar(audience, message);
     }
 
@@ -751,5 +777,16 @@ public final class LanguageManager {
         }
 
         return player.hasPermission(permission);
+    }
+
+    public DecimalFormat getDecimalFormat(@Nullable CommandSender sender) {
+        Language language = getLanguage(sender);
+        if (language == null) {
+            DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.US);
+            return new DecimalFormat("0.00", symbols);
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        return configuration.getDecimalFormat();
     }
 }

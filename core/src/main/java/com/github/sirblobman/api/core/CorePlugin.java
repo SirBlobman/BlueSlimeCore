@@ -53,10 +53,10 @@ public final class CorePlugin extends ConfigurablePlugin {
 
     @Override
     public void onEnable() {
+        reloadConfiguration();
+
         LanguageManager languageManager = getLanguageManager();
         languageManager.onPluginEnable();
-
-        reloadConfiguration();
 
         CoreConfiguration coreConfiguration = getCoreConfiguration();
         if (coreConfiguration.isDebugModeEnabled()) {
