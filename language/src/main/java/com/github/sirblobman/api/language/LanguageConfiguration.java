@@ -3,11 +3,13 @@ package com.github.sirblobman.api.language;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,6 +36,7 @@ public final class LanguageConfiguration {
     private final MiniMessage miniMessage;
     private final Map<String, String> rawMessageMap;
     private final Map<String, Component> messageMap;
+    private final Map<String, List<Component>> messageListMap;
     private final Map<String, ModifiableMessage> modifiableMessageMap;
     private final Map<String, Sound> soundMap;
     private final Map<String, Title> titleMap;
@@ -48,6 +51,7 @@ public final class LanguageConfiguration {
 
         this.rawMessageMap = new HashMap<>();
         this.messageMap = new HashMap<>();
+        this.messageListMap = new HashMap<>();
         this.modifiableMessageMap = new HashMap<>();
         this.soundMap = new HashMap<>();
         this.titleMap = new HashMap<>();
@@ -109,6 +113,26 @@ public final class LanguageConfiguration {
         String rawMessage = getRawMessage(path);
         MiniMessage miniMessage = getMiniMessage();
         return miniMessage.deserialize(rawMessage);
+    }
+
+    @NotNull
+    public List<Component> getMessageList(String path) {
+        return this.messageListMap.computeIfAbsent(path, this::fetchMessageList);
+    }
+
+    @NotNull
+    private List<Component> fetchMessageList(String path) {
+        String baseMessage = getRawMessage(path);
+        String[] rawMessages = baseMessage.split(Pattern.quote("\n"));
+        List<Component> messages = new ArrayList<>();
+
+        MiniMessage miniMessage = getMiniMessage();
+        for (String rawMessage : rawMessages) {
+            Component component = miniMessage.deserialize(rawMessage);
+            messages.add(component);
+        }
+
+        return messages;
     }
 
     @NotNull

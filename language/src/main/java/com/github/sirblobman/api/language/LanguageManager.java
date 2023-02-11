@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -468,6 +469,45 @@ public final class LanguageManager {
         }
 
         return message;
+    }
+
+    @NotNull
+    public List<Component> getMessageList(@Nullable CommandSender audience, @NotNull String key,
+                                          Replacer... replacerArray) {
+        Validate.notEmpty(key, "key must not be empty!");
+
+        Language language = getLanguage(audience);
+        if (language == null) {
+            Logger logger = getLogger();
+            logger.warning("There are no languages available.");
+            return Collections.emptyList();
+        }
+
+        LanguageConfiguration configuration = language.getConfiguration();
+        List<Component> messages = configuration.getMessageList(key);
+
+        if (this.usePlaceholderAPI) {
+            List<Component> newMessages = new ArrayList<>();
+            for (Component message : messages) {
+                message = replacePlaceholderAPI(audience, message);
+                newMessages.add(message);
+            }
+
+            messages = newMessages;
+        }
+
+        for (Replacer replacer : replacerArray) {
+            List<Component> newMessages = new ArrayList<>();
+            TextReplacementConfig replacementConfig = replacer.asReplacementConfig();
+            for (Component message : messages) {
+                message = message.replaceText(replacementConfig);
+                newMessages.add(message);
+            }
+
+            messages = newMessages;
+        }
+
+        return messages;
     }
 
     @NotNull
