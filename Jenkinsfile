@@ -21,7 +21,6 @@ pipeline {
         stage("Gradle: Build (No Daemon)") {
             steps {
                 withGradle {
-                    sh("ls $JAVA_HOME")
                     sh("./gradlew clean build --refresh-dependencies --no-daemon")
                 }
             }
