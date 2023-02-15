@@ -69,12 +69,12 @@ publishing {
             url = uri("https://nexus.sirblobman.xyz/repository/public-snapshots/")
 
             credentials {
-                var currentUsername = System.getenv("MAVEN_DEPLOY_USERNAME")
+                var currentUsername = System.getenv("MAVEN_DEPLOY_USR")
                 if (currentUsername == null) {
                     currentUsername = property("mavenUsernameSirBlobman") as String
                 }
 
-                var currentPassword = System.getenv("MAVEN_DEPLOY_PASSWORD")
+                var currentPassword = System.getenv("MAVEN_DEPLOY_PSW")
                 if (currentPassword == null) {
                     currentPassword = property("mavenPasswordSirBlobman") as String
                 }
