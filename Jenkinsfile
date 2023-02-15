@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DISCORD_URL = credentials('PUBLIC_DISCORD_WEBHOOK_URL')
+        DISCORD_URL = credentials('PUBLIC_DISCORD_WEBHOOK')
     }
 
     triggers {
