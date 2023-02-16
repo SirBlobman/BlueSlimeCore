@@ -22,7 +22,7 @@ pipeline {
         stage("Gradle: Build (No Daemon)") {
             steps {
                 withGradle {
-                    sh("./gradlew clean build --refresh-dependencies --no-daemon")
+                    sh("./gradlew clean build --refresh-dependencies --no-daemon --stacktrace")
                 }
             }
         }
