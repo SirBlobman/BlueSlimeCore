@@ -22,6 +22,8 @@ pipeline {
         stage("Gradle: Build (No Daemon)") {
             steps {
                 withGradle {
+                    sh("ls -alh /tmp")
+                    sh("df -h /tmp")
                     sh("./gradlew clean build --refresh-dependencies --no-daemon --stacktrace")
                 }
             }
