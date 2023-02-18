@@ -36,6 +36,7 @@ import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.adventure.adventure.text.ComponentLike;
 import com.github.sirblobman.api.adventure.adventure.text.TextReplacementConfig;
 import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
+import com.github.sirblobman.api.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import com.github.sirblobman.api.adventure.adventure.title.Title;
 import com.github.sirblobman.api.adventure.adventure.title.Title.Times;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
@@ -433,10 +434,18 @@ public final class LanguageManager {
         return message.replaceText(textReplacementConfig);
     }
 
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
     private ComponentLike replacePlaceholderAPI(OfflinePlayer player, MatchResult matchResult) {
         String match = matchResult.group();
         String replaced = PlaceholderAPI.setPlaceholders(player, match);
-        return Component.text(replaced);
+
+        if (replaced.contains("\u00A7")) {
+            LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+            return serializer.deserialize(replaced);
+        } else {
+            MiniMessage miniMessage = getMiniMessage();
+            return miniMessage.deserialize(replaced);
+        }
     }
 
     @NotNull

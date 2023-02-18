@@ -19,7 +19,7 @@ pipeline {
     }
 
     stages {
-        stage("Gradle: Build (No Daemon)") {
+        stage("Gradle: Build") {
             steps {
                 withGradle {
                     sh("./gradlew clean build publish --refresh-dependencies")
