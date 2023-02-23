@@ -1,16 +1,5 @@
 rootProject.name = "BlueSlimeCore"
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-
-        maven {
-            name = "papermc"
-            url = uri("https://repo.papermc.io/repository/maven-public/")
-        }
-    }
-}
-
 // Utilities
 include("shaded")
 include("utility")
