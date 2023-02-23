@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -22,6 +23,30 @@ public final class PaperHelper {
     public static void setDeathMessage(Component message, PlayerDeathEvent e) {
         net.kyori.adventure.text.Component paperMessage = shadedToNormal(message);
         e.deathMessage(paperMessage);
+    }
+
+    @Nullable
+    public static Component getCustomName(Entity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        net.kyori.adventure.text.Component paperName = entity.customName();
+        return normalToShaded(paperName);
+    }
+
+    public static void setCustomName(Entity entity, Component name) {
+        if (entity == null) {
+            return;
+        }
+
+        if (name == null) {
+            entity.customName(null);
+            return;
+        }
+
+        net.kyori.adventure.text.Component paperName = shadedToNormal(name);
+        entity.customName(paperName);
     }
 
     @Nullable
