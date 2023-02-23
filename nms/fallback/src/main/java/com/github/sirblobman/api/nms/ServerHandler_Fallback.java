@@ -11,4 +11,9 @@ public final class ServerHandler_Fallback extends ServerHandler {
     public int getMaxWorldSize() {
         return 29_999_984;
     }
+
+    @Override
+    public double[] getServerTpsValues() {
+        return new double[] {20.0D, 20.0D, 20.0D};
+    }
 }

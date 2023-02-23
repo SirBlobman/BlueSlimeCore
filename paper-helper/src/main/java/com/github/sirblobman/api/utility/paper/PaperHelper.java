@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -23,6 +24,23 @@ public final class PaperHelper {
     public static void setDeathMessage(Component message, PlayerDeathEvent e) {
         net.kyori.adventure.text.Component paperMessage = shadedToNormal(message);
         e.deathMessage(paperMessage);
+    }
+
+    /**
+     * @return The server TPS values [1m, 5m, 15m]
+     */
+    public static double[] getServerTpsValues() {
+        Server server = Bukkit.getServer();
+        return server.getTPS();
+    }
+
+    /**
+     * @return The server TPS value for 1m
+     */
+    public static double getServer1mTps() {
+        Server server = Bukkit.getServer();
+        double[] tpsArray = server.getTPS();
+        return tpsArray[0];
     }
 
     @Nullable
