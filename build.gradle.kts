@@ -36,7 +36,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:24.0.0")
+        compileOnly("org.jetbrains:annotations:24.0.1")
     }
 
     tasks {
