@@ -50,6 +50,10 @@ public final class PaperHelper {
         }
 
         net.kyori.adventure.text.Component paperName = entity.customName();
+        if (paperName == null) {
+            return null;
+        }
+
         return normalToShaded(paperName);
     }
 
