@@ -1,8 +1,5 @@
 repositories {
-    maven {
-        name = "papermc"
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 plugins {
@@ -16,7 +13,7 @@ java {
 
 dependencies {
     compileOnly(project(":nms:abstract"))
-    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.18.2-R0.1-SNAPSHOT")
 }
 
 tasks {
