@@ -79,7 +79,6 @@ tasks {
 publishing {
     repositories {
         maven {
-            name = "sirblobman-public"
             url = uri("https://nexus.sirblobman.xyz/repository/public-snapshots/")
 
             credentials {

@@ -3,7 +3,6 @@ allprojects {
 
     repositories {
         maven {
-            name = "sirblobman-private"
             url = uri("https://nexus.sirblobman.xyz/repository/private/")
 
             credentials {

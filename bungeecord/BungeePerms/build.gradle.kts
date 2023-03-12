@@ -1,8 +1,5 @@
 repositories {
-    maven {
-        name = "bungeeperms-repo"
-        url = uri("https://repo.wea-ondara.net/repository/public/")
-    }
+    maven("https://repo.wea-ondara.net/repository/public/")
 }
 
 dependencies {

@@ -18,21 +18,9 @@ allprojects {
 
     repositories {
         mavenCentral()
-
-        maven {
-            name = "sirblobman-public"
-            url = uri("https://nexus.sirblobman.xyz/repository/public/")
-        }
-
-        maven {
-            name = "spigot-repo"
-            url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-        }
-
-        maven {
-            name = "oss-sonatype-snapshots"
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-        }
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://nexus.sirblobman.xyz/repository/public/")
     }
 
     dependencies {
@@ -45,10 +33,8 @@ allprojects {
         }
 
         javadoc {
-            options {
-                val standard = this as StandardJavadocDocletOptions
-                standard.addStringOption("Xdoclint:none", "-quiet")
-            }
+            val standard = options as StandardJavadocDocletOptions
+            standard.addStringOption("Xdoclint:none", "-quiet")
         }
     }
 }
