@@ -4,11 +4,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -49,13 +49,13 @@ public final class LanguageConfiguration {
         this.configuration = Validate.notNull(configuration, "configuration must not be null!");
         this.miniMessage = Validate.notNull(miniMessage, "miniMessage must not be null!");
 
-        this.rawMessageMap = new HashMap<>();
-        this.messageMap = new HashMap<>();
-        this.messageListMap = new HashMap<>();
-        this.modifiableMessageMap = new HashMap<>();
-        this.soundMap = new HashMap<>();
-        this.titleMap = new HashMap<>();
-        this.playerListInfoMap = new HashMap<>();
+        this.rawMessageMap = new ConcurrentHashMap<>();
+        this.messageMap = new ConcurrentHashMap<>();
+        this.messageListMap = new ConcurrentHashMap<>();
+        this.modifiableMessageMap = new ConcurrentHashMap<>();
+        this.soundMap = new ConcurrentHashMap<>();
+        this.titleMap = new ConcurrentHashMap<>();
+        this.playerListInfoMap = new ConcurrentHashMap<>();
     }
 
     public Optional<LanguageConfiguration> getParent() {
