@@ -28,7 +28,7 @@ public final class FactionsHandler_Saber extends FactionsHandler {
     @Override
     public Faction getFactionAt(Location location) {
         Board board = Board.getInstance();
-        FLocation factionLocation = new FLocation(location);
+        FLocation factionLocation = FLocation.wrap(location);
         return board.getFactionAt(factionLocation);
     }
 

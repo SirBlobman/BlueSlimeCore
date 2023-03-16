@@ -1,3 +1,4 @@
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -79,7 +80,7 @@ tasks {
 publishing {
     repositories {
         maven {
-            url = uri("https://nexus.sirblobman.xyz/repository/public-snapshots/")
+            url = uri("https://nexus.sirblobman.xyz/public/")
 
             credentials {
                 var currentUsername = System.getenv("MAVEN_DEPLOY_USR")

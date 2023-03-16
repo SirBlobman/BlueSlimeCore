@@ -65,7 +65,7 @@ tasks {
 publishing {
     repositories {
         maven {
-            url = uri("https://nexus.sirblobman.xyz/repository/public-snapshots/")
+            url = uri("https://nexus.sirblobman.xyz/public/")
 
             credentials {
                 var currentUsername = System.getenv("MAVEN_DEPLOY_USR")
