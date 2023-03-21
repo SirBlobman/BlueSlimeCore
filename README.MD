@@ -11,7 +11,6 @@ This library is used in many of my projects, such as CombatLogX or Disco Armor.
 Only Spigot and Paper are supported. Custom forks may work, but they are untested and support will not be provided.
 The following Minecraft versions are currently supported:
 
-- 1.7.10
 - 1.8.8
 - 1.9.4
 - 1.10.2
@@ -23,7 +22,7 @@ The following Minecraft versions are currently supported:
 - 1.16.5
 - 1.17.1
 - 1.18.2
-- 1.19.2
+- 1.19.4
 
 ## Dependency Information
 
