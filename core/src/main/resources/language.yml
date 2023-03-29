@@ -1,5 +1,5 @@
 # This option allows you to debug language loading and parsing.
-# Your console will get spammed though, so its recommended to keep it disabled.
+# Your console will get spammed though, so it's recommended to keep it disabled.
 debug-mode: false
 
 # Force all players to use the 'default-locale', even when they have set a different language in their client.
