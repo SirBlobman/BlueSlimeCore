@@ -24,7 +24,7 @@ dependencies {
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.1")
-    implementation("org.bstats:bstats-bungeecord:3.0.1")
+    implementation("org.bstats:bstats-bungeecord:3.0.2")
 }
 
 tasks {
