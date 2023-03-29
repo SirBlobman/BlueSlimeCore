@@ -23,7 +23,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.13.0")
 
     // bStats
-    implementation("org.bstats:bstats-bukkit:3.0.1")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("org.bstats:bstats-bungeecord:3.0.1")
 }
 
