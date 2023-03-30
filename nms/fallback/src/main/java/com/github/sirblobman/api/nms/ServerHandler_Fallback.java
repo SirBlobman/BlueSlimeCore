@@ -14,6 +14,6 @@ public final class ServerHandler_Fallback extends ServerHandler {
 
     @Override
     public double[] getServerTpsValues() {
-        return new double[] {20.0D, 20.0D, 20.0D};
+        return new double[]{20.0D, 20.0D, 20.0D};
     }
 }

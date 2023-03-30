@@ -24,11 +24,11 @@ import net.minecraft.server.v1_13_R2.NBTTagString;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_1_13_R2;
 import com.github.sirblobman.api.nbt.CustomNbtTypeRegistry_1_13_R2;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.utility.ItemUtility;
 
 import org.jetbrains.annotations.Contract;

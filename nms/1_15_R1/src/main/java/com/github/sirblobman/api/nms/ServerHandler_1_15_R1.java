@@ -33,7 +33,7 @@ public final class ServerHandler_1_15_R1 extends ServerHandler {
     public double[] getServerTpsValues() {
         Server server = Bukkit.getServer();
         if (!(server instanceof CraftServer)) {
-            return new double[] {20.0D, 20.0D, 20.0D};
+            return new double[]{20.0D, 20.0D, 20.0D};
         }
 
         CraftServer craftServer = (CraftServer) server;

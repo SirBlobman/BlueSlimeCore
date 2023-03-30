@@ -20,11 +20,11 @@ import net.minecraft.server.v1_7_R4.NBTCompressedStreamTools;
 import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_1_7_R4;
 import com.github.sirblobman.api.nbt.CustomNbtTypeRegistry_1_7_R4;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.utility.ItemUtility;
 
 import org.jetbrains.annotations.Contract;

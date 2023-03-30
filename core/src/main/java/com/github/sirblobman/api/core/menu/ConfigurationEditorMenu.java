@@ -5,12 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.menu.AbstractPagedMenu;
 import com.github.sirblobman.api.menu.IMenu;
 import com.github.sirblobman.api.menu.button.AbstractButton;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.utility.Validate;
 
 import org.jetbrains.annotations.Nullable;

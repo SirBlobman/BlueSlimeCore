@@ -40,13 +40,15 @@ tasks {
             val pluginDescription = findProperty("plugin.description") as String
             val calculatedVersion = rootProject.ext.get("calculatedVersion")
 
-            expand(mapOf(
-                "pluginName" to pluginName,
-                "pluginPrefix" to pluginPrefix,
-                "pluginMainClass" to pluginMainClass,
-                "pluginDescription" to pluginDescription,
-                "pluginVersion" to calculatedVersion
-            ))
+            expand(
+                mapOf(
+                    "pluginName" to pluginName,
+                    "pluginPrefix" to pluginPrefix,
+                    "pluginMainClass" to pluginMainClass,
+                    "pluginDescription" to pluginDescription,
+                    "pluginVersion" to calculatedVersion
+                )
+            )
         }
     }
 }

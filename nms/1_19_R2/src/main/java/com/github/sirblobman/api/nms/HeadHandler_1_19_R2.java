@@ -16,8 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
-import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
+import com.github.sirblobman.api.utility.ItemUtility;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

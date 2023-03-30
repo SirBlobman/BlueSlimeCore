@@ -29,6 +29,6 @@ public final class ServerHandler_1_7_R4 extends ServerHandler {
     @Override
     public double[] getServerTpsValues() {
         // CraftBukkit 1.7.10 does not seem to have a method for TPS.
-        return new double[] {20.0D, 20.0D, 20.0D};
+        return new double[]{20.0D, 20.0D, 20.0D};
     }
 }

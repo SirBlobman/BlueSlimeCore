@@ -60,14 +60,16 @@ tasks {
             val pluginMainClass = findProperty("bukkit.plugin.main") as String
             val calculatedVersion = rootProject.ext.get("calculatedVersion")
 
-            expand(mapOf(
-                "pluginName" to pluginName,
-                "pluginPrefix" to pluginPrefix,
-                "pluginWebsite" to pluginWebsite,
-                "pluginMainClass" to pluginMainClass,
-                "pluginDescription" to pluginDescription,
-                "pluginVersion" to calculatedVersion
-            ))
+            expand(
+                mapOf(
+                    "pluginName" to pluginName,
+                    "pluginPrefix" to pluginPrefix,
+                    "pluginWebsite" to pluginWebsite,
+                    "pluginMainClass" to pluginMainClass,
+                    "pluginDescription" to pluginDescription,
+                    "pluginVersion" to calculatedVersion
+                )
+            )
         }
     }
 }

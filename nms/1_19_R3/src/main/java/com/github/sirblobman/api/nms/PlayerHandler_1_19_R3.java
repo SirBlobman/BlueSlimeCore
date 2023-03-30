@@ -10,8 +10,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public final class PlayerHandler_1_19_R3 extends PlayerHandler {
     public PlayerHandler_1_19_R3(JavaPlugin plugin) {

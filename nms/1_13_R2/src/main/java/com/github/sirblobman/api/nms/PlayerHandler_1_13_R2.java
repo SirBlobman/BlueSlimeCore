@@ -11,8 +11,8 @@ import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_13_R2.Packet;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public class PlayerHandler_1_13_R2 extends PlayerHandler {
     public PlayerHandler_1_13_R2(JavaPlugin plugin) {

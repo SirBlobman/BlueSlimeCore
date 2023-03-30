@@ -1,7 +1,7 @@
 package com.github.sirblobman.api.item;
 
-import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
+import com.github.sirblobman.api.utility.Validate;
 
 import org.jetbrains.annotations.NotNull;
 

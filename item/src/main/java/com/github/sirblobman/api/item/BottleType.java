@@ -2,8 +2,8 @@ package com.github.sirblobman.api.item;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
+import com.github.sirblobman.api.utility.Validate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
