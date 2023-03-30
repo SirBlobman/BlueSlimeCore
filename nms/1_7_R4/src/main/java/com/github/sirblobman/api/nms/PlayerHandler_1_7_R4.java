@@ -10,7 +10,7 @@ import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 
 public final class PlayerHandler_1_7_R4 extends PlayerHandler {

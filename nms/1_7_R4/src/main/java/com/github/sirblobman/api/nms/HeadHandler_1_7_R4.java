@@ -14,7 +14,7 @@ import net.minecraft.util.com.mojang.authlib.GameProfile;
 import net.minecraft.util.com.mojang.authlib.properties.Property;
 import net.minecraft.util.com.mojang.authlib.properties.PropertyMap;
 
-import com.github.sirblobman.api.xseries.XMaterial;
+import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
 public final class HeadHandler_1_7_R4 extends HeadHandler {
     public HeadHandler_1_7_R4(JavaPlugin plugin) {

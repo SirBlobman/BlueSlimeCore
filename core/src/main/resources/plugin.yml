@@ -1,20 +1,15 @@
-name: "@bukkit.plugin.name@"
-prefix: "@bukkit.plugin.prefix@"
-description: "@bukkit.plugin.description@"
-website: "https://www.spigotmc.org/resources/83189/"
+name: "${pluginName}"
+prefix: "${pluginPrefix}"
+description: "${pluginDescription}"
+website: "${pluginWebsite}"
 
-main: "@bukkit.plugin.main@"
-version: "@bukkit.plugin.version@"
+main: "${pluginMainClass}"
+version: "${pluginVersion}"
 api-version: "1.13"
 load: STARTUP
 
 authors:
   - "SirBlobman"
-
-provides:
-  - "SirBlobmanAPI"
-  - "SirBlobmanCore"
-  - "XSeries"
 
 softdepend:
   - "Factions"

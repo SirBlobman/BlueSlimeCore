@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public abstract class ItemHandler extends Handler {
     public ItemHandler(JavaPlugin plugin) {

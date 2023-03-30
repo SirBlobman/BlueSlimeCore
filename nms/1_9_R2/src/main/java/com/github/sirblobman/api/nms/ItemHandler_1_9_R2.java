@@ -22,7 +22,7 @@ import net.minecraft.server.v1_9_R2.NBTCompressedStreamTools;
 import net.minecraft.server.v1_9_R2.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_1_9_R2;

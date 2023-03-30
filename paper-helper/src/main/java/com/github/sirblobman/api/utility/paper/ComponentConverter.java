@@ -1,7 +1,7 @@
 package com.github.sirblobman.api.utility.paper;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
-import com.github.sirblobman.api.adventure.adventure.text.serializer.gson.GsonComponentSerializer;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.serializer.gson.GsonComponentSerializer;
 
 public final class ComponentConverter {
     public static Component normalToShaded(net.kyori.adventure.text.Component component) {

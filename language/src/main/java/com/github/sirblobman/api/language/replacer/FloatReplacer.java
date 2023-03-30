@@ -3,7 +3,7 @@ package com.github.sirblobman.api.language.replacer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 import org.jetbrains.annotations.NotNull;
 

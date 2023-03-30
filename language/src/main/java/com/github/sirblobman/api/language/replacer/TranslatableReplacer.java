@@ -1,8 +1,8 @@
 package com.github.sirblobman.api.language.replacer;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
-import com.github.sirblobman.api.adventure.adventure.text.ComponentLike;
-import com.github.sirblobman.api.adventure.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.ComponentLike;
+import com.github.sirblobman.api.shaded.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import com.github.sirblobman.api.utility.Validate;
 
 import org.jetbrains.annotations.NotNull;

@@ -1,6 +1,6 @@
 package com.github.sirblobman.api.language.custom;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public final class PlayerListInfo {
     private Component header;

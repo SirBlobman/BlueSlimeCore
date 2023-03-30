@@ -14,17 +14,17 @@ import java.util.regex.Pattern;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.github.sirblobman.api.adventure.adventure.key.Key;
-import com.github.sirblobman.api.adventure.adventure.sound.Sound;
-import com.github.sirblobman.api.adventure.adventure.sound.Sound.Source;
-import com.github.sirblobman.api.adventure.adventure.text.Component;
-import com.github.sirblobman.api.adventure.adventure.text.minimessage.MiniMessage;
-import com.github.sirblobman.api.adventure.adventure.title.Title;
-import com.github.sirblobman.api.adventure.adventure.title.Title.Times;
-import com.github.sirblobman.api.adventure.adventure.util.Ticks;
 import com.github.sirblobman.api.language.custom.ModifiableMessage;
 import com.github.sirblobman.api.language.custom.ModifiableMessageType;
 import com.github.sirblobman.api.language.custom.PlayerListInfo;
+import com.github.sirblobman.api.shaded.adventure.key.Key;
+import com.github.sirblobman.api.shaded.adventure.sound.Sound;
+import com.github.sirblobman.api.shaded.adventure.sound.Sound.Source;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
+import com.github.sirblobman.api.shaded.adventure.title.Title;
+import com.github.sirblobman.api.shaded.adventure.title.Title.Times;
+import com.github.sirblobman.api.shaded.adventure.util.Ticks;
 import com.github.sirblobman.api.utility.Validate;
 
 import org.intellij.lang.annotations.Subst;

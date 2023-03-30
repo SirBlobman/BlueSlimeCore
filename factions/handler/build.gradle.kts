@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    // Factions Abstract
+    // Local Dependencies
     implementation(project(":factions:abstract"))
 
     // Factions Implementations

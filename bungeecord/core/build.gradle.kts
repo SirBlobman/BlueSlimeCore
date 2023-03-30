@@ -1,15 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.apache.tools.ant.filters.ReplaceTokens
-
-val jenkinsBuildNumber = System.getenv("BUILD_NUMBER") ?: "Unknown"
-val baseVersion = rootProject.property("version.base") as String
-val betaVersionString = rootProject.property("version.beta") as String
-val betaVersion = betaVersionString.toBoolean()
-
-var calculatedVersion = ("$baseVersion.$jenkinsBuildNumber")
-if (betaVersion) {
-    calculatedVersion += "-Beta"
-}
 
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -17,11 +6,11 @@ plugins {
 }
 
 dependencies {
-    // Utilities
+    // Local Dependencies
     implementation(project(path = ":shaded", configuration = "shadow"))
     implementation(project(":utility"))
 
-    // BungeeCord
+    // BungeeCord Modules
     implementation(project(":bungeecord:abstract"))
     implementation(project(":bungeecord:BungeePerms"))
     implementation(project(":bungeecord:LuckPerms"))
@@ -34,6 +23,7 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar") {
+        val calculatedVersion = rootProject.ext.get("calculatedVersion")
         archiveFileName.set("BlueSlimeBungeeCore-$calculatedVersion.jar")
         archiveClassifier.set(null as String?)
     }
@@ -44,50 +34,38 @@ tasks {
 
     processResources {
         filesMatching("bungee.yml") {
-            val bungeePluginName = rootProject.property("bungee.plugin.name") as String
-            val bungeePluginPrefix = rootProject.property("bungee.plugin.prefix") as String
-            val bungeePluginDescription = rootProject.property("plugin.description") as String
-            val bungeePluginMain = rootProject.property("bukkit.plugin.main") as String
+            val pluginName = findProperty("bungee.plugin.name") as String
+            val pluginPrefix = findProperty("bungee.plugin.prefix") as String
+            val pluginMainClass = findProperty("bungee.plugin.main") as String
+            val pluginDescription = findProperty("plugin.description") as String
+            val calculatedVersion = rootProject.ext.get("calculatedVersion")
 
-            filter<ReplaceTokens>(
-                "tokens" to mapOf(
-                    "bungee.plugin.version" to calculatedVersion,
-                    "bungee.plugin.name" to bungeePluginName,
-                    "bungee.plugin.prefix" to bungeePluginPrefix,
-                    "plugin.description" to bungeePluginDescription,
-                    "bungee.plugin.main" to bungeePluginMain
-                )
-            )
+            expand(mapOf(
+                "pluginName" to pluginName,
+                "pluginPrefix" to pluginPrefix,
+                "pluginMainClass" to pluginMainClass,
+                "pluginDescription" to pluginDescription,
+                "pluginVersion" to calculatedVersion
+            ))
         }
     }
 }
 
 publishing {
     repositories {
-        maven {
-            url = uri("https://nexus.sirblobman.xyz/public/")
-
+        maven("https://nexus.sirblobman.xyz/public/") {
             credentials {
-                var currentUsername = System.getenv("MAVEN_DEPLOY_USR")
-                if (currentUsername == null) {
-                    currentUsername = property("mavenUsernameSirBlobman") as String
-                }
-
-                var currentPassword = System.getenv("MAVEN_DEPLOY_PSW")
-                if (currentPassword == null) {
-                    currentPassword = property("mavenPasswordSirBlobman") as String
-                }
-
-                username = currentUsername
-                password = currentPassword
+                username = rootProject.ext.get("mavenUsername") as String
+                password = rootProject.ext.get("mavenPassword") as String
             }
         }
     }
 
     publications {
         create<MavenPublication>("maven") {
-            groupId = "$group"
+            groupId = "com.github.sirblobman.api.bungeecord"
             artifactId = "core"
+            version = rootProject.ext.get("apiVersion") as String
             artifact(tasks["shadowJar"])
         }
     }

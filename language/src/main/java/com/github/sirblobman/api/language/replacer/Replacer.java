@@ -1,7 +1,7 @@
 package com.github.sirblobman.api.language.replacer;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
-import com.github.sirblobman.api.adventure.adventure.text.TextReplacementConfig;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.TextReplacementConfig;
 import com.github.sirblobman.api.utility.Validate;
 
 import org.jetbrains.annotations.NotNull;

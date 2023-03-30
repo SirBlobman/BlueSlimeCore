@@ -9,14 +9,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.adventure.adventure.audience.Audience;
-import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar;
-import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar.Color;
-import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar.Flag;
-import com.github.sirblobman.api.adventure.adventure.bossbar.BossBar.Overlay;
-import com.github.sirblobman.api.adventure.adventure.key.Key;
-import com.github.sirblobman.api.adventure.adventure.platform.bukkit.BukkitAudiences;
-import com.github.sirblobman.api.adventure.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.audience.Audience;
+import com.github.sirblobman.api.shaded.adventure.bossbar.BossBar;
+import com.github.sirblobman.api.shaded.adventure.bossbar.BossBar.Color;
+import com.github.sirblobman.api.shaded.adventure.bossbar.BossBar.Flag;
+import com.github.sirblobman.api.shaded.adventure.bossbar.BossBar.Overlay;
+import com.github.sirblobman.api.shaded.adventure.key.Key;
+import com.github.sirblobman.api.shaded.adventure.platform.bukkit.BukkitAudiences;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.utility.Validate;
 
 import org.intellij.lang.annotations.Subst;

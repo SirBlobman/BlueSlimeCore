@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    // Bukkit API Base
+    // Bukkit API
     compileOnly("org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT")
 
     // Boss Bar

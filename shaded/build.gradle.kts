@@ -5,13 +5,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "com.github.sirblobman.api"
-version = "2.6-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     // XSeries
     implementation("com.github.cryptomorin:XSeries:9.3.1")
@@ -33,12 +26,14 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar") {
-        relocate("com.cryptomorin.xseries", "com.github.sirblobman.api.xseries")
-        relocate("net.kyori", "com.github.sirblobman.api.adventure")
-        relocate("org.bstats", "com.github.sirblobman.api.bstats")
+        val shadePrefix = "com.github.sirblobman.api.shaded"
+        relocate("com.cryptomorin.xseries", "$shadePrefix.xseries")
+        relocate("net.kyori.adventure", "$shadePrefix.adventure")
+        relocate("net.kyori.examination", "$shadePrefix.examination")
+        relocate("org.bstats", "$shadePrefix.bstats")
     }
 
     build {
-        dependsOn(shadowJar)
+        dependsOn("shadowJar")
     }
 }

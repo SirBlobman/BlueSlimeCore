@@ -1,34 +1,34 @@
 package com.github.sirblobman.api.item;
 
 import com.github.sirblobman.api.utility.Validate;
-import com.github.sirblobman.api.xseries.XMaterial;
+import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
 import org.jetbrains.annotations.NotNull;
 
-import static com.github.sirblobman.api.xseries.XMaterial.CHAINMAIL_BOOTS;
-import static com.github.sirblobman.api.xseries.XMaterial.CHAINMAIL_CHESTPLATE;
-import static com.github.sirblobman.api.xseries.XMaterial.CHAINMAIL_HELMET;
-import static com.github.sirblobman.api.xseries.XMaterial.CHAINMAIL_LEGGINGS;
-import static com.github.sirblobman.api.xseries.XMaterial.DIAMOND_BOOTS;
-import static com.github.sirblobman.api.xseries.XMaterial.DIAMOND_CHESTPLATE;
-import static com.github.sirblobman.api.xseries.XMaterial.DIAMOND_HELMET;
-import static com.github.sirblobman.api.xseries.XMaterial.DIAMOND_LEGGINGS;
-import static com.github.sirblobman.api.xseries.XMaterial.GOLDEN_BOOTS;
-import static com.github.sirblobman.api.xseries.XMaterial.GOLDEN_CHESTPLATE;
-import static com.github.sirblobman.api.xseries.XMaterial.GOLDEN_HELMET;
-import static com.github.sirblobman.api.xseries.XMaterial.GOLDEN_LEGGINGS;
-import static com.github.sirblobman.api.xseries.XMaterial.IRON_BOOTS;
-import static com.github.sirblobman.api.xseries.XMaterial.IRON_CHESTPLATE;
-import static com.github.sirblobman.api.xseries.XMaterial.IRON_HELMET;
-import static com.github.sirblobman.api.xseries.XMaterial.IRON_LEGGINGS;
-import static com.github.sirblobman.api.xseries.XMaterial.LEATHER_BOOTS;
-import static com.github.sirblobman.api.xseries.XMaterial.LEATHER_CHESTPLATE;
-import static com.github.sirblobman.api.xseries.XMaterial.LEATHER_HELMET;
-import static com.github.sirblobman.api.xseries.XMaterial.LEATHER_LEGGINGS;
-import static com.github.sirblobman.api.xseries.XMaterial.NETHERITE_BOOTS;
-import static com.github.sirblobman.api.xseries.XMaterial.NETHERITE_CHESTPLATE;
-import static com.github.sirblobman.api.xseries.XMaterial.NETHERITE_HELMET;
-import static com.github.sirblobman.api.xseries.XMaterial.NETHERITE_LEGGINGS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.CHAINMAIL_BOOTS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.CHAINMAIL_CHESTPLATE;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.CHAINMAIL_HELMET;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.CHAINMAIL_LEGGINGS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.DIAMOND_BOOTS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.DIAMOND_CHESTPLATE;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.DIAMOND_HELMET;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.DIAMOND_LEGGINGS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.GOLDEN_BOOTS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.GOLDEN_CHESTPLATE;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.GOLDEN_HELMET;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.GOLDEN_LEGGINGS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.IRON_BOOTS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.IRON_CHESTPLATE;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.IRON_HELMET;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.IRON_LEGGINGS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.LEATHER_BOOTS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.LEATHER_CHESTPLATE;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.LEATHER_HELMET;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.LEATHER_LEGGINGS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.NETHERITE_BOOTS;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.NETHERITE_CHESTPLATE;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.NETHERITE_HELMET;
+import static com.github.sirblobman.api.shaded.xseries.XMaterial.NETHERITE_LEGGINGS;
 
 public enum ArmorMaterialType {
     LEATHER(LEATHER_HELMET, LEATHER_CHESTPLATE, LEATHER_LEGGINGS, LEATHER_BOOTS),

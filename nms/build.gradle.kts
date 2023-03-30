@@ -1,28 +1,15 @@
 allprojects {
-    group = "com.github.sirblobman.api.nms"
-
     repositories {
-        maven {
-            url = uri("https://nexus.sirblobman.xyz/private/")
-
+        maven("https://nexus.sirblobman.xyz/private/") {
             credentials {
-                var currentUsername = System.getenv("MAVEN_DEPLOY_USR")
-                if (currentUsername == null) {
-                    currentUsername = property("mavenUsernameSirBlobman") as String
-                }
-
-                var currentPassword = System.getenv("MAVEN_DEPLOY_PSW")
-                if (currentPassword == null) {
-                    currentPassword = property("mavenPasswordSirBlobman") as String
-                }
-
-                username = currentUsername
-                password = currentPassword
+                username = rootProject.ext.get("mavenUsername") as String
+                password = rootProject.ext.get("mavenPassword") as String
             }
         }
     }
 
     dependencies {
+        // Local Dependencies
         compileOnly(project(path = ":shaded", configuration = "shadow"))
         compileOnly(project(":utility"))
     }

@@ -3,12 +3,12 @@ package com.github.sirblobman.api.language;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sirblobman.api.adventure.adventure.text.Component;
-import com.github.sirblobman.api.adventure.adventure.text.TextComponent;
-import com.github.sirblobman.api.adventure.adventure.text.format.TextDecoration;
-import com.github.sirblobman.api.adventure.adventure.text.serializer.gson.GsonComponentSerializer;
-import com.github.sirblobman.api.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import com.github.sirblobman.api.adventure.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.TextComponent;
+import com.github.sirblobman.api.shaded.adventure.text.format.TextDecoration;
+import com.github.sirblobman.api.shaded.adventure.text.serializer.gson.GsonComponentSerializer;
+import com.github.sirblobman.api.shaded.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import com.github.sirblobman.api.shaded.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.VersionUtility;
 
