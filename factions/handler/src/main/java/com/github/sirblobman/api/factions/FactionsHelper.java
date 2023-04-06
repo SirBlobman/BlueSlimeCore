@@ -45,13 +45,13 @@ public final class FactionsHelper {
             PluginManager manager = Bukkit.getPluginManager();
             if (manager.isPluginEnabled("FactionsX")) {
                 printHookInfo("FactionsX", "FactionsX");
-                this.factionsHandler = new FactionsHandler_X(this.plugin);
+                this.factionsHandler = new FactionsHandler_X();
                 return this.factionsHandler;
             }
 
             if (manager.isPluginEnabled("LegacyFactions")) {
                 printHookInfo("LegacyFactions", "Legacy Factions");
-                this.factionsHandler = new FactionsHandler_Legacy(this.plugin);
+                this.factionsHandler = new FactionsHandler_Legacy();
                 return this.factionsHandler;
             }
 
@@ -62,7 +62,7 @@ public final class FactionsHelper {
 
             if (isSaberFactions(plugin)) {
                 printHookInfo("Factions", "SaberFactions");
-                this.factionsHandler = new FactionsHandler_Saber(this.plugin);
+                this.factionsHandler = new FactionsHandler_Saber();
                 return this.factionsHandler;
             }
 
@@ -70,7 +70,7 @@ public final class FactionsHelper {
             List<String> pluginDependencyList = description.getDepend();
             if (pluginDependencyList.contains("MassiveCore")) {
                 printHookInfo("Factions", "MassiveCore Factions");
-                this.factionsHandler = new FactionsHandler_Massive(this.plugin);
+                this.factionsHandler = new FactionsHandler_Massive();
                 return this.factionsHandler;
             }
 
@@ -78,13 +78,13 @@ public final class FactionsHelper {
             if (pluginVersion.startsWith("1.6.9.5")) {
                 if (pluginVersion.startsWith("1.6.9.5-U0.2")) {
                     printHookInfo("Factions", "Factions UUID Legacy");
-                    this.factionsHandler = new FactionsHandler_UUID_Legacy(this.plugin);
+                    this.factionsHandler = new FactionsHandler_UUID_Legacy();
                     return this.factionsHandler;
                 }
 
                 if (pluginVersion.startsWith("1.6.9.5-U0.6")) {
                     printHookInfo("Factions", "Factions UUID Modern");
-                    this.factionsHandler = new FactionsHandler_UUID(this.plugin);
+                    this.factionsHandler = new FactionsHandler_UUID();
                     return this.factionsHandler;
                 }
             }

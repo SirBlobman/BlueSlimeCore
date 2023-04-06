@@ -1,14 +1,11 @@
 package com.github.sirblobman.api.factions;
 
-import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import net.prosavage.factionsx.core.CustomRole;
 import net.prosavage.factionsx.core.FPlayer;
@@ -16,158 +13,114 @@ import net.prosavage.factionsx.core.Faction;
 import net.prosavage.factionsx.manager.GridManager;
 import net.prosavage.factionsx.manager.PlayerManager;
 import net.prosavage.factionsx.util.Relation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class FactionsHandler_X extends FactionsHandler {
-    public FactionsHandler_X(JavaPlugin plugin) {
-        super(plugin);
+    @Override
+    public boolean hasFaction(@NotNull OfflinePlayer player) {
+        FPlayer fplayer = getFPlayer(player);
+        if (fplayer == null) {
+            return false;
+        }
+
+        return fplayer.hasFaction();
     }
 
     @Override
-    public Faction getFactionAt(Location location) {
+    public @Nullable FactionWrapper getFactionFor(@NotNull OfflinePlayer player) {
+        if (hasFaction(player)) {
+            FPlayer fplayer = getFPlayer(player);
+            if (fplayer == null) {
+                return null;
+            }
+
+            return wrap(fplayer.getFaction());
+        }
+
+        return null;
+    }
+
+    @Override
+    public @Nullable FactionWrapper getFactionAt(@NotNull Location location) {
         Chunk chunk = location.getChunk();
-        return GridManager.INSTANCE.getFactionAt(chunk);
+        Faction faction = GridManager.INSTANCE.getFactionAt(chunk);
+        return wrap(faction);
     }
 
     @Override
-    public String getFactionNameAt(Location location) {
-        Faction locationFaction = getFactionAt(location);
-        if (locationFaction == null) {
-            return null;
-        }
-
-        return locationFaction.getTag();
-    }
-
-    @Override
-    public boolean isSafeZone(Location location) {
-        Faction locationFaction = getFactionAt(location);
-        if (locationFaction == null) {
-            return false;
-        }
-
-        return locationFaction.isSafezone();
-    }
-
-    @Override
-    public boolean isWarZone(Location location) {
-        Faction locationFaction = getFactionAt(location);
-        if (locationFaction == null) {
-            return false;
-        }
-
-        return locationFaction.isWarzone();
-    }
-
-    @Override
-    public boolean isWilderness(Location location) {
-        Faction locationFaction = getFactionAt(location);
-        if (locationFaction == null) {
+    public boolean isAlly(@NotNull OfflinePlayer player1, @NotNull OfflinePlayer player2) {
+        if (player1.getUniqueId().equals(player2.getUniqueId())) {
             return true;
         }
 
-        return locationFaction.isWilderness();
-    }
-
-    @Override
-    public boolean hasFaction(OfflinePlayer player) {
-        UUID playerId = player.getUniqueId();
-        FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if (factionPlayer == null) {
+        FPlayer fplayer1 = getFPlayer(player1);
+        FPlayer fplayer2 = getFPlayer(player2);
+        if (fplayer1 == null || fplayer2 == null) {
             return false;
         }
 
-        return factionPlayer.hasFaction();
-    }
-
-    @Override
-    public Faction getFactionFor(OfflinePlayer player) {
-        UUID playerId = player.getUniqueId();
-        FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if (factionPlayer == null) {
-            return null;
+        Faction faction1 = fplayer1.getFaction();
+        Faction faction2 = fplayer2.getFaction();
+        if (faction1 == null || faction2 == null) {
+            return false;
         }
 
-        return factionPlayer.getFaction();
-    }
-
-    @Override
-    public String getFactionNameFor(OfflinePlayer player) {
-        Faction playerFaction = getFactionFor(player);
-        if (playerFaction == null) {
-            return null;
-        }
-
-        return playerFaction.getTag();
-    }
-
-    @Override
-    public boolean isMemberOrAlly(OfflinePlayer player1, OfflinePlayer player2) {
-        UUID playerId1 = player1.getUniqueId();
-        UUID playerId2 = player2.getUniqueId();
-        if (playerId1.equals(playerId2) || !hasFaction(player1) || !hasFaction(player2)) {
+        if (faction1.getId() == faction2.getId()) {
             return true;
         }
 
-        FPlayer factionPlayer1 = PlayerManager.INSTANCE.getFPlayer(playerId1);
-        FPlayer factionPlayer2 = PlayerManager.INSTANCE.getFPlayer(playerId2);
-
-        Faction playerFaction1 = factionPlayer1.getFaction();
-        Faction playerFaction2 = factionPlayer2.getFaction();
-
-        long factionId1 = playerFaction1.getId();
-        long factionId2 = playerFaction2.getId();
-        if (factionId1 == factionId2) {
-            return true;
-        }
-
-        Relation relation = playerFaction1.getRelationTo(playerFaction2);
+        Relation relation = faction1.getRelationTo(faction2);
         return (relation == Relation.ALLY);
     }
 
     @Override
-    public boolean isEnemy(OfflinePlayer player1, OfflinePlayer player2) {
-        UUID playerId1 = player1.getUniqueId();
-        UUID playerId2 = player2.getUniqueId();
-        if (playerId1.equals(playerId2) || !hasFaction(player1) || !hasFaction(player2)) {
+    public boolean isEnemy(@NotNull OfflinePlayer player1, @NotNull OfflinePlayer player2) {
+        if (player1.getUniqueId().equals(player2.getUniqueId())) {
             return false;
         }
 
-        FPlayer factionPlayer1 = PlayerManager.INSTANCE.getFPlayer(playerId1);
-        FPlayer factionPlayer2 = PlayerManager.INSTANCE.getFPlayer(playerId2);
-
-        Faction playerFaction1 = factionPlayer1.getFaction();
-        Faction playerFaction2 = factionPlayer2.getFaction();
-
-        long factionId1 = playerFaction1.getId();
-        long factionId2 = playerFaction2.getId();
-        if (factionId1 == factionId2) {
+        FPlayer fplayer1 = getFPlayer(player1);
+        FPlayer fplayer2 = getFPlayer(player2);
+        if (fplayer1 == null || fplayer2 == null) {
             return false;
         }
 
-        Relation relation = playerFaction1.getRelationTo(playerFaction2);
+        Faction faction1 = fplayer1.getFaction();
+        Faction faction2 = fplayer2.getFaction();
+        if (faction1 == null || faction2 == null) {
+            return false;
+        }
+
+        Relation relation = faction1.getRelationTo(faction2);
         return (relation == Relation.ENEMY);
     }
 
     @Override
-    public boolean hasBypass(OfflinePlayer player) {
-        UUID playerId = player.getUniqueId();
-        FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if (factionPlayer == null) {
+    public boolean hasBypass(@NotNull OfflinePlayer player) {
+        FPlayer fplayer = getFPlayer(player);
+        if (fplayer == null) {
             return false;
         }
 
-        return factionPlayer.getInBypass();
+        return fplayer.getInBypass();
     }
 
     @Override
-    public boolean isInEnemyLand(OfflinePlayer player, Location location) {
-        if (!hasFaction(player)) {
+    public boolean isInEnemyLand(@NotNull OfflinePlayer player, @NotNull Location location) {
+        FPlayer fplayer = getFPlayer(player);
+        if (fplayer == null) {
             return false;
         }
 
-        Faction playerFaction = getFactionFor(player);
-        Faction locationFaction = getFactionAt(location);
-        if (playerFaction == null || locationFaction == null) {
+        Faction playerFaction = fplayer.getFaction();
+        if (playerFaction == null) {
+            return false;
+        }
+
+        Chunk chunk = location.getChunk();
+        Faction locationFaction = GridManager.INSTANCE.getFactionAt(chunk);
+        if (locationFaction == null) {
             return false;
         }
 
@@ -176,115 +129,74 @@ public final class FactionsHandler_X extends FactionsHandler {
     }
 
     @Override
-    public boolean isInOwnFaction(OfflinePlayer player, Location location) {
-        if (!hasFaction(player)) {
+    public boolean isInOwnFaction(@NotNull OfflinePlayer player, @NotNull Location location) {
+        FactionWrapper faction = getFactionAt(location);
+        if (faction == null) {
             return false;
         }
 
-        Faction playerFaction = getFactionFor(player);
-        Faction locationFaction = getFactionAt(location);
-        if (playerFaction == null || locationFaction == null) {
-            return false;
-        }
-
-        long factionPlayerId = playerFaction.getId();
-        long factionLocationId = locationFaction.getId();
-        return (factionPlayerId == factionLocationId);
+        return faction.isMember(player);
     }
 
     @Override
-    public boolean isLeader(OfflinePlayer player, Location location) {
-        Faction locationFaction = getFactionAt(location);
-        if (locationFaction == null) {
-            return false;
-        }
-
-        UUID playerId = player.getUniqueId();
-        UUID ownerId = locationFaction.getOwnerId();
-        return playerId.equals(ownerId);
-    }
-
-    @Override
-    public boolean canBuild(OfflinePlayer player, Location location) {
-        UUID playerId = player.getUniqueId();
-        FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if (factionPlayer == null) {
-            return false;
-        }
-
-        return factionPlayer.canBuildAt(location);
-    }
-
-    @Override
-    public boolean canDestroy(OfflinePlayer player, Location location) {
-        UUID playerId = player.getUniqueId();
-        FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if (factionPlayer == null) {
-            return false;
-        }
-
-        return factionPlayer.canBreakAt(location);
-    }
-
-    @Override
-    public ChatColor getRelationChatColor(OfflinePlayer viewer, OfflinePlayer player) {
-        if (!hasFaction(viewer) || !hasFaction(player)) {
+    public @Nullable ChatColor getRelationChatColor(@NotNull OfflinePlayer viewer, @NotNull OfflinePlayer player) {
+        FPlayer fviewer = getFPlayer(viewer);
+        FPlayer fplayer = getFPlayer(player);
+        if (fviewer == null || fplayer == null) {
             return null;
         }
 
-        Faction viewerFaction = getFactionFor(viewer);
-        Faction playerFaction = getFactionFor(player);
+        Faction viewerFaction = fviewer.getFaction();
+        Faction playerFaction = fplayer.getFaction();
         if (viewerFaction == null || playerFaction == null) {
             return null;
         }
 
         Relation relation = viewerFaction.getRelationTo(playerFaction);
-        switch (relation) {
-            case ALLY:
-                return ChatColor.LIGHT_PURPLE;
-            case ENEMY:
-                return ChatColor.RED;
-            case TRUCE:
-                return ChatColor.YELLOW;
-            case NEUTRAL:
-                return ChatColor.WHITE;
-            default:
-                break;
-        }
-
-        return null;
+        return getChatColor(relation);
     }
 
     @Override
-    public String getRolePrefix(OfflinePlayer player) {
-        UUID playerId = player.getUniqueId();
-        FPlayer factionPlayer = PlayerManager.INSTANCE.getFPlayer(playerId);
-        if (factionPlayer == null) {
+    public @Nullable String getRolePrefix(@NotNull OfflinePlayer player) {
+        FPlayer fplayer = getFPlayer(player);
+        if (fplayer == null) {
             return null;
         }
 
-        CustomRole role = factionPlayer.getRole();
+        CustomRole role = fplayer.getRole();
         return role.getChatTag();
     }
 
-    @Override
-    public Set<UUID> getMembersForFactionAt(Location location) {
-        Faction locationFaction = getFactionAt(location);
-        return getMembersForFaction(locationFaction);
+    private @Nullable FPlayer getFPlayer(@NotNull OfflinePlayer player) {
+        UUID playerId = player.getUniqueId();
+        return PlayerManager.INSTANCE.getFPlayer(playerId);
     }
 
-    @Override
-    public Set<UUID> getMembersForFactionOf(OfflinePlayer player) {
-        Faction playerFaction = getFactionFor(player);
-        return getMembersForFaction(playerFaction);
-    }
-
-    private Set<UUID> getMembersForFaction(Faction faction) {
+    private @Nullable FactionWrapper wrap(Faction faction) {
         if (faction == null) {
-            return Collections.emptySet();
+            return null;
         }
 
-        Set<UUID> factionMemberSet = faction.getFactionMembers();
-        return Collections.unmodifiableSet(factionMemberSet);
+        return new FactionWrapper_X(faction);
+    }
+
+    private @Nullable ChatColor getChatColor(Relation relation) {
+        if (relation == Relation.ALLY) {
+            return ChatColor.LIGHT_PURPLE;
+        }
+
+        if (relation == Relation.ENEMY) {
+            return ChatColor.RED;
+        }
+
+        if (relation == Relation.TRUCE) {
+            return ChatColor.YELLOW;
+        }
+
+        if (relation == Relation.NEUTRAL) {
+            return ChatColor.WHITE;
+        }
+
+        return null;
     }
 }
