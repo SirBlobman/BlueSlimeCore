@@ -2,6 +2,7 @@ package com.github.sirblobman.api.nbt;
 
 import java.util.Set;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,7 +89,9 @@ public interface CustomNbtContainer {
      * @throws IllegalArgumentException if no suitable adapter will be found for
      *                                  the {@link CustomNbtType#getPrimitiveType()}
      */
-    @NotNull <T, Z> Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type, @NotNull Z defaultValue);
+
+    @Contract("_, _, null -> null")
+    <T, Z> @Nullable Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type, @Nullable Z defaultValue);
 
     /**
      * Get a set of keys present.
@@ -121,6 +124,5 @@ public interface CustomNbtContainer {
      *
      * @return the tag context
      */
-    @NotNull
-    CustomNbtContext getContext();
+    @NotNull CustomNbtContext getContext();
 }

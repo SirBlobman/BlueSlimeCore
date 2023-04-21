@@ -37,7 +37,7 @@ public final class CustomNbtTypes {
     public static CustomNbtType<CustomNbtContainer, CustomNbtContainer> TAG_CONTAINER;
 
     /*
-        Real Custom NBT Types
+        Built-in Custom Types
      */
     public static CustomNbtTypeUUID UUID;
     public static CustomNbtTypeBoolean BOOLEAN;

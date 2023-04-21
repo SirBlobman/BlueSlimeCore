@@ -2,6 +2,8 @@ package com.github.sirblobman.api.nms;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -11,64 +13,64 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.minecraft.server.v1_16_R3.IChatBaseComponent;
-import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_16_R3.ChatComponentText;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 
 import com.github.sirblobman.api.utility.Validate;
 
-import com.google.gson.JsonObject;
-
-public class EntityHandler_1_16_R3 extends EntityHandler {
-    public EntityHandler_1_16_R3(JavaPlugin plugin) {
+public final class EntityHandler_1_16_R3 extends EntityHandler {
+    public EntityHandler_1_16_R3(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public String getName(Entity entity) {
+    public @NotNull String getName(@NotNull Entity entity) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
             return player.getName();
         }
 
         String customName = entity.getCustomName();
-        return (customName == null ? entity.getName() : customName);
+        return (customName != null ? customName : entity.getName());
     }
 
     @Override
-    public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
-        if (entity instanceof CraftEntity) {
-            CraftEntity craftEntity = (CraftEntity) entity;
-            net.minecraft.server.v1_16_R3.Entity nmsEntity = craftEntity.getHandle();
+    public void setCustomNameTextOnly(@NotNull Entity entity, String text, boolean visible) {
+        if (!(entity instanceof CraftEntity)) {
+            return;
+        }
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("text", text);
+        CraftEntity craftEntity = (CraftEntity) entity;
+        net.minecraft.server.v1_16_R3.Entity nmsEntity = craftEntity.getHandle();
 
-            IChatBaseComponent chatComponent = ChatSerializer.a(jsonObject);
-            nmsEntity.setCustomName(chatComponent);
-            nmsEntity.setCustomNameVisible(visible);
+        ChatComponentText component = new ChatComponentText(text);
+        nmsEntity.setCustomName(component);
+        nmsEntity.setCustomNameVisible(visible);
+    }
+
+    @Override
+    public double getMaxHealth(@NotNull LivingEntity entity) {
+        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (attribute != null) {
+            return attribute.getValue();
+        }
+
+        return 0.0D;
+    }
+
+    @Override
+    public void setMaxHealth(@NotNull LivingEntity entity, double maxHealth) {
+        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (attribute != null) {
+            attribute.setBaseValue(maxHealth);
         }
     }
 
     @Override
-    public double getMaxHealth(LivingEntity entity) {
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        return (attribute == null ? 0.0D : attribute.getValue());
-    }
-
-    @Override
-    public void setMaxHealth(LivingEntity entity, double maxHealth) {
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attribute != null) attribute.setBaseValue(maxHealth);
-    }
-
-    @Override
-    public <T extends Entity> T spawnEntity(Location location, Class<T> entityClass, Consumer<T> beforeSpawn) {
-        Validate.notNull(location, "location must not be null!");
-        Validate.notNull(entityClass, "entityClass must not be null!");
-
+    public <T extends Entity> @NotNull T spawnEntity(@NotNull Location location, @NotNull Class<T> entityClass,
+                                                     @NotNull Consumer<T> beforeSpawn) {
         World world = location.getWorld();
-        if (world == null) throw new IllegalArgumentException("location must have a valid bukkit world!");
+        Validate.notNull(world, "location must have a valid world!");
 
         org.bukkit.util.Consumer<T> bukkitConsumer = beforeSpawn::accept;
         return world.spawn(location, entityClass, bukkitConsumer);

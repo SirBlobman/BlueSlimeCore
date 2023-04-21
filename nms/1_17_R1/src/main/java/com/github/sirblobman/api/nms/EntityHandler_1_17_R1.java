@@ -2,6 +2,8 @@ package com.github.sirblobman.api.nms;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -16,40 +18,45 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 
 import com.github.sirblobman.api.utility.Validate;
 
-public class EntityHandler_1_17_R1 extends EntityHandler {
-    public EntityHandler_1_17_R1(JavaPlugin plugin) {
+public final class EntityHandler_1_17_R1 extends EntityHandler {
+    public EntityHandler_1_17_R1(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public String getName(Entity entity) {
+    public @NotNull String getName(@NotNull Entity entity) {
         if (entity instanceof Player player) {
             return player.getName();
         }
 
-        String entityName = entity.getName();
         String customName = entity.getCustomName();
-        return (customName == null ? entityName : customName);
+        return (customName != null ? customName : entity.getName());
     }
 
     @Override
-    public void setCustomNameTextOnly(Entity entity, String text, boolean visible) {
-        if (entity instanceof CraftEntity craftEntity) {
-            net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
-            TextComponent textComponent = new TextComponent(text);
-            nmsEntity.setCustomName(textComponent);
-            nmsEntity.setCustomNameVisible(visible);
+    public void setCustomNameTextOnly(@NotNull Entity entity, String text, boolean visible) {
+        if (!(entity instanceof CraftEntity craftEntity)) {
+            return;
         }
+
+        net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
+        TextComponent component = new TextComponent(text);
+        nmsEntity.setCustomName(component);
+        nmsEntity.setCustomNameVisible(visible);
     }
 
     @Override
-    public double getMaxHealth(LivingEntity entity) {
+    public double getMaxHealth(@NotNull LivingEntity entity) {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        return (attribute == null ? 0.0D : attribute.getValue());
+        if (attribute != null) {
+            return attribute.getValue();
+        }
+
+        return 0.0D;
     }
 
     @Override
-    public void setMaxHealth(LivingEntity entity, double maxHealth) {
+    public void setMaxHealth(@NotNull LivingEntity entity, double maxHealth) {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (attribute != null) {
             attribute.setBaseValue(maxHealth);
@@ -57,12 +64,12 @@ public class EntityHandler_1_17_R1 extends EntityHandler {
     }
 
     @Override
-    public <T extends Entity> T spawnEntity(Location location, Class<T> entityClass, Consumer<T> beforeSpawn) {
-        Validate.notNull(location, "location must not be null!");
-        Validate.notNull(entityClass, "entityClass must not be null!");
-
+    public <T extends Entity> @NotNull T spawnEntity(@NotNull Location location, @NotNull Class<T> entityClass,
+                                                     @NotNull Consumer<T> beforeSpawn) {
         World world = location.getWorld();
-        if (world == null) throw new IllegalArgumentException("location must have a valid bukkit world!");
-        return world.spawn(location, entityClass, beforeSpawn::accept);
+        Validate.notNull(world, "location must have a valid world!");
+
+        org.bukkit.util.Consumer<T> bukkitConsumer = beforeSpawn::accept;
+        return world.spawn(location, entityClass, bukkitConsumer);
     }
 }

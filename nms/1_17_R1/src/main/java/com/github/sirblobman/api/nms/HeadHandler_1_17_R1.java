@@ -1,10 +1,15 @@
 package com.github.sirblobman.api.nms;
 
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,73 +21,72 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
-import com.github.sirblobman.api.utility.ItemUtility;
 
 
-public class HeadHandler_1_17_R1 extends HeadHandler {
-    public HeadHandler_1_17_R1(JavaPlugin plugin) {
+public final class HeadHandler_1_17_R1 extends HeadHandler {
+    public HeadHandler_1_17_R1(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public ItemStack getPlayerHead(OfflinePlayer player) {
-        ItemStack itemStack = XMaterial.PLAYER_HEAD.parseItem();
-        if (ItemUtility.isAir(itemStack)) {
-            throw new IllegalStateException("Failed to create PLAYER_HEAD ItemStack!");
+    public @NotNull ItemStack getPlayerHead(@NotNull OfflinePlayer player) {
+        ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+        if (item == null) {
+            return new ItemStack(Material.AIR);
         }
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        ItemMeta itemMeta = item.getItemMeta();
         if (!(itemMeta instanceof SkullMeta skullMeta)) {
-            throw new IllegalStateException("PLAYER_HEAD ItemStack doesn't have SkullMeta.");
+            return item;
         }
 
         skullMeta.setOwningPlayer(player);
-        itemStack.setItemMeta(skullMeta);
-        return itemStack;
+        item.setItemMeta(skullMeta);
+        return item;
     }
 
     @Override
-    public ItemStack getBase64Head(String base64) {
-        byte[] base64ByteArray = base64.getBytes();
-        UUID uuid = UUID.nameUUIDFromBytes(base64ByteArray);
-        return getBase64Head(base64, uuid);
+    public @NotNull ItemStack getBase64Head(@NotNull String base64) {
+        byte[] base64Bytes = base64.getBytes(StandardCharsets.UTF_8);
+        UUID idFromBytes = UUID.nameUUIDFromBytes(base64Bytes);
+        return getBase64Head(base64, idFromBytes);
     }
 
     @Override
-    public ItemStack getBase64Head(String base64, UUID customId) {
+    public @NotNull ItemStack getBase64Head(@NotNull String base64, @Nullable UUID customId) {
         GameProfile gameProfile = new GameProfile(customId, "custom");
         Property property = new Property("textures", base64);
 
-        PropertyMap properties = gameProfile.getProperties();
-        properties.put("textures", property);
+        PropertyMap propertyMap = gameProfile.getProperties();
+        propertyMap.put("textures", property);
         return createGameProfileHead(gameProfile);
     }
 
-    private ItemStack createGameProfileHead(GameProfile gameProfile) {
+    private @NotNull ItemStack createGameProfileHead(@NotNull GameProfile profile) {
+        ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+        if (item == null) {
+            return new ItemStack(Material.AIR);
+        }
+
+        ItemMeta itemMeta = item.getItemMeta();
+        if (!(itemMeta instanceof SkullMeta skullMeta)) {
+            return item;
+        }
+
+        setGameProfile(skullMeta, profile);
+        item.setItemMeta(skullMeta);
+        return item;
+    }
+
+    private void setGameProfile(@NotNull SkullMeta meta, @NotNull GameProfile profile) {
         try {
-            ItemStack itemStack = XMaterial.PLAYER_HEAD.parseItem();
-            if (ItemUtility.isAir(itemStack)) {
-                throw new IllegalStateException("Failed to create PLAYER_HEAD ItemStack!");
-            }
-
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            if (!(itemMeta instanceof SkullMeta skullMeta)) {
-                throw new IllegalStateException("PLAYER_HEAD ItemStack doesn't have SkullMeta.");
-            }
-
-            Class<? extends SkullMeta> class_SkullMeta = skullMeta.getClass();
-            Method method_setProfile = class_SkullMeta.getDeclaredMethod("setProfile", GameProfile.class);
+            Class<?> metaClass = Class.forName("org.bukkit.craftbukkit.v1_17_R1.inventory.CraftMetaSkull");
+            Method method_setProfile = metaClass.getDeclaredMethod("setProfile", GameProfile.class);
             method_setProfile.setAccessible(true);
-
-            method_setProfile.invoke(skullMeta, gameProfile);
-            method_setProfile.setAccessible(false);
-
-            itemStack.setItemMeta(skullMeta);
-            return itemStack;
-        } catch (Exception ex) {
-            Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING, "Failed to create a GameProfile head because an error occurred:", ex);
-            return null;
+            method_setProfile.invoke(meta, profile);
+        } catch (ReflectiveOperationException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to set GameProfile on a SkullMeta:", ex);
         }
     }
 }

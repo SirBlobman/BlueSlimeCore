@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.minecraft.server.v1_8_R3.NBTBase;
 import net.minecraft.server.v1_8_R3.NBTTagByte;
 import net.minecraft.server.v1_8_R3.NBTTagByteArray;
@@ -24,10 +26,15 @@ import com.google.common.primitives.Primitives;
 import org.apache.commons.lang3.Validate;
 
 public final class CustomNbtTypeRegistry_1_8_R3 {
-    private final Function<Class<?>, CustomNbtTagAdapter_1_8_R3<?, ?>> CREATE_ADAPTER = this::createAdapter;
-    private final Map<Class<?>, CustomNbtTagAdapter_1_8_R3<?, ?>> adapters = new HashMap<>();
+    private final Function<Class<?>, Adapter_1_8_R3<?, ?>> createAdapter;
+    private final Map<Class<?>, Adapter_1_8_R3<?, ?>> adapters;
 
-    private <T> CustomNbtTagAdapter_1_8_R3<?, ?> createAdapter(Class<T> type) {
+    public CustomNbtTypeRegistry_1_8_R3() {
+        this.createAdapter = this::createAdapter;
+        this.adapters = new HashMap<>();
+    }
+
+    private <T> @NotNull Adapter_1_8_R3<?, ?> createAdapter(@NotNull Class<T> type) {
         if (!Primitives.isWrapperType(type)) {
             type = Primitives.wrap(type);
         }
@@ -60,12 +67,14 @@ public final class CustomNbtTypeRegistry_1_8_R3 {
             return createAdapter(CustomNbtContainer_1_8_R3.class, NBTTagCompound.class,
                     CustomNbtContainer_1_8_R3::toTagCompound, this::tagToContainer);
         } else {
-            throw new IllegalArgumentException("Could not find a valid CustomNbtTagAdapter implementation for the " +
-                    "requested type " + type.getSimpleName());
+            String simpleName = type.getSimpleName();
+            String message = ("Could not find a valid CustomNbtTagAdapter implementation for the requested type "
+                    + simpleName);
+            throw new IllegalArgumentException(message);
         }
     }
 
-    private CustomNbtContainer_1_8_R3 tagToContainer(NBTTagCompound tag) {
+    private @NotNull CustomNbtContainer_1_8_R3 tagToContainer(@NotNull NBTTagCompound tag) {
         CustomNbtContainer_1_8_R3 container = new CustomNbtContainer_1_8_R3(this);
         Set<String> keySet = tag.c();
         for (String key : keySet) {
@@ -76,7 +85,7 @@ public final class CustomNbtTypeRegistry_1_8_R3 {
         return container;
     }
 
-    private NBTTagString longArrayToNBT(long[] longArray) {
+    private @NotNull NBTTagString longArrayToNBT(long[] longArray) {
         StringBuilder builder = new StringBuilder();
         for (long part : longArray) {
             if (builder.length() > 0) {
@@ -90,7 +99,7 @@ public final class CustomNbtTypeRegistry_1_8_R3 {
         return new NBTTagString(value);
     }
 
-    private long[] nbtToLongArray(NBTTagString nbt) {
+    private long @NotNull [] nbtToLongArray(@NotNull NBTTagString nbt) {
         String string = nbt.a_();
         String[] split = string.split(Pattern.quote(";"));
         int splitLength = split.length;
@@ -108,23 +117,24 @@ public final class CustomNbtTypeRegistry_1_8_R3 {
         }
     }
 
-    private <T, Z extends NBTBase> CustomNbtTagAdapter_1_8_R3<T, Z> createAdapter(Class<T> primitiveType,
-                                                                                  Class<Z> nbtBaseType,
-                                                                                  Function<T, Z> builder,
-                                                                                  Function<Z, T> extractor) {
-        return new CustomNbtTagAdapter_1_8_R3<>(primitiveType, nbtBaseType, builder, extractor);
+    private <T, Z extends NBTBase> @NotNull Adapter_1_8_R3<T, Z> createAdapter(@NotNull Class<T> primitiveType,
+                                                                               @NotNull Class<Z> nbtBaseType,
+                                                                               @NotNull Function<T, Z> builder,
+                                                                               @NotNull Function<Z, T> extractor) {
+        return new Adapter_1_8_R3<>(primitiveType, nbtBaseType, builder, extractor);
     }
 
-    public <T> NBTBase wrap(Class<T> type, T value) {
-        return this.adapters.computeIfAbsent(type, this.CREATE_ADAPTER).build(value);
+    public <T> @NotNull NBTBase wrap(@NotNull Class<T> type, @NotNull T value) {
+        return this.adapters.computeIfAbsent(type, this.createAdapter).build(value);
     }
 
-    public <T> boolean isInstanceOf(Class<T> type, NBTBase base) {
-        return this.adapters.computeIfAbsent(type, this.CREATE_ADAPTER).isInstance(base);
+    public <T> boolean isInstanceOf(@NotNull Class<T> type, @NotNull NBTBase base) {
+        return this.adapters.computeIfAbsent(type, this.createAdapter).isInstance(base);
     }
 
-    public <T> T extract(Class<T> type, NBTBase tag) throws ClassCastException, IllegalArgumentException {
-        CustomNbtTagAdapter_1_8_R3<?, ?> adapter = this.adapters.computeIfAbsent(type, this.CREATE_ADAPTER);
+    public <T> @NotNull T extract(@NotNull Class<T> type, @NotNull NBTBase tag)
+            throws ClassCastException, IllegalArgumentException {
+        Adapter_1_8_R3<?, ?> adapter = this.adapters.computeIfAbsent(type, this.createAdapter);
         Validate.isTrue(adapter.isInstance(tag), "`The found tag instance cannot store %s as it is a %s",
                 type.getSimpleName(), tag.getClass().getSimpleName());
         Object foundValue = adapter.extract(tag);

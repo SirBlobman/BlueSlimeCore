@@ -7,36 +7,31 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.server.v1_12_R1.NBTBase;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
-
-@SuppressWarnings("NullableProblems")
 public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
     private final Map<String, NBTBase> customDataTags;
     private final CustomNbtTypeRegistry_1_12_R1 registry;
     private final CustomNbtContext_1_12_R1 adapterContext;
 
-    public CustomNbtContainer_1_12_R1(Map<String, NBTBase> customTags, CustomNbtTypeRegistry_1_12_R1 registry) {
+    public CustomNbtContainer_1_12_R1(@NotNull Map<String, NBTBase> customTags,
+                                      @NotNull CustomNbtTypeRegistry_1_12_R1 registry) {
         this(registry);
         this.customDataTags.putAll(customTags);
     }
 
-    public CustomNbtContainer_1_12_R1(CustomNbtTypeRegistry_1_12_R1 registry) {
+    public CustomNbtContainer_1_12_R1(@NotNull CustomNbtTypeRegistry_1_12_R1 registry) {
         this.customDataTags = new HashMap<>();
         this.registry = registry;
         this.adapterContext = new CustomNbtContext_1_12_R1(this.registry);
     }
 
     @Override
-    public <T, Z> void set(String key, CustomNbtType<T, Z> type, Z value) {
-        Validate.notNull(key, "key must not be null!");
-        Validate.notNull(type, "type must not be null!");
-        Validate.notNull(value, "value must not be null!");
-
+    public <T, Z> void set(@NotNull String key, @NotNull CustomNbtType<T, Z> type, @NotNull Z value) {
         Class<T> primitiveType = type.getPrimitiveType();
         T primitiveValue = type.toPrimitive(value, this.adapterContext);
         NBTBase wrap = this.registry.wrap(primitiveType, primitiveValue);
@@ -44,10 +39,7 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
     }
 
     @Override
-    public <T, Z> boolean has(String key, CustomNbtType<T, Z> type) {
-        Validate.notNull(key, "key must not be null!");
-        Validate.notNull(type, "type must not be null!");
-
+    public <T, Z> boolean has(@NotNull String key, @NotNull CustomNbtType<T, Z> type) {
         NBTBase value = this.customDataTags.get(key);
         if (value == null) {
             return false;
@@ -58,10 +50,7 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
     }
 
     @Override
-    public <T, Z> Z get(String key, CustomNbtType<T, Z> type) {
-        Validate.notNull(key, "key must not be null!");
-        Validate.notNull(type, "type must not be null!");
-
+    public <T, Z> @Nullable Z get(@NotNull String key, @NotNull CustomNbtType<T, Z> type) {
         NBTBase value = this.customDataTags.get(key);
         if (value == null) {
             return null;
@@ -73,14 +62,14 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
     }
 
     @Override
-    public <T, Z> Z getOrDefault(String key, CustomNbtType<T, Z> type, Z defaultValue) {
+    public <T, Z> @Nullable Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type,
+                                           @Nullable Z defaultValue) {
         Z value = get(key, type);
         return (value != null ? value : defaultValue);
     }
 
     @Override
-    public void remove(String key) {
-        Validate.notNull(key, "key must not be null!");
+    public void remove(@NotNull String key) {
         this.customDataTags.remove(key);
     }
 
@@ -96,7 +85,7 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
     }
 
     @Override
-    public CustomNbtContext getContext() {
+    public @NotNull CustomNbtContext getContext() {
         return this.adapterContext;
     }
 
@@ -111,7 +100,7 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
         }
     }
 
-    public NBTTagCompound toTagCompound() {
+    public @NotNull NBTTagCompound toTagCompound() {
         NBTTagCompound tag = new NBTTagCompound();
         Set<Entry<String, NBTBase>> entrySet = this.customDataTags.entrySet();
 
@@ -124,29 +113,12 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
         return tag;
     }
 
-    public void put(String key, NBTBase base) {
+    public void put(@NotNull String key, @NotNull NBTBase base) {
         this.customDataTags.put(key, base);
     }
 
-    public void putAll(Map<String, NBTBase> map) {
-        this.customDataTags.putAll(map);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void putAll(NBTTagCompound compound) {
-        Set<String> keySet = (Set<String>) compound.c();
-        for (String key : keySet) {
-            NBTBase value = compound.get(key);
-            this.customDataTags.put(key, value);
-        }
-    }
-
-    public Map<String, NBTBase> getRaw() {
+    public @NotNull Map<String, NBTBase> getRaw() {
         return this.customDataTags;
-    }
-
-    public CustomNbtTypeRegistry_1_12_R1 getDataTagTypeRegistry() {
-        return this.registry;
     }
 
     public int hashCode() {
@@ -154,8 +126,4 @@ public final class CustomNbtContainer_1_12_R1 implements CustomNbtContainer {
         hashCode += this.customDataTags.hashCode();
         return hashCode;
     }
-
-//    public Map<String, Object> serialize() {
-//        return (Map)CraftNBTTagConfigSerializer.serialize(this.toTagCompound());
-//    }
 }

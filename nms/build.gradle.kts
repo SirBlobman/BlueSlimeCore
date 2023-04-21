@@ -1,4 +1,4 @@
-allprojects {
+subprojects {
     repositories {
         maven("https://nexus.sirblobman.xyz/private/") {
             credentials {

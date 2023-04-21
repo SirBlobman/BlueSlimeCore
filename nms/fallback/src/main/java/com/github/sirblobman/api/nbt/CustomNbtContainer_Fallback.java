@@ -37,7 +37,8 @@ public final class CustomNbtContainer_Fallback implements CustomNbtContainer {
     }
 
     @Override
-    public <T, Z> @NotNull Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type, @NotNull Z defaultValue) {
+    public <T, Z> @NotNull Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type,
+                                          @NotNull Z defaultValue) {
         return defaultValue;
     }
 

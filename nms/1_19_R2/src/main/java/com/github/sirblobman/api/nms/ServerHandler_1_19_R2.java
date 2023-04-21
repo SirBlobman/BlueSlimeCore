@@ -2,7 +2,8 @@ package com.github.sirblobman.api.nms;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,15 +17,15 @@ public final class ServerHandler_1_19_R2 extends ServerHandler {
 
     @Override
     public int getMaxWorldSize() {
-        Server server = Bukkit.getServer();
+        Server server = getServer();
         return server.getMaxWorldSize();
     }
 
     @Override
-    public double[] getServerTpsValues() {
-        Server server = Bukkit.getServer();
+    public double @NotNull [] getServerTpsValues() {
+        Server server = getServer();
         if (!(server instanceof CraftServer craftServer)) {
-            return new double[]{20.0D, 20.0D, 20.0D};
+            return new double[] {20.0D, 20.0D, 20.0D};
         }
 
         MinecraftServer minecraftServer = craftServer.getServer();

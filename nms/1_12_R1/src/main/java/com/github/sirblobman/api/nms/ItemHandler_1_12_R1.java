@@ -2,18 +2,24 @@ package com.github.sirblobman.api.nms;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.server.v1_12_R1.Item;
-import net.minecraft.server.v1_12_R1.ItemStack;
 import net.minecraft.server.v1_12_R1.MinecraftKey;
 import net.minecraft.server.v1_12_R1.MojangsonParseException;
 import net.minecraft.server.v1_12_R1.MojangsonParser;
@@ -27,200 +33,200 @@ import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_1_12_R1;
 import com.github.sirblobman.api.nbt.CustomNbtTypeRegistry_1_12_R1;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.utility.ItemUtility;
 
-import org.jetbrains.annotations.Contract;
+public final class ItemHandler_1_12_R1 extends ItemHandler {
+    private final CustomNbtTypeRegistry_1_12_R1 registry;
 
-public class ItemHandler_1_12_R1 extends ItemHandler {
-    private final CustomNbtTypeRegistry_1_12_R1 nbtRegistry;
-
-    public ItemHandler_1_12_R1(JavaPlugin plugin) {
+    public ItemHandler_1_12_R1(@NotNull JavaPlugin plugin) {
         super(plugin);
-        this.nbtRegistry = new CustomNbtTypeRegistry_1_12_R1();
+        this.registry = new CustomNbtTypeRegistry_1_12_R1();
     }
 
     @Override
-    public String getLocalizedName(org.bukkit.inventory.ItemStack item) {
-        if (item == null) {
-            return "Air";
-        }
-
+    public @NotNull String getLocalizedName(@NotNull ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta != null && itemMeta.hasDisplayName()) {
             return itemMeta.getDisplayName();
         }
 
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem.getName();
     }
 
     @Override
-    public String getKeyString(org.bukkit.inventory.ItemStack item) {
-        if (item == null) {
+    public @NotNull String getKeyString(@NotNull ItemStack item) {
+        net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+        Item nmsItem = nmsStack.getItem();
+
+        MinecraftKey nmsRegistryKey = Item.REGISTRY.b(nmsItem);
+        if (nmsRegistryKey == null) {
             return "minecraft:air";
         }
 
-        ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
-        Item nmsItem = nmsItemStack.getItem();
-
-        MinecraftKey minecraftKey = Item.REGISTRY.b(nmsItem);
-        if (minecraftKey == null) {
-            return "minecraft:air";
-        }
-
-        return minecraftKey.toString();
+        return nmsRegistryKey.toString();
     }
 
     @Override
-    public String toNBT(org.bukkit.inventory.ItemStack item) {
-        NBTTagCompound nbtData = new NBTTagCompound();
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        nmsItem.save(nbtData);
-        return nbtData.toString();
+    public @NotNull String toNBT(@NotNull ItemStack item) {
+        NBTTagCompound tag = new NBTTagCompound();
+        net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        nmsItem.save(tag);
+        return tag.toString();
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack fromNBT(String string) {
+    public @NotNull ItemStack fromNBT(@NotNull String string) {
         try {
-            NBTTagCompound nbtData = MojangsonParser.parse(string);
-            ItemStack nmsItem = new ItemStack(nbtData);
+            NBTTagCompound tag = MojangsonParser.parse(string);
+            net.minecraft.server.v1_12_R1.ItemStack nmsItem = new net.minecraft.server.v1_12_R1.ItemStack(tag);
             return CraftItemStack.asBukkitCopy(nmsItem);
-        } catch (MojangsonParseException ex) {
-            JavaPlugin plugin = getPlugin();
-            Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "Failed to parse an NBT string to an item, returning AIR...", ex);
-            return new org.bukkit.inventory.ItemStack(Material.AIR);
+        } catch(MojangsonParseException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to parse an NBT string to an ItemStack:", ex);
+            logger.warning("The item will be replaced with air.");
+            return new ItemStack(Material.AIR);
         }
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack fromBase64String(String string) {
-        if (string == null || string.isEmpty()) {
-            return null;
+    public @NotNull String toBase64String(@NotNull ItemStack item) {
+        NBTTagCompound tag = new NBTTagCompound();
+        net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        nmsItem.save(tag);
+
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            NBTCompressedStreamTools.a(tag, outputStream);
+            byte[] byteArray = outputStream.toByteArray();
+            Encoder encoder = Base64.getEncoder();
+            return encoder.encodeToString(byteArray);
+        } catch (IOException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to encode an item to a string:", ex);
+            logger.warning("The item will not be saved properly.");
+            return "";
+        }
+    }
+
+    @Override
+    public @NotNull ItemStack fromBase64String(@NotNull String string) {
+        if (string.isEmpty()) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Decoded an empty string to air.");
+            return new ItemStack(Material.AIR);
         }
 
-        NBTTagCompound nbtTagCompound;
-        byte[] decode = Base64.getDecoder().decode(string);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decode);
-
-        try {
-            nbtTagCompound = NBTCompressedStreamTools.a(byteArrayInputStream);
-        } catch (Exception ex) {
-            Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING, "Failed to decode an item from a string because an error occurred:", ex);
-            return null;
+        Decoder decoder = Base64.getDecoder();
+        byte[] byteArray = decoder.decode(string);
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray)) {
+            NBTTagCompound tag = NBTCompressedStreamTools.a(inputStream);
+            net.minecraft.server.v1_12_R1.ItemStack nmsItem = new net.minecraft.server.v1_12_R1.ItemStack(tag);
+            return CraftItemStack.asBukkitCopy(nmsItem);
+        } catch(IOException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to encode an item from a string:", ex);
+            logger.warning("The item will be loaded as air.");
+            return new ItemStack(Material.AIR);
         }
+    }
 
-        ItemStack nmsItem = new ItemStack(nbtTagCompound);
+    @Override
+    public @NotNull CustomNbtContainer createNewCustomNbtContainer() {
+        return new CustomNbtContainer_1_12_R1(this.registry);
+    }
+
+    @Override
+    public @NotNull CustomNbtContainer getCustomNbt(@NotNull ItemStack item) {
+        net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        NBTTagCompound tag = createNBT(nmsItem);
+
+        JavaPlugin plugin = getPlugin();
+        String pluginName = plugin.getName();
+
+        NBTTagCompound compound = tag.getCompound(pluginName);
+        return this.registry.extract(CustomNbtContainer.class, compound);
+    }
+
+    @Override
+    public @NotNull ItemStack setCustomNbt(@NotNull ItemStack item, @NotNull CustomNbtContainer container) {
+        net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        NBTTagCompound tag = createNBT(nmsItem);
+
+        JavaPlugin plugin = getPlugin();
+        String pluginName = plugin.getName();
+
+        NBTBase wrap = this.registry.wrap(CustomNbtContainer.class, container);
+        tag.set(pluginName, wrap);
+
+        nmsItem.setTag(tag);
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
-    @Override
-    public String toBase64String(org.bukkit.inventory.ItemStack item) {
-        if (ItemUtility.isAir(item)) {
-            return null;
+    private @NotNull NBTTagCompound createNBT(@NotNull net.minecraft.server.v1_12_R1.ItemStack nmsItem) {
+        if (nmsItem.hasTag()) {
+            NBTTagCompound tag = nmsItem.getTag();
+            if (tag != null) {
+                return tag;
+            }
         }
 
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        CraftItemStack.asNMSCopy(item).save(nbtTagCompound);
-
-        try {
-            NBTCompressedStreamTools.a(nbtTagCompound, byteArrayOutputStream);
-        } catch (Exception ex) {
-            Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING, "Failed to encode an item to a string because an error occurred:", ex);
-            return null;
-        }
-
-        byte[] encode = byteArrayOutputStream.toByteArray();
-        return Base64.getEncoder().encodeToString(encode);
+        return new NBTTagCompound();
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item, Component displayName) {
+    public @Nullable Component getDisplayName(@NotNull ItemStack item) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta == null || !itemMeta.hasDisplayName()) {
+            return null;
+        }
+
+        String legacyName = itemMeta.getDisplayName();
+        return ComponentHelper.toComponent(legacyName);
+    }
+
+    @Override
+    public @NotNull ItemStack setDisplayName(@NotNull ItemStack item, @Nullable Component displayName) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return item;
         }
 
-        String legacy = ComponentHelper.toLegacy(displayName);
-        itemMeta.setDisplayName(legacy);
+        if (displayName == null) {
+            itemMeta.setDisplayName(null);
+        } else {
+            String legacyName = ComponentHelper.toLegacy(displayName);
+            itemMeta.setDisplayName(legacyName);
+        }
 
         item.setItemMeta(itemMeta);
         return item;
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
-                                                  List<Component> lore) {
+    public @Nullable List<Component> getLore(@NotNull ItemStack item) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta == null || !itemMeta.hasLore()) {
+            return null;
+        }
+
+        List<String> legacyLore = itemMeta.getLore();
+        return legacyLore.stream().map(ComponentHelper::toComponent).collect(Collectors.toList());
+    }
+
+    @Override
+    public @NotNull ItemStack setLore(@NotNull ItemStack item, @Nullable List<Component> lore) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return item;
         }
 
-        List<String> legacyLore = new ArrayList<>();
-        for (Component line : lore) {
-            String legacy = ComponentHelper.toLegacy(line);
-            legacyLore.add(legacy);
+        if (lore == null) {
+            itemMeta.setLore(null);
+        } else {
+            List<String> legacyLore = lore.stream().map(ComponentHelper::toLegacy).collect(Collectors.toList());
+            itemMeta.setLore(legacyLore);
         }
 
-        itemMeta.setLore(legacyLore);
         item.setItemMeta(itemMeta);
         return item;
-    }
-
-    @Override
-    public CustomNbtContainer createNewCustomNbtContainer() {
-        return new CustomNbtContainer_1_12_R1(this.nbtRegistry);
-    }
-
-    @Override
-    public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
-                                                       CustomNbtContainer customNbtContainer) {
-        if (item == null) {
-            return null;
-        }
-
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = createNBT(nmsItem);
-
-        JavaPlugin plugin = getPlugin();
-        String pluginName = plugin.getName();
-
-        NBTBase wrap = this.nbtRegistry.wrap(CustomNbtContainer.class, customNbtContainer);
-        nbtData.set(pluginName, wrap);
-
-        nmsItem.setTag(nbtData);
-        return CraftItemStack.asBukkitCopy(nmsItem);
-    }
-
-    @Override
-    public CustomNbtContainer getCustomNbt(org.bukkit.inventory.ItemStack item) {
-        if (item == null) {
-            return null;
-        }
-
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbtData = createNBT(nmsItem);
-
-        JavaPlugin plugin = getPlugin();
-        String pluginName = plugin.getName();
-        NBTTagCompound compound = nbtData.getCompound(pluginName);
-        return this.nbtRegistry.extract(CustomNbtContainer.class, compound);
-    }
-
-    @Contract("null -> null")
-    private NBTTagCompound createNBT(ItemStack nmsItem) {
-        if (nmsItem == null) {
-            return null;
-        }
-
-        if (!nmsItem.hasTag()) {
-            return new NBTTagCompound();
-        }
-
-        NBTTagCompound tag = nmsItem.getTag();
-        return (tag == null ? new NBTTagCompound() : tag);
     }
 }

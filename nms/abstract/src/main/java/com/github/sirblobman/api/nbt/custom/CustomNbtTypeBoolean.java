@@ -1,27 +1,28 @@
 package com.github.sirblobman.api.nbt.custom;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.sirblobman.api.nbt.CustomNbtContext;
 import com.github.sirblobman.api.nbt.CustomNbtType;
 
-@SuppressWarnings("NullableProblems")
 public final class CustomNbtTypeBoolean implements CustomNbtType<Byte, Boolean> {
     @Override
-    public Class<Byte> getPrimitiveType() {
+    public @NotNull Class<Byte> getPrimitiveType() {
         return Byte.class;
     }
 
     @Override
-    public Class<Boolean> getComplexType() {
+    public @NotNull Class<Boolean> getComplexType() {
         return Boolean.class;
     }
 
     @Override
-    public Byte toPrimitive(Boolean complex, CustomNbtContext context) {
+    public @NotNull Byte toPrimitive(@NotNull Boolean complex, @NotNull CustomNbtContext context) {
         return (byte) (complex ? 1 : 0);
     }
 
     @Override
-    public Boolean fromPrimitive(Byte primitive, CustomNbtContext context) {
-        return (primitive == 1);
+    public @NotNull Boolean fromPrimitive(@NotNull Byte primitive, @NotNull CustomNbtContext context) {
+        return (primitive >= 1);
     }
 }

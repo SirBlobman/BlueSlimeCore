@@ -8,8 +8,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.bossbar.BossBarHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
-import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
+
+import org.jetbrains.annotations.NotNull;
 
 public final class MultiVersionHandler {
     private final JavaPlugin plugin;
@@ -22,21 +23,34 @@ public final class MultiVersionHandler {
     private PlayerHandler playerHandler;
     private ServerHandler serverHandler;
 
-    public MultiVersionHandler(JavaPlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+    /**
+     * Create a new instance of a handler for multiple versions in a plugin.
+     * @param plugin The plugin that owns this instance.
+     */
+    public MultiVersionHandler(@NotNull JavaPlugin plugin) {
+        this.plugin = plugin;
     }
 
+    /**
+     * @return the plugin that owns this instance.
+     */
     public JavaPlugin getPlugin() {
         return this.plugin;
     }
 
-    private Class<?> findHandlerClass(String classType) throws ClassNotFoundException {
+    /**
+     * Find a handler class based on the current NMS version.
+     * @param classType The prefix name of the handler class (e.g. ItemHandler)
+     * @return A class object for the class found at 'com.github.sirblobman.api.nms.[classType]_[nmsVersion]
+     * @throws ClassNotFoundException when the class does not exist.
+     */
+    private @NotNull Class<?> findHandlerClass(String classType) throws ClassNotFoundException {
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
         String className = ("com.github.sirblobman.api.nms." + classType + "_" + nmsVersion);
         return Class.forName(className);
     }
 
-    private <O> O getHandler(Class<O> typeClass, String classType) {
+    private @NotNull<O> O getHandler(Class<O> typeClass, String classType) {
         JavaPlugin plugin = getPlugin();
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
 

@@ -7,7 +7,11 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,47 +21,46 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
-import com.github.sirblobman.api.utility.ItemUtility;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public final class HeadHandler_1_19_R1 extends HeadHandler {
-    public HeadHandler_1_19_R1(JavaPlugin plugin) {
+    public HeadHandler_1_19_R1(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public ItemStack getPlayerHead(OfflinePlayer player) {
-        ItemStack itemStack = XMaterial.PLAYER_HEAD.parseItem();
-        if (ItemUtility.isAir(itemStack)) {
-            throw new IllegalStateException("Failed to create PLAYER_HEAD ItemStack!");
+    public @NotNull ItemStack getPlayerHead(@NotNull OfflinePlayer player) {
+        ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+        if (item == null) {
+            return new ItemStack(Material.AIR);
         }
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        ItemMeta itemMeta = item.getItemMeta();
         if (!(itemMeta instanceof SkullMeta skullMeta)) {
-            throw new IllegalStateException("PLAYER_HEAD ItemStack doesn't have SkullMeta.");
+            return item;
         }
 
         skullMeta.setOwningPlayer(player);
-        itemStack.setItemMeta(skullMeta);
-        return itemStack;
+        item.setItemMeta(skullMeta);
+        return item;
     }
 
     @Override
-    public ItemStack getBase64Head(String base64) {
-        byte[] base64ByteArray = base64.getBytes();
-        UUID uuid = UUID.nameUUIDFromBytes(base64ByteArray);
-        return getBase64Head(base64, uuid);
+    public @NotNull ItemStack getBase64Head(@NotNull String base64) {
+        byte[] base64Bytes = base64.getBytes(StandardCharsets.UTF_8);
+        UUID idFromBytes = UUID.nameUUIDFromBytes(base64Bytes);
+        return getBase64Head(base64, idFromBytes);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemStack getBase64Head(String base64, UUID customId) {
+    public @NotNull ItemStack getBase64Head(@NotNull String base64, @Nullable UUID customId) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
         if (item == null) {
-            return null;
+            return new ItemStack(Material.AIR);
         }
 
         ItemMeta itemMeta = item.getItemMeta();
@@ -82,7 +85,7 @@ public final class HeadHandler_1_19_R1 extends HeadHandler {
         return profile;
     }
 
-    private URL decodeSkinUrl(String base64) {
+    private @Nullable URL decodeSkinUrl(String base64) {
         Decoder decoder = Base64.getDecoder();
         byte[] decode = decoder.decode(base64);
 

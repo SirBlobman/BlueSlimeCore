@@ -2,11 +2,18 @@ package com.github.sirblobman.api.nms;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -22,220 +29,268 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component.Serializer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.MutableComponent;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_19_R1.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers.NBT;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import com.github.sirblobman.api.language.ComponentHelper;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.modern.CustomNbtPersistentDataContainerWrapper;
 import com.github.sirblobman.api.nbt.modern.PersistentDataConverter;
+import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.utility.ItemUtility;
-
-import org.jetbrains.annotations.Nullable;
+import com.github.sirblobman.api.shaded.adventure.text.serializer.gson.GsonComponentSerializer;
 
 public final class ItemHandler_1_19_R1 extends ItemHandler {
-    public ItemHandler_1_19_R1(JavaPlugin plugin) {
+    public ItemHandler_1_19_R1(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public String getLocalizedName(org.bukkit.inventory.ItemStack item) {
-        ItemStack nmsItem = ItemStack.EMPTY;
-        if (!ItemUtility.isAir(item)) {
-            nmsItem = CraftItemStack.asNMSCopy(item);
-        }
-
+    public @NotNull String getLocalizedName(@NotNull org.bukkit.inventory.ItemStack item) {
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         net.minecraft.network.chat.Component hoverName = nmsItem.getHoverName();
         return CraftChatMessage.fromComponent(hoverName);
     }
 
     @Override
-    public String getKeyString(org.bukkit.inventory.ItemStack item) {
-        Material material = Material.AIR;
-        if (!ItemUtility.isAir(item)) {
-            material = item.getType();
-        }
-
-        NamespacedKey key = material.getKey();
-        return key.toString();
+    public @NotNull String getKeyString(@NotNull org.bukkit.inventory.ItemStack item) {
+        Material material = item.getType();
+        NamespacedKey registryKey = material.getKey();
+        return registryKey.toString();
     }
 
     @Override
-    public String toNBT(org.bukkit.inventory.ItemStack item) {
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        CompoundTag compoundTag = new CompoundTag();
-        nmsItem.save(compoundTag);
-        return compoundTag.toString();
+    public @NotNull String toNBT(@NotNull org.bukkit.inventory.ItemStack item) {
+        CompoundTag tag = new CompoundTag();
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        nmsItem.save(tag);
+        return tag.toString();
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack fromNBT(String string) {
+    public @NotNull org.bukkit.inventory.ItemStack fromNBT(@NotNull String string) {
         try {
             StringReader stringReader = new StringReader(string);
             TagParser tagParser = new TagParser(stringReader);
-            CompoundTag compoundTag = tagParser.readStruct();
+            CompoundTag tag = tagParser.readStruct();
 
-            ItemStack nmsItem = ItemStack.of(compoundTag);
+            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.of(tag);
             return CraftItemStack.asBukkitCopy(nmsItem);
-        } catch (CommandSyntaxException ex) {
-            Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING, "Failed to parse an NBT string to an item:", ex);
-            logger.log(Level.WARNING, "returning AIR....");
+        } catch(CommandSyntaxException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to parse an NBT string to an ItemStack:", ex);
+            logger.warning("The item will be replaced with air.");
             return new org.bukkit.inventory.ItemStack(Material.AIR);
         }
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack fromBase64String(String string) {
-        if (string == null || string.isBlank()) {
-            return null;
+    public @NotNull String toBase64String(@NotNull org.bukkit.inventory.ItemStack item) {
+        CompoundTag tag = new CompoundTag();
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        nmsItem.save(tag);
+
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            NbtIo.writeCompressed(tag, outputStream);
+            byte[] byteArray = outputStream.toByteArray();
+            Encoder encoder = Base64.getEncoder();
+            return encoder.encodeToString(byteArray);
+        } catch (IOException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to encode an item to a string:", ex);
+            logger.warning("The item will not be saved properly.");
+            return "";
         }
-
-        CompoundTag compoundTag;
-        byte[] decode = Base64.getDecoder().decode(string);
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(decode);
-
-        try {
-            compoundTag = NbtIo.readCompressed(inputStream);
-        } catch (Exception ex) {
-            Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING, "Failed to decode an item from a string because an error occurred:", ex);
-            return null;
-        }
-
-        ItemStack nmsItem = ItemStack.of(compoundTag);
-        return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
     @Override
-    public String toBase64String(org.bukkit.inventory.ItemStack item) {
-        if (ItemUtility.isAir(item)) {
-            return null;
+    public @NotNull org.bukkit.inventory.ItemStack fromBase64String(@NotNull String string) {
+        if (string.isEmpty()) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Decoded an empty string to air.");
+            return new org.bukkit.inventory.ItemStack(Material.AIR);
         }
 
-        CompoundTag compoundTag = new CompoundTag();
-        CraftItemStack.asNMSCopy(item).save(compoundTag);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        try {
-            NbtIo.writeCompressed(compoundTag, outputStream);
-        } catch (Exception ex) {
-            Logger logger = getPlugin().getLogger();
-            logger.log(Level.WARNING, "Failed to encode an item to a string because an error occurred:", ex);
-            return null;
+        Decoder decoder = Base64.getDecoder();
+        byte[] byteArray = decoder.decode(string);
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray)) {
+            CompoundTag tag = NbtIo.readCompressed(inputStream);
+            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.of(tag);
+            return CraftItemStack.asBukkitCopy(nmsItem);
+        } catch(IOException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to encode an item from a string:", ex);
+            logger.warning("The item will be loaded as air.");
+            return new org.bukkit.inventory.ItemStack(Material.AIR);
         }
-
-        byte[] encode = outputStream.toByteArray();
-        return Base64.getEncoder().encodeToString(encode);
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setDisplayName(org.bukkit.inventory.ItemStack item,
-                                                         Component displayName) {
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        net.minecraft.network.chat.Component nmsComponent = getNmsComponent(displayName);
-        nmsItem.setHoverName(nmsComponent);
-        return CraftItemStack.asBukkitCopy(nmsItem);
+    public @NotNull CustomNbtContainer createNewCustomNbtContainer() {
+        org.bukkit.inventory.ItemStack item = new org.bukkit.inventory.ItemStack(Material.BARRIER);
+        return getCustomNbt(item);
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack setLore(org.bukkit.inventory.ItemStack item,
-                                                  List<Component> lore) {
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        CompoundTag nmsTag = nmsItem.getOrCreateTag();
-        CompoundTag displayTag = nmsTag.getCompound("display");
-
-        ListTag jsonList = getJsonList(lore);
-        displayTag.put("Lore", jsonList);
-        nmsTag.put("display", displayTag);
-
-        nmsItem.setTag(nmsTag);
-        return CraftItemStack.asBukkitCopy(nmsItem);
-    }
-
-    private String getJsonComponent(Component adventure) {
-        return ComponentHelper.toGson(adventure);
-    }
-
-    private net.minecraft.network.chat.Component getNmsComponent(Component adventure) {
-        String json = ComponentHelper.toGson(adventure);
-        return Serializer.fromJson(json);
-    }
-
-    private ListTag getJsonList(List<Component> adventureList) {
-        ListTag jsonList = new ListTag();
-        for (Component adventure : adventureList) {
-            String json = getJsonComponent(adventure);
-            StringTag stringTag = StringTag.valueOf(json);
-            jsonList.add(stringTag);
-        }
-
-        return jsonList;
-    }
-
-    @Override
-    public CustomNbtContainer createNewCustomNbtContainer() {
-        return getCustomNbt(new org.bukkit.inventory.ItemStack(Material.BARRIER));
-    }
-
-    @Override
-    public org.bukkit.inventory.ItemStack setCustomNbt(org.bukkit.inventory.ItemStack item,
-                                                       CustomNbtContainer customNbtContainer) {
+    public @NotNull CustomNbtContainer getCustomNbt(@NotNull org.bukkit.inventory.ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
-            return null;
+            return createNewCustomNbtContainer();
         }
 
-        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-        if (customNbtContainer instanceof CustomNbtPersistentDataContainerWrapper wrapper) {
+        JavaPlugin plugin = getPlugin();
+        PersistentDataContainer dataContainer = createNBT(item);
+        return PersistentDataConverter.convertContainer(plugin, dataContainer);
+    }
+
+    @Override
+    public @NotNull org.bukkit.inventory.ItemStack setCustomNbt(@NotNull org.bukkit.inventory.ItemStack item, @NotNull CustomNbtContainer container) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return item;
+        }
+
+        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+        if (container instanceof CustomNbtPersistentDataContainerWrapper wrapper) {
             PersistentDataContainer internalContainer = wrapper.getContainer();
 
             JavaPlugin plugin = getPlugin();
             NamespacedKey pluginKey = new NamespacedKey(plugin, plugin.getName().toLowerCase(Locale.US));
-            container.set(pluginKey, PersistentDataType.TAG_CONTAINER, internalContainer);
+            dataContainer.set(pluginKey, PersistentDataType.TAG_CONTAINER, internalContainer);
         }
 
         item.setItemMeta(itemMeta);
         return item;
     }
 
-    @Override
-    public CustomNbtContainer getCustomNbt(org.bukkit.inventory.ItemStack item) {
-        if (item == null) {
-            return null;
-        }
-
+    private @NotNull PersistentDataContainer createNBT(@NotNull org.bukkit.inventory.ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
-        PersistentDataContainer dataContainer = createNBT(itemMeta);
-        if (dataContainer == null) {
-            return null;
-        }
+        Validate.notNull(itemMeta, "item must not have null meta!");
 
         JavaPlugin plugin = getPlugin();
-        return PersistentDataConverter.convertContainer(plugin, dataContainer);
-    }
+        String pluginName = plugin.getName().toLowerCase(Locale.US);
+        NamespacedKey pluginKey = new NamespacedKey(plugin, pluginName);
 
-    @Nullable
-    private PersistentDataContainer createNBT(ItemMeta itemMeta) {
-        if (itemMeta == null) {
-            return null;
-        }
-
-        JavaPlugin plugin = getPlugin();
-        NamespacedKey pluginKey = new NamespacedKey(plugin, plugin.getName().toLowerCase(Locale.US));
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
-
         if (dataContainer.has(pluginKey, PersistentDataType.TAG_CONTAINER)) {
-            return dataContainer.get(pluginKey, PersistentDataType.TAG_CONTAINER);
+            PersistentDataContainer subContainer = dataContainer.get(pluginKey, PersistentDataType.TAG_CONTAINER);
+            return Validate.notNull(subContainer, "subContainer must not be null!");
         }
 
         PersistentDataAdapterContext context = dataContainer.getAdapterContext();
         PersistentDataContainer newContainer = context.newPersistentDataContainer();
         dataContainer.set(pluginKey, PersistentDataType.TAG_CONTAINER, newContainer);
         return newContainer;
+    }
+
+    @Override
+    public @Nullable Component getDisplayName(@NotNull org.bukkit.inventory.ItemStack item) {
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        if (nmsItem.hasCustomHoverName()) {
+            net.minecraft.network.chat.Component component = nmsItem.getHoverName();
+            return convert(component);
+        }
+
+        return null;
+    }
+
+    @Override
+    public @NotNull org.bukkit.inventory.ItemStack setDisplayName(@NotNull org.bukkit.inventory.ItemStack item, @Nullable Component displayName) {
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+
+        if (displayName == null) {
+            nmsItem.resetHoverName();
+        } else {
+            net.minecraft.network.chat.Component nmsComponent = convert(displayName);
+            nmsItem.setHoverName(nmsComponent);
+        }
+
+        return CraftItemStack.asBukkitCopy(nmsItem);
+    }
+
+    @Override
+    public @Nullable List<Component> getLore(@NotNull org.bukkit.inventory.ItemStack item) {
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        if (!nmsItem.hasTag()) {
+            return null;
+        }
+
+        CompoundTag tag = nmsItem.getOrCreateTag();
+        if (!tag.contains("display", NBT.TAG_COMPOUND)) {
+            return null;
+        }
+
+        CompoundTag display = tag.getCompound("display");
+        if (!display.contains("Lore", NBT.TAG_LIST)) {
+            return null;
+        }
+
+        ListTag list = display.getList("Lore", CraftMagicNumbers.NBT.TAG_STRING);
+        List<String> loreJson = new ArrayList<>(list.size());
+        for (int index = 0; index < list.size(); index++) {
+            String line = list.getString(index);
+            loreJson.add(line);
+        }
+
+        List<Component> componentLore = new ArrayList<>();
+        GsonComponentSerializer serializer = GsonComponentSerializer.gson();
+        for (String json : loreJson) {
+            if (json == null) {
+                componentLore.add(Component.empty());
+                continue;
+            }
+
+            Component component = serializer.deserialize(json);
+            componentLore.add(component);
+        }
+
+        return componentLore;
+    }
+
+    @Override
+    public @NotNull org.bukkit.inventory.ItemStack setLore(@NotNull org.bukkit.inventory.ItemStack item, @Nullable List<Component> lore) {
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        CompoundTag tag = nmsItem.getOrCreateTag();
+        CompoundTag display = tag.getCompound("display");
+
+        if (lore == null) {
+            display.remove("Lore");
+        } else {
+            GsonComponentSerializer serializer = GsonComponentSerializer.gson();
+            ListTag jsonList = new ListTag();
+            for (Component component : lore) {
+                String json = serializer.serialize(component);
+                StringTag stringTag = StringTag.valueOf(json);
+                jsonList.add(stringTag);
+            }
+
+            display.put("Lore", jsonList);
+        }
+
+        tag.put("display", display);
+        nmsItem.setTag(tag);
+        return CraftItemStack.asBukkitCopy(nmsItem);
+    }
+
+    private @NotNull Component convert(@NotNull net.minecraft.network.chat.Component component) {
+        String json = Serializer.toJson(component);
+        GsonComponentSerializer serializer = GsonComponentSerializer.gson();
+        return serializer.deserialize(json);
+    }
+
+    private @NotNull net.minecraft.network.chat.Component convert(@NotNull Component component) {
+        GsonComponentSerializer serializer = GsonComponentSerializer.gson();
+        String json = serializer.serialize(component);
+
+        MutableComponent nmsComponent = Serializer.fromJson(json);
+        if (nmsComponent != null) {
+            return nmsComponent;
+        }
+
+        return net.minecraft.network.chat.Component.literal(json);
     }
 }

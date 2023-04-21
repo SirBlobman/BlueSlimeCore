@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.nbt;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class CustomNbtContext_1_8_R3 implements CustomNbtContext {
     private final CustomNbtTypeRegistry_1_8_R3 registry;
 
@@ -8,7 +10,7 @@ public final class CustomNbtContext_1_8_R3 implements CustomNbtContext {
     }
 
     @Override
-    public CustomNbtContainer_1_8_R3 newCustomNbtContainer() {
+    public @NotNull CustomNbtContainer_1_8_R3 newCustomNbtContainer() {
         return new CustomNbtContainer_1_8_R3(this.registry);
     }
 }
