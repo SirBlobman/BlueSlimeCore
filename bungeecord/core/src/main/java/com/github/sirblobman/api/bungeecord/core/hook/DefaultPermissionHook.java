@@ -3,6 +3,9 @@ package com.github.sirblobman.api.bungeecord.core.hook;
 import java.util.Collection;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -10,61 +13,43 @@ import net.md_5.bungee.config.Configuration;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
 import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
-import com.github.sirblobman.api.utility.Validate;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public final class DefaultPermissionHook implements IPermissionHook {
-    private final CorePlugin plugin;
-
-    public DefaultPermissionHook(CorePlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-    }
-
-    @Override
-    public CorePlugin getPlugin() {
-        return this.plugin;
-    }
-
+public record DefaultPermissionHook(@NotNull CorePlugin plugin) implements IPermissionHook {
     @Override
     public boolean isDisabled() {
         return false;
     }
 
-    @NotNull
     @Override
-    public String getPrefix(UUID playerId) {
+    public @Nullable String getPrefix(@NotNull UUID playerId) {
         String primaryGroupName = getPrimaryGroupName(playerId);
         if (primaryGroupName == null) {
-            return "";
+            return null;
         }
 
         Configuration rankSection = getRankSection(primaryGroupName);
-        return rankSection.getString("prefix", "");
+        return rankSection.getString("prefix");
     }
 
-    @NotNull
     @Override
-    public String getSuffix(UUID playerId) {
+    public @Nullable String getSuffix(@NotNull UUID playerId) {
         String primaryGroupName = getPrimaryGroupName(playerId);
         if (primaryGroupName == null) {
-            return "";
+            return null;
         }
 
         Configuration rankSection = getRankSection(primaryGroupName);
-        return rankSection.getString("suffix", "");
+        return rankSection.getString("suffix");
     }
 
-    @Nullable
     @Override
-    public String getPrimaryGroupName(UUID playerId) {
+    public @Nullable String getPrimaryGroupName(@NotNull UUID playerId) {
         ProxiedPlayer player = getPlayer(playerId);
         if (player == null) {
-            return "";
+            return null;
         }
 
-        CorePlugin plugin = getPlugin();
+        CorePlugin plugin = plugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         Configuration configuration = configurationManager.get("config.yml");
 
@@ -91,7 +76,7 @@ public final class DefaultPermissionHook implements IPermissionHook {
     }
 
     @Override
-    public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
+    public int getPrimaryGroupWeight(@NotNull UUID playerId, int defaultWeight) {
         String primaryGroupName = getPrimaryGroupName(playerId);
         if (primaryGroupName == null) {
             return defaultWeight;
@@ -101,20 +86,18 @@ public final class DefaultPermissionHook implements IPermissionHook {
         return rankSection.getInt("weight", defaultWeight);
     }
 
-    @NotNull
-    private ProxyServer getProxy() {
-        CorePlugin plugin = getPlugin();
+    private @NotNull ProxyServer getProxy() {
+        CorePlugin plugin = plugin();
         return plugin.getProxy();
     }
 
-    @Nullable
-    private ProxiedPlayer getPlayer(UUID playerId) {
+    private @NotNull ProxiedPlayer getPlayer(UUID playerId) {
         ProxyServer proxy = getProxy();
         return proxy.getPlayer(playerId);
     }
 
-    private Configuration getRankSection(String rankId) {
-        CorePlugin plugin = getPlugin();
+    private @NotNull Configuration getRankSection(String rankId) {
+        CorePlugin plugin = plugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         Configuration configuration = configurationManager.get("config.yml");
 

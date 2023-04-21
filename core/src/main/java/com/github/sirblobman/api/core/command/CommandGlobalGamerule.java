@@ -3,6 +3,8 @@ package com.github.sirblobman.api.core.command;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,8 +15,6 @@ import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.language.replacer.IntegerReplacer;
 import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
-
-import org.jetbrains.annotations.Nullable;
 
 public final class CommandGlobalGamerule extends Command {
     public CommandGlobalGamerule(CorePlugin plugin) {
@@ -72,6 +72,10 @@ public final class CommandGlobalGamerule extends Command {
     @Nullable
     private World getWorld(CommandSender sender) {
         Location location = getLocation(sender);
+        if (location == null) {
+            return null;
+        }
+
         return location.getWorld();
     }
 

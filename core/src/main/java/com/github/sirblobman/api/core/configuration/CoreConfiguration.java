@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.core.configuration;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.sirblobman.api.configuration.IConfigurable;
@@ -24,7 +26,7 @@ public final class CoreConfiguration implements IConfigurable {
     }
 
     @Override
-    public void load(ConfigurationSection section) {
+    public void load(@NotNull ConfigurationSection section) {
         setUpdateCheckerEnabled(section.getBoolean("update-checker", true));
         setDebugModeEnabled(section.getBoolean("debug-mode", false));
         setCommandLoggerEnabled(section.getBoolean("command-logger", false));

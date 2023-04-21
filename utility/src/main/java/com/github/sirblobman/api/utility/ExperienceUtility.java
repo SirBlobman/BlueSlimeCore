@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.utility;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.entity.Player;
 
 /**
@@ -15,7 +17,7 @@ public final class ExperienceUtility {
      * @return the amount of exp the Player has
      * @see <a href="https://minecraft.fandom.com/wiki/Experience#Leveling_up">Experience: Leveling up</a>
      */
-    public static int getExp(Player player) {
+    public static int getExp(@NotNull Player player) {
         int playerLevel = player.getLevel();
         float playerExp = player.getExp();
         int round = Math.round(getExpToNext(playerLevel) * playerExp);
@@ -95,7 +97,7 @@ public final class ExperienceUtility {
      * @param player the Player affected
      * @param exp    the amount of experience to add or remove
      */
-    public static void changeExp(Player player, int exp) {
+    public static void changeExp(@NotNull Player player, int exp) {
         exp += getExp(player);
 
         if (exp < 0) {

@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
@@ -19,14 +21,12 @@ import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
-import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
-import com.github.sirblobman.api.shaded.xseries.XMaterial;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.paper.PaperChecker;
 import com.github.sirblobman.api.utility.paper.PaperHelper;
-
-import org.jetbrains.annotations.Nullable;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
+import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
 public abstract class BaseMenu implements IMenu {
     private IMenu parentMenu;
@@ -35,25 +35,24 @@ public abstract class BaseMenu implements IMenu {
         this(null);
     }
 
-    public BaseMenu(IMenu parentMenu) {
+    public BaseMenu(@Nullable IMenu parentMenu) {
         this.parentMenu = parentMenu;
     }
 
     @Override
-    public Optional<IMenu> getParentMenu() {
+    public @NotNull Optional<IMenu> getParentMenu() {
         return Optional.ofNullable(this.parentMenu);
     }
 
     @Override
-    public void setParentMenu(IMenu parentMenu) {
+    public void setParentMenu(@NotNull IMenu parentMenu) {
         this.parentMenu = parentMenu;
     }
 
     /**
      * @return The head handler for the current Bukkit version if there is one.
      */
-    @Nullable
-    public HeadHandler getHeadHandler() {
+    public @Nullable HeadHandler getHeadHandler() {
         MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
         if (multiVersionHandler == null) {
             return null;
@@ -65,8 +64,7 @@ public abstract class BaseMenu implements IMenu {
     /**
      * @return The item handler for the current Bukkit version if there is one.
      */
-    @Nullable
-    public ItemHandler getItemHandler() {
+    public @Nullable ItemHandler getItemHandler() {
         MultiVersionHandler multiVersionHandler = getMultiVersionHandler();
         if (multiVersionHandler == null) {
             return null;
@@ -80,7 +78,7 @@ public abstract class BaseMenu implements IMenu {
      *             nine for a chest menu.
      * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
-    public Inventory getInventory(int size) {
+    public @NotNull Inventory getInventory(int size) {
         if (size == 5) {
             return Bukkit.createInventory(this, InventoryType.HOPPER);
         }
@@ -107,7 +105,7 @@ public abstract class BaseMenu implements IMenu {
      *              (legacy color codes with the '&amp;' symbol will be translated automatically)
      * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
-    public Inventory getInventory(int size, String title) {
+    public @NotNull Inventory getInventory(int size, @Nullable String title) {
         if (title == null) {
             return getInventory(size);
         }
@@ -139,7 +137,7 @@ public abstract class BaseMenu implements IMenu {
      * @param title The component title for the GUI.
      * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
-    public Inventory getInventory(int size, Component title) {
+    public @NotNull Inventory getInventory(int size, @Nullable Component title) {
         if (title == null) {
             return getInventory(size);
         }
@@ -159,26 +157,24 @@ public abstract class BaseMenu implements IMenu {
      * @param path   The path in the configuration or section.
      * @return An {@link ItemStack} read from the section, or {@code null} if one could not be read.
      */
-    @Nullable
-    protected final ItemStack loadItemStack(ConfigurationSection config, String path) {
+    protected final @Nullable ItemStack loadItemStack(@NotNull ConfigurationSection config, @NotNull String path) {
         if (config.isItemStack(path)) {
             return config.getItemStack(path);
         }
 
         ConfigurationSection section = config.getConfigurationSection(path);
-        return loadItemStack(section);
-    }
-
-    private ItemStack loadItemStack(ConfigurationSection section) {
         if (section == null) {
             return null;
         }
 
+        return loadItemStack(section);
+    }
+
+    private @Nullable ItemStack loadItemStack(@NotNull ConfigurationSection section) {
         String materialName = section.getString("material");
         Optional<XMaterial> optionalMaterial = XMaterial.matchXMaterial(materialName);
         if (!optionalMaterial.isPresent()) {
-            JavaPlugin plugin = getPlugin();
-            Logger logger = plugin.getLogger();
+            Logger logger = getLogger();
             logger.warning("Unknown material name '" + materialName + "'.");
             return null;
         }
@@ -189,59 +185,73 @@ public abstract class BaseMenu implements IMenu {
         builder = checkNameAndLore(builder, section);
 
         int amount = section.getInt("quantity", 1);
-        builder.withAmount(amount);
+        builder = builder.withAmount(amount);
 
         int damage = section.getInt("damage", 0);
-        builder.withDamage(damage);
+        builder = builder.withDamage(damage);
 
         Integer model = (section.isSet("model") ? section.getInt("model") : null);
-        builder.withModel(model);
+        builder = builder.withModel(model);
 
         if (section.getBoolean("glowing")) {
-            builder.withGlowing();
+            builder = builder.withGlowing();
         }
 
         return builder.build();
     }
 
-    private ItemBuilder checkNameAndLore(ItemBuilder builder, ConfigurationSection section) {
-        ItemHandler itemHandler = getItemHandler();
-        LanguageManager languageManager = getLanguageManager();
-
-        String displayNameString = section.getString("display-name");
-        if (displayNameString != null) {
-            if (itemHandler != null && languageManager != null) {
-                MiniMessage miniMessage = languageManager.getMiniMessage();
-                Component displayName = miniMessage.deserialize(displayNameString);
-                builder.withName(itemHandler, ComponentHelper.wrapNoItalics(displayName));
-            } else {
-                String displayName = MessageUtility.color(displayNameString);
-                return builder.withName(displayName);
-            }
-        }
-
-        List<String> loreStringList = section.getStringList("lore");
-        if (!loreStringList.isEmpty()) {
-            if (itemHandler != null && languageManager != null) {
-                MiniMessage miniMessage = languageManager.getMiniMessage();
-                List<Component> lore = new ArrayList<>();
-
-                for (String lineString : loreStringList) {
-                    Component line = miniMessage.deserialize(lineString);
-                    lore.add(line);
-                }
-
-                builder.withLore(itemHandler, ComponentHelper.wrapNoItalics(lore));
-            } else {
-                List<String> lore = MessageUtility.colorList(loreStringList);
-                builder.withLore(lore);
-            }
-        }
-
+    private @NotNull ItemBuilder checkNameAndLore(@NotNull ItemBuilder builder,
+                                                  @NotNull ConfigurationSection section) {
+        builder = checkDisplayName(builder, section);
+        builder = checkLore(builder, section);
         return builder;
     }
 
-    private ItemBuilder checkSkull(ItemBuilder builder, XMaterial material, ConfigurationSection section) {
+    private @NotNull ItemBuilder checkDisplayName(@NotNull ItemBuilder builder,
+                                                  @NotNull ConfigurationSection section) {
+        String displayNameString = section.getString("display-name");
+        if (displayNameString == null) {
+            return builder;
+        }
+
+        LanguageManager languageManager = getLanguageManager();
+        ItemHandler itemHandler = getItemHandler();
+        if (languageManager == null || itemHandler == null) {
+            String displayNameFormatted = MessageUtility.color(displayNameString);
+            return builder.withName(displayNameFormatted);
+        }
+
+        MiniMessage miniMessage = languageManager.getMiniMessage();
+        Component displayName = miniMessage.deserialize(displayNameString);
+        return builder.withName(itemHandler, displayName);
+    }
+
+    private @NotNull ItemBuilder checkLore(@NotNull ItemBuilder builder,
+                                           @NotNull ConfigurationSection section) {
+        List<String> loreString = section.getStringList("lore");
+        if (loreString.isEmpty()) {
+            return builder;
+        }
+
+        LanguageManager languageManager = getLanguageManager();
+        ItemHandler itemHandler = getItemHandler();
+        if (languageManager == null || itemHandler == null) {
+            List<String> loreFormatted = MessageUtility.colorList(loreString);
+            return builder.withLore(loreFormatted);
+        }
+
+        List<Component> lore = new ArrayList<>();
+        MiniMessage miniMessage = languageManager.getMiniMessage();
+        for (String lineString : loreString) {
+            Component line = miniMessage.deserialize(lineString);
+            lore.add(line);
+        }
+
+        return builder.withLore(itemHandler, lore);
+    }
+
+    private @NotNull ItemBuilder checkSkull(@NotNull ItemBuilder builder, @NotNull XMaterial material,
+                                            @NotNull ConfigurationSection section) {
         HeadHandler headHandler = getHeadHandler();
         if (material != XMaterial.PLAYER_HEAD || headHandler == null) {
             return builder;

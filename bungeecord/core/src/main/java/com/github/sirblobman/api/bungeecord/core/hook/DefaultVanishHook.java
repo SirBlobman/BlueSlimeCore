@@ -2,40 +2,30 @@ package com.github.sirblobman.api.bungeecord.core.hook;
 
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
 import com.github.sirblobman.api.bungeecord.hook.vanish.IVanishHook;
-import com.github.sirblobman.api.utility.Validate;
 
-public final class DefaultVanishHook implements IVanishHook {
-    private final CorePlugin plugin;
-
-    public DefaultVanishHook(CorePlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-    }
-
-    @Override
-    public CorePlugin getPlugin() {
-        return this.plugin;
-    }
-
+public record DefaultVanishHook(@NotNull CorePlugin plugin) implements IVanishHook {
     @Override
     public boolean isDisabled() {
         return false;
     }
 
     @Override
-    public boolean isHidden(ProxiedPlayer player) {
+    public boolean isHidden(@NotNull ProxiedPlayer player) {
         UUID playerId = player.getUniqueId();
         return isHidden(playerId);
     }
 
     @Override
-    public boolean isHidden(UUID playerId) {
-        CorePlugin plugin = getPlugin();
+    public boolean isHidden(@NotNull UUID playerId) {
+        CorePlugin plugin = plugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         Configuration configuration = configurationManager.get("hidden.yml");
 
@@ -44,14 +34,14 @@ public final class DefaultVanishHook implements IVanishHook {
     }
 
     @Override
-    public void setHidden(ProxiedPlayer player, boolean hidden) {
+    public void setHidden(@NotNull ProxiedPlayer player, boolean hidden) {
         UUID playerId = player.getUniqueId();
         setHidden(playerId, hidden);
     }
 
     @Override
-    public void setHidden(UUID playerId, boolean hidden) {
-        CorePlugin plugin = getPlugin();
+    public void setHidden(@NotNull UUID playerId, boolean hidden) {
+        CorePlugin plugin = plugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         Configuration configuration = configurationManager.get("hidden.yml");
 

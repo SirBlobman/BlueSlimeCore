@@ -3,8 +3,11 @@ package com.github.sirblobman.api.utility;
 import java.util.Collection;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public final class Validate {
-    public static <O> O notNull(O value, String message) {
+    public static <O> @NotNull O notNull(@Nullable O value, @NotNull String message) {
         if (value == null) {
             throw new IllegalArgumentException(message);
         }
@@ -12,7 +15,7 @@ public final class Validate {
         return value;
     }
 
-    public static String notEmpty(String value, String message) {
+    public static @NotNull String notEmpty(@Nullable String value, @NotNull String message) {
         notNull(value, message);
 
         if (value.isEmpty()) {
@@ -22,7 +25,7 @@ public final class Validate {
         return value;
     }
 
-    public static <O, C extends Collection<O>> C notEmpty(C value, String message) {
+    public static <O, C extends Collection<O>> @NotNull C notEmpty(@Nullable C value, @NotNull String message) {
         notNull(value, message);
 
         if (value.isEmpty()) {
@@ -32,7 +35,7 @@ public final class Validate {
         return value;
     }
 
-    public static <K, V, M extends Map<K, V>> M notEmpty(M value, String message) {
+    public static <K, V, M extends Map<K, V>> @NotNull M notEmpty(@Nullable M value, @NotNull String message) {
         notNull(value, message);
 
         if (value.isEmpty()) {

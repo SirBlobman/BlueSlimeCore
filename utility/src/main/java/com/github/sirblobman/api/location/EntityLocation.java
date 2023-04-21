@@ -4,15 +4,15 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
 import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class EntityLocation {
     private final UUID worldId;
@@ -22,7 +22,7 @@ public final class EntityLocation {
     private final double yaw;
     private final double pitch;
 
-    public EntityLocation(UUID worldId, double x, double y, double z, double yaw, double pitch) {
+    public EntityLocation(@NotNull UUID worldId, double x, double y, double z, double yaw, double pitch) {
         this.worldId = Validate.notNull(worldId, "worldId must not be null!");
         this.x = x;
         this.y = y;
@@ -31,21 +31,15 @@ public final class EntityLocation {
         this.pitch = pitch;
     }
 
-    @NotNull
-    public static EntityLocation from(World world, double x, double y, double z, double yaw, double pitch) {
-        Validate.notNull(world, "world must not be null!");
+    public static @NotNull EntityLocation from(@NotNull World world, double x, double y, double z, double yaw,
+                                               double pitch) {
         UUID worldId = world.getUID();
         return new EntityLocation(worldId, x, y, z, yaw, pitch);
     }
 
-    @Nullable
-    public static EntityLocation from(Location location) {
-        Validate.notNull(location, "location must not be null!");
-
+    public static @NotNull EntityLocation from(@NotNull Location location) {
         World world = location.getWorld();
-        if (world == null) {
-            return null;
-        }
+        Validate.notNull(world, "world must not be null!");
 
         double x = location.getX();
         double y = location.getY();
@@ -55,15 +49,12 @@ public final class EntityLocation {
         return from(world, x, y, z, yaw, pitch);
     }
 
-    @Nullable
-    public static EntityLocation from(Entity entity) {
-        Validate.notNull(entity, "entity must not be null!");
+    public static @NotNull EntityLocation from(@NotNull Entity entity) {
         Location location = entity.getLocation();
         return from(location);
     }
 
-    @NotNull
-    public UUID getWorldId() {
+    public @NotNull UUID getWorldId() {
         return this.worldId;
     }
 
@@ -87,14 +78,12 @@ public final class EntityLocation {
         return this.pitch;
     }
 
-    @Nullable
-    public World getWorld() {
+    public @Nullable World getWorld() {
         UUID worldId = getWorldId();
         return Bukkit.getWorld(worldId);
     }
 
-    @Nullable
-    public Location asLocation() {
+    public @Nullable Location asLocation() {
         World world = getWorld();
         if (world == null) {
             return null;

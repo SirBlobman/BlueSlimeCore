@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.bungeecord.core;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
@@ -16,8 +18,6 @@ import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
 import com.github.sirblobman.api.bungeecord.hook.vanish.IVanishHook;
 import com.github.sirblobman.api.bungeecord.luckperms.LuckPermsHook;
 import com.github.sirblobman.api.bungeecord.premiumvanish.PremiumVanishHook;
-
-import org.jetbrains.annotations.NotNull;
 
 public final class CorePlugin extends ConfigurablePlugin implements IHookPlugin {
     private final IPermissionHook defaultPermissionHook;
@@ -75,27 +75,23 @@ public final class CorePlugin extends ConfigurablePlugin implements IHookPlugin 
         setupVanishHook();
     }
 
-    @NotNull
     @Override
-    public IPermissionHook getDefaultPermissionHook() {
+    public @NotNull IPermissionHook getDefaultPermissionHook() {
         return this.defaultPermissionHook;
     }
 
-    @NotNull
     @Override
-    public IVanishHook getDefaultVanishHook() {
+    public @NotNull IVanishHook getDefaultVanishHook() {
         return this.defaultVanishHook;
     }
 
-    @NotNull
     @Override
-    public IPermissionHook getPermissionHook() {
+    public @NotNull IPermissionHook getPermissionHook() {
         return this.permissionHook;
     }
 
-    @NotNull
     @Override
-    public IVanishHook getVanishHook() {
+    public @NotNull IVanishHook getVanishHook() {
         return this.vanishHook;
     }
 

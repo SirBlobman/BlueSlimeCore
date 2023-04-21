@@ -1,30 +1,29 @@
 package com.github.sirblobman.api.core.menu;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
-import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.menu.AbstractPagedMenu;
 import com.github.sirblobman.api.menu.IMenu;
 import com.github.sirblobman.api.menu.button.AbstractButton;
-import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.Nullable;
 
 // TODO
 public final class ConfigurationEditorMenu extends AbstractPagedMenu {
     private final YamlConfiguration configuration;
 
-    public ConfigurationEditorMenu(IMenu parent, JavaPlugin plugin, Player player, YamlConfiguration configuration) {
+    public ConfigurationEditorMenu(@NotNull IMenu parent, @NotNull Plugin plugin, @NotNull Player player,
+                                   @NotNull YamlConfiguration configuration) {
         super(parent, plugin, player);
-        this.configuration = Validate.notNull(configuration, "configuration must not be null!");
+        this.configuration = configuration;
     }
 
-    public YamlConfiguration getConfiguration() {
+    public @NotNull YamlConfiguration getConfiguration() {
         return this.configuration;
     }
 
@@ -54,17 +53,7 @@ public final class ConfigurationEditorMenu extends AbstractPagedMenu {
     }
 
     @Override
-    public Component getTitleFormat() {
+    public @Nullable Component getTitleFormat() {
         return null;
-    }
-
-    @Override
-    public @Nullable MultiVersionHandler getMultiVersionHandler() {
-        return super.getMultiVersionHandler();
-    }
-
-    @Override
-    public @Nullable LanguageManager getLanguageManager() {
-        return super.getLanguageManager();
     }
 }

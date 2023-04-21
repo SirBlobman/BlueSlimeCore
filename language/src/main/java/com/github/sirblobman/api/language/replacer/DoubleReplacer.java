@@ -3,24 +3,26 @@ package com.github.sirblobman.api.language.replacer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public final class DoubleReplacer extends Replacer {
     private final double replacement;
     private final DecimalFormat format;
     private final DecimalFormatSymbols symbols;
 
-    public DoubleReplacer(String target, double replacement) {
+    public DoubleReplacer(@NotNull String target, double replacement) {
         this(target, replacement, null);
     }
 
-    public DoubleReplacer(String target, double replacement, DecimalFormat format) {
+    public DoubleReplacer(@NotNull String target, double replacement, @Nullable DecimalFormat format) {
         this(target, replacement, format, null);
     }
 
-    public DoubleReplacer(String target, double replacement, DecimalFormat format, DecimalFormatSymbols symbols) {
+    public DoubleReplacer(@NotNull String target, double replacement, @Nullable DecimalFormat format,
+                          @Nullable DecimalFormatSymbols symbols) {
         super(target);
         this.replacement = replacement;
         this.format = format;

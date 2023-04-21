@@ -1,12 +1,12 @@
 package com.github.sirblobman.api.item;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
 
 public final class SkullBuilder {
     private final HeadHandler headHandler;
@@ -32,6 +32,7 @@ public final class SkullBuilder {
         return new ItemBuilder(playerHead);
     }
 
+    @SuppressWarnings("deprecation")
     public ItemBuilder withOwner(@NotNull String playerName) {
         HeadHandler headHandler = getHeadHandler();
         ItemStack playerHead = headHandler.getPlayerHead(playerName);

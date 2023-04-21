@@ -13,10 +13,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.Validate;
 
@@ -30,12 +32,12 @@ public final class ConfigurationManager {
      *
      * @param plugin The plugin being used.
      */
-    public ConfigurationManager(JavaPlugin plugin) {
+    public ConfigurationManager(@NotNull Plugin plugin) {
         this(new WrapperPluginResourceHolder(plugin));
     }
 
-    public ConfigurationManager(IResourceHolder resourceHolder) {
-        this.resourceHolder = Validate.notNull(resourceHolder, "resourceHolder must not be null!");
+    public ConfigurationManager(@NotNull IResourceHolder resourceHolder) {
+        this.resourceHolder = resourceHolder;
         this.baseFolder = resourceHolder.getDataFolder();
         this.configurationMap = new HashMap<>();
     }
@@ -43,14 +45,14 @@ public final class ConfigurationManager {
     /**
      * @return The {@link IResourceHolder} managing these configuration files.
      */
-    public IResourceHolder getResourceHolder() {
+    public @NotNull IResourceHolder getResourceHolder() {
         return this.resourceHolder;
     }
 
     /**
      * @return The base directory that all files will be contained in.
      */
-    public File getBaseFolder() {
+    public @NotNull File getBaseFolder() {
         return this.baseFolder;
     }
 
@@ -59,7 +61,7 @@ public final class ConfigurationManager {
      *
      * @param fileName The relative name of the configuration to copy
      */
-    public void saveDefault(String fileName) {
+    public void saveDefault(@NotNull String fileName) {
         File file = getFile(fileName);
         saveDefault(fileName, file);
     }
@@ -70,7 +72,7 @@ public final class ConfigurationManager {
      * ({@code null} if the file does not exist or an error occurred.)
      * @see IResourceHolder#getResource(String)
      */
-    public YamlConfiguration getInternal(String fileName) {
+    public @Nullable YamlConfiguration getInternal(@NotNull String fileName) {
         IResourceHolder resourceHolder = getResourceHolder();
         InputStream inputStream = resourceHolder.getResource(fileName);
         if (inputStream == null) {
@@ -94,14 +96,14 @@ public final class ConfigurationManager {
      * @return A configuration from memory. If the configuration is not in memory it will be loaded from storage first.
      * If a file can't be loaded, an empty configuration will be returned.
      */
-    public YamlConfiguration get(String fileName) {
+    public @NotNull YamlConfiguration get(@NotNull String fileName) {
         YamlConfiguration configuration = this.configurationMap.getOrDefault(fileName, null);
         if (configuration != null) {
             return configuration;
         }
 
         reload(fileName);
-        return this.configurationMap.getOrDefault(fileName, new YamlConfiguration());
+        return this.configurationMap.computeIfAbsent(fileName, key -> new YamlConfiguration());
     }
 
     /**
@@ -109,7 +111,7 @@ public final class ConfigurationManager {
      *
      * @param fileName The relative name of the configuration.
      */
-    public void save(String fileName) {
+    public void save(@NotNull String fileName) {
         try {
             YamlConfiguration configuration = this.configurationMap.getOrDefault(fileName, null);
             if (configuration == null) {
@@ -129,7 +131,7 @@ public final class ConfigurationManager {
      *
      * @param fileName The relative name of the configuration.
      */
-    public void reload(String fileName) {
+    public void reload(@NotNull String fileName) {
         File file = getFile(fileName);
         IResourceHolder resourceHolder = getResourceHolder();
         if (!file.exists() || !file.isFile()) {
@@ -155,16 +157,18 @@ public final class ConfigurationManager {
         }
     }
 
-    private File getFile(String fileName) {
-        Validate.notEmpty(fileName, "fileName cannot be null or empty!");
+    private File getFile(@NotNull String fileName) {
+        Validate.notEmpty(fileName, "fileName must not be empty!");
         File baseFolder = getBaseFolder();
         return new File(baseFolder, fileName);
     }
 
-    private void saveDefault(String fileName, File realFile) {
-        Validate.notEmpty(fileName, "jarName cannot be null or empty!");
+    private void saveDefault(@NotNull String fileName, @NotNull File realFile) {
+        Validate.notEmpty(fileName, "jarName must not be empty!");
         Validate.notNull(realFile, "realFile cannot be null!");
-        if (realFile.exists()) return;
+        if (realFile.exists()) {
+            return;
+        }
 
         IResourceHolder resourceHolder = getResourceHolder();
         InputStream jarStream = resourceHolder.getResource(fileName);

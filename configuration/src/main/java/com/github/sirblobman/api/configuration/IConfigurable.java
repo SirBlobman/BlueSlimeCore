@@ -1,8 +1,8 @@
 package com.github.sirblobman.api.configuration;
 
-import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
-import com.github.sirblobman.api.utility.Validate;
+import org.bukkit.configuration.ConfigurationSection;
 
 public interface IConfigurable {
     /**
@@ -10,14 +10,14 @@ public interface IConfigurable {
      *
      * @param section The configuration that contains the values.
      */
-    void load(ConfigurationSection section);
+    void load(@NotNull ConfigurationSection section);
 
     /**
      * Save the values to a configuration.
      *
      * @param section The configuration that wil contain the values.
      */
-    default void save(ConfigurationSection section) {
+    default void save(@NotNull ConfigurationSection section) {
         // Do Nothing
     }
 
@@ -28,10 +28,7 @@ public interface IConfigurable {
      * @param path   The path to check.
      * @return The original section at the path, or a new one if a section did not exist.
      */
-    default ConfigurationSection getOrCreateSection(ConfigurationSection parent, String path) {
-        Validate.notNull(parent, "parent section must not be null!");
-        Validate.notEmpty(path, "path must not be empty!");
-
+    default ConfigurationSection getOrCreateSection(@NotNull ConfigurationSection parent, @NotNull String path) {
         ConfigurationSection oldSection = parent.getConfigurationSection(path);
         if (oldSection != null) {
             return oldSection;

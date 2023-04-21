@@ -2,35 +2,24 @@ package com.github.sirblobman.api.bungeecord.bungeeperms;
 
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 
 import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
-import com.github.sirblobman.api.utility.Validate;
 
 import net.alpenblock.bungeeperms.BungeePerms;
 import net.alpenblock.bungeeperms.BungeePermsAPI;
 import net.alpenblock.bungeeperms.Group;
 import net.alpenblock.bungeeperms.PermissionsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class BungeePermsHook implements IPermissionHook {
-    private final Plugin plugin;
-
-    public BungeePermsHook(Plugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return this.plugin;
-    }
-
+public record BungeePermsHook(Plugin plugin) implements IPermissionHook {
     @Override
     public boolean isDisabled() {
-        Plugin plugin = getPlugin();
+        Plugin plugin = plugin();
         ProxyServer proxy = plugin.getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
 
@@ -38,33 +27,28 @@ public final class BungeePermsHook implements IPermissionHook {
         return (bungeePerms == null);
     }
 
-    @NotNull
     @Override
-    public String getPrefix(UUID playerId) {
+    public @Nullable String getPrefix(@NotNull UUID playerId) {
         if (isDisabled()) {
-            return "";
+            return null;
         }
 
         String playerIdString = playerId.toString();
-        String prefix = BungeePermsAPI.userPrefix(playerIdString, null, null);
-        return (prefix == null || prefix.isBlank() ? "" : prefix);
+        return BungeePermsAPI.userPrefix(playerIdString, null, null);
     }
 
-    @NotNull
     @Override
-    public String getSuffix(UUID playerId) {
+    public @Nullable String getSuffix(@NotNull UUID playerId) {
         if (isDisabled()) {
-            return "";
+            return null;
         }
 
         String playerIdString = playerId.toString();
-        String suffix = BungeePermsAPI.userSuffix(playerIdString, null, null);
-        return (suffix == null || suffix.isBlank() ? "" : suffix);
+        return BungeePermsAPI.userSuffix(playerIdString, null, null);
     }
 
-    @Nullable
     @Override
-    public String getPrimaryGroupName(UUID playerId) {
+    public @Nullable String getPrimaryGroupName(@NotNull UUID playerId) {
         if (isDisabled()) {
             return null;
         }
@@ -74,7 +58,7 @@ public final class BungeePermsHook implements IPermissionHook {
     }
 
     @Override
-    public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
+    public int getPrimaryGroupWeight(@NotNull UUID playerId, int defaultWeight) {
         if (isDisabled()) {
             return defaultWeight;
         }

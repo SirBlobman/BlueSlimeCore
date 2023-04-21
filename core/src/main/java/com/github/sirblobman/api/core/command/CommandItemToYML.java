@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,18 +15,18 @@ import com.github.sirblobman.api.core.CorePlugin;
 import com.github.sirblobman.api.utility.ItemUtility;
 
 public final class CommandItemToYML extends PlayerCommand {
-    public CommandItemToYML(CorePlugin plugin) {
+    public CommandItemToYML(@NotNull CorePlugin plugin) {
         super(plugin, "item-to-yml");
         setPermissionName("blue.slime.core.command.item-to-yml");
     }
 
     @Override
-    public List<String> onTabComplete(Player player, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull Player player, String @NotNull [] args) {
         return Collections.emptyList();
     }
 
     @Override
-    public boolean execute(Player player, String[] args) {
+    public boolean execute(@NotNull Player player, String @NotNull [] args) {
         ItemStack item = getHeldItem(player);
         if (ItemUtility.isAir(item)) {
             sendMessage(player, "error.invalid-held-item");

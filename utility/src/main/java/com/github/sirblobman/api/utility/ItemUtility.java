@@ -3,6 +3,10 @@ package com.github.sirblobman.api.utility;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,7 +16,8 @@ public final class ItemUtility {
      * @param item The {@link ItemStack} to check.
      * @return {@code true} if the item is null or has an AIR material, {@code false} otherwise.
      */
-    public static boolean isAir(ItemStack item) {
+    @Contract("null -> true")
+    public static boolean isAir(@Nullable ItemStack item) {
         if (item == null) {
             return true;
         }
@@ -27,7 +32,7 @@ public final class ItemUtility {
     /**
      * @return an {@link ItemStack} with the type set to {@link Material#AIR}
      */
-    public static ItemStack getAir() {
+    public static @NotNull ItemStack getAir() {
         return new ItemStack(Material.AIR);
     }
 
@@ -35,7 +40,8 @@ public final class ItemUtility {
      * @param item The {@link ItemStack} to check.
      * @return {@code false} if the item is null or is missing {@link ItemMeta}, {@code true} otherwise.
      */
-    public static boolean hasItemMeta(ItemStack item) {
+    @Contract("null -> false")
+    public static boolean hasItemMeta(@Nullable ItemStack item) {
         if (isAir(item)) {
             return false;
         }
@@ -47,7 +53,8 @@ public final class ItemUtility {
      * @param item The {@link ItemStack} to check.
      * @return {@code false} if the item is null or is missing a display name, {@code true} otherwise.
      */
-    public static boolean hasDisplayName(ItemStack item) {
+    @Contract("null -> false")
+    public static boolean hasDisplayName(@Nullable ItemStack item) {
         if (!hasItemMeta(item)) {
             return false;
         }
@@ -64,7 +71,8 @@ public final class ItemUtility {
      * @param item The {@link ItemStack} to check.
      * @return {@code false} if the item is null or is missing a lore, {@code true} otherwise.
      */
-    public static boolean hasLore(ItemStack item) {
+    @Contract("null -> false")
+    public static boolean hasLore(@Nullable ItemStack item) {
         if (!hasItemMeta(item)) {
             return false;
         }
@@ -82,7 +90,8 @@ public final class ItemUtility {
      * @param query A {@link String} to check for in each line.
      * @return {@code true} if a line contains the string, {@code false} otherwise.
      */
-    public static boolean doesAnyLoreContain(ItemStack item, String query) {
+    @Contract("null,_ -> false")
+    public static boolean doesAnyLoreContain(@Nullable ItemStack item, @NotNull String query) {
         if (!hasLore(item)) {
             return false;
         }

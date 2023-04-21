@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,26 +17,23 @@ import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class SubCommandLanguageTest extends Command {
     private final CorePlugin plugin;
 
-    public SubCommandLanguageTest(CorePlugin plugin) {
+    public SubCommandLanguageTest(@NotNull CorePlugin plugin) {
         super(plugin, "language-test");
         setPermissionName("blue.slime.core.command.blueslimecore.language-test");
         this.plugin = plugin;
     }
 
-    @NotNull
     @Override
-    protected LanguageManager getLanguageManager() {
+    protected @NotNull LanguageManager getLanguageManager() {
         CorePlugin corePlugin = getCorePlugin();
         return corePlugin.getLanguageManager();
     }
 
     @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+    protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         if (args.length == 1) {
             Set<String> valueSet = getOnlinePlayerNames();
             return getMatching(args[0], valueSet);
@@ -44,7 +43,7 @@ public final class SubCommandLanguageTest extends Command {
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
         CommandSender target = sender;
         if (args.length > 0) {
             String targetName = args[0];
@@ -83,7 +82,7 @@ public final class SubCommandLanguageTest extends Command {
         return true;
     }
 
-    private CorePlugin getCorePlugin() {
+    private @NotNull CorePlugin getCorePlugin() {
         return this.plugin;
     }
 }

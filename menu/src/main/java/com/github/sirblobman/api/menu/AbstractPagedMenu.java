@@ -1,7 +1,10 @@
 package com.github.sirblobman.api.menu;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.TextReplacementConfig;
@@ -9,11 +12,11 @@ import com.github.sirblobman.api.shaded.adventure.text.TextReplacementConfig;
 public abstract class AbstractPagedMenu extends AbstractMenu {
     private int currentPage;
 
-    public AbstractPagedMenu(JavaPlugin plugin, Player player) {
+    public AbstractPagedMenu(@NotNull Plugin plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AbstractPagedMenu(IMenu parentMenu, JavaPlugin plugin, Player player) {
+    public AbstractPagedMenu(@Nullable IMenu parentMenu, @NotNull Plugin plugin, @NotNull Player player) {
         super(parentMenu, plugin, player);
         this.currentPage = 1;
     }

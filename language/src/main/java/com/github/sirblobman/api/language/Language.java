@@ -2,8 +2,6 @@ package com.github.sirblobman.api.language;
 
 import java.util.Locale;
 
-import com.github.sirblobman.api.utility.Validate;
-
 import org.jetbrains.annotations.NotNull;
 
 public final class Language {
@@ -11,9 +9,9 @@ public final class Language {
     private final LanguageConfiguration configuration;
     private final Locale javaLocale;
 
-    public Language(String languageName, LanguageConfiguration configuration) {
-        this.languageName = Validate.notEmpty(languageName, "languageName must not be empty!");
-        this.configuration = Validate.notNull(configuration, "configuration must not be null!");
+    public Language(@NotNull String languageName, @NotNull LanguageConfiguration configuration) {
+        this.languageName = languageName;
+        this.configuration = configuration;
 
         Locale javaLocale = Locale.forLanguageTag(languageName);
         if (javaLocale == null) {
@@ -23,18 +21,15 @@ public final class Language {
         }
     }
 
-    @NotNull
-    public String getLanguageName() {
+    public @NotNull String getLanguageName() {
         return this.languageName;
     }
 
-    @NotNull
-    public LanguageConfiguration getConfiguration() {
+    public @NotNull LanguageConfiguration getConfiguration() {
         return this.configuration;
     }
 
-    @NotNull
-    public Locale getJavaLocale() {
+    public @NotNull Locale getJavaLocale() {
         return this.javaLocale;
     }
 }

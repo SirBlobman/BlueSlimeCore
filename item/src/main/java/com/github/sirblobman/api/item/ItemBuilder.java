@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -12,84 +15,88 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.sirblobman.api.nms.ItemHandler;
-import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.shaded.xseries.XMaterial;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
 import com.github.sirblobman.api.utility.paper.PaperChecker;
 import com.github.sirblobman.api.utility.paper.PaperHelper;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
 public class ItemBuilder {
     protected ItemStack finalItem;
 
-    public ItemBuilder(ItemStack item) {
-        this.finalItem = Validate.notNull(item, "item must not be null!");
+    public ItemBuilder(@NotNull ItemStack item) {
+        this.finalItem = item.clone();
     }
 
-    public ItemBuilder(Material material) {
-        Validate.notNull(material, "material must not be null!");
-        this.finalItem = new ItemStack(material, 1);
+    public ItemBuilder(@NotNull Material material) {
+        this(new ItemStack(material, 1));
     }
 
-    public ItemBuilder(XMaterial material) {
-        Validate.notNull(material, "material must not be null!");
-        this.finalItem = material.parseItem();
+    public ItemBuilder(@NotNull XMaterial material) {
+        this(Validate.notNull(material.parseItem(), "material has an invalid item!"));
     }
 
-    final ItemStack getFinalItem() {
+    protected final @NotNull ItemStack getFinalItem() {
         return this.finalItem;
     }
 
-    public ItemStack build() {
-        return this.finalItem.clone();
+    public @NotNull ItemStack build() {
+        ItemStack finalItem = getFinalItem();
+        return finalItem.clone();
     }
 
-    public ItemBuilder withMaterial(Material material) {
+    public @NotNull ItemBuilder withMaterial(@NotNull Material material) {
         this.finalItem.setType(material);
         return this;
     }
 
-    public ItemBuilder withAmount(int amount) {
+    public @NotNull ItemBuilder withMaterial(@NotNull XMaterial material) {
+        Material bukkitMaterial = material.parseMaterial();
+        return (bukkitMaterial == null ? this : withMaterial(bukkitMaterial));
+    }
+
+    public @NotNull ItemBuilder withAmount(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("amount cannot be less than 0!");
         }
 
-        if (amount > 64) {
-            throw new IllegalArgumentException("amount cannot be greater than 64!");
+        int maxStackSize = this.finalItem.getMaxStackSize();
+        if(amount > maxStackSize) {
+            throw new IllegalArgumentException("amount cannot be greater than the max stack size!");
         }
 
         this.finalItem.setAmount(amount);
         return this;
     }
 
-    public ItemBuilder withMaxAmount() {
+    public @NotNull ItemBuilder withMaxAmount() {
         int maxAmount = this.finalItem.getMaxStackSize();
         return withAmount(maxAmount);
     }
 
-    @Nullable
-    public ItemMeta getItemMeta() {
+    public @Nullable ItemMeta getItemMeta() {
         return this.finalItem.getItemMeta();
     }
 
-    public ItemBuilder withItemMeta(@Nullable ItemMeta itemMeta) {
+    public @NotNull ItemBuilder withItemMeta(@Nullable ItemMeta itemMeta) {
         this.finalItem.setItemMeta(itemMeta);
         return this;
     }
 
-    @SuppressWarnings("deprecation")
-    public ItemBuilder withDamage(int damage) {
+    public @NotNull ItemBuilder withDamage(int damage) {
         int minorVersion = VersionUtility.getMinorVersion();
-        if (minorVersion < 13) {
-            short shortDamage = (short) damage;
-            this.finalItem.setDurability(shortDamage);
-            return this;
-        }
+        return (minorVersion < 13 ? withLegacyDamage((short) damage) : withModernDurability(damage));
+    }
 
-        ItemMeta itemMeta = this.finalItem.getItemMeta();
+    @SuppressWarnings("deprecation")
+    private @NotNull ItemBuilder withLegacyDamage(short damage) {
+        this.finalItem.setDurability(damage);
+        return this;
+    }
+
+    private @NotNull ItemBuilder withModernDurability(int damage) {
+        ItemMeta itemMeta = getItemMeta();
         if (itemMeta instanceof Damageable) {
             ((Damageable) itemMeta).setDamage(damage);
             return withItemMeta(itemMeta);
@@ -98,7 +105,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder withModel(@Nullable Integer model) {
+    public @NotNull ItemBuilder withModel(@Nullable Integer model) {
         int minorVersion = VersionUtility.getMinorVersion();
         if (minorVersion < 14) {
             return this;
@@ -113,7 +120,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withName(@Nullable String name) {
+    public @NotNull ItemBuilder withName(@Nullable String name) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -123,9 +130,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withName(ItemHandler itemHandler, @Nullable Component name) {
-        Validate.notNull(itemHandler, "itemHandler must not be null!");
-
+    public @NotNull ItemBuilder withName(@NotNull ItemHandler itemHandler, @Nullable Component name) {
         if (name == null) {
             return withName(null);
         }
@@ -139,7 +144,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder withLore(@Nullable List<String> loreList) {
+    public @NotNull ItemBuilder withLore(@Nullable List<String> loreList) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -149,15 +154,13 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withLore(String... loreArray) {
+    public @NotNull ItemBuilder withLore(String @NotNull ... loreArray) {
         List<String> loreList = new ArrayList<>();
         Collections.addAll(loreList, loreArray);
         return withLore(loreList);
     }
 
-    public ItemBuilder withLore(ItemHandler itemHandler, @Nullable List<Component> lore) {
-        Validate.notNull(itemHandler, "itemHandler must not be null!");
-
+    public @NotNull ItemBuilder withLore(@NotNull ItemHandler itemHandler, @Nullable List<Component> lore) {
         if (lore == null) {
             return withLore((List<String>) null);
         }
@@ -171,13 +174,13 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder withLore(ItemHandler itemHandler, Component... lines) {
+    public @NotNull ItemBuilder withLore(@NotNull ItemHandler itemHandler, Component @NotNull ... lines) {
         List<Component> lore = new ArrayList<>();
         Collections.addAll(lore, lines);
         return withLore(itemHandler, lore);
     }
 
-    public ItemBuilder appendLore(@NotNull String line) {
+    public @NotNull ItemBuilder appendLore(@NotNull String line) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null || !itemMeta.hasLore()) {
             return withLore(line);
@@ -191,7 +194,30 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withEnchantment(@NotNull Enchantment enchantment, int level) {
+    public @NotNull ItemBuilder appendLore(@NotNull ItemHandler itemHandler, @NotNull Component line) {
+        boolean paper = PaperChecker.hasNativeComponentSupport();
+        return (paper ? appendLorePaper(line) : appendLoreSpigot(itemHandler, line));
+    }
+
+    private @NotNull ItemBuilder appendLorePaper(@NotNull Component line) {
+        List<Component> lore = PaperHelper.getLore(this.finalItem);
+        lore = (lore == null ? new ArrayList<>() : new ArrayList<>(lore));
+        lore.add(line);
+
+        PaperHelper.setLore(this.finalItem, lore);
+        return this;
+    }
+
+    private @NotNull ItemBuilder appendLoreSpigot(@NotNull ItemHandler itemHandler, @NotNull Component line) {
+        List<Component> lore = itemHandler.getLore(this.finalItem);
+        lore = (lore == null ? new ArrayList<>() : new ArrayList<>(lore));
+        lore.add(line);
+
+        this.finalItem = itemHandler.setLore(this.finalItem, lore);
+        return this;
+    }
+
+    public @NotNull ItemBuilder withEnchantment(@NotNull Enchantment enchantment, int level) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -201,7 +227,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withFlags(@NotNull ItemFlag... flagArray) {
+    public @NotNull ItemBuilder withFlags(ItemFlag @NotNull ... flagArray) {
         ItemMeta itemMeta = getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -211,7 +237,7 @@ public class ItemBuilder {
         return withItemMeta(itemMeta);
     }
 
-    public ItemBuilder withGlowing() {
+    public @NotNull ItemBuilder withGlowing() {
         return withEnchantment(Enchantment.LUCK, 1).withFlags(ItemFlag.HIDE_ENCHANTS);
     }
 }

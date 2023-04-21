@@ -1,7 +1,11 @@
 package com.github.sirblobman.api.utility.paper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -15,13 +19,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
-import org.jetbrains.annotations.Nullable;
-
 import static com.github.sirblobman.api.utility.paper.ComponentConverter.normalToShaded;
 import static com.github.sirblobman.api.utility.paper.ComponentConverter.shadedToNormal;
 
 public final class PaperHelper {
-    public static void setDeathMessage(Component message, PlayerDeathEvent e) {
+    public static void setDeathMessage(@NotNull Component message, @NotNull PlayerDeathEvent e) {
         net.kyori.adventure.text.Component paperMessage = shadedToNormal(message);
         e.deathMessage(paperMessage);
     }
@@ -29,7 +31,7 @@ public final class PaperHelper {
     /**
      * @return The server TPS values [1m, 5m, 15m]
      */
-    public static double[] getServerTpsValues() {
+    public static double @NotNull [] getServerTpsValues() {
         Server server = Bukkit.getServer();
         return server.getTPS();
     }
@@ -43,12 +45,7 @@ public final class PaperHelper {
         return tpsArray[0];
     }
 
-    @Nullable
-    public static Component getCustomName(Entity entity) {
-        if (entity == null) {
-            return null;
-        }
-
+    public static @Nullable Component getCustomName(@NotNull Entity entity) {
         net.kyori.adventure.text.Component paperName = entity.customName();
         if (paperName == null) {
             return null;
@@ -57,11 +54,7 @@ public final class PaperHelper {
         return normalToShaded(paperName);
     }
 
-    public static void setCustomName(Entity entity, Component name) {
-        if (entity == null) {
-            return;
-        }
-
+    public static void setCustomName(@NotNull Entity entity, @Nullable Component name) {
         if (name == null) {
             entity.customName(null);
             return;
@@ -71,12 +64,7 @@ public final class PaperHelper {
         entity.customName(paperName);
     }
 
-    @Nullable
-    public static Component getDisplayName(ItemStack item) {
-        if (item == null) {
-            return null;
-        }
-
+    public static @Nullable Component getDisplayName(@NotNull ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return null;
@@ -94,8 +82,7 @@ public final class PaperHelper {
         return null;
     }
 
-    @Nullable
-    public static List<Component> getLore(ItemStack item) {
+    public static @Nullable List<Component> getLore(ItemStack item) {
         if (item == null) {
             return null;
         }
@@ -117,38 +104,45 @@ public final class PaperHelper {
         return null;
     }
 
-    public static void setDisplayName(ItemStack item, Component name) {
-        if (item == null) {
-            return;
-        }
-
+    public static void setDisplayName(@NotNull ItemStack item, @Nullable Component name) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return;
         }
 
-        net.kyori.adventure.text.Component paperName = shadedToNormal(name);
-        itemMeta.displayName(paperName);
+        if (name == null) {
+            itemMeta.displayName(null);
+        } else {
+            net.kyori.adventure.text.Component paperName = shadedToNormal(name);
+            itemMeta.displayName(paperName);
+        }
+
         item.setItemMeta(itemMeta);
     }
 
-    public static void setLore(ItemStack item, List<Component> lore) {
-        if (item == null) {
-            return;
-        }
-
+    public static void setLore(@NotNull ItemStack item, @Nullable List<Component> lore) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return;
         }
 
-        List<net.kyori.adventure.text.Component> paperLore = lore.parallelStream()
-                .map(ComponentConverter::shadedToNormal).collect(Collectors.toList());
-        itemMeta.lore(paperLore);
+        if (lore == null) {
+            itemMeta.lore(null);
+        } else {
+            List<net.kyori.adventure.text.Component> paperLore = new ArrayList<>();
+            for (Component line : lore) {
+                net.kyori.adventure.text.Component loreLine = shadedToNormal(line);
+                paperLore.add(loreLine);
+            }
+
+            itemMeta.lore(paperLore);
+        }
+
         item.setItemMeta(itemMeta);
     }
 
-    public static Inventory createInventory(InventoryHolder holder, int size, Component title) {
+    public static @NotNull Inventory createInventory(@Nullable InventoryHolder holder, int size,
+                                                     @NotNull Component title) {
         net.kyori.adventure.text.Component paperTitle = shadedToNormal(title);
 
         if (size == 5) {

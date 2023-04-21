@@ -3,6 +3,9 @@ package com.github.sirblobman.api.menu;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,40 +18,35 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.github.sirblobman.api.menu.button.AbstractButton;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractMenu extends BaseMenu {
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final Player player;
     private final Map<Integer, AbstractButton> buttonMap;
 
-    public AbstractMenu(JavaPlugin plugin, Player player) {
+    public AbstractMenu(@NotNull Plugin plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AbstractMenu(IMenu parentMenu, JavaPlugin plugin, Player player) {
+    public AbstractMenu(@Nullable IMenu parentMenu, @NotNull Plugin plugin, @NotNull Player player) {
         super(parentMenu);
-
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-        this.player = Validate.notNull(player, "player must not be null!");
-
-        if (!this.player.isOnline()) {
+        if (!player.isOnline()) {
             throw new IllegalArgumentException("player must be online!");
         }
 
+        this.plugin = plugin;
+        this.player = player;
         this.buttonMap = new ConcurrentHashMap<>();
     }
 
     @Override
-    public final JavaPlugin getPlugin() {
+    public final @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 
@@ -59,7 +57,7 @@ public abstract class AbstractMenu extends BaseMenu {
      * @return A filled {@link Inventory} instance with this menu instance as the holder.
      */
     @Override
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         int size = getSize();
         Component title = getTitle();
         Inventory inventory = getInventory(size, title);
@@ -125,13 +123,13 @@ public abstract class AbstractMenu extends BaseMenu {
     /**
      * @return The player that will open this menu.
      */
-    public final Player getPlayer() {
+    public final @NotNull Player getPlayer() {
         return this.player;
     }
 
     @Override
     public void open() {
-        JavaPlugin plugin = getPlugin();
+        Plugin plugin = getPlugin();
         Player player = getPlayer();
         player.closeInventory();
 
@@ -152,7 +150,7 @@ public abstract class AbstractMenu extends BaseMenu {
      * @param slot   The slot to contain the button.
      * @param button The button instance. Use {@code null} to remove the current button.
      */
-    protected final void setButton(int slot, AbstractButton button) {
+    protected final void setButton(int slot, @Nullable AbstractButton button) {
         if (button == null) {
             this.buttonMap.remove(slot);
             return;
@@ -164,7 +162,7 @@ public abstract class AbstractMenu extends BaseMenu {
     private void internalOpen() {
         this.buttonMap.clear();
 
-        JavaPlugin plugin = getPlugin();
+        Plugin plugin = getPlugin();
         Inventory inventory = getInventory();
 
         PluginManager pluginManager = Bukkit.getPluginManager();
@@ -174,7 +172,7 @@ public abstract class AbstractMenu extends BaseMenu {
         player.openInventory(inventory);
     }
 
-    private AbstractButton internalGetButton(int slot) {
+    private @Nullable AbstractButton internalGetButton(int slot) {
         return this.buttonMap.getOrDefault(slot, null);
     }
 
@@ -189,8 +187,7 @@ public abstract class AbstractMenu extends BaseMenu {
      * @param slot The slot that will contain the item stack.
      * @return An {@link ItemStack} or {@code null}
      */
-    @Nullable
-    public abstract ItemStack getItem(int slot);
+    public abstract @Nullable ItemStack getItem(int slot);
 
     /**
      * Get a button for a specific slot.
@@ -199,15 +196,13 @@ public abstract class AbstractMenu extends BaseMenu {
      * @return A custom button or action that will be triggered when the slot is clicked.
      * You can also return null if you do not want an action.
      */
-    @Nullable
-    public abstract AbstractButton getButton(int slot);
+    public abstract @Nullable AbstractButton getButton(int slot);
 
     /**
      * {@inheritDoc}
      */
-    @Nullable
     @Override
-    public abstract Component getTitle();
+    public abstract @Nullable Component getTitle();
 
     /**
      * Override this method to change whether a click is prevented or not.
@@ -221,7 +216,7 @@ public abstract class AbstractMenu extends BaseMenu {
      * {@inheritDoc}
      */
     @Override
-    public void onCustomClose(InventoryCloseEvent e) {
+    public void onCustomClose(@NotNull InventoryCloseEvent e) {
         // Do Nothing
     }
 }

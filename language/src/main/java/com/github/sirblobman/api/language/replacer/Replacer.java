@@ -1,30 +1,32 @@
 package com.github.sirblobman.api.language.replacer;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.TextReplacementConfig;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
 
 public abstract class Replacer {
     private final String target;
 
-    public Replacer(String target) {
-        this.target = Validate.notEmpty(target, "target must not be empty!");
+    public Replacer(@NotNull String target) {
+        this.target = target;
     }
 
-    public String getTarget() {
+    public @NotNull String getTarget() {
         return this.target;
     }
 
-    @NotNull
-    public abstract Component getReplacement();
+    public abstract @NotNull Component getReplacement();
 
-    @NotNull
-    public abstract String getReplacementString();
+    public abstract @NotNull String getReplacementString();
 
-    @NotNull
-    public final TextReplacementConfig asReplacementConfig() {
+    public final @NotNull String replaceString(@NotNull String original) {
+        String target = getTarget();
+        String replacement = getReplacementString();
+        return original.replace(target, replacement);
+    }
+
+    public final @NotNull TextReplacementConfig asReplacementConfig() {
         String target = getTarget();
         Component replacement = getReplacement();
         TextReplacementConfig.Builder builder = TextReplacementConfig.builder();

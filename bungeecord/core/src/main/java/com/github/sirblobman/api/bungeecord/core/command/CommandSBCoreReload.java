@@ -3,6 +3,8 @@ package com.github.sirblobman.api.bungeecord.core.command;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -10,23 +12,22 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
-import com.github.sirblobman.api.utility.Validate;
 
 public final class CommandSBCoreReload extends Command implements TabExecutor {
     private final CorePlugin plugin;
 
-    public CommandSBCoreReload(CorePlugin plugin) {
+    public CommandSBCoreReload(@NotNull CorePlugin plugin) {
         super("sbcorereload", "sbcore.reload", "sbcore-reload", "sbc-reload");
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+        this.plugin = plugin;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         return Collections.emptyList();
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(@NotNull CommandSender sender, String @NotNull [] args) {
         CorePlugin plugin = getPlugin();
         plugin.onReload();
 
@@ -35,7 +36,7 @@ public final class CommandSBCoreReload extends Command implements TabExecutor {
         sender.sendMessage(message);
     }
 
-    private CorePlugin getPlugin() {
+    private @NotNull CorePlugin getPlugin() {
         return this.plugin;
     }
 }

@@ -3,6 +3,8 @@ package com.github.sirblobman.api.plugin;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,8 +12,6 @@ import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.PlayerDataManager;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
-
-import org.jetbrains.annotations.NotNull;
 
 public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVersionPlugin {
     private final ConfigurationManager configurationManager;
@@ -53,7 +53,7 @@ public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVer
     }
 
     @Override
-    public final YamlConfiguration getConfig() {
+    public final @NotNull YamlConfiguration getConfig() {
         ConfigurationManager configurationManager = getConfigurationManager();
         return configurationManager.get("config.yml");
     }
@@ -63,23 +63,19 @@ public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVer
         configurationManager.reload("config.yml");
     }
 
-    @NotNull
-    public final ConfigurationManager getConfigurationManager() {
+    public final @NotNull ConfigurationManager getConfigurationManager() {
         return this.configurationManager;
     }
 
-    @NotNull
-    public final MultiVersionHandler getMultiVersionHandler() {
+    public final @NotNull MultiVersionHandler getMultiVersionHandler() {
         return this.multiVersionHandler;
     }
 
-    @NotNull
-    public final PlayerDataManager getPlayerDataManager() {
+    public final @NotNull PlayerDataManager getPlayerDataManager() {
         return this.playerDataManager;
     }
 
-    @NotNull
-    public final LanguageManager getLanguageManager() {
+    public final @NotNull LanguageManager getLanguageManager() {
         return this.languageManager;
     }
 
@@ -89,7 +85,7 @@ public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVer
         return configuration.getBoolean("debug-mode", false);
     }
 
-    public void printDebug(String message) {
+    public void printDebug(@NotNull String message) {
         if (isDebugMode()) {
             Logger logger = getLogger();
             String logMessage = String.format(Locale.US, "[Debug] %s", message);

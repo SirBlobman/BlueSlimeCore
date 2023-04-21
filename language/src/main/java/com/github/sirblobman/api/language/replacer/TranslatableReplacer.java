@@ -1,19 +1,19 @@
 package com.github.sirblobman.api.language.replacer;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.ComponentLike;
 import com.github.sirblobman.api.shaded.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
 
 public final class TranslatableReplacer extends Replacer {
     private final String translationKey;
     private final ComponentLike[] args;
 
-    public TranslatableReplacer(String target, String translationKey, ComponentLike... args) {
+    public TranslatableReplacer(@NotNull String target, @NotNull String translationKey,
+                                ComponentLike @NotNull ... args) {
         super(target);
-        this.translationKey = Validate.notEmpty(translationKey, "translation key must not be empty!");
+        this.translationKey = translationKey;
         this.args = args;
     }
 

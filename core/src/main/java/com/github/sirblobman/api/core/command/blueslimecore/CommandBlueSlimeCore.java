@@ -3,13 +3,15 @@ package com.github.sirblobman.api.core.command.blueslimecore;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.command.CommandSender;
 
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
 
 public final class CommandBlueSlimeCore extends Command {
-    public CommandBlueSlimeCore(CorePlugin plugin) {
+    public CommandBlueSlimeCore(@NotNull CorePlugin plugin) {
         super(plugin, "blueslimecore");
         setPermissionName("blue.slime.core.command.blueslimecore");
         addSubCommand(new SubCommandConfig(plugin));
@@ -19,12 +21,12 @@ public final class CommandBlueSlimeCore extends Command {
     }
 
     @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+    protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         return Collections.emptyList();
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
         return false;
     }
 }

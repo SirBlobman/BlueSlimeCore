@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.menu.button;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -7,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class QuickButton extends AbstractButton {
     @Override
-    public void onClick(InventoryClickEvent e) {
+    public void onClick(@NotNull InventoryClickEvent e) {
         HumanEntity human = e.getWhoClicked();
         if (!(human instanceof Player)) {
             return;
@@ -32,15 +34,15 @@ public class QuickButton extends AbstractButton {
         }
     }
 
-    public void onLeftClick(Player player, boolean shift) {
+    public void onLeftClick(@NotNull Player player, boolean shift) {
         // Do Nothing
     }
 
-    public void onRightClick(Player player, boolean shift) {
+    public void onRightClick(@NotNull Player player, boolean shift) {
         // Do Nothing
     }
 
-    public void onMiddleClick(Player player, boolean shift) {
+    public void onMiddleClick(@NotNull Player player, boolean shift) {
         // Do Nothing
     }
 }

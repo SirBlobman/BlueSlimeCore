@@ -1,5 +1,8 @@
 package com.github.sirblobman.api.core.menu;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,27 +20,26 @@ import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public final class ConfigurationSelectorMenu extends AbstractMenu {
     private final CorePlugin plugin;
 
-    public ConfigurationSelectorMenu(CorePlugin plugin, Player player) {
+    public ConfigurationSelectorMenu(@NotNull CorePlugin plugin, @NotNull Player player) {
         super(plugin, player);
         this.plugin = plugin;
     }
 
-    @NotNull
+    private @NotNull CorePlugin getCorePlugin() {
+        return this.plugin;
+    }
+
     @Override
-    public MultiVersionHandler getMultiVersionHandler() {
+    public @NotNull MultiVersionHandler getMultiVersionHandler() {
         CorePlugin plugin = getCorePlugin();
         return plugin.getMultiVersionHandler();
     }
 
-    @NotNull
     @Override
-    public LanguageManager getLanguageManager() {
+    public @NotNull LanguageManager getLanguageManager() {
         CorePlugin plugin = getCorePlugin();
         return plugin.getLanguageManager();
     }
@@ -47,9 +49,8 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
         return 5;
     }
 
-    @Nullable
     @Override
-    public ItemStack getItem(int slot) {
+    public @Nullable ItemStack getItem(int slot) {
         switch (slot) {
             case 0:
                 return getConfigItem();
@@ -64,9 +65,8 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
         return getFillerItem();
     }
 
-    @Nullable
     @Override
-    public AbstractButton getButton(int slot) {
+    public @Nullable AbstractButton getButton(int slot) {
         switch (slot) {
             case 0:
                 return getConfigButton();
@@ -81,9 +81,8 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
         return null;
     }
 
-    @Nullable
     @Override
-    public Component getTitle() {
+    public @Nullable Component getTitle() {
         return null;
     }
 
@@ -92,11 +91,7 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
         return true;
     }
 
-    private CorePlugin getCorePlugin() {
-        return this.plugin;
-    }
-
-    private ItemStack getFillerItem() {
+    private @NotNull ItemStack getFillerItem() {
         ItemBuilder builder = new ItemBuilder(XMaterial.LIGHT_GRAY_STAINED_GLASS_PANE);
 
         ItemHandler itemHandler = getItemHandler();
@@ -108,26 +103,26 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
         return builder.build();
     }
 
-    private ItemStack getConfigItem() {
+    private @Nullable ItemStack getConfigItem() {
         // TODO
         return null;
     }
 
-    private ItemStack getLanguageItem() {
+    private @Nullable ItemStack getLanguageItem() {
         // TODO
         return null;
     }
 
-    private ItemStack getExitItem() {
+    private @Nullable ItemStack getExitItem() {
         return null;
     }
 
-    private AbstractButton getConfigButton() {
+    private @Nullable AbstractButton getConfigButton() {
         // TODO
         return null;
     }
 
-    private AbstractButton getLanguageButton() {
+    private @NotNull AbstractButton getLanguageButton() {
         CorePlugin plugin = getCorePlugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         YamlConfiguration configuration = configurationManager.get("language.yml");
@@ -137,7 +132,7 @@ public final class ConfigurationSelectorMenu extends AbstractMenu {
         return new OpenMenuButton(menu);
     }
 
-    private AbstractButton getExitButton() {
+    private @NotNull AbstractButton getExitButton() {
         return new ExitButton(this);
     }
 }

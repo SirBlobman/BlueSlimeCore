@@ -3,6 +3,8 @@ package com.github.sirblobman.api.core;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -28,10 +30,10 @@ import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
-import com.github.sirblobman.api.shaded.bstats.bukkit.Metrics;
-import com.github.sirblobman.api.shaded.bstats.charts.SimplePie;
 import com.github.sirblobman.api.update.UpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
+import com.github.sirblobman.api.shaded.bstats.bukkit.Metrics;
+import com.github.sirblobman.api.shaded.bstats.charts.SimplePie;
 
 public final class CorePlugin extends ConfigurablePlugin {
     private final CoreConfiguration coreConfiguration;
@@ -90,11 +92,11 @@ public final class CorePlugin extends ConfigurablePlugin {
         registerListeners();
     }
 
-    public CoreConfiguration getCoreConfiguration() {
+    public @NotNull CoreConfiguration getCoreConfiguration() {
         return this.coreConfiguration;
     }
 
-    public UpdateManager getUpdateManager() {
+    public @NotNull UpdateManager getUpdateManager() {
         return this.updateManager;
     }
 
@@ -134,7 +136,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         printClassNames(bossBarHandler, scoreboardHandler, entityHandler, headHandler, itemHandler, playerHandler);
     }
 
-    private void printClassNames(Object... objects) {
+    private void printClassNames(Object @NotNull ... objects) {
         for (Object object : objects) {
             if (object != null) {
                 printClassName(object);
@@ -142,7 +144,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         }
     }
 
-    private void printClassName(Object object) {
+    private void printClassName(@NotNull Object object) {
         Logger logger = getLogger();
         String className = getClassName(object);
 
@@ -150,7 +152,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         logger.info(message);
     }
 
-    private String getClassName(Object object) {
+    private String getClassName(@NotNull Object object) {
         Class<?> objectClass = (object instanceof Class ? (Class<?>) object : object.getClass());
         return objectClass.getName();
     }
@@ -183,7 +185,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         metrics.addCustomChart(new SimplePie("selected_language", this::getDefaultLanguageName));
     }
 
-    private String getDefaultLanguageName() {
+    private @NotNull String getDefaultLanguageName() {
         LanguageManager languageManager = getLanguageManager();
         Language defaultLanguage = languageManager.getDefaultLanguage();
         if (defaultLanguage == null) {

@@ -1,11 +1,10 @@
 package com.github.sirblobman.api.item;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.inventory.EquipmentSlot;
 
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
 
 public enum ArmorType {
     HELMET(EquipmentSlot.HEAD),
@@ -15,18 +14,15 @@ public enum ArmorType {
 
     private final EquipmentSlot equipmentSlot;
 
-    ArmorType(EquipmentSlot equipmentSlot) {
-        this.equipmentSlot = Validate.notNull(equipmentSlot, "equipmentSlot must not be null!");
+    ArmorType(@NotNull EquipmentSlot equipmentSlot) {
+        this.equipmentSlot = equipmentSlot;
     }
 
-    @NotNull
-    public EquipmentSlot getEquipmentSlot() {
+    public @NotNull EquipmentSlot getEquipmentSlot() {
         return this.equipmentSlot;
     }
 
-    @NotNull
-    public XMaterial getArmorMaterial(ArmorMaterialType materialType) {
-        Validate.notNull(materialType, "materialType must not be null!");
+    public @NotNull XMaterial getArmorMaterial(@NotNull ArmorMaterialType materialType) {
         return materialType.getArmorMaterial(this);
     }
 }

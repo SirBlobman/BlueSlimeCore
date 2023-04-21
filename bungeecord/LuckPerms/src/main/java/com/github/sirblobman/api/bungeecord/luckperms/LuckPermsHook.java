@@ -3,12 +3,14 @@ package com.github.sirblobman.api.bungeecord.luckperms;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 
 import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
-import com.github.sirblobman.api.utility.Validate;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -18,24 +20,11 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class LuckPermsHook implements IPermissionHook {
-    private final Plugin plugin;
-
-    public LuckPermsHook(Plugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return this.plugin;
-    }
-
+public record LuckPermsHook(Plugin plugin) implements IPermissionHook {
     @Override
     public boolean isDisabled() {
-        Plugin plugin = getPlugin();
+        Plugin plugin = plugin();
         ProxyServer proxy = plugin.getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
 
@@ -43,18 +32,17 @@ public final class LuckPermsHook implements IPermissionHook {
         return (luckPerms == null);
     }
 
-    @NotNull
     @Override
-    public String getPrefix(UUID playerId) {
+    public @Nullable String getPrefix(@NotNull UUID playerId) {
         if (isDisabled()) {
-            return "";
+            return null;
         }
 
         LuckPerms luckPerms = LuckPermsProvider.get();
         UserManager userManager = luckPerms.getUserManager();
         User user = userManager.getUser(playerId);
         if (user == null) {
-            return "";
+            return null;
         }
 
         CachedDataManager dataManager = user.getCachedData();
@@ -63,9 +51,8 @@ public final class LuckPermsHook implements IPermissionHook {
         return (prefix == null || prefix.isBlank() ? "" : prefix);
     }
 
-    @NotNull
     @Override
-    public String getSuffix(UUID playerId) {
+    public @NotNull String getSuffix(@NotNull UUID playerId) {
         if (isDisabled()) {
             return "";
         }
@@ -83,9 +70,8 @@ public final class LuckPermsHook implements IPermissionHook {
         return (suffix == null || suffix.isBlank() ? "" : suffix);
     }
 
-    @Nullable
     @Override
-    public String getPrimaryGroupName(UUID playerId) {
+    public @Nullable String getPrimaryGroupName(@NotNull UUID playerId) {
         if (isDisabled()) {
             return null;
         }
@@ -101,7 +87,7 @@ public final class LuckPermsHook implements IPermissionHook {
     }
 
     @Override
-    public int getPrimaryGroupWeight(UUID playerId, int defaultWeight) {
+    public int getPrimaryGroupWeight(@NotNull UUID playerId, int defaultWeight) {
         if (isDisabled()) {
             return defaultWeight;
         }

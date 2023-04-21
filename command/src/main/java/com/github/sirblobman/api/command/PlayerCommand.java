@@ -3,6 +3,8 @@ package com.github.sirblobman.api.command;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,7 +15,7 @@ public abstract class PlayerCommand extends Command {
     }
 
     @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+    protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             return onTabComplete(player, args);
@@ -23,7 +25,7 @@ public abstract class PlayerCommand extends Command {
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             return execute(player, args);
@@ -38,7 +40,7 @@ public abstract class PlayerCommand extends Command {
      * @param args   An array of command arguments.
      * @return The list of tab completions for this combination of sender and command arguments.
      */
-    protected abstract List<String> onTabComplete(Player player, String[] args);
+    protected abstract @NotNull List<String> onTabComplete(@NotNull Player player, String @NotNull [] args);
 
     /**
      * @param player The {@link Player} that is executing this command.
@@ -46,5 +48,5 @@ public abstract class PlayerCommand extends Command {
      * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command
      * usage.
      */
-    protected abstract boolean execute(Player player, String[] args);
+    protected abstract boolean execute(@NotNull Player player, @NotNull String @NotNull [] args);
 }

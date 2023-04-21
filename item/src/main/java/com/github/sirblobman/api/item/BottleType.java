@@ -1,12 +1,11 @@
 package com.github.sirblobman.api.item;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public enum BottleType {
     /**
@@ -26,23 +25,21 @@ public enum BottleType {
 
     private final XMaterial material;
 
-    BottleType(XMaterial material) {
-        this.material = Validate.notNull(material, "material must not be null!");
+    BottleType(@NotNull XMaterial material) {
+        this.material = material;
     }
 
     /**
      * @return A {@link XMaterial} value that matches this potion type.
      */
-    @NotNull
-    public XMaterial getMaterial() {
+    public @NotNull XMaterial getMaterial() {
         return this.material;
     }
 
     /**
      * @return An {@link ItemStack} that matches this potion type, or {@code null}.
      */
-    @Nullable
-    public ItemStack getItem() {
+    public @Nullable ItemStack getItem() {
         XMaterial material = getMaterial();
         return material.parseItem();
     }

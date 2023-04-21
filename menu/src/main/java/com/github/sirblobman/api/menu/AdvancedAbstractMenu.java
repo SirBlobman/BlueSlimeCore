@@ -1,5 +1,8 @@
 package com.github.sirblobman.api.menu;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,32 +14,29 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.github.sirblobman.api.utility.Validate;
-
-public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends BaseMenu implements Runnable {
-    private final Plugin plugin;
+public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu implements Runnable {
+    private final P plugin;
     private final Player player;
     private BukkitTask currentTask;
 
-    public AdvancedAbstractMenu(Plugin plugin, Player player) {
+    public AdvancedAbstractMenu(@NotNull P plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AdvancedAbstractMenu(IMenu parentMenu, Plugin plugin, Player player) {
+    public AdvancedAbstractMenu(@Nullable IMenu parentMenu, @NotNull P plugin, @NotNull Player player) {
         super(parentMenu);
-
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-        this.player = Validate.notNull(player, "player must not be null!");
+        this.plugin = plugin;
+        this.player = player;
         this.currentTask = null;
     }
 
     @Override
-    public final Plugin getPlugin() {
+    public final @NotNull P getPlugin() {
         return this.plugin;
     }
 
@@ -49,7 +49,7 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
     }
 
     @Override
-    public void onCustomClose(InventoryCloseEvent e) {
+    public void onCustomClose(@NotNull InventoryCloseEvent e) {
         onValidClose(e);
     }
 
@@ -102,7 +102,7 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
         onValidDrag(e);
     }
 
-    public final Player getPlayer() {
+    public final @NotNull Player getPlayer() {
         return this.player;
     }
 
@@ -110,13 +110,13 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
         Player player = getPlayer();
         player.closeInventory();
 
-        Plugin plugin = getPlugin();
+        P plugin = getPlugin();
         BukkitScheduler scheduler = Bukkit.getScheduler();
         scheduler.runTaskLater(plugin, this::internalOpen, 1L);
     }
 
     private void internalOpen() {
-        Plugin plugin = getPlugin();
+        P plugin = getPlugin();
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(this, plugin);
 
@@ -130,22 +130,24 @@ public abstract class AdvancedAbstractMenu<Plugin extends JavaPlugin> extends Ba
 
     private void internalClose() {
         HandlerList.unregisterAll(this);
-        if (this.currentTask != null) {
-            try {
-                this.currentTask.cancel();
-            } catch (Exception ignored) {
+        if (this.currentTask == null) {
+            return;
+        }
 
-            } finally {
-                this.currentTask = null;
-            }
+        try {
+            this.currentTask.cancel();
+        } catch (Exception ignored) {
+            // Do Nothing
+        } finally {
+            this.currentTask = null;
         }
     }
 
-    public abstract Inventory getInventory();
+    public abstract @NotNull Inventory getInventory();
 
-    protected abstract void onValidClose(InventoryCloseEvent e);
+    protected abstract void onValidClose(@NotNull InventoryCloseEvent e);
 
-    protected abstract void onValidClick(InventoryClickEvent e);
+    protected abstract void onValidClick(@NotNull InventoryClickEvent e);
 
-    protected abstract void onValidDrag(InventoryDragEvent e);
+    protected abstract void onValidDrag(@NotNull InventoryDragEvent e);
 }

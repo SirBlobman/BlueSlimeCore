@@ -17,6 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.MatchResult;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -36,6 +39,8 @@ import com.github.sirblobman.api.language.custom.ModifiableMessageType;
 import com.github.sirblobman.api.language.custom.PlayerListInfo;
 import com.github.sirblobman.api.language.listener.LanguageListener;
 import com.github.sirblobman.api.language.replacer.Replacer;
+import com.github.sirblobman.api.utility.Validate;
+import com.github.sirblobman.api.utility.VersionUtility;
 import com.github.sirblobman.api.shaded.adventure.audience.Audience;
 import com.github.sirblobman.api.shaded.adventure.platform.AudienceProvider;
 import com.github.sirblobman.api.shaded.adventure.platform.bukkit.BukkitAudiences;
@@ -47,12 +52,8 @@ import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.shaded.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import com.github.sirblobman.api.shaded.adventure.title.Title;
 import com.github.sirblobman.api.shaded.adventure.title.Title.Times;
-import com.github.sirblobman.api.utility.Validate;
-import com.github.sirblobman.api.utility.VersionUtility;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 public final class LanguageManager {
@@ -94,9 +95,8 @@ public final class LanguageManager {
     private Language consoleLanguage;
 
 
-    public LanguageManager(ConfigurationManager configurationManager) {
-        this.configurationManager = Validate.notNull(configurationManager,
-                "configurationManager must not be null!");
+    public LanguageManager(@NotNull ConfigurationManager configurationManager) {
+        this.configurationManager = configurationManager;
         this.plugin = configurationManager.getResourceHolder();
 
         this.localeMap = new HashMap<>();
@@ -108,45 +108,41 @@ public final class LanguageManager {
         this.miniMessage = builder.build();
     }
 
-    @NotNull
-    public IResourceHolder getPlugin() {
+    public @NotNull IResourceHolder getPlugin() {
         return this.plugin;
     }
 
-    @NotNull
-    public Logger getLogger() {
+    public @NotNull Logger getLogger() {
         IResourceHolder plugin = getPlugin();
         return plugin.getLogger();
     }
 
-    @NotNull
-    public MiniMessage getMiniMessage() {
+    public @NotNull MiniMessage getMiniMessage() {
         return this.miniMessage;
     }
 
-    public ConfigurationManager getConfigurationManager() {
+    public @NotNull ConfigurationManager getConfigurationManager() {
         return this.configurationManager;
     }
 
-    public String getCachedLocale(OfflinePlayer player) {
+    public @NotNull String getCachedLocale(@NotNull OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         return this.localeMap.get(playerId);
     }
 
-    public void setLocale(Player player, String locale) {
+    public void setLocale(@NotNull Player player, @NotNull String locale) {
         printDebug("Detected setLocale for player '" + player.getName() + "' and locale '" + locale + "'.");
         UUID playerId = player.getUniqueId();
         this.localeMap.put(playerId, locale);
     }
 
-    public void removeLocale(Player player) {
+    public void removeLocale(@NotNull Player player) {
         printDebug("Detected removeLocale for player '" + player.getName() + "'.");
         UUID playerId = player.getUniqueId();
         this.localeMap.remove(playerId);
     }
 
-    @Nullable
-    public Language getDefaultLanguage() {
+    public @Nullable Language getDefaultLanguage() {
         if (this.defaultLanguage != null) {
             return this.defaultLanguage;
         }
@@ -161,8 +157,7 @@ public final class LanguageManager {
         return this.defaultLanguage;
     }
 
-    @Nullable
-    public Language getConsoleLanguage() {
+    public @Nullable Language getConsoleLanguage() {
         if (this.forceDefaultLanguage) {
             return getDefaultLanguage();
         }
@@ -187,8 +182,7 @@ public final class LanguageManager {
         return this.consoleLanguage;
     }
 
-    @Nullable
-    public Language getLanguage(String name) {
+    public @Nullable Language getLanguage(@Nullable String name) {
         printDebug("Detected getLanguage for name '" + name + "'...");
 
         Language defaultLanguage = getDefaultLanguage();
@@ -201,16 +195,14 @@ public final class LanguageManager {
         return this.languageMap.getOrDefault(name, defaultLanguage);
     }
 
-    @Nullable
-    private Language getPlayerLanguage(Player player) {
+    private @Nullable Language getPlayerLanguage(@NotNull Player player) {
         printDebug("Detected getPlayerLanguage for player '" + player.getName() + "'.");
         String cachedLocale = getCachedLocale(player);
         printDebug("Cached Locale Name: " + cachedLocale);
         return getLanguage(cachedLocale);
     }
 
-    @Nullable
-    public Language getLanguage(CommandSender sender) {
+    public @Nullable Language getLanguage(@Nullable CommandSender sender) {
         if (this.forceDefaultLanguage) {
             return getDefaultLanguage();
         }
@@ -277,7 +269,7 @@ public final class LanguageManager {
         }
     }
 
-    public void printDebug(String message) {
+    public void printDebug(@NotNull String message) {
         if (!this.debugLanguage) {
             return;
         }
@@ -286,7 +278,7 @@ public final class LanguageManager {
         logger.info("[Debug] [Language] " + message);
     }
 
-    public void printMiniMessageDebug(String message) {
+    public void printMiniMessageDebug(@NotNull String message) {
         printDebug("[MiniMessage] " + message);
     }
 
@@ -353,7 +345,7 @@ public final class LanguageManager {
         }
     }
 
-    private YamlConfiguration reloadLanguageFile(File file) {
+    private @Nullable YamlConfiguration reloadLanguageFile(@NotNull File file) {
         String languageFileName = file.getName();
         String languageName = languageFileName.replace(".lang.yml", "");
 
@@ -370,7 +362,7 @@ public final class LanguageManager {
         }
     }
 
-    private LanguageConfiguration reloadLanguage(YamlConfiguration configuration) {
+    private @NotNull LanguageConfiguration reloadLanguage(@NotNull YamlConfiguration configuration) {
         MiniMessage miniMessage = getMiniMessage();
         LanguageConfiguration languageConfiguration = new LanguageConfiguration(configuration, miniMessage);
 
@@ -401,9 +393,8 @@ public final class LanguageManager {
         return languageConfiguration;
     }
 
-    @NotNull
-    private String replacePlaceholderAPI(CommandSender audience, String message) {
-        if (message == null || message.isEmpty()) {
+    private @NotNull String replacePlaceholderAPI(@Nullable CommandSender audience, @NotNull String message) {
+        if (message.isEmpty()) {
             return "";
         }
 
@@ -415,12 +406,7 @@ public final class LanguageManager {
         return PlaceholderAPI.setPlaceholders(player, message);
     }
 
-    @NotNull
-    private Component replacePlaceholderAPI(CommandSender audience, Component message) {
-        if (message == null) {
-            return Component.empty();
-        }
-
+    private @NotNull Component replacePlaceholderAPI(@Nullable CommandSender audience, @NotNull Component message) {
         if (!(audience instanceof OfflinePlayer)) {
             return message;
         }
@@ -434,12 +420,12 @@ public final class LanguageManager {
         return message.replaceText(textReplacementConfig);
     }
 
-    @SuppressWarnings("UnnecessaryUnicodeEscape")
-    private ComponentLike replacePlaceholderAPI(OfflinePlayer player, MatchResult matchResult) {
+    private @NotNull ComponentLike replacePlaceholderAPI(@NotNull OfflinePlayer player,
+                                                         @NotNull MatchResult matchResult) {
         String match = matchResult.group();
         String replaced = PlaceholderAPI.setPlaceholders(player, match);
 
-        if (replaced.contains("\u00A7")) {
+        if (replaced.contains("§")) {
             LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
             return serializer.deserialize(replaced);
         } else {
@@ -448,8 +434,7 @@ public final class LanguageManager {
         }
     }
 
-    @NotNull
-    public String getMessageRaw(@Nullable CommandSender audience, @NotNull String key) {
+    public @NotNull String getMessageRaw(@Nullable CommandSender audience, @NotNull String key) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -463,8 +448,8 @@ public final class LanguageManager {
         return configuration.getRawMessage(key);
     }
 
-    @NotNull
-    public String getMessageString(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public @NotNull String getMessageString(@Nullable CommandSender audience, @NotNull String key,
+                                            Replacer @NotNull ... replacerArray) {
         String message = getMessageRaw(audience, key);
 
         if (this.usePlaceholderAPI) {
@@ -480,9 +465,8 @@ public final class LanguageManager {
         return message;
     }
 
-    @NotNull
-    public List<Component> getMessageList(@Nullable CommandSender audience, @NotNull String key,
-                                          Replacer... replacerArray) {
+    public @NotNull List<Component> getMessageList(@Nullable CommandSender audience, @NotNull String key,
+                                                   Replacer @NotNull ... replacerArray) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -519,8 +503,8 @@ public final class LanguageManager {
         return messages;
     }
 
-    @NotNull
-    public Component getMessage(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public @NotNull Component getMessage(@Nullable CommandSender audience, @NotNull String key,
+                                         Replacer @NotNull ... replacerArray) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -545,8 +529,8 @@ public final class LanguageManager {
         return message;
     }
 
-    @NotNull
-    public Component getMessageWithPrefix(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public @NotNull Component getMessageWithPrefix(@Nullable CommandSender audience, @NotNull String key,
+                                                   Replacer @NotNull ... replacerArray) {
         Component message = getMessage(audience, key, replacerArray);
         if (Component.empty().equals(message)) {
             return Component.empty();
@@ -560,8 +544,8 @@ public final class LanguageManager {
         return message;
     }
 
-    @NotNull
-    public ModifiableMessage getMessageModifiable(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public @NotNull ModifiableMessage getMessageModifiable(@Nullable CommandSender audience, @NotNull String key,
+                                                           Replacer @NotNull ... replacerArray) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -593,8 +577,8 @@ public final class LanguageManager {
         return newModifiable;
     }
 
-    @NotNull
-    public Title getTitle(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public @NotNull Title getTitle(@Nullable CommandSender audience, @NotNull String key,
+                                   Replacer @NotNull ... replacerArray) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -625,8 +609,8 @@ public final class LanguageManager {
         return Title.title(titleMessage, subtitleMessage, times);
     }
 
-    @NotNull
-    public PlayerListInfo getPlayerListInfo(@Nullable CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public @NotNull PlayerListInfo getPlayerListInfo(@Nullable CommandSender audience, @NotNull String key,
+                                                     Replacer @NotNull ... replacerArray) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -659,8 +643,7 @@ public final class LanguageManager {
         return newPlayerListInfo;
     }
 
-    @Nullable
-    public Sound getSound(@Nullable CommandSender audience, @NotNull String key) {
+    public @Nullable Sound getSound(@Nullable CommandSender audience, @NotNull String key) {
         Validate.notEmpty(key, "key must not be empty!");
 
         Language language = getLanguage(audience);
@@ -674,8 +657,7 @@ public final class LanguageManager {
         return configuration.getSound(key);
     }
 
-    @Nullable
-    public Audience getAudience(CommandSender sender) {
+    public @Nullable Audience getAudience(CommandSender sender) {
         if (this.audienceProvider == null) {
             return null;
         }
@@ -689,13 +671,14 @@ public final class LanguageManager {
         return this.audienceProvider.console();
     }
 
-    private void sendNoAudience(CommandSender sender, Component message) {
+    private void sendNoAudience(@NotNull CommandSender sender, @NotNull Component message) {
         BaseComponent[] bungeeComponents = ComponentBungeeConverter.toBungee(message);
         CommandSender.Spigot spigot = sender.spigot();
         spigot.sendMessage(bungeeComponents);
     }
 
-    public void sendMessage(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public void sendMessage(@NotNull CommandSender audience, @NotNull String key,
+                            Replacer @NotNull ... replacerArray) {
         Component message = getMessage(audience, key, replacerArray);
         sendMessage(audience, message);
     }
@@ -714,12 +697,14 @@ public final class LanguageManager {
         realAudience.sendMessage(message);
     }
 
-    public void sendMessageWithPrefix(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public void sendMessageWithPrefix(@NotNull CommandSender audience, @NotNull String key,
+                                      Replacer @NotNull ... replacerArray) {
         Component message = getMessageWithPrefix(audience, key, replacerArray);
         sendMessage(audience, message);
     }
 
-    public void sendActionBar(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public void sendActionBar(@NotNull CommandSender audience, @NotNull String key,
+                              Replacer @NotNull ... replacerArray) {
         Component message = getMessage(audience, key, replacerArray);
         sendActionBar(audience, message);
     }
@@ -737,7 +722,8 @@ public final class LanguageManager {
         realAudience.sendActionBar(message);
     }
 
-    public void sendModifiableMessage(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public void sendModifiableMessage(@NotNull CommandSender audience, @NotNull String key,
+                                      Replacer @NotNull ... replacerArray) {
         ModifiableMessage modifiable = getMessageModifiable(audience, key, replacerArray);
         Component message = modifiable.getMessage();
 
@@ -752,7 +738,8 @@ public final class LanguageManager {
         }
     }
 
-    public void sendTitle(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public void sendTitle(@NotNull CommandSender audience, @NotNull String key,
+                          Replacer @NotNull ... replacerArray) {
         Title title = getTitle(audience, key, replacerArray);
         sendTitle(audience, title);
     }
@@ -770,16 +757,13 @@ public final class LanguageManager {
         realAudience.showTitle(title);
     }
 
-    public void sendPlayerListInfo(@NotNull CommandSender audience, @NotNull String key, Replacer... replacerArray) {
+    public void sendPlayerListInfo(@NotNull CommandSender audience, @NotNull String key,
+                                   Replacer @NotNull ... replacerArray) {
         PlayerListInfo playerListInfo = getPlayerListInfo(audience, key, replacerArray);
         sendPlayerListInfo(audience, playerListInfo);
     }
 
     public void sendPlayerListInfo(@NotNull CommandSender audience, @NotNull PlayerListInfo info) {
-        if (Component.empty().equals(info.getHeader()) && Component.empty().equals(info.getFooter())) {
-            return;
-        }
-
         Audience realAudience = getAudience(audience);
         if (realAudience == null) {
             return;
@@ -808,12 +792,18 @@ public final class LanguageManager {
         realAudience.playSound(sound);
     }
 
-    public void broadcastMessage(@NotNull String key, @Nullable String permission, Replacer... replacerArray) {
+    public void broadcastMessage(@NotNull String key, @Nullable String permission,
+                                 Replacer @NotNull ... replacerArray) {
+        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
+        broadcastMessage(onlinePlayerCollection, key, permission, replacerArray);
+    }
+
+    public void broadcastMessage(@NotNull Iterable<? extends Player> players, @NotNull String key,
+                                 @Nullable String permission, Replacer @NotNull ... replacerArray) {
         CommandSender console = Bukkit.getConsoleSender();
         sendMessage(console, key, replacerArray);
 
-        Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
-        for (Player player : onlinePlayerCollection) {
+        for (Player player : players) {
             if (hasPermission(player, permission)) {
                 sendMessage(player, key, replacerArray);
             }
@@ -828,7 +818,7 @@ public final class LanguageManager {
         return player.hasPermission(permission);
     }
 
-    public DecimalFormat getDecimalFormat(@Nullable CommandSender sender) {
+    public @NotNull DecimalFormat getDecimalFormat(@Nullable CommandSender sender) {
         Language language = getLanguage(sender);
         if (language == null) {
             DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.US);

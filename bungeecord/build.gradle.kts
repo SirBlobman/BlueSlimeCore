@@ -1,4 +1,8 @@
-allprojects {
+tasks.named("jar") {
+    enabled = false;
+}
+
+subprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

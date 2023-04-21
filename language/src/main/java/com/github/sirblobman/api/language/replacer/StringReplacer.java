@@ -1,21 +1,21 @@
 package com.github.sirblobman.api.language.replacer;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
-import com.github.sirblobman.api.utility.Validate;
-
 import org.jetbrains.annotations.NotNull;
+
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public final class StringReplacer extends Replacer {
     private final String replacement;
 
-    public StringReplacer(String target, String replacement) {
+    public StringReplacer(@NotNull String target, @NotNull String replacement) {
         super(target);
-        this.replacement = Validate.notNull(replacement, "replacement must not be null!");
+        this.replacement = replacement;
     }
 
     @Override
     public @NotNull Component getReplacement() {
-        return Component.text(this.replacement);
+        String replacement = getReplacementString();
+        return Component.text(replacement);
     }
 
     @Override

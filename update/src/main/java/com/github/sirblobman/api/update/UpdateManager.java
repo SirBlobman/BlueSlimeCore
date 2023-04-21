@@ -13,6 +13,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -20,10 +23,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.Nullable;
 
 public final class UpdateManager {
     private static final String BASE_UPDATE_URL;
@@ -38,8 +37,8 @@ public final class UpdateManager {
     private final Map<String, Long> pluginResourceMap;
     private final Map<String, String> spigotVersionCache;
 
-    public UpdateManager(JavaPlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+    public UpdateManager(@NotNull JavaPlugin plugin) {
+        this.plugin = plugin;
         this.pluginResourceMap = new HashMap<>();
         this.spigotVersionCache = new HashMap<>();
     }
@@ -50,7 +49,7 @@ public final class UpdateManager {
      * @param plugin     The plugin that will be checked for updates.
      * @param resourceId The SpigotMC resource id for the plugin.
      */
-    public void addResource(Plugin plugin, long resourceId) {
+    public void addResource(@NotNull Plugin plugin, long resourceId) {
         String pluginName = plugin.getName();
         this.pluginResourceMap.put(pluginName, resourceId);
     }
@@ -60,7 +59,7 @@ public final class UpdateManager {
      *
      * @param plugin The plugin to remove.
      */
-    public void removeResource(Plugin plugin) {
+    public void removeResource(@NotNull Plugin plugin) {
         String pluginName = plugin.getName();
         this.pluginResourceMap.remove(pluginName);
     }
@@ -78,8 +77,7 @@ public final class UpdateManager {
         scheduler.runTaskLaterAsynchronously(this.plugin, this::internalCheckForUpdates, 1L);
     }
 
-    @Nullable
-    public String getSpigotVersion(Plugin plugin) {
+    public @Nullable String getSpigotVersion(@NotNull Plugin plugin) {
         String pluginName = plugin.getName();
         return this.spigotVersionCache.getOrDefault(pluginName, null);
     }
@@ -96,7 +94,7 @@ public final class UpdateManager {
         pluginNameSet.forEach(this::printUpdateInformation);
     }
 
-    private void printUpdateInformation(String pluginName) {
+    private void printUpdateInformation(@NotNull String pluginName) {
         Long resourceId = this.pluginResourceMap.getOrDefault(pluginName, null);
         if (resourceId == null) {
             return;
@@ -142,7 +140,7 @@ public final class UpdateManager {
         pluginNameSet.forEach(this::retrieveSpigotVersion);
     }
 
-    private void retrieveSpigotVersion(String pluginName) {
+    private void retrieveSpigotVersion(@NotNull String pluginName) {
         try {
             Long resourceId = this.pluginResourceMap.getOrDefault(pluginName, null);
             if (resourceId == null) {

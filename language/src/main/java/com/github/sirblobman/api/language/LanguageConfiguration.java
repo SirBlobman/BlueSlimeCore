@@ -11,9 +11,13 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.github.sirblobman.api.utility.ConfigurationHelper;
 import com.github.sirblobman.api.language.custom.ModifiableMessage;
 import com.github.sirblobman.api.language.custom.ModifiableMessageType;
 import com.github.sirblobman.api.language.custom.PlayerListInfo;
@@ -25,11 +29,8 @@ import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.shaded.adventure.title.Title;
 import com.github.sirblobman.api.shaded.adventure.title.Title.Times;
 import com.github.sirblobman.api.shaded.adventure.util.Ticks;
-import com.github.sirblobman.api.utility.Validate;
 
 import org.intellij.lang.annotations.Subst;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class LanguageConfiguration {
     private final YamlConfiguration configuration;
@@ -44,10 +45,10 @@ public final class LanguageConfiguration {
     private LanguageConfiguration parent;
     private DecimalFormat decimalFormat;
 
-    public LanguageConfiguration(YamlConfiguration configuration, MiniMessage miniMessage) {
+    public LanguageConfiguration(@NotNull YamlConfiguration configuration, @NotNull MiniMessage miniMessage) {
         this.parent = null;
-        this.configuration = Validate.notNull(configuration, "configuration must not be null!");
-        this.miniMessage = Validate.notNull(miniMessage, "miniMessage must not be null!");
+        this.configuration = configuration;
+        this.miniMessage = miniMessage;
 
         this.rawMessageMap = new ConcurrentHashMap<>();
         this.messageMap = new ConcurrentHashMap<>();
@@ -58,31 +59,27 @@ public final class LanguageConfiguration {
         this.playerListInfoMap = new ConcurrentHashMap<>();
     }
 
-    public Optional<LanguageConfiguration> getParent() {
+    public @NotNull Optional<LanguageConfiguration> getParent() {
         return Optional.ofNullable(this.parent);
     }
 
-    public void setParent(LanguageConfiguration parent) {
+    public void setParent(@Nullable LanguageConfiguration parent) {
         this.parent = parent;
     }
 
-    @NotNull
-    public YamlConfiguration getOriginalConfiguration() {
+    public @NotNull YamlConfiguration getOriginalConfiguration() {
         return this.configuration;
     }
 
-    @NotNull
-    public MiniMessage getMiniMessage() {
+    public @NotNull MiniMessage getMiniMessage() {
         return this.miniMessage;
     }
 
-    @NotNull
-    public String getRawMessage(String path) {
+    public @NotNull String getRawMessage(@NotNull String path) {
         return this.rawMessageMap.computeIfAbsent(path, this::fetchRawMessage);
     }
 
-    @NotNull
-    private String fetchRawMessage(String path) {
+    private @NotNull String fetchRawMessage(@NotNull String path) {
         YamlConfiguration originalConfiguration = getOriginalConfiguration();
         if (originalConfiguration.isList(path)) {
             List<String> messageList = originalConfiguration.getStringList(path);
@@ -90,38 +87,34 @@ public final class LanguageConfiguration {
         }
 
         String message = originalConfiguration.getString(path);
-        if (message == null) {
-            Optional<LanguageConfiguration> optionalParent = getParent();
-            if (optionalParent.isPresent()) {
-                LanguageConfiguration parent = optionalParent.get();
-                return parent.getRawMessage(path);
-            }
-
-            return String.format(Locale.US, "{%s}", path);
+        if (message != null) {
+            return message;
         }
 
-        return message;
+        Optional<LanguageConfiguration> optionalParent = getParent();
+        if (optionalParent.isPresent()) {
+            LanguageConfiguration parent = optionalParent.get();
+            return parent.getRawMessage(path);
+        }
+
+        return String.format(Locale.US, "{%s}", path);
     }
 
-    @NotNull
-    public Component getMessage(String path) {
+    public @NotNull Component getMessage(@NotNull String path) {
         return this.messageMap.computeIfAbsent(path, this::fetchMessage);
     }
 
-    @NotNull
-    private Component fetchMessage(String path) {
+    private @NotNull Component fetchMessage(@NotNull String path) {
         String rawMessage = getRawMessage(path);
         MiniMessage miniMessage = getMiniMessage();
         return miniMessage.deserialize(rawMessage);
     }
 
-    @NotNull
-    public List<Component> getMessageList(String path) {
+    public @NotNull List<Component> getMessageList(@NotNull String path) {
         return this.messageListMap.computeIfAbsent(path, this::fetchMessageList);
     }
 
-    @NotNull
-    private List<Component> fetchMessageList(String path) {
+    private @NotNull List<Component> fetchMessageList(@NotNull String path) {
         String baseMessage = getRawMessage(path);
         String[] rawMessages = baseMessage.split(Pattern.quote("\n"));
         List<Component> messages = new ArrayList<>();
@@ -135,13 +128,11 @@ public final class LanguageConfiguration {
         return messages;
     }
 
-    @NotNull
-    public ModifiableMessage getModifiableMessage(String path) {
+    public @NotNull ModifiableMessage getModifiableMessage(@NotNull String path) {
         return this.modifiableMessageMap.computeIfAbsent(path, this::fetchModifiableMessage);
     }
 
-    @NotNull
-    private ModifiableMessage fetchModifiableMessage(String path) {
+    private @NotNull ModifiableMessage fetchModifiableMessage(@NotNull String path) {
         YamlConfiguration originalConfiguration = getOriginalConfiguration();
         if (originalConfiguration.isConfigurationSection(path)) {
             Component message = getMessage(path + ".content");
@@ -149,7 +140,8 @@ public final class LanguageConfiguration {
             modifiableMessage.setMessage(message);
 
             String messageTypeName = originalConfiguration.getString(path + ".type");
-            ModifiableMessageType messageType = ModifiableMessageType.parse(messageTypeName);
+            ModifiableMessageType messageType = ConfigurationHelper.parseEnum(ModifiableMessageType.class,
+                    messageTypeName, ModifiableMessageType.CHAT);
             modifiableMessage.setType(messageType);
             return modifiableMessage;
         } else {
@@ -166,13 +158,11 @@ public final class LanguageConfiguration {
         }
     }
 
-    @Nullable
-    public Sound getSound(String path) {
+    public @Nullable Sound getSound(@NotNull String path) {
         return this.soundMap.computeIfAbsent(path, this::fetchSound);
     }
 
-    @Nullable
-    private Sound fetchSound(String path) {
+    private @Nullable Sound fetchSound(@NotNull String path) {
         YamlConfiguration originalConfiguration = getOriginalConfiguration();
         ConfigurationSection section = originalConfiguration.getConfigurationSection(path);
         if (section == null) {
@@ -212,13 +202,11 @@ public final class LanguageConfiguration {
         return builder.build();
     }
 
-    @NotNull
-    public Title getTitle(String path) {
+    public @NotNull Title getTitle(@NotNull String path) {
         return this.titleMap.computeIfAbsent(path, this::fetchTitle);
     }
 
-    @NotNull
-    private Title fetchTitle(String path) {
+    private @NotNull Title fetchTitle(@NotNull String path) {
         YamlConfiguration originalConfiguration = getOriginalConfiguration();
         ConfigurationSection section = originalConfiguration.getConfigurationSection(path);
         if (section == null) {
@@ -241,17 +229,15 @@ public final class LanguageConfiguration {
         return Title.title(titleMessage, subtitleMessage, times);
     }
 
-    private Duration ticks(int ticks) {
+    private @NotNull Duration ticks(int ticks) {
         return Ticks.duration(ticks);
     }
 
-    @NotNull
-    public PlayerListInfo getPlayerListInfo(String path) {
+    public @NotNull PlayerListInfo getPlayerListInfo(@NotNull String path) {
         return this.playerListInfoMap.computeIfAbsent(path, this::fetchPlayerListInfo);
     }
 
-    @NotNull
-    private PlayerListInfo fetchPlayerListInfo(String path) {
+    private @NotNull PlayerListInfo fetchPlayerListInfo(@NotNull String path) {
         YamlConfiguration originalConfiguration = getOriginalConfiguration();
         ConfigurationSection section = originalConfiguration.getConfigurationSection(path);
         if (section == null) {
@@ -272,8 +258,7 @@ public final class LanguageConfiguration {
         return playerListHeader;
     }
 
-    @NotNull
-    public DecimalFormat getDecimalFormat() {
+    public @NotNull DecimalFormat getDecimalFormat() {
         if (this.decimalFormat != null) {
             return this.decimalFormat;
         }
@@ -289,7 +274,7 @@ public final class LanguageConfiguration {
         return this.decimalFormat;
     }
 
-    public void setDecimalFormat(DecimalFormat format) {
-        this.decimalFormat = Validate.notNull(format, "format must not be null!");
+    public void setDecimalFormat(@NotNull DecimalFormat format) {
+        this.decimalFormat = format;
     }
 }

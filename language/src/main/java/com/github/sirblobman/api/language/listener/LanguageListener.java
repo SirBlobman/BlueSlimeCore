@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.language.listener;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,22 +15,21 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.github.sirblobman.api.language.LanguageManager;
-import com.github.sirblobman.api.utility.Validate;
 
 public final class LanguageListener implements Listener {
     private final Plugin plugin;
     private final LanguageManager languageManager;
 
-    public LanguageListener(Plugin plugin, LanguageManager languageManager) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-        this.languageManager = Validate.notNull(languageManager, "languageManager must not be null!");
+    public LanguageListener(@NotNull Plugin plugin, @NotNull LanguageManager languageManager) {
+        this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
-    public Plugin getPlugin() {
+    public @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 
-    public LanguageManager getLanguageManager() {
+    public @NotNull LanguageManager getLanguageManager() {
         return this.languageManager;
     }
 
@@ -59,19 +60,19 @@ public final class LanguageListener implements Listener {
         runLater(() -> remove(player));
     }
 
-    private void runLater(Runnable task) {
+    private void runLater(@NotNull Runnable task) {
         Plugin plugin = getPlugin();
         BukkitScheduler scheduler = Bukkit.getScheduler();
         scheduler.runTaskLater(plugin, task, 1L);
     }
 
-    private void updateLocale(Player player) {
+    private void updateLocale(@NotNull Player player) {
         String playerLocale = player.getLocale();
         LanguageManager languageManager = getLanguageManager();
         languageManager.setLocale(player, playerLocale);
     }
 
-    private void remove(Player player) {
+    private void remove(@NotNull Player player) {
         LanguageManager languageManager = getLanguageManager();
         languageManager.removeLocale(player);
     }

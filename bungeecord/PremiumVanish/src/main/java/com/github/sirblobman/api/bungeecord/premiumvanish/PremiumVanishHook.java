@@ -10,25 +10,13 @@ import net.md_5.bungee.api.plugin.PluginManager;
 
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurablePlugin;
 import com.github.sirblobman.api.bungeecord.hook.vanish.IVanishHook;
-import com.github.sirblobman.api.utility.Validate;
 
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 
-public final class PremiumVanishHook implements IVanishHook {
-    private final Plugin plugin;
-
-    public PremiumVanishHook(Plugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return this.plugin;
-    }
-
+public record PremiumVanishHook(Plugin plugin) implements IVanishHook {
     @Override
     public boolean isDisabled() {
-        Plugin plugin = getPlugin();
+        Plugin plugin = plugin();
         ProxyServer proxy = plugin.getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
 
@@ -58,7 +46,7 @@ public final class PremiumVanishHook implements IVanishHook {
 
     @Override
     public void setHidden(UUID playerId, boolean hidden) {
-        Plugin plugin = getPlugin();
+        Plugin plugin = plugin();
         ProxyServer proxy = plugin.getProxy();
         ProxiedPlayer player = proxy.getPlayer(playerId);
         setHidden(player, hidden);
@@ -71,7 +59,7 @@ public final class PremiumVanishHook implements IVanishHook {
 
     @Override
     public void registerListener() {
-        Plugin plugin = getPlugin();
+        Plugin plugin = plugin();
         if (!(plugin instanceof ConfigurablePlugin configurablePlugin)) {
             return;
         }

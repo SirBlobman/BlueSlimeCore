@@ -4,13 +4,15 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Used to indicate an object that can store/save files and log information.
  */
 public interface IResourceHolder {
-    File getDataFolder();
+    @NotNull File getDataFolder();
 
-    InputStream getResource(String name);
+    @NotNull InputStream getResource(String name);
 
-    Logger getLogger();
+    @NotNull Logger getLogger();
 }

@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.bungeecord.configuration;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.plugin.Plugin;
 
 public abstract class ConfigurablePlugin extends Plugin {
@@ -9,7 +11,7 @@ public abstract class ConfigurablePlugin extends Plugin {
         this.configurationManager = new ConfigurationManager(this);
     }
 
-    public ConfigurationManager getConfigurationManager() {
+    public @NotNull ConfigurationManager getConfigurationManager() {
         return this.configurationManager;
     }
 

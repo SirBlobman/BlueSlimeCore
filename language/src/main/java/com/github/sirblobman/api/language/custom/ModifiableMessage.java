@@ -1,8 +1,8 @@
 package com.github.sirblobman.api.language.custom;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
-
 import org.jetbrains.annotations.NotNull;
+
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public final class ModifiableMessage {
     private Component message;
@@ -13,8 +13,7 @@ public final class ModifiableMessage {
         this.type = ModifiableMessageType.CHAT;
     }
 
-    @NotNull
-    public Component getMessage() {
+    public @NotNull Component getMessage() {
         return this.message;
     }
 
@@ -22,8 +21,7 @@ public final class ModifiableMessage {
         this.message = message;
     }
 
-    @NotNull
-    public ModifiableMessageType getType() {
+    public @NotNull ModifiableMessageType getType() {
         return this.type;
     }
 

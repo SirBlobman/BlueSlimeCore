@@ -2,10 +2,10 @@ package com.github.sirblobman.api.bungeecord.hook.permission;
 
 import java.util.UUID;
 
-import com.github.sirblobman.api.bungeecord.hook.IHook;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.github.sirblobman.api.bungeecord.hook.IHook;
 
 public interface IPermissionHook extends IHook {
     /**
@@ -14,7 +14,7 @@ public interface IPermissionHook extends IHook {
      * @param playerId The {@link UUID} of the player.
      * @return The prefix for the player, or an empty string if they do not have one.
      */
-    @NotNull String getPrefix(UUID playerId);
+    @Nullable String getPrefix(@NotNull UUID playerId);
 
     /**
      * Get the suffix text for a specific player.
@@ -22,7 +22,7 @@ public interface IPermissionHook extends IHook {
      * @param playerId The {@link UUID} of the player.
      * @return The suffix for the player, or an empty string if they do not have one.
      */
-    @NotNull String getSuffix(UUID playerId);
+    @Nullable String getSuffix(@NotNull UUID playerId);
 
     /**
      * Get the current primary group name for a player.
@@ -30,7 +30,7 @@ public interface IPermissionHook extends IHook {
      * @param playerId The {@link UUID} of the player.
      * @return The primary group name for the player, or an empty string if they do not have one.
      */
-    @Nullable String getPrimaryGroupName(UUID playerId);
+    @Nullable String getPrimaryGroupName(@NotNull UUID playerId);
 
     /**
      * Get the current LuckPerms primary group weight for a player.
@@ -39,5 +39,5 @@ public interface IPermissionHook extends IHook {
      * @param defaultWeight The default weight to use if the player doesn't have a group or weight.
      * @return The weight for the player's primary group, or the value of {@code defaultWeight}.
      */
-    int getPrimaryGroupWeight(UUID playerId, int defaultWeight);
+    int getPrimaryGroupWeight(@NotNull UUID playerId, int defaultWeight);
 }

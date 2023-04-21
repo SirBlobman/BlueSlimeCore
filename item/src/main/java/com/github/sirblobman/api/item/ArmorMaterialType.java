@@ -1,9 +1,8 @@
 package com.github.sirblobman.api.item;
 
-import com.github.sirblobman.api.shaded.xseries.XMaterial;
-import com.github.sirblobman.api.utility.Validate;
-
 import org.jetbrains.annotations.NotNull;
+
+import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
 import static com.github.sirblobman.api.shaded.xseries.XMaterial.CHAINMAIL_BOOTS;
 import static com.github.sirblobman.api.shaded.xseries.XMaterial.CHAINMAIL_CHESTPLATE;
@@ -43,37 +42,31 @@ public enum ArmorMaterialType {
     private final XMaterial leggings;
     private final XMaterial boots;
 
-    ArmorMaterialType(XMaterial helmet, XMaterial chestplate, XMaterial leggings, XMaterial boots) {
-        this.helmet = Validate.notNull(helmet, "helmet XMaterial must not be null!");
-        this.chestplate = Validate.notNull(chestplate, "chestplate XMaterial must not be null!");
-        this.leggings = Validate.notNull(leggings, "leggings XMaterial must not be null!");
-        this.boots = Validate.notNull(boots, "boots XMaterial must not be null!");
+    ArmorMaterialType(@NotNull XMaterial helmet, @NotNull XMaterial chestplate, @NotNull XMaterial leggings,
+                      @NotNull XMaterial boots) {
+        this.helmet = helmet;
+        this.chestplate = chestplate;
+        this.leggings = leggings;
+        this.boots = boots;
     }
 
-    @NotNull
-    public XMaterial getHelmet() {
+    public @NotNull XMaterial getHelmet() {
         return this.helmet;
     }
 
-    @NotNull
-    public XMaterial getChestplate() {
+    public @NotNull XMaterial getChestplate() {
         return this.chestplate;
     }
 
-    @NotNull
-    public XMaterial getLeggings() {
+    public @NotNull XMaterial getLeggings() {
         return this.leggings;
     }
 
-    @NotNull
-    public XMaterial getBoots() {
+    public @NotNull XMaterial getBoots() {
         return this.boots;
     }
 
-    @NotNull
-    public XMaterial getArmorMaterial(ArmorType armorType) {
-        Validate.notNull(armorType, "armorType must not be null!");
-
+    public @NotNull XMaterial getArmorMaterial(@NotNull ArmorType armorType) {
         switch (armorType) {
             case HELMET:
                 return getHelmet();

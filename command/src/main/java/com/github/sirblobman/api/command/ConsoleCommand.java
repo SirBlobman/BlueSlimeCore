@@ -3,17 +3,19 @@ package com.github.sirblobman.api.command;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class ConsoleCommand extends Command {
-    public ConsoleCommand(JavaPlugin plugin, String commandName) {
+    public ConsoleCommand(@NotNull JavaPlugin plugin, @NotNull String commandName) {
         super(plugin, commandName);
     }
 
     @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+    protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         if (sender instanceof ConsoleCommandSender) {
             ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return onTabComplete(console, args);
@@ -23,7 +25,7 @@ public abstract class ConsoleCommand extends Command {
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
         if (sender instanceof ConsoleCommandSender) {
             ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return execute(console, args);
@@ -38,7 +40,7 @@ public abstract class ConsoleCommand extends Command {
      * @param args    An array of command arguments.
      * @return The list of tab completions for this combination of sender and command arguments.
      */
-    protected abstract List<String> onTabComplete(ConsoleCommandSender console, String[] args);
+    protected abstract List<String> onTabComplete(@NotNull ConsoleCommandSender console, String @NotNull [] args);
 
     /**
      * @param console The console that is executing this command.
@@ -46,5 +48,5 @@ public abstract class ConsoleCommand extends Command {
      * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command
      * usage.
      */
-    protected abstract boolean execute(ConsoleCommandSender console, String[] args);
+    protected abstract boolean execute(@NotNull ConsoleCommandSender console, String @NotNull [] args);
 }

@@ -1,12 +1,14 @@
 package com.github.sirblobman.api.bungeecord.hook;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.plugin.Plugin;
 
 public interface IHook {
     /**
      * @return The plugin that will be using the hook.
      */
-    Plugin getPlugin();
+    @NotNull Plugin plugin();
 
     /**
      * Check if the plugin being hooked is disabled or does not exist.

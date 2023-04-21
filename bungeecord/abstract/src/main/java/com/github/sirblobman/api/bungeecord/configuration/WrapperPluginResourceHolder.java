@@ -4,36 +4,36 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
-import com.github.sirblobman.api.utility.Validate;
+import net.md_5.bungee.api.plugin.Plugin;
 
 public final class WrapperPluginResourceHolder implements IResourceHolder {
     private final Plugin plugin;
 
-    public WrapperPluginResourceHolder(Plugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+    public WrapperPluginResourceHolder(@NotNull Plugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override
-    public File getDataFolder() {
+    public @NotNull File getDataFolder() {
         Plugin plugin = getPlugin();
         return plugin.getDataFolder();
     }
 
     @Override
-    public InputStream getResource(String name) {
+    public @NotNull InputStream getResource(@NotNull String name) {
         Plugin plugin = getPlugin();
         return plugin.getResourceAsStream(name);
     }
 
     @Override
-    public Logger getLogger() {
+    public @NotNull Logger getLogger() {
         Plugin plugin = getPlugin();
         return plugin.getLogger();
     }
 
-    private Plugin getPlugin() {
+    private @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 }

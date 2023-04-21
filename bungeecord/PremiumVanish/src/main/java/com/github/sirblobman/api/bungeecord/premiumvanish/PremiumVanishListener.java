@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.bungeecord.premiumvanish;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -16,7 +18,7 @@ import de.myzelyam.api.vanish.BungeePlayerShowEvent;
 public final class PremiumVanishListener implements Listener {
     private final ConfigurablePlugin plugin;
 
-    public PremiumVanishListener(ConfigurablePlugin plugin) {
+    public PremiumVanishListener(@NotNull ConfigurablePlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -32,16 +34,16 @@ public final class PremiumVanishListener implements Listener {
         getDefaultVanishHook().setHidden(player, false);
     }
 
-    private ConfigurablePlugin getPlugin() {
+    private @NotNull ConfigurablePlugin getPlugin() {
         return this.plugin;
     }
 
-    private ProxyServer getProxy() {
+    private @NotNull ProxyServer getProxy() {
         ConfigurablePlugin plugin = getPlugin();
         return plugin.getProxy();
     }
 
-    private IVanishHook getDefaultVanishHook() {
+    private @NotNull IVanishHook getDefaultVanishHook() {
         ProxyServer proxy = getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
         IHookPlugin corePlugin = (IHookPlugin) pluginManager.getPlugin("BlueSlimeBungeeCore");

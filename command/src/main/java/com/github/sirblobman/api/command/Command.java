@@ -16,6 +16,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -31,6 +34,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,15 +42,13 @@ import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
-import com.github.sirblobman.api.shaded.adventure.audience.Audience;
-import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.utility.ConfigurationHelper;
 import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.github.sirblobman.api.shaded.adventure.audience.Audience;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
@@ -59,9 +61,9 @@ public abstract class Command implements TabExecutor {
      * @param plugin      The plugin that will be used to register this command.
      * @param commandName The name of the command that will be registered. (must match 'plugin.yml' setting)
      */
-    public Command(JavaPlugin plugin, String commandName) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-        this.commandName = Validate.notEmpty(commandName, "commandName cannot be empty or null!");
+    public Command(@NotNull JavaPlugin plugin, @NotNull String commandName) {
+        this.plugin = plugin;
+        this.commandName = Validate.notEmpty(commandName, "commandName must not be empty!");
         this.subCommandMap = new HashMap<>();
         this.permission = null;
     }
@@ -69,19 +71,19 @@ public abstract class Command implements TabExecutor {
     /**
      * @return The name used for registering this command.
      */
-    public final String getCommandName() {
+    public final @NotNull String getCommandName() {
         return this.commandName;
     }
 
     /**
      * @return The plugin used for registering this command.
      */
-    protected final JavaPlugin getPlugin() {
+    protected final @NotNull JavaPlugin getPlugin() {
         return this.plugin;
     }
 
-    protected final Logger getLogger() {
-        JavaPlugin plugin = getPlugin();
+    protected final @NotNull Logger getLogger() {
+        Plugin plugin = getPlugin();
         return plugin.getLogger();
     }
 
@@ -90,9 +92,8 @@ public abstract class Command implements TabExecutor {
      *
      * @return A {@link LanguageManager} or {@code null} if not overridden.
      */
-    @Nullable
-    protected LanguageManager getLanguageManager() {
-        JavaPlugin plugin = getPlugin();
+    protected @Nullable LanguageManager getLanguageManager() {
+        Plugin plugin = getPlugin();
         if (!(plugin instanceof ConfigurablePlugin)) {
             return null;
         }
@@ -121,7 +122,9 @@ public abstract class Command implements TabExecutor {
 
             if (pluginCommand == null) {
                 Logger logger = plugin.getLogger();
-                logger.warning("Failed to register command '/" + commandName + "':");
+                String logMessage = "Failed to register command '/" + commandName + "':";
+                logger.warning(logMessage);
+
                 logger.warning("Command '" + commandName + "' is missing in the 'plugin.yml' file.");
                 return;
             }
@@ -130,7 +133,8 @@ public abstract class Command implements TabExecutor {
             pluginCommand.setTabCompleter(this);
         } catch (Exception ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "Failed to register command '/" + commandName + "':", ex);
+            String logMessage = "Failed to register command '/" + commandName + "':";
+            logger.log(Level.WARNING, logMessage, ex);
         }
     }
 
@@ -139,8 +143,7 @@ public abstract class Command implements TabExecutor {
      *
      * @param subCommand The command to register as a sub-command.
      */
-    protected final void addSubCommand(Command subCommand) {
-        Validate.notNull(subCommand, "subCommand must not be null!");
+    protected final void addSubCommand(@NotNull Command subCommand) {
         String subCommandName = subCommand.getCommandName();
         this.subCommandMap.putIfAbsent(subCommandName, subCommand);
     }
@@ -148,7 +151,7 @@ public abstract class Command implements TabExecutor {
     /**
      * @return An unmodifiable view of the sub commands for this command.
      */
-    protected final Map<String, Command> getSubCommands() {
+    protected final @NotNull Map<String, Command> getSubCommands() {
         return Collections.unmodifiableMap(this.subCommandMap);
     }
 
@@ -160,7 +163,7 @@ public abstract class Command implements TabExecutor {
      * @param values An iterable of possible values in the tab completion.
      * @return A list of values that match the argument.
      */
-    protected final List<String> getMatching(String arg, Iterable<String> values) {
+    protected final @NotNull List<String> getMatching(@NotNull String arg, @NotNull Iterable<String> values) {
         return MessageUtility.getMatches(arg, values);
     }
 
@@ -172,7 +175,7 @@ public abstract class Command implements TabExecutor {
      * @param values An array of possible values in the tab completion.
      * @return A list of values that match the argument.
      */
-    protected final List<String> getMatching(String arg, String... values) {
+    protected final @NotNull List<String> getMatching(@NotNull String arg, String @NotNull ... values) {
         List<String> valueList = Arrays.asList(values);
         return getMatching(arg, valueList);
     }
@@ -183,7 +186,7 @@ public abstract class Command implements TabExecutor {
      * @return A new {@link String[]} containing all values from start (inclusive) to {@code args.length} (exclusive).
      * If the start is not an index in the original array, an empty array will be returned.
      */
-    protected final String[] getSubArguments(String[] original, int start) {
+    protected final String @NotNull [] getSubArguments(String @NotNull [] original, int start) {
         if (original.length <= start) {
             return new String[0];
         }
@@ -191,32 +194,15 @@ public abstract class Command implements TabExecutor {
         return Arrays.copyOfRange(original, start, original.length);
     }
 
-    protected final Set<String> getEnumNames(Class<? extends Enum<?>> enumClass) {
-        Enum<?>[] enumArray = enumClass.getEnumConstants();
-        Set<String> enumNameSet = new HashSet<>();
-
-        for (Enum<?> enumValue : enumArray) {
-            String enumName = enumValue.name();
-            enumNameSet.add(enumName);
-        }
-
-        return Collections.unmodifiableSet(enumNameSet);
+    protected final <E extends Enum<E>> @NotNull Set<String> getEnumNames(@NotNull Class<E> enumClass) {
+        return ConfigurationHelper.getEnumNames(enumClass);
     }
 
-    @Nullable
-    protected final <E extends Enum<E>> E matchEnum(Class<E> enumClass, String value) {
-        E[] enumArray = enumClass.getEnumConstants();
-        for (E enumValue : enumArray) {
-            String enumName = enumValue.name();
-            if (enumName.equals(value)) {
-                return enumValue;
-            }
-        }
-
-        return null;
+    protected final <E extends Enum<E>> @Nullable E matchEnum(@NotNull Class<E> enumClass, @NotNull String value) {
+        return ConfigurationHelper.parseEnum(enumClass, value, null);
     }
 
-    protected final Collection<Player> getOnlinePlayers() {
+    protected final @NotNull Collection<Player> getOnlinePlayers() {
         Collection<? extends Player> onlinePlayerCollection = Bukkit.getOnlinePlayers();
         return Collections.unmodifiableCollection(onlinePlayerCollection);
     }
@@ -224,7 +210,7 @@ public abstract class Command implements TabExecutor {
     /**
      * @return A set containing the name of each online player as a String.
      */
-    protected final Set<String> getOnlinePlayerNames() {
+    protected final @NotNull Set<String> getOnlinePlayerNames() {
         Collection<Player> onlinePlayerCollection = getOnlinePlayers();
         Set<String> playerNameSet = new HashSet<>();
 
@@ -241,24 +227,22 @@ public abstract class Command implements TabExecutor {
      * @return The location of the command sender. Defaults to the main world at 0,0,0 if no location is available.
      * (e.g. console)
      */
-    @NotNull
-    protected final Location getLocation(CommandSender sender) {
+    protected final @Nullable Location getLocation(CommandSender sender) {
         if (sender instanceof Entity) {
-            return ((Entity) sender).getLocation();
+            Entity entity = (Entity) sender;
+            return entity.getLocation();
         }
 
         if (sender instanceof BlockCommandSender) {
-            Block block = ((BlockCommandSender) sender).getBlock();
+            BlockCommandSender blockSender = (BlockCommandSender) sender;
+            Block block = blockSender.getBlock();
             return block.getLocation();
         }
 
-        List<World> worldList = Bukkit.getWorlds();
-        World mainWorld = worldList.get(0);
-        return new Location(mainWorld, 0, 0, 0, 0, 0);
+        return null;
     }
 
-    @NotNull
-    protected final Audience getAudience(@NotNull CommandSender commandSender) {
+    protected final @NotNull Audience getAudience(@NotNull CommandSender commandSender) {
         LanguageManager languageManager = getLanguageManager();
         if (languageManager == null) {
             return Audience.empty();
@@ -272,17 +256,18 @@ public abstract class Command implements TabExecutor {
         return audience;
     }
 
-    @NotNull
-    protected final Component getMessage(CommandSender sender, String key, Replacer replacer) {
+    protected final @NotNull Component getMessage(@Nullable CommandSender sender, @NotNull String key,
+                                                  Replacer @NotNull... replacerArray) {
         LanguageManager languageManager = getLanguageManager();
         if (languageManager == null) {
             return Component.text(key);
         }
 
-        return languageManager.getMessage(sender, key, replacer);
+        return languageManager.getMessage(sender, key, replacerArray);
     }
 
-    protected final void sendMessage(CommandSender sender, String key, Replacer... replacerArray) {
+    protected final void sendMessage(@NotNull CommandSender sender, @NotNull String key,
+                                     Replacer @NotNull ... replacerArray) {
         LanguageManager languageManager = getLanguageManager();
         if (languageManager == null) {
             return;
@@ -291,7 +276,8 @@ public abstract class Command implements TabExecutor {
         languageManager.sendMessage(sender, key, replacerArray);
     }
 
-    protected final void sendMessageWithPrefix(CommandSender sender, String key, Replacer... replacerArray) {
+    protected final void sendMessageWithPrefix(@NotNull CommandSender sender, @NotNull String key,
+                                               Replacer @NotNull... replacerArray) {
         LanguageManager languageManager = getLanguageManager();
         if (languageManager == null) {
             return;
@@ -308,15 +294,15 @@ public abstract class Command implements TabExecutor {
      * @param sendMessage    {@code true} if a "no permission" message should be sent, {@code false} for no output.
      * @return {@code true} if the sender has the permission, {@code false} if they do not.
      */
-    protected final boolean checkPermission(Permissible sender, String permissionName, boolean sendMessage) {
+    protected final boolean checkPermission(@NotNull Permissible sender, @NotNull String permissionName,
+                                            boolean sendMessage) {
         if (sender.hasPermission(permissionName)) {
             return true;
         }
 
         if (sendMessage && sender instanceof CommandSender) {
             CommandSender audience = (CommandSender) sender;
-            Replacer replacer = new StringReplacer("{permission}", permissionName);
-            sendMessage(audience, "error.no-permission", replacer);
+            sendNoPermissionMessage(audience, permissionName);
         }
 
         return false;
@@ -330,7 +316,8 @@ public abstract class Command implements TabExecutor {
      * @param sendMessage {@code true} if a "no permission" message should be sent, {@code false} for no output.
      * @return {@code true} if the sender has the permission, {@code false} if they do not.
      */
-    protected final boolean checkPermission(Permissible sender, Permission permission, boolean sendMessage) {
+    protected final boolean checkPermission(@NotNull Permissible sender, @NotNull Permission permission,
+                                            boolean sendMessage) {
         if (sender.hasPermission(permission)) {
             return true;
         }
@@ -338,23 +325,30 @@ public abstract class Command implements TabExecutor {
         if (sendMessage && sender instanceof CommandSender) {
             CommandSender audience = (CommandSender) sender;
             String permissionName = permission.getName();
-            Replacer replacer = new StringReplacer("{permission}", permissionName);
-            sendMessage(audience, "error.no-permission", replacer);
+            sendNoPermissionMessage(audience, permissionName);
         }
 
         return false;
     }
 
-    @SuppressWarnings("deprecation")
-    protected final ItemStack getHeldItem(Player player) {
-        PlayerInventory playerInventory = player.getInventory();
-        int minorVersion = VersionUtility.getMinorVersion();
+    private void sendNoPermissionMessage(@NotNull CommandSender sender, @NotNull String permissionName) {
+        Replacer replacer = new StringReplacer("{permission}", permissionName);
+        sendMessage(sender, "error.no-permission", replacer);
+    }
 
-        if (minorVersion < 9) {
-            return playerInventory.getItemInHand();
-        } else {
-            return playerInventory.getItemInMainHand();
-        }
+    protected final @Nullable ItemStack getHeldItem(@NotNull Player player) {
+        int minorVersion = VersionUtility.getMinorVersion();
+        return (minorVersion < 9 ? getHeldItemLegacy(player) : getHeldItemModern(player));
+    }
+
+    @SuppressWarnings("deprecation")
+    private @Nullable ItemStack getHeldItemLegacy(@NotNull Player player) {
+        return player.getItemInHand();
+    }
+
+    private @Nullable ItemStack getHeldItemModern(@NotNull Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+        return playerInventory.getItemInMainHand();
     }
 
     /**
@@ -362,8 +356,7 @@ public abstract class Command implements TabExecutor {
      * @param value  A string value to convert to an integer.
      * @return A valid BigInteger value, or {@code null} if one could not be parsed.
      */
-    @Nullable
-    protected final BigInteger parseInteger(CommandSender sender, String value) {
+    protected final @Nullable BigInteger parseInteger(@NotNull CommandSender sender, @NotNull String value) {
         try {
             return new BigInteger(value);
         } catch (NumberFormatException ex) {
@@ -378,8 +371,7 @@ public abstract class Command implements TabExecutor {
      * @param value  A string value to convert to a decimal.
      * @return A valid BigDecimal value, or {@code null} if one could not be parsed.
      */
-    @Nullable
-    protected final BigDecimal parseDecimal(CommandSender sender, String value) {
+    protected final @Nullable BigDecimal parseDecimal(@NotNull CommandSender sender, @NotNull String value) {
         try {
             return new BigDecimal(value);
         } catch (NumberFormatException ex) {
@@ -394,8 +386,7 @@ public abstract class Command implements TabExecutor {
      * @param targetName The name of the player that should be found.
      * @return an instanceof a {@link Player} if one was found with that name, otherwise {@code null}
      */
-    @Nullable
-    protected final Player findTarget(CommandSender sender, String targetName) {
+    protected final @Nullable Player findTarget(@NotNull CommandSender sender, @NotNull String targetName) {
         Player target = Bukkit.getPlayerExact(targetName);
         if (target != null) {
             return target;
@@ -412,19 +403,27 @@ public abstract class Command implements TabExecutor {
      * @param player    The player that will receive the items.
      * @param itemArray An array of items that will be given.
      */
-    protected final void giveItems(Player player, ItemStack... itemArray) {
+    protected final void giveItems(@NotNull Player player, ItemStack @NotNull ... itemArray) {
         PlayerInventory playerInventory = player.getInventory();
         Map<Integer, ItemStack> leftover = playerInventory.addItem(itemArray);
-        if (leftover.isEmpty()) return;
+        if (leftover.isEmpty()) {
+            return;
+        }
 
-        World world = player.getWorld();
-        Location location = player.getLocation();
         sendMessage(player, "error.inventory-full");
+        Collection<ItemStack> drops = leftover.values();
+        Location location = player.getLocation();
+        dropItems(location, drops);
+    }
 
-        Collection<ItemStack> dropCollection = leftover.values();
-        for (ItemStack item : dropCollection) {
-            if (ItemUtility.isAir(item)) continue;
-            world.dropItemNaturally(location, item);
+    protected final void dropItems(@NotNull Location location, @NotNull Iterable<ItemStack> drops) {
+        World world = location.getWorld();
+        Validate.notNull(world, "location must have a valid world!");
+
+        for (ItemStack drop : drops) {
+            if (!ItemUtility.isAir(drop)) {
+                world.dropItemNaturally(location, drop);
+            }
         }
     }
 
@@ -432,8 +431,9 @@ public abstract class Command implements TabExecutor {
      * {@inheritDoc}
      */
     @Override
-    public final List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label,
-                                            String[] args) {
+    public final @NotNull List<String> onTabComplete(@NotNull CommandSender sender,
+                                                     @NotNull org.bukkit.command.Command command,
+                                                     @NotNull String label, String @NotNull [] args) {
         List<String> tabCompletions = new ArrayList<>();
 
         if (args.length == 1) {
@@ -473,8 +473,8 @@ public abstract class Command implements TabExecutor {
      * {@inheritDoc}
      */
     @Override
-    public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
-                                   String[] args) {
+    public final boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command,
+                                   @NotNull String label, String @NotNull [] args) {
         if (args.length >= 1) {
             String subCommandName = args[0].toLowerCase(Locale.US);
             Map<String, Command> subCommandMap = getSubCommands();
@@ -498,7 +498,7 @@ public abstract class Command implements TabExecutor {
      * @param args   An array of command arguments.
      * @return The list of tab completions for this combination of sender and command arguments.
      */
-    protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
+    protected abstract @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args);
 
     /**
      * @param sender The {@link CommandSender} that is executing this command.
@@ -506,25 +506,25 @@ public abstract class Command implements TabExecutor {
      * @return {@code true} if the command was executed correctly, {@code false} if the sender needs to see the command
      * usage.
      */
-    protected abstract boolean execute(CommandSender sender, String[] args);
+    protected abstract boolean execute(@NotNull CommandSender sender, String @NotNull [] args);
 
-    public Permission getPermission() {
+    public @Nullable Permission getPermission() {
         return this.permission;
     }
 
-    public void setPermission(Permission permission) {
+    public void setPermission(@Nullable Permission permission) {
         this.permission = permission;
     }
 
-    public void setPermissionName(String permissionName) {
+    public void setPermissionName(@Nullable String permissionName) {
         if (permissionName == null || permissionName.isEmpty()) {
             setPermission(null);
             return;
         }
 
         JavaPlugin plugin = getPlugin();
-        PluginDescriptionFile description = plugin.getDescription();
-        List<Permission> permissionList = description.getPermissions();
+        PluginDescriptionFile pluginDescription = plugin.getDescription();
+        List<Permission> permissionList = pluginDescription.getPermissions();
         for (Permission loopPermission : permissionList) {
             String loopPermissionName = loopPermission.getName();
             if (permissionName.equals(loopPermissionName)) {
@@ -533,7 +533,11 @@ public abstract class Command implements TabExecutor {
             }
         }
 
-        Permission permission = new Permission(permissionName, "Command Permission", PermissionDefault.OP);
+        String pluginName = plugin.getName();
+        String commandName = getCommandName();
+        String description = ("Permission for plugin '" + pluginName + "' command '/" + commandName + "'.");
+
+        Permission permission = new Permission(permissionName, description, PermissionDefault.OP);
         setPermission(permission);
     }
 }

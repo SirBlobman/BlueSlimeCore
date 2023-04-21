@@ -28,8 +28,8 @@ tasks {
         archiveClassifier.set(null as String?)
     }
 
-    build {
-        dependsOn(shadowJar)
+    named("build") {
+        dependsOn("shadowJar")
     }
 
     processResources {

@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.item;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -7,18 +9,12 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
-
 public final class PotionBuilder extends ItemBuilder {
-    public PotionBuilder(BottleType bottleType) {
+    public PotionBuilder(@NotNull BottleType bottleType) {
         super(bottleType.getItem());
     }
 
-    public PotionBuilder withMainEffect(@NotNull PotionType potionType, boolean extended, boolean upgraded) {
-        Validate.notNull(potionType, "potionType must not be null!");
-
+    public @NotNull PotionBuilder withMainEffect(@NotNull PotionType potionType, boolean extended, boolean upgraded) {
         ItemMeta itemMeta = getItemMeta();
         if (!(itemMeta instanceof PotionMeta)) {
             return this;
@@ -31,9 +27,7 @@ public final class PotionBuilder extends ItemBuilder {
         return (PotionBuilder) withItemMeta(potionMeta);
     }
 
-    public PotionBuilder withExtraEffect(@NotNull PotionEffect potionEffect) {
-        Validate.notNull(potionEffect, "potionEffect must not be null!");
-
+    public @NotNull PotionBuilder withExtraEffect(@NotNull PotionEffect potionEffect) {
         ItemMeta itemMeta = getItemMeta();
         if (!(itemMeta instanceof PotionMeta)) {
             return this;
@@ -45,9 +39,7 @@ public final class PotionBuilder extends ItemBuilder {
         return (PotionBuilder) withItemMeta(potionMeta);
     }
 
-    public PotionBuilder withColor(@NotNull Color color) {
-        Validate.notNull(color, "color must not be null!");
-
+    public @NotNull PotionBuilder withColor(@NotNull Color color) {
         ItemMeta itemMeta = getItemMeta();
         if (!(itemMeta instanceof PotionMeta)) {
             return this;
@@ -59,12 +51,12 @@ public final class PotionBuilder extends ItemBuilder {
         return (PotionBuilder) withItemMeta(potionMeta);
     }
 
-    public PotionBuilder withColor(int red, int green, int blue) {
+    public @NotNull PotionBuilder withColor(int red, int green, int blue) {
         Color color = Color.fromRGB(red, green, blue);
         return withColor(color);
     }
 
-    public PotionBuilder withColor(int rgb) {
+    public @NotNull PotionBuilder withColor(int rgb) {
         Color color = Color.fromRGB(rgb);
         return withColor(color);
     }

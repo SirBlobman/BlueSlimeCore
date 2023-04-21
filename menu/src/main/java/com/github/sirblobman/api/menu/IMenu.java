@@ -1,24 +1,31 @@
 package com.github.sirblobman.api.menu;
 
 import java.util.Optional;
+import java.util.logging.Logger;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.plugin.IMultiVersionPlugin;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
-import org.jetbrains.annotations.Nullable;
-
 public interface IMenu extends InventoryHolder, Listener {
     /**
      * @return The plugin that owns this menu.
      */
-    JavaPlugin getPlugin();
+    @NotNull Plugin getPlugin();
+
+    default @NotNull Logger getLogger() {
+        Plugin plugin = getPlugin();
+        return plugin.getLogger();
+    }
 
     /**
      * Use this method to open the menu.
@@ -28,8 +35,7 @@ public interface IMenu extends InventoryHolder, Listener {
     /**
      * @return The title component for the menu.
      */
-    @Nullable
-    default Component getTitle() {
+    default @Nullable Component getTitle() {
         return null;
     }
 
@@ -38,7 +44,7 @@ public interface IMenu extends InventoryHolder, Listener {
      *
      * @param e the InventoryCloseEvent of the action.
      */
-    void onCustomClose(InventoryCloseEvent e);
+    void onCustomClose(@NotNull InventoryCloseEvent e);
 
     /**
      * Used when there is a button to open the previous menu,
@@ -46,7 +52,7 @@ public interface IMenu extends InventoryHolder, Listener {
      *
      * @return An optional menu that caused this menu to open.
      */
-    Optional<IMenu> getParentMenu();
+    @NotNull Optional<IMenu> getParentMenu();
 
     /**
      * Change the parent menu for this menu.
@@ -54,11 +60,10 @@ public interface IMenu extends InventoryHolder, Listener {
      * @param parentMenu The new parent menu. Can be null.
      * @see #getParentMenu()
      */
-    void setParentMenu(IMenu parentMenu);
+    void setParentMenu(@NotNull IMenu parentMenu);
 
-    @Nullable
-    default MultiVersionHandler getMultiVersionHandler() {
-        JavaPlugin plugin = getPlugin();
+    default @Nullable MultiVersionHandler getMultiVersionHandler() {
+        Plugin plugin = getPlugin();
         if (plugin instanceof IMultiVersionPlugin) {
             IMultiVersionPlugin multiVersionPlugin = (IMultiVersionPlugin) plugin;
             return multiVersionPlugin.getMultiVersionHandler();
@@ -70,8 +75,7 @@ public interface IMenu extends InventoryHolder, Listener {
     /**
      * @return The language manager if your plugin has one.
      */
-    @Nullable
-    default LanguageManager getLanguageManager() {
+    default @Nullable LanguageManager getLanguageManager() {
         return null;
     }
 }

@@ -1,8 +1,8 @@
 package com.github.sirblobman.api.language.replacer;
 
-import com.github.sirblobman.api.shaded.adventure.text.Component;
-
 import org.jetbrains.annotations.NotNull;
+
+import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public final class LongReplacer extends Replacer {
     private final long replacement;
@@ -12,13 +12,19 @@ public final class LongReplacer extends Replacer {
         this.replacement = replacement;
     }
 
+    private long getLong() {
+        return this.replacement;
+    }
+
     @Override
     public @NotNull Component getReplacement() {
-        return Component.text(this.replacement);
+        long replacement = getLong();
+        return Component.text(replacement);
     }
 
     @Override
     public @NotNull String getReplacementString() {
-        return Long.toString(this.replacement);
+        long replacement = getLong();
+        return Long.toString(replacement);
     }
 }

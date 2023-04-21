@@ -1,8 +1,11 @@
 package com.github.sirblobman.api.core.command;
 
+import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,12 +20,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 public final class CommandItemToNBT extends PlayerCommand {
     private final CorePlugin plugin;
     private final Gson prettyGson;
 
-    public CommandItemToNBT(CorePlugin plugin) {
+    public CommandItemToNBT(@NotNull CorePlugin plugin) {
         super(plugin, "item-to-nbt");
         setPermissionName("blue.slime.core.command.item-to-nbt");
         this.plugin = plugin;
@@ -41,7 +45,7 @@ public final class CommandItemToNBT extends PlayerCommand {
     }
 
     @Override
-    public List<String> onTabComplete(Player player, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull Player player, String[] args) {
         if (args.length == 1) {
             return Collections.singletonList("pretty");
         }
@@ -50,7 +54,7 @@ public final class CommandItemToNBT extends PlayerCommand {
     }
 
     @Override
-    public boolean execute(Player player, String[] args) {
+    public boolean execute(@NotNull Player player, String @NotNull [] args) {
         ItemStack item = getHeldItem(player);
         if (ItemUtility.isAir(item)) {
             sendMessage(player, "error.invalid-held-item");
@@ -71,19 +75,23 @@ public final class CommandItemToNBT extends PlayerCommand {
         return true;
     }
 
-    private CorePlugin getCorePlugin() {
+    private @NotNull CorePlugin getCorePlugin() {
         return this.plugin;
     }
 
-    private Gson getPrettyGson() {
+    private @NotNull Gson getPrettyGson() {
         return this.prettyGson;
     }
 
-    private String prettyJSON(Player player, String json) {
-        try {
-            Gson prettyGson = getPrettyGson();
+    private @NotNull String prettyJSON(Player player, String json) {
+        try(JsonReader reader = new JsonReader(new StringReader(json))) {
+            reader.setLenient(true);
+
             JsonParser jsonParser = new JsonParser();
+            jsonParser.parse(reader);
             JsonElement jsonElement = jsonParser.parse(json);
+
+            Gson prettyGson = getPrettyGson();
             return prettyGson.toJson(jsonElement);
         } catch (NoClassDefFoundError | Exception ex) {
             player.sendMessage("Could not parse into pretty JSON, sending normal...");

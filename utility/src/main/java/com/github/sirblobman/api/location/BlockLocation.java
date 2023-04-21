@@ -4,6 +4,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,32 +15,23 @@ import org.bukkit.entity.Entity;
 
 import com.github.sirblobman.api.utility.Validate;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class BlockLocation {
     private final UUID worldId;
     private final int x, y, z;
 
-    public BlockLocation(UUID worldId, int x, int y, int z) {
-        this.worldId = Validate.notNull(worldId, "worldId must not be null!");
+    public BlockLocation(@NotNull UUID worldId, int x, int y, int z) {
+        this.worldId = worldId;
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    @NotNull
-    public static BlockLocation from(World world, int x, int y, int z) {
-        Validate.notNull(world, "world must not be null!");
-
+    public static @NotNull BlockLocation from(@NotNull World world, int x, int y, int z) {
         UUID worldId = world.getUID();
         return new BlockLocation(worldId, x, y, z);
     }
 
-    @NotNull
-    public static BlockLocation from(Block block) {
-        Validate.notNull(block, "block must not be null!");
-
+    public static @NotNull BlockLocation from(@NotNull Block block) {
         World world = block.getWorld();
         int x = block.getX();
         int y = block.getY();
@@ -45,29 +39,20 @@ public class BlockLocation {
         return from(world, x, y, z);
     }
 
-    @Nullable
-    public static BlockLocation from(Location location) {
-        Validate.notNull(location, "location must not be null!");
-
+    public static @NotNull BlockLocation from(@NotNull Location location) {
         World world = location.getWorld();
-        if (world == null) {
-            return null;
-        }
+        Validate.notNull(world, "world must not be null!");
 
         Block block = location.getBlock();
         return from(block);
     }
 
-    @Nullable
-    public static BlockLocation from(Entity entity) {
-        Validate.notNull(entity, "entity must not be null!");
-
+    public static @NotNull BlockLocation from(Entity entity) {
         Location location = entity.getLocation();
         return from(location);
     }
 
-    @NotNull
-    public UUID getWorldId() {
+    public @NotNull UUID getWorldId() {
         return this.worldId;
     }
 
@@ -83,14 +68,12 @@ public class BlockLocation {
         return this.z;
     }
 
-    @Nullable
-    public World getWorld() {
+    public @Nullable World getWorld() {
         UUID worldId = getWorldId();
         return Bukkit.getWorld(worldId);
     }
 
-    @Nullable
-    public Location asLocation() {
+    public @Nullable Location asLocation() {
         World world = getWorld();
         if (world == null) {
             return null;
@@ -102,8 +85,7 @@ public class BlockLocation {
         return new Location(world, x, y, z, 0.0F, 0.0F);
     }
 
-    @Nullable
-    public Block asBlock() {
+    public @Nullable Block asBlock() {
         World world = getWorld();
         if (world == null) {
             return null;

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,18 +18,17 @@ import net.md_5.bungee.config.Configuration;
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
 import com.github.sirblobman.api.utility.MessageUtility;
-import com.github.sirblobman.api.utility.Validate;
 
 public final class CommandSBCoreHide extends Command implements TabExecutor {
     private final CorePlugin plugin;
 
-    public CommandSBCoreHide(CorePlugin plugin) {
+    public CommandSBCoreHide(@NotNull CorePlugin plugin) {
         super("sbcorehide", "sbcore.hide", "sbcore-hide", "sbchide");
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+        this.plugin = plugin;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         if (args.length == 1) {
             Set<String> valueSet = Set.of("on", "off");
             return MessageUtility.getMatches(args[0], valueSet);
@@ -37,7 +38,7 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(@NotNull CommandSender sender, String @NotNull [] args) {
         if (!(sender instanceof ProxiedPlayer player)) {
             TextComponent message = new TextComponent("Only players can execute this command.");
             message.setColor(ChatColor.RED);
@@ -73,11 +74,11 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
         player.sendMessage(message1);
     }
 
-    private CorePlugin getPlugin() {
+    private @NotNull CorePlugin getPlugin() {
         return this.plugin;
     }
 
-    private Configuration getConfiguration() {
+    private @NotNull Configuration getConfiguration() {
         CorePlugin plugin = getPlugin();
         ConfigurationManager configurationManager = plugin.getConfigurationManager();
         return configurationManager.get("hidden.yml");
@@ -89,7 +90,7 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
         configurationManager.save("hidden.yml");
     }
 
-    private boolean isHidden(ProxiedPlayer player) {
+    private boolean isHidden(@NotNull ProxiedPlayer player) {
         UUID playerId = player.getUniqueId();
         String playerIdString = playerId.toString();
 
@@ -97,7 +98,7 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
         return configuration.getBoolean(playerIdString, false);
     }
 
-    private void setHidden(ProxiedPlayer player, boolean hidden) {
+    private void setHidden(@NotNull ProxiedPlayer player, boolean hidden) {
         UUID playerId = player.getUniqueId();
         String playerIdString = playerId.toString();
 

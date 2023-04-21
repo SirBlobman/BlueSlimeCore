@@ -14,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -34,13 +37,13 @@ import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
 
 public final class CommandDebugEvent extends ConsoleCommand {
-    public CommandDebugEvent(CorePlugin plugin) {
+    public CommandDebugEvent(@NotNull CorePlugin plugin) {
         super(plugin, "debug-event");
         setPermissionName("blue.slime.core.command.debug-event");
     }
 
     @Override
-    public List<String> onTabComplete(ConsoleCommandSender sender, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull ConsoleCommandSender sender, String @NotNull [] args) {
         if (args.length == 1) {
             Set<String> valueSet = getEnumNames(EventPriority.class);
             return getMatching(args[0], valueSet);
@@ -55,7 +58,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
     }
 
     @Override
-    public boolean execute(ConsoleCommandSender sender, String[] args) {
+    public boolean execute(@NotNull ConsoleCommandSender sender, String @NotNull [] args) {
         if (args.length < 2) {
             return false;
         }
@@ -88,7 +91,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         }
     }
 
-    private Class<? extends Event> getEventClass(String className) {
+    private @Nullable Class<? extends Event> getEventClass(@NotNull String className) {
         try {
             Class<?> namedClass = Class.forName(className);
             return namedClass.asSubclass(Event.class);
@@ -97,7 +100,8 @@ public final class CommandDebugEvent extends ConsoleCommand {
         }
     }
 
-    private HandlerList getHandlerList(Class<? extends Event> eventClass) throws ReflectiveOperationException {
+    private @NotNull HandlerList getHandlerList(@NotNull Class<? extends Event> eventClass)
+            throws ReflectiveOperationException {
         Method method_getHandlerList = eventClass.getMethod("getHandlerList");
         method_getHandlerList.setAccessible(true);
 
@@ -105,7 +109,8 @@ public final class CommandDebugEvent extends ConsoleCommand {
         return (HandlerList) object_HandlerList;
     }
 
-    private Map<String, Set<String>> getPluginListenerMap(HandlerList handlerList, EventPriority priority) {
+    private @NotNull Map<String, Set<String>> getPluginListenerMap(@NotNull HandlerList handlerList,
+                                                                   @NotNull EventPriority priority) {
         RegisteredListener[] registeredListenerArray = handlerList.getRegisteredListeners();
         Map<String, Set<String>> pluginListenerMap = new HashMap<>();
 
@@ -130,7 +135,8 @@ public final class CommandDebugEvent extends ConsoleCommand {
         return pluginListenerMap;
     }
 
-    private void logDebugResults(Class<?> eventClass, HandlerList handlerList, EventPriority priority) {
+    private void logDebugResults(@NotNull Class<?> eventClass, @NotNull HandlerList handlerList,
+                                 @NotNull EventPriority priority) {
         Map<String, Set<String>> pluginListenerMap = getPluginListenerMap(handlerList, priority);
         Set<Entry<String, Set<String>>> entrySet = pluginListenerMap.entrySet();
 
@@ -159,7 +165,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
         }
     }
 
-    private Set<String> getExampleEventClasses() {
+    private @NotNull Set<String> getExampleEventClasses() {
         List<Class<?>> exampleClassList = Arrays.asList(PlayerInteractEvent.class, PlayerDeathEvent.class,
                 PlayerTeleportEvent.class, EntitySpawnEvent.class);
         return exampleClassList.parallelStream().map(Class::getName).collect(Collectors.toSet());

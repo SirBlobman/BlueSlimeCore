@@ -3,16 +3,13 @@ package com.github.sirblobman.api.language;
 import java.util.Comparator;
 import java.util.Objects;
 
-import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
-import com.github.sirblobman.api.utility.Validate;
+import org.bukkit.configuration.ConfigurationSection;
 
 public final class LanguageConfigurationComparator implements Comparator<ConfigurationSection> {
     @Override
-    public int compare(ConfigurationSection section1, ConfigurationSection section2) {
-        Validate.notNull(section1, "section1 must not be null!");
-        Validate.notNull(section2, "section2 must not be null!");
-
+    public int compare(@NotNull ConfigurationSection section1, @NotNull ConfigurationSection section2) {
         String languageName1 = section1.getString("language-name");
         String languageName2 = section2.getString("language-name");
         String parentName1 = section1.getString("parent");

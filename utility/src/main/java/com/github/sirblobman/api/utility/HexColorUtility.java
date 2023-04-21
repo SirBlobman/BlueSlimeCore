@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.ChatColor;
 
 public final class HexColorUtility {
@@ -15,7 +17,7 @@ public final class HexColorUtility {
      * @param string    The {@link String} that will have its values replaced.
      * @return A new {@link String} with the hex color codes being replaced.
      */
-    public static String replaceHexColors(char colorChar, String string) {
+    public static @NotNull String replaceHexColors(char colorChar, @NotNull String string) {
         Pattern pattern = getReplaceAllRgbPattern(colorChar);
         Matcher matcher = pattern.matcher(string);
 
@@ -53,7 +55,7 @@ public final class HexColorUtility {
         return pattern;
     }
 
-    private static String parseHexColor(String string) throws NumberFormatException {
+    private static @NotNull String parseHexColor(@NotNull String string) throws NumberFormatException {
         if (string.startsWith("#")) {
             string = string.substring(1);
         }
