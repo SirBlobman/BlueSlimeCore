@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -13,10 +16,6 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContext;
 import com.github.sirblobman.api.nbt.CustomNbtType;
-import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static com.github.sirblobman.api.nbt.modern.PersistentDataConverter.convertContext;
 import static com.github.sirblobman.api.nbt.modern.PersistentDataConverter.convertType;
@@ -25,9 +24,10 @@ public final class CustomNbtPersistentDataContainerWrapper implements CustomNbtC
     private final Plugin plugin;
     private final PersistentDataContainer container;
 
-    public CustomNbtPersistentDataContainerWrapper(Plugin plugin, PersistentDataContainer container) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-        this.container = Validate.notNull(container, "container must not be null!");
+    public CustomNbtPersistentDataContainerWrapper(@NotNull Plugin plugin,
+                                                   @NotNull PersistentDataContainer container) {
+        this.plugin = plugin;
+        this.container = container;
     }
 
     public Plugin getPlugin() {
@@ -62,12 +62,18 @@ public final class CustomNbtPersistentDataContainerWrapper implements CustomNbtC
     }
 
     @Override
-    public <T, Z> @NotNull Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type, @NotNull Z defaultValue) {
+    public <T, Z> @Nullable Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type,
+                                          @Nullable Z defaultValue) {
         Plugin plugin = getPlugin();
         NamespacedKey realKey = getKey(key);
         PersistentDataContainer container = getContainer();
         PersistentDataType<T, Z> realType = convertType(plugin, type);
-        return container.getOrDefault(realKey, realType, defaultValue);
+
+        if (defaultValue == null) {
+            return container.get(realKey, realType);
+        } else {
+            return container.getOrDefault(realKey, realType, defaultValue);
+        }
     }
 
     @Override
@@ -104,11 +110,11 @@ public final class CustomNbtPersistentDataContainerWrapper implements CustomNbtC
         return convertContext(plugin, container.getAdapterContext());
     }
 
-    public PersistentDataContainer getContainer() {
+    public @NotNull PersistentDataContainer getContainer() {
         return this.container;
     }
 
-    private NamespacedKey getKey(String key) {
+    private @NotNull NamespacedKey getKey(String key) {
         Plugin plugin = getPlugin();
         return new NamespacedKey(plugin, key);
     }

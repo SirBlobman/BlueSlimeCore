@@ -1,13 +1,13 @@
 package com.github.sirblobman.api.nms.scoreboard;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.github.sirblobman.api.nms.Handler;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * NMS Scoreboard Handler
@@ -31,16 +31,26 @@ public final class ScoreboardHandler extends Handler {
      * @param displayName The display name for the objective that will be shown to players.
      * @return The new objective that was created.
      */
-    @SuppressWarnings("deprecation")
     public @NotNull Objective createObjective(@NotNull Scoreboard scoreboard, @NotNull String name,
                                               @NotNull String criteria, @NotNull String displayName) {
         int minorVersion = VersionUtility.getMinorVersion();
         if (minorVersion < 13) {
-            Objective objective = scoreboard.registerNewObjective(name, criteria);
-            objective.setDisplayName(displayName);
-            return objective;
+            return createObjectiveLegacy(scoreboard, name, criteria, displayName);
+        } else {
+            return createObjectiveModern(scoreboard, name, criteria, displayName);
         }
+    }
 
+    @SuppressWarnings("deprecation") // Legacy Method
+    private @NotNull Objective createObjectiveLegacy(@NotNull Scoreboard scoreboard, @NotNull String name,
+                                                     @NotNull String criteria, @NotNull String displayName) {
+        Objective objective = scoreboard.registerNewObjective(name, criteria);
+        objective.setDisplayName(displayName);
+        return objective;
+    }
+
+    private @NotNull Objective createObjectiveModern(@NotNull Scoreboard scoreboard, @NotNull String name,
+                                                     @NotNull String criteria, @NotNull String displayName) {
         return scoreboard.registerNewObjective(name, criteria, displayName);
     }
 }

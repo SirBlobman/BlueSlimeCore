@@ -1,5 +1,7 @@
 package com.github.sirblobman.api.nbt.modern;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -10,15 +12,18 @@ import com.github.sirblobman.api.nbt.CustomNbtContext;
 import com.github.sirblobman.api.nbt.CustomNbtType;
 
 public final class PersistentDataConverter {
-    public static <T, Z> PersistentDataType<T, Z> convertType(Plugin plugin, CustomNbtType<T, Z> customNbtType) {
+    public static <T, Z> @NotNull PersistentDataType<T, Z> convertType(@NotNull Plugin plugin,
+                                                                       @NotNull CustomNbtType<T, Z> customNbtType) {
         return new CustomNbtPersistentDataTypeWrapper<>(plugin, customNbtType);
     }
 
-    public static CustomNbtContext convertContext(Plugin plugin, PersistentDataAdapterContext context) {
+    public static @NotNull CustomNbtContext convertContext(@NotNull Plugin plugin,
+                                                           @NotNull PersistentDataAdapterContext context) {
         return new CustomNbtPersistentDataAdapterContextWrapper(plugin, context);
     }
 
-    public static CustomNbtContainer convertContainer(Plugin plugin, PersistentDataContainer container) {
+    public static @NotNull CustomNbtContainer convertContainer(@NotNull Plugin plugin,
+                                                               @NotNull PersistentDataContainer container) {
         return new CustomNbtPersistentDataContainerWrapper(plugin, container);
     }
 }
