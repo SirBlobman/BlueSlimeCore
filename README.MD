@@ -12,13 +12,7 @@ Only Spigot and Paper are supported. Custom forks may work, but they are unteste
 The following Minecraft versions are currently supported:
 
 - 1.8.8
-- 1.9.4
-- 1.10.2
-- 1.11.2
 - 1.12.2
-- 1.13.2
-- 1.14.4
-- 1.15.2
 - 1.16.5
 - 1.17.1
 - 1.18.2
