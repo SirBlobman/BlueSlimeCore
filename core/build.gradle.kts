@@ -1,5 +1,6 @@
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.papermc.hangarpublishplugin.HangarPublishTask
 import io.papermc.hangarpublishplugin.model.Platforms
 
 repositories {
@@ -51,6 +52,10 @@ tasks {
     }
 
     named("build") {
+        dependsOn("shadowJar")
+    }
+
+    withType<HangarPublishTask> {
         dependsOn("shadowJar")
     }
 
@@ -114,8 +119,9 @@ hangarPublish {
                         it.archiveFile
                     })
 
-                    platformVersions.set(listOf("1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.12.2", "1.8.8"))
+                    platformVersions.set(listOf("1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.12.2"))
                     changelog.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/changes")
+
                     this.dependencies {
                         url("Factions (Massive)", "https://www.spigotmc.org/resources/83459/") {
                             required.set(false)
