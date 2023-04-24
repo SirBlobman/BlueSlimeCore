@@ -98,11 +98,11 @@ publishing {
 }
 
 hangarPublish {
-    val apiKey = System.getenv("HANGAR_API_KEY")
+    val envApiKey = System.getenv("HANGAR_API_KEY")
     val beta = rootProject.ext.get("isBeta") as Boolean
-    if (apiKey != null && beta) {
+    if (envApiKey != null && beta) {
         publications.register("plugin") {
-            this.apiKey.set(apiKey)
+            apiKey.set(envApiKey)
             namespace("SirBlobman", "BlueSlimeCore")
             version.set(rootProject.ext.get("calculatedVersion") as String)
             channel.set("Beta")
