@@ -102,13 +102,14 @@ hangarPublish {
     val beta = rootProject.ext.get("isBeta") as Boolean
     if (apiKey != null && beta) {
         publications.register("plugin") {
+            this.apiKey.set(apiKey)
             namespace("SirBlobman", "BlueSlimeCore")
             version.set(rootProject.ext.get("calculatedVersion") as String)
             channel.set("Beta")
 
             platforms {
                 register(Platforms.PAPER) {
-                    jar.set(tasks.named<ShadowJar>("shadowJar").get().archiveFile)
+                    url.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/");
                     platformVersions.set(listOf("1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.12.2", "1.8.8"))
                     this.dependencies {
                         url("Factions (Massive)", "https://www.spigotmc.org/resources/83459/") {
