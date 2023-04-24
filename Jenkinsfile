@@ -25,7 +25,7 @@ pipeline {
                 withGradle {
                     script {
                         if (env.BRANCH_NAME == "main") {
-                            sh("./gradlew --no-daemon --refresh-dependencies --info --stacktrace clean build publish publishAllPublicationsToHangar")
+                            sh("./gradlew --no-daemon --refresh-dependencies clean build publish publishAllPublicationsToHangar")
                         } else {
                             sh("./gradlew --no-daemon --refresh-dependencies clean build")
                         }
