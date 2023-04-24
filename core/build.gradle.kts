@@ -110,7 +110,10 @@ hangarPublish {
             platforms {
                 register(Platforms.PAPER) {
                     // url.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/");
-                    jar.set(tasks.named<ShadowJar>("shadowJar").get().archiveFile)
+                    jar.set(tasks.named<ShadowJar>("shadowJar").flatMap {
+                        it.archiveFile
+                    })
+
                     platformVersions.set(listOf("1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.12.2", "1.8.8"))
                     changelog.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/changes")
                     this.dependencies {
