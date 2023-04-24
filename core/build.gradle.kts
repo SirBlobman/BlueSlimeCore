@@ -1,6 +1,5 @@
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import io.papermc.hangarpublishplugin.HangarPublishTask
 import io.papermc.hangarpublishplugin.model.Platforms
 
 repositories {
@@ -52,10 +51,6 @@ tasks {
     }
 
     named("build") {
-        dependsOn("shadowJar")
-    }
-
-    withType<HangarPublishTask> {
         dependsOn("shadowJar")
     }
 
