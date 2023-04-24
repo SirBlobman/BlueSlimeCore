@@ -223,7 +223,7 @@ public abstract class BaseMenu implements IMenu {
 
         MiniMessage miniMessage = languageManager.getMiniMessage();
         Component displayName = miniMessage.deserialize(displayNameString);
-        return builder.withName(itemHandler, displayName);
+        return builder.withName(itemHandler, ComponentHelper.wrapNoItalics(displayName));
     }
 
     private @NotNull ItemBuilder checkLore(@NotNull ItemBuilder builder,
@@ -247,7 +247,7 @@ public abstract class BaseMenu implements IMenu {
             lore.add(line);
         }
 
-        return builder.withLore(itemHandler, lore);
+        return builder.withLore(itemHandler, ComponentHelper.wrapNoItalics(lore));
     }
 
     private @NotNull ItemBuilder checkSkull(@NotNull ItemBuilder builder, @NotNull XMaterial material,
