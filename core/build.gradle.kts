@@ -1,4 +1,6 @@
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.papermc.hangarpublishplugin.model.Platforms
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -6,8 +8,9 @@ repositories {
 }
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("maven-publish")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.papermc.hangar-publish-plugin") version "0.0.5"
 }
 
 dependencies {
@@ -37,7 +40,7 @@ dependencies {
 }
 
 tasks {
-    named<Jar>("jar") {
+    named("jar") {
         enabled = false
     }
 
@@ -47,8 +50,8 @@ tasks {
         archiveClassifier.set(null as String?)
     }
 
-    build {
-        dependsOn(shadowJar)
+    named("build") {
+        dependsOn("shadowJar")
     }
 
     processResources {
@@ -90,6 +93,50 @@ publishing {
             artifactId = "core"
             version = rootProject.ext.get("apiVersion") as String
             artifact(tasks["shadowJar"])
+        }
+    }
+}
+
+hangarPublish {
+    val apiKey = System.getenv("HANGAR_API_KEY")
+    val beta = rootProject.ext.get("isBeta") as Boolean
+    if (apiKey != null && beta) {
+        publications.register("plugin") {
+            namespace("SirBlobman", "BlueSlimeCore")
+            version.set(rootProject.ext.get("calculatedVersion") as String)
+            channel.set("Beta")
+
+            platforms {
+                register(Platforms.PAPER) {
+                    jar.set(tasks.named<ShadowJar>("shadowJar").get().archiveFile)
+                    platformVersions.set(listOf("1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.12.2", "1.8.8"))
+                    this.dependencies {
+                        url("Factions (Massive)", "https://www.spigotmc.org/resources/83459/") {
+                            required.set(false)
+                        }
+
+                        url("Factions (Saber)", "https://www.spigotmc.org/resources/69771/") {
+                            required.set(false)
+                        }
+
+                        url("Factions (UUID)", "https://www.spigotmc.org/resources/1035/") {
+                            required.set(false)
+                        }
+
+                        url("FactionsX", "https://www.spigotmc.org/resources/83459/") {
+                            required.set(false)
+                        }
+
+                        url("LegacyFactions", "https://www.spigotmc.org/resources/40122/") {
+                            required.set(false)
+                        }
+
+                        url("PlaceholderAPI", "https://www.spigotmc.org/resources/6245/") {
+                            required.set(false)
+                        }
+                    }
+                }
+            }
         }
     }
 }

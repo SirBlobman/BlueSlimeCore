@@ -8,6 +8,7 @@ val jenkinsBuildNumber = System.getenv("BUILD_NUMBER") ?: "Unofficial"
 val betaBoolean = betaString.toBoolean()
 val betaVersion = if (betaBoolean) "Beta-" else ""
 val calculatedVersion = "$baseVersion.$betaVersion$jenkinsBuildNumber"
+rootProject.ext.set("isBeta", betaBoolean)
 rootProject.ext.set("calculatedVersion", calculatedVersion)
 
 val mavenUsername = System.getenv("MAVEN_DEPLOY_USR") ?: findProperty("mavenUsernameSirBlobman") ?: ""

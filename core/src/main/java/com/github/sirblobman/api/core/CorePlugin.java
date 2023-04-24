@@ -30,7 +30,9 @@ import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.nms.PlayerHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
-import com.github.sirblobman.api.update.UpdateManager;
+import com.github.sirblobman.api.update.HangarInfo;
+import com.github.sirblobman.api.update.HangarUpdateManager;
+import com.github.sirblobman.api.update.SpigotUpdateManager;
 import com.github.sirblobman.api.utility.VersionUtility;
 import com.github.sirblobman.api.shaded.bstats.bukkit.Metrics;
 import com.github.sirblobman.api.shaded.bstats.charts.SimplePie;
@@ -38,11 +40,13 @@ import com.github.sirblobman.api.shaded.bstats.charts.SimplePie;
 public final class CorePlugin extends ConfigurablePlugin {
     private final CoreConfiguration coreConfiguration;
 
-    private final UpdateManager updateManager;
+    private final SpigotUpdateManager spigotUpdateManager;
+    private final HangarUpdateManager hangarUpdateManager;
 
     public CorePlugin() {
         this.coreConfiguration = new CoreConfiguration();
-        this.updateManager = new UpdateManager(this);
+        this.spigotUpdateManager = new SpigotUpdateManager(this);
+        this.hangarUpdateManager = new HangarUpdateManager(this);
     }
 
     @Override
@@ -96,8 +100,12 @@ public final class CorePlugin extends ConfigurablePlugin {
         return this.coreConfiguration;
     }
 
-    public @NotNull UpdateManager getUpdateManager() {
-        return this.updateManager;
+    public @NotNull SpigotUpdateManager getSpigotUpdateManager() {
+        return this.spigotUpdateManager;
+    }
+
+    public @NotNull HangarUpdateManager getHangarUpdateManager() {
+        return this.hangarUpdateManager;
     }
 
     private void printMultiVersionInformation() {
@@ -175,9 +183,13 @@ public final class CorePlugin extends ConfigurablePlugin {
     }
 
     private void registerUpdateChecker() {
-        UpdateManager updateManager = getUpdateManager();
-        updateManager.addResource(this, 83189L);
+        SpigotUpdateManager updateManager = getSpigotUpdateManager();
         updateManager.checkForUpdates();
+
+        HangarInfo hangarInfo = new HangarInfo("SirBlobman", "BlueSlimeCore");
+        HangarUpdateManager hangarUpdateManager = getHangarUpdateManager();
+        hangarUpdateManager.addProject(this, hangarInfo);
+        hangarUpdateManager.checkForUpdates();
     }
 
     private void register_bStats() {

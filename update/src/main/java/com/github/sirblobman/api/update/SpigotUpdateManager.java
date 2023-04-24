@@ -24,7 +24,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-public final class UpdateManager {
+public final class SpigotUpdateManager {
     private static final String BASE_UPDATE_URL;
     private static final String BASE_RESOURCE_URL;
 
@@ -37,7 +37,7 @@ public final class UpdateManager {
     private final Map<String, Long> pluginResourceMap;
     private final Map<String, String> spigotVersionCache;
 
-    public UpdateManager(@NotNull JavaPlugin plugin) {
+    public SpigotUpdateManager(@NotNull JavaPlugin plugin) {
         this.plugin = plugin;
         this.pluginResourceMap = new HashMap<>();
         this.spigotVersionCache = new HashMap<>();

@@ -8,6 +8,7 @@ pipeline {
     environment {
         DISCORD_URL = credentials('PUBLIC_DISCORD_WEBHOOK')
         MAVEN_DEPLOY = credentials('MAVEN_DEPLOY')
+        HANGAR_API_KEY = credentials('HANGAR_API_KEY')
     }
 
     triggers {
@@ -24,9 +25,9 @@ pipeline {
                 withGradle {
                     script {
                         if (env.BRANCH_NAME == "main") {
-                            sh("./gradlew clean build publish --refresh-dependencies --no-daemon")
+                            sh("./gradlew --no-daemon --refresh-dependencies clean build publish publishAllPublicationsToHangar")
                         } else {
-                            sh("./gradlew clean build --refresh-dependencies --no-daemon")
+                            sh("./gradlew --no-daemon --refresh-dependencies clean build")
                         }
                     }
                 }
