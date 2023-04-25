@@ -6,17 +6,18 @@ import org.jetbrains.annotations.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.TextReplacementConfig;
 
-public abstract class AbstractPagedMenu extends AbstractMenu {
+public abstract class AbstractPagedMenu<P extends Plugin> extends AbstractMenu<P> {
     private int currentPage;
 
-    public AbstractPagedMenu(@NotNull Plugin plugin, @NotNull Player player) {
+    public AbstractPagedMenu(@NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AbstractPagedMenu(@Nullable IMenu parentMenu, @NotNull Plugin plugin, @NotNull Player player) {
+    public AbstractPagedMenu(@Nullable IMenu<P> parentMenu, @NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
         super(parentMenu, plugin, player);
         this.currentPage = 1;
     }

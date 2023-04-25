@@ -7,19 +7,19 @@ import org.bukkit.entity.Player;
 import com.github.sirblobman.api.menu.IMenu;
 
 public final class OpenMenuButton extends QuickButton {
-    private final IMenu menu;
+    private final IMenu<?> menu;
 
-    public OpenMenuButton(@NotNull IMenu menu) {
+    public OpenMenuButton(@NotNull IMenu<?> menu) {
         this.menu = menu;
     }
 
     @Override
     public void onLeftClick(@NotNull Player player, boolean shift) {
-        IMenu menu = getMenu();
+        IMenu<?> menu = getMenu();
         menu.open();
     }
 
-    private @NotNull IMenu getMenu() {
+    private @NotNull IMenu<?> getMenu() {
         return this.menu;
     }
 }

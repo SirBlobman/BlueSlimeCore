@@ -13,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
@@ -28,24 +29,24 @@ import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
-public abstract class BaseMenu implements IMenu {
-    private IMenu parentMenu;
+public abstract class BaseMenu<P extends Plugin> implements IMenu<P> {
+    private IMenu<P> parentMenu;
 
     public BaseMenu() {
         this(null);
     }
 
-    public BaseMenu(@Nullable IMenu parentMenu) {
+    public BaseMenu(@Nullable IMenu<P> parentMenu) {
         this.parentMenu = parentMenu;
     }
 
     @Override
-    public @NotNull Optional<IMenu> getParentMenu() {
+    public @NotNull Optional<IMenu<P>> getParentMenu() {
         return Optional.ofNullable(this.parentMenu);
     }
 
     @Override
-    public void setParentMenu(@NotNull IMenu parentMenu) {
+    public void setParentMenu(@NotNull IMenu<P> parentMenu) {
         this.parentMenu = parentMenu;
     }
 

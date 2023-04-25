@@ -11,19 +11,25 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 
+import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.plugin.IMultiVersionPlugin;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
-public interface IMenu extends InventoryHolder, Listener {
+public interface IMenu<P extends Plugin> extends InventoryHolder, Listener {
+    @NotNull IFoliaPlugin<P> getFoliaPlugin();
+
     /**
      * @return The plugin that owns this menu.
      */
-    @NotNull Plugin getPlugin();
+    default @NotNull P getPlugin() {
+        IFoliaPlugin<P> plugin = getFoliaPlugin();
+        return plugin.getPlugin();
+    }
 
     default @NotNull Logger getLogger() {
-        Plugin plugin = getPlugin();
+        P plugin = getPlugin();
         return plugin.getLogger();
     }
 
@@ -52,7 +58,7 @@ public interface IMenu extends InventoryHolder, Listener {
      *
      * @return An optional menu that caused this menu to open.
      */
-    @NotNull Optional<IMenu> getParentMenu();
+    @NotNull Optional<IMenu<P>> getParentMenu();
 
     /**
      * Change the parent menu for this menu.
@@ -60,7 +66,7 @@ public interface IMenu extends InventoryHolder, Listener {
      * @param parentMenu The new parent menu. Can be null.
      * @see #getParentMenu()
      */
-    void setParentMenu(@NotNull IMenu parentMenu);
+    void setParentMenu(@NotNull IMenu<P> parentMenu);
 
     default @Nullable MultiVersionHandler getMultiVersionHandler() {
         Plugin plugin = getPlugin();

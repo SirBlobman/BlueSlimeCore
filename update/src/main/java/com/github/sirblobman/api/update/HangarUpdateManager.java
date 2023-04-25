@@ -23,9 +23,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitScheduler;
 
-public final class HangarUpdateManager {
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.details.TaskDetails;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
+
+public final class HangarUpdateManager<P extends Plugin> {
     private static final String BASE_API_URL;
     private static final String BASE_RESOURCE_URL;
 
@@ -34,11 +38,11 @@ public final class HangarUpdateManager {
         BASE_RESOURCE_URL = "https://hangar.papermc.io/%s/%s";
     }
 
-    private final Plugin plugin;
+    private final IFoliaPlugin<P> plugin;
     private final Map<String, HangarInfo> pluginInfoMap;
     private final Map<String, String> hangarVersionCache;
 
-    public HangarUpdateManager(@NotNull Plugin plugin) {
+    public HangarUpdateManager(@NotNull IFoliaPlugin<P> plugin) {
         this.plugin = plugin;
         this.pluginInfoMap = new HashMap<>();
         this.hangarVersionCache = new HashMap<>();
@@ -74,22 +78,30 @@ public final class HangarUpdateManager {
             return;
         }
 
-        Plugin plugin = getPlugin();
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLaterAsynchronously(plugin, this::fetchUpdates, 1L);
+        IFoliaPlugin<P> plugin = getPlugin();
+        TaskDetails<P> task = new TaskDetails<P>(plugin.getPlugin()) {
+            @Override
+            public void run() {
+                fetchUpdates();
+            }
+        };
+
+        FoliaHelper<P> foliaHelper = plugin.getFoliaHelper();
+        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
+        scheduler.scheduleAsyncTask(task);
     }
 
-    private @NotNull Plugin getPlugin() {
+    private @NotNull IFoliaPlugin<P> getPlugin() {
         return this.plugin;
     }
 
     private @NotNull Logger getLogger() {
-        Plugin plugin = getPlugin();
+        Plugin plugin = getPlugin().getPlugin();
         return plugin.getLogger();
     }
 
     private boolean isEnabled() {
-        Plugin plugin = getPlugin();
+        Plugin plugin = getPlugin().getPlugin();
         FileConfiguration configuration = plugin.getConfig();
         return configuration.getBoolean("update-checker", false);
     }

@@ -8,6 +8,8 @@ version: "${pluginVersion}"
 api-version: "1.13"
 load: STARTUP
 
+folia-supported: true
+
 authors:
   - "SirBlobman"
 

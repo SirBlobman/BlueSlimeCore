@@ -2,30 +2,34 @@ package com.github.sirblobman.api.menu.button;
 
 import org.jetbrains.annotations.NotNull;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.menu.IMenu;
-import com.github.sirblobman.api.utility.Validate;
+import com.github.sirblobman.api.menu.task.CloseInventoryTask;
 
-public final class ExitButton extends QuickButton {
-    private final Plugin plugin;
+public final class ExitButton<P extends Plugin> extends QuickButton {
+    private final IFoliaPlugin<P> plugin;
 
-    public ExitButton(@NotNull IMenu menu) {
-        Validate.notNull(menu, "menu must not be null!");
-        this.plugin = menu.getPlugin();
+    public ExitButton(@NotNull IMenu<P> menu) {
+        this.plugin = menu.getFoliaPlugin();
     }
 
     @Override
     public void onLeftClick(@NotNull Player player, boolean shift) {
-        Plugin plugin = getPlugin();
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLater(plugin, player::closeInventory, 2L);
+        IFoliaPlugin<P> plugin = getPlugin();
+        FoliaHelper<P> foliaHelper = plugin.getFoliaHelper();
+        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
+
+        P bukkitPlugin = plugin.getPlugin();
+        CloseInventoryTask<P> task = new CloseInventoryTask<>(bukkitPlugin, player);
+        scheduler.scheduleEntityTask(task);
     }
 
-    private @NotNull Plugin getPlugin() {
+    private @NotNull IFoliaPlugin<P> getPlugin() {
         return this.plugin;
     }
 }

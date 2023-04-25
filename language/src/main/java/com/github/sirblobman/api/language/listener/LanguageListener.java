@@ -12,24 +12,41 @@ import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitScheduler;
 
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.language.LanguageManager;
 
-public final class LanguageListener implements Listener {
-    private final Plugin plugin;
+public final class LanguageListener<P extends Plugin> implements Listener {
+    private final IFoliaPlugin<P> plugin;
     private final LanguageManager languageManager;
 
-    public LanguageListener(@NotNull Plugin plugin, @NotNull LanguageManager languageManager) {
+    public LanguageListener(@NotNull IFoliaPlugin<P> plugin, @NotNull LanguageManager languageManager) {
         this.plugin = plugin;
         this.languageManager = languageManager;
     }
 
-    public @NotNull Plugin getPlugin() {
+    private @NotNull IFoliaPlugin<P> getFoliaPlugin() {
         return this.plugin;
     }
 
-    public @NotNull LanguageManager getLanguageManager() {
+    private @NotNull P getPlugin() {
+        IFoliaPlugin<P> plugin = getFoliaPlugin();
+        return plugin.getPlugin();
+    }
+
+    private @NotNull FoliaHelper<P> getFoliaHelper() {
+        IFoliaPlugin<P> plugin = getFoliaPlugin();
+        return plugin.getFoliaHelper();
+    }
+
+    private @NotNull TaskScheduler<P> getTaskScheduler() {
+        FoliaHelper<P> foliaHelper = getFoliaHelper();
+        return foliaHelper.getScheduler();
+    }
+
+    private @NotNull LanguageManager getLanguageManager() {
         return this.languageManager;
     }
 
@@ -44,35 +61,33 @@ public final class LanguageListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
+        P plugin = getPlugin();
         Player player = e.getPlayer();
-        runLater(() -> updateLocale(player));
+        LanguageManager languageManager = getLanguageManager();
+
+        UpdateLocaleTask<P> task = new UpdateLocaleTask<>(plugin, player, languageManager);
+        task.setDelay(1L);
+
+        TaskScheduler<P> taskScheduler = getTaskScheduler();
+        taskScheduler.scheduleEntityTask(task);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSwitchLocale(PlayerLocaleChangeEvent e) {
         Player player = e.getPlayer();
-        runLater(() -> updateLocale(player));
+        String locale = e.getLocale();
+
+        LanguageManager languageManager = getLanguageManager();
+        if (locale == null) {
+            languageManager.removeLocale(player);
+        } else {
+            languageManager.setLocale(player, locale);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        runLater(() -> remove(player));
-    }
-
-    private void runLater(@NotNull Runnable task) {
-        Plugin plugin = getPlugin();
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLater(plugin, task, 1L);
-    }
-
-    private void updateLocale(@NotNull Player player) {
-        String playerLocale = player.getLocale();
-        LanguageManager languageManager = getLanguageManager();
-        languageManager.setLocale(player, playerLocale);
-    }
-
-    private void remove(@NotNull Player player) {
         LanguageManager languageManager = getLanguageManager();
         languageManager.removeLocale(player);
     }

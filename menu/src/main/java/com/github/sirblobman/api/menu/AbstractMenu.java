@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,22 +18,25 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitScheduler;
 
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.details.EntityTaskDetails;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.menu.button.AbstractButton;
+import com.github.sirblobman.api.menu.task.AbstractMenuInternalOpenTask;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
-public abstract class AbstractMenu extends BaseMenu {
-    private final Plugin plugin;
+public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
+    private final IFoliaPlugin<P> plugin;
     private final Player player;
     private final Map<Integer, AbstractButton> buttonMap;
 
-    public AbstractMenu(@NotNull Plugin plugin, @NotNull Player player) {
+    public AbstractMenu(@NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AbstractMenu(@Nullable IMenu parentMenu, @NotNull Plugin plugin, @NotNull Player player) {
+    public AbstractMenu(@Nullable IMenu<P> parentMenu, @NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
         super(parentMenu);
         if (!player.isOnline()) {
             throw new IllegalArgumentException("player must be online!");
@@ -46,8 +48,14 @@ public abstract class AbstractMenu extends BaseMenu {
     }
 
     @Override
-    public final @NotNull Plugin getPlugin() {
+    public final @NotNull IFoliaPlugin<P> getFoliaPlugin() {
         return this.plugin;
+    }
+
+    @Override
+    public final @NotNull P getPlugin() {
+        IFoliaPlugin<P> plugin = getFoliaPlugin();
+        return plugin.getPlugin();
     }
 
     /**
@@ -129,12 +137,16 @@ public abstract class AbstractMenu extends BaseMenu {
 
     @Override
     public void open() {
-        Plugin plugin = getPlugin();
+        P plugin = getPlugin();
         Player player = getPlayer();
         player.closeInventory();
 
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLater(plugin, this::internalOpen, 1L);
+        IFoliaPlugin<P> foliaPlugin = getFoliaPlugin();
+        FoliaHelper<P> foliaHelper = foliaPlugin.getFoliaHelper();
+        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
+
+        EntityTaskDetails<P, Player> task = new AbstractMenuInternalOpenTask<>(plugin, player, this);
+        scheduler.scheduleEntityTask(task);
     }
 
     /**
@@ -142,6 +154,13 @@ public abstract class AbstractMenu extends BaseMenu {
      */
     public boolean shouldCancelShiftClickFromPlayerInventory() {
         return true;
+    }
+
+    /**
+     * Remove all previously added buttons
+     */
+    public void resetButtons() {
+        this.buttonMap.clear();
     }
 
     /**
@@ -157,19 +176,6 @@ public abstract class AbstractMenu extends BaseMenu {
         }
 
         this.buttonMap.put(slot, button);
-    }
-
-    private void internalOpen() {
-        this.buttonMap.clear();
-
-        Plugin plugin = getPlugin();
-        Inventory inventory = getInventory();
-
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(this, plugin);
-
-        Player player = getPlayer();
-        player.openInventory(inventory);
     }
 
     private @Nullable AbstractButton internalGetButton(int slot) {

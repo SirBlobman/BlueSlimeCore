@@ -10,20 +10,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.PlayerDataManager;
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 
-public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVersionPlugin {
+public abstract class ConfigurablePlugin extends JavaPlugin
+        implements IMultiVersionPlugin, IFoliaPlugin<ConfigurablePlugin> {
     private final ConfigurationManager configurationManager;
     private final MultiVersionHandler multiVersionHandler;
     private final PlayerDataManager playerDataManager;
     private final LanguageManager languageManager;
+
+    private final FoliaHelper<ConfigurablePlugin> foliaHelper;
 
     public ConfigurablePlugin() {
         this.configurationManager = new ConfigurationManager(this);
         this.multiVersionHandler = new MultiVersionHandler(this);
         this.playerDataManager = new PlayerDataManager(this);
         this.languageManager = new LanguageManager(this.configurationManager);
+        this.foliaHelper = new FoliaHelper<>(this);
     }
 
     @Override
@@ -56,6 +62,16 @@ public abstract class ConfigurablePlugin extends JavaPlugin implements IMultiVer
     public final @NotNull YamlConfiguration getConfig() {
         ConfigurationManager configurationManager = getConfigurationManager();
         return configurationManager.get("config.yml");
+    }
+
+    @Override
+    public @NotNull ConfigurablePlugin getPlugin() {
+        return this;
+    }
+
+    @Override
+    public @NotNull FoliaHelper<ConfigurablePlugin> getFoliaHelper() {
+        return this.foliaHelper;
     }
 
     protected void reloadConfiguration() {

@@ -3,7 +3,6 @@ package com.github.sirblobman.api.menu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,20 +14,26 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
-public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu implements Runnable {
-    private final P plugin;
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.details.EntityTaskDetails;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
+import com.github.sirblobman.api.folia.task.WrappedTask;
+import com.github.sirblobman.api.menu.task.AdvancedMenuInternalOpenTask;
+import com.github.sirblobman.api.menu.task.AdvancedMenuRefreshLoopTask;
+
+public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu<P> implements Runnable {
+    private final IFoliaPlugin<P> plugin;
     private final Player player;
-    private BukkitTask currentTask;
+    private WrappedTask currentTask;
 
-    public AdvancedAbstractMenu(@NotNull P plugin, @NotNull Player player) {
+    public AdvancedAbstractMenu(@NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AdvancedAbstractMenu(@Nullable IMenu parentMenu, @NotNull P plugin, @NotNull Player player) {
+    public AdvancedAbstractMenu(@Nullable IMenu<P> parentMenu, @NotNull IFoliaPlugin<P> plugin,
+                                @NotNull Player player) {
         super(parentMenu);
         this.plugin = plugin;
         this.player = player;
@@ -36,7 +41,7 @@ public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu im
     }
 
     @Override
-    public final @NotNull P getPlugin() {
+    public final @NotNull IFoliaPlugin<P> getFoliaPlugin() {
         return this.plugin;
     }
 
@@ -107,25 +112,19 @@ public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu im
     }
 
     public void open() {
+        P plugin = getPlugin();
         Player player = getPlayer();
         player.closeInventory();
 
-        P plugin = getPlugin();
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLater(plugin, this::internalOpen, 1L);
-    }
+        IFoliaPlugin<P> foliaPlugin = getFoliaPlugin();
+        FoliaHelper<P> foliaHelper = foliaPlugin.getFoliaHelper();
+        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
 
-    private void internalOpen() {
-        P plugin = getPlugin();
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(this, plugin);
+        EntityTaskDetails<P, Player> task = new AdvancedMenuInternalOpenTask<>(plugin, player, this);
+        scheduler.scheduleEntityTask(task);
 
-        Player player = getPlayer();
-        Inventory inventory = getInventory();
-        player.openInventory(inventory);
-
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        this.currentTask = scheduler.runTaskTimer(plugin, this, 20L, 20L);
+        EntityTaskDetails<P, Player> timer = new AdvancedMenuRefreshLoopTask<>(plugin, player, this);
+        this.currentTask = scheduler.scheduleEntityTask(timer);
     }
 
     private void internalClose() {

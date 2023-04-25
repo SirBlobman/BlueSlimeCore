@@ -5,6 +5,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+repositories {
+    maven("https://nexus.sirblobman.xyz/public/")
+}
+
 dependencies {
     // XSeries
     implementation("com.github.cryptomorin:XSeries:9.3.1")
@@ -18,6 +22,9 @@ dependencies {
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("org.bstats:bstats-bungeecord:3.0.2")
+
+    // Folia Helper
+    implementation("com.github.sirblobman.api:folia-helper:1.0.0-SNAPSHOT")
 }
 
 tasks {

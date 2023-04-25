@@ -34,6 +34,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import com.github.sirblobman.api.configuration.ConfigurationManager;
 import com.github.sirblobman.api.configuration.IResourceHolder;
 import com.github.sirblobman.api.configuration.WrapperPluginResourceHolder;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.language.custom.ModifiableMessage;
 import com.github.sirblobman.api.language.custom.ModifiableMessageType;
 import com.github.sirblobman.api.language.custom.PlayerListInfo;
@@ -228,14 +229,17 @@ public final class LanguageManager {
             WrapperPluginResourceHolder wrapper = (WrapperPluginResourceHolder) resourceHolder;
             Plugin plugin = wrapper.getPlugin();
 
-            int minorVersion = VersionUtility.getMinorVersion();
-            if (minorVersion >= 12) {
-                printDebug("Version is 1.12 or greater, registering language listener...");
-                new LanguageListener(plugin, this).register();
-            }
+            if (plugin instanceof IFoliaPlugin) {
+                int minorVersion = VersionUtility.getMinorVersion();
+                if (minorVersion >= 12) {
+                    IFoliaPlugin<?> foliaPlugin = (IFoliaPlugin<?>) plugin;
+                    printDebug("Version is 1.12 or greater, registering language listener...");
+                    new LanguageListener<>(foliaPlugin, this).register();
+                }
 
-            printDebug("Successfully created BukkitAudiences instance.");
-            this.audienceProvider = BukkitAudiences.create(plugin);
+                printDebug("Successfully created BukkitAudiences instance.");
+                this.audienceProvider = BukkitAudiences.create(plugin);
+            }
         }
     }
 

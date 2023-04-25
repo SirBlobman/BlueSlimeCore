@@ -14,7 +14,6 @@ public final class CommandBlueSlimeCore extends Command {
     public CommandBlueSlimeCore(@NotNull CorePlugin plugin) {
         super(plugin, "blueslimecore");
         setPermissionName("blue.slime.core.command.blueslimecore");
-        addSubCommand(new SubCommandConfig(plugin));
         addSubCommand(new SubCommandHelp(plugin));
         addSubCommand(new SubCommandLanguageTest(plugin));
         addSubCommand(new SubCommandReload(plugin));

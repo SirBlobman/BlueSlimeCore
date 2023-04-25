@@ -21,10 +21,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
-public final class SpigotUpdateManager {
+import com.github.sirblobman.api.folia.FoliaHelper;
+import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.details.TaskDetails;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
+
+public final class SpigotUpdateManager<P extends Plugin> {
     private static final String BASE_UPDATE_URL;
     private static final String BASE_RESOURCE_URL;
 
@@ -33,11 +36,11 @@ public final class SpigotUpdateManager {
         BASE_RESOURCE_URL = "https://www.spigotmc.org/resources/%s/";
     }
 
-    private final JavaPlugin plugin;
+    private final IFoliaPlugin<P> plugin;
     private final Map<String, Long> pluginResourceMap;
     private final Map<String, String> spigotVersionCache;
 
-    public SpigotUpdateManager(@NotNull JavaPlugin plugin) {
+    public SpigotUpdateManager(@NotNull IFoliaPlugin<P> plugin) {
         this.plugin = plugin;
         this.pluginResourceMap = new HashMap<>();
         this.spigotVersionCache = new HashMap<>();
@@ -73,8 +76,16 @@ public final class SpigotUpdateManager {
             return;
         }
 
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskLaterAsynchronously(this.plugin, this::internalCheckForUpdates, 1L);
+        TaskDetails<P> task = new TaskDetails<P>(this.plugin.getPlugin()) {
+            @Override
+            public void run() {
+                fetchUpdates();
+            }
+        };
+
+        FoliaHelper<P> foliaHelper = this.plugin.getFoliaHelper();
+        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
+        scheduler.scheduleAsyncTask(task);
     }
 
     public @Nullable String getSpigotVersion(@NotNull Plugin plugin) {
@@ -83,12 +94,12 @@ public final class SpigotUpdateManager {
     }
 
     private void printDisabledInformation() {
-        Logger logger = this.plugin.getLogger();
+        Logger logger = this.plugin.getPlugin().getLogger();
         logger.info("[Update Checker] The update checking feature is disabled.");
         logger.info("[Update Checker] No plugin update information is available.");
     }
 
-    private void internalCheckForUpdates() {
+    private void fetchUpdates() {
         retrieveSpigotVersions();
         Set<String> pluginNameSet = this.spigotVersionCache.keySet();
         pluginNameSet.forEach(this::printUpdateInformation);
@@ -110,7 +121,7 @@ public final class SpigotUpdateManager {
         String pluginVersion = pluginDescription.getVersion();
         String spigotVersion = this.spigotVersionCache.getOrDefault(pluginName, null);
 
-        Logger logger = this.plugin.getLogger();
+        Logger logger = this.plugin.getPlugin().getLogger();
         logger.info(" ");
 
         if (spigotVersion == null) {
@@ -131,7 +142,7 @@ public final class SpigotUpdateManager {
     }
 
     private boolean isEnabled() {
-        FileConfiguration config = this.plugin.getConfig();
+        FileConfiguration config = this.plugin.getPlugin().getConfig();
         return config.getBoolean("update-checker", false);
     }
 
@@ -165,7 +176,7 @@ public final class SpigotUpdateManager {
             inputStreamReader.close();
             inputStream.close();
         } catch (IOException ex) {
-            Logger logger = this.plugin.getLogger();
+            Logger logger = this.plugin.getPlugin().getLogger();
             logger.log(Level.WARNING, "Update check failed for plugin '" + pluginName
                     + "' because an error occurred:", ex);
         }
