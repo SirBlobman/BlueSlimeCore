@@ -1,3 +1,7 @@
+tasks.named("jar") {
+    enabled = false;
+}
+
 subprojects {
     repositories {
         maven("https://nexus.sirblobman.xyz/private/") {

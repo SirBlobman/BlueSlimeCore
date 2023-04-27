@@ -21,7 +21,11 @@ plugins {
     id("java")
 }
 
-allprojects {
+tasks.named("jar") {
+    enabled = false
+}
+
+subprojects{
     apply(plugin = "java")
 
     java {
@@ -43,7 +47,7 @@ allprojects {
             options.compilerArgs.add("-Xlint:deprecation")
         }
 
-        javadoc {
+        withType<Javadoc> {
             val standard = options as StandardJavadocDocletOptions
             standard.addStringOption("Xdoclint:none", "-quiet")
         }
