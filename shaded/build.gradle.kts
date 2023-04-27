@@ -40,7 +40,7 @@ tasks {
         relocate("org.bstats", "$shadePrefix.bstats")
     }
 
-    build {
+    named("build") {
         dependsOn("shadowJar")
     }
 }
