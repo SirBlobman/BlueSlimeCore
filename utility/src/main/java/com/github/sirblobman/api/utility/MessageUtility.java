@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import org.apache.commons.lang.Validate;
-
 public final class MessageUtility {
     /**
      * @param message The message that will be colored
@@ -17,7 +15,7 @@ public final class MessageUtility {
      * @see net.md_5.bungee.api.ChatColor#translateAlternateColorCodes(char, String)
      * @see HexColorUtility#replaceHexColors(char, String)
      */
-    public static String color(@NotNull String message) {
+    public static @NotNull String color(@NotNull String message) {
         try {
             Class.forName("net.md_5.bungee.api.ChatColor");
             return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
@@ -101,7 +99,6 @@ public final class MessageUtility {
      * @throws IllegalArgumentException if string is null
      */
     public static boolean startsWithIgnoreCase(@NotNull String string, @NotNull String prefix) {
-        Validate.notNull(string, "Cannot check a null string for a match");
         if (string.length() < prefix.length()) {
             return false;
         }
