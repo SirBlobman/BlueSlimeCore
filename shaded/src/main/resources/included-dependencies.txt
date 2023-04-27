@@ -1,4 +1,5 @@
-Includes Dependencies:
-- bStats
-- Cryptomorin XSeries
-- Kyori Adventure
+This jar shades the following dependencies:
+- bStats (https://bstats.org/getting-started/include-metrics)
+- CryptoMorin XSeries (https://github.com/CryptoMorin/XSeries#getting-started)
+- Kyori Adventure (https://docs.advntr.dev/getting-started.html)
+- Folia Helper (https://github.com/SirBlobman/Folia-Helper/)
