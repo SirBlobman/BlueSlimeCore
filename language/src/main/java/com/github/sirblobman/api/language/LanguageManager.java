@@ -730,8 +730,37 @@ public final class LanguageManager {
                                       Replacer @NotNull ... replacerArray) {
         ModifiableMessage modifiable = getMessageModifiable(audience, key, replacerArray);
         Component message = modifiable.getMessage();
+        if (Component.empty().equals(message)) {
+            return;
+        }
 
         ModifiableMessageType type = modifiable.getType();
+        switch (type) {
+            case CHAT:
+                sendMessage(audience, message);
+            case ACTION_BAR:
+                sendActionBar(audience, message);
+            default:
+                break;
+        }
+    }
+
+    public void sendModifiableMessageWithPrefix(@NotNull CommandSender audience, @NotNull String key,
+                                                Replacer @NotNull ... replacerArray) {
+        ModifiableMessage modifiable = getMessageModifiable(audience, key, replacerArray);
+        Component message = modifiable.getMessage();
+        if (Component.empty().equals(message)) {
+            return;
+        }
+
+        ModifiableMessageType type = modifiable.getType();
+        if (type == ModifiableMessageType.CHAT) {
+            Component prefix = getMessage(audience, "prefix");
+            if (!Component.empty().equals(prefix)) {
+                message = prefix.append(Component.space()).append(message);
+            }
+        }
+
         switch (type) {
             case CHAT:
                 sendMessage(audience, message);
