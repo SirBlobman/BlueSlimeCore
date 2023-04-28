@@ -18,12 +18,12 @@ public final class ComponentBungeeConverter {
         return BungeeComponentSerializer.get();
     }
 
-    public static BaseComponent @NotNull [] toBungee(Component component) {
+    public static BaseComponent @NotNull [] toBungee(@NotNull Component component) {
         BungeeComponentSerializer serializer = getSerializer();
         return serializer.serialize(component);
     }
 
-    public static @NotNull Component fromBungee(BaseComponent @NotNull ... componentArray) {
+    public static @NotNull Component fromBungee(@NotNull BaseComponent @NotNull ... componentArray) {
         BungeeComponentSerializer serializer = getSerializer();
         return serializer.deserialize(componentArray);
     }

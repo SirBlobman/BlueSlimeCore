@@ -10,17 +10,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class PluginListener<Plugin extends JavaPlugin> implements Listener {
-    private final Plugin plugin;
+public abstract class PluginListener<JP extends JavaPlugin> implements Listener {
+    private final JP plugin;
 
-    public PluginListener(@NotNull Plugin plugin) {
+    public PluginListener(@NotNull JP plugin) {
         this.plugin = plugin;
     }
 
     public final void register() {
         unregister();
 
-        Plugin plugin = getPlugin();
+        JP plugin = getPlugin();
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(this, plugin);
     }
@@ -29,12 +29,12 @@ public abstract class PluginListener<Plugin extends JavaPlugin> implements Liste
         HandlerList.unregisterAll(this);
     }
 
-    protected final @NotNull Plugin getPlugin() {
+    protected final @NotNull JP getPlugin() {
         return this.plugin;
     }
 
     protected final @NotNull Logger getLogger() {
-        Plugin plugin = getPlugin();
+        JP plugin = getPlugin();
         return plugin.getLogger();
     }
 }

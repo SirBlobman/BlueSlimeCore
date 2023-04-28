@@ -15,7 +15,7 @@ import org.bukkit.entity.Entity;
 
 import com.github.sirblobman.api.utility.Validate;
 
-public class BlockLocation {
+public final class BlockLocation {
     private final UUID worldId;
     private final int x, y, z;
 
@@ -118,7 +118,7 @@ public class BlockLocation {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         UUID worldId = getWorldId();
         int x = getX();
         int y = getY();
