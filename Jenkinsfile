@@ -1,14 +1,26 @@
-import com.github.sirblobman.jenkins.utils
+def SkipCI(number = "all") {
+    // Method copied from https://shenxianpeng.github.io/2022/10/jenkins-skip-ci/
+    def statusCodeList = []
+
+    String[] keyWords = ['ci skip', 'skip ci'] // add more keywords if need.
+    keyWords.each { keyWord ->
+        def statusCode = null
+        if (number == "all") {
+            statusCode = sh script: "git log --oneline --all | grep \'${keyWord}\'", returnStatus: true
+        } else {
+            statusCode = sh script: "git log --oneline -n ${number} | grep \'${keyWord}\'", returnStatus: true
+        }
+        statusCodeList.add(statusCode)
+    }
+
+    return statusCodeList.contains(0)
+}
 
 pipeline {
     agent any
 
     options {
         githubProjectProperty(projectUrlStr: "https://github.com/SirBlobman/BlueSlimeCore")
-    }
-
-    parameters {
-        booleanParam defaultValue: true, name: 'Build', description: 'Uncheck to skip build.'
     }
 
     environment {
@@ -25,19 +37,17 @@ pipeline {
         jdk "JDK 17"
     }
 
-    def utils = new utils()
-
     stages {
         stage('Checkout') {
             checkout scm
-            SkipCI = utils.SkipCI('1')
+            skipCiCheck = this.SkipCI('1')
         }
 
         stage("Gradle: Build") {
             when {
                 beforeAgent = true
                 expression {
-                    return params.Build && !SkipCI
+                    return !skipCiCheck
                 }
             }
 
