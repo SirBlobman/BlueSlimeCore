@@ -40,9 +40,8 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Check CI Skip') {
             steps {
-                checkout scm
                 script {
                     skipCiCheck = this.SkipCI('1')
                 }
