@@ -72,10 +72,12 @@ pipeline {
 
     post {
         success {
-            archiveArtifacts artifacts: 'core/build/libs/BlueSlimeCore-*.jar, bungeecord/core/build/libs/BlueSlimeBungeeCore-*.jar', fingerprint: true
+            if (!skipCiCheck) {
+                archiveArtifacts artifacts: 'core/build/libs/BlueSlimeCore-*.jar, bungeecord/core/build/libs/BlueSlimeBungeeCore-*.jar', fingerprint: true
+            }
         }
 
-        always {
+        if (!skipCiCheck) {
             script {
                 discordSend webhookURL: DISCORD_URL,
                         title: "${env.JOB_NAME}",
