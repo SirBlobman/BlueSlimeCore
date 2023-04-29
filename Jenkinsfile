@@ -1,3 +1,5 @@
+import src.com.github.sirblobman.jenkins.utils
+
 pipeline {
     agent any
 
