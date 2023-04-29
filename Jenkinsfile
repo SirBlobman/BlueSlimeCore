@@ -5,6 +5,10 @@ pipeline {
         githubProjectProperty(projectUrlStr: "https://github.com/SirBlobman/BlueSlimeCore")
     }
 
+    parameters {
+        booleanParam defaultValue: true, name: 'Build', description: 'Uncheck to skip build.'
+    }
+
     environment {
         DISCORD_URL = credentials('PUBLIC_DISCORD_WEBHOOK')
         MAVEN_DEPLOY = credentials('MAVEN_DEPLOY')
@@ -19,14 +23,22 @@ pipeline {
         jdk "JDK 17"
     }
 
+    def utils = new utils()
+
     stages {
         stage('Checkout') {
-            steps {
-                scmSkip(deleteBuild: true, skipPattern:'.*\\[ci skip\\].*')
-            }
+            checkout scm
+            SkipCI = utils.SkipCI('1')
         }
 
         stage("Gradle: Build") {
+            when {
+                beforeAgent = true
+                expression {
+                    return params.Build && !SkipCI
+                }
+            }
+
             steps {
                 withGradle {
                     script {
