@@ -43,16 +43,15 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                skipCiCheck = this.SkipCI('1')
+                script {
+                    skipCiCheck = this.SkipCI('1')
+                }
             }
         }
 
         stage("Gradle: Build") {
             when {
-                beforeAgent = true
-                expression {
-                    return !skipCiCheck
-                }
+                expression { return !skipCiCheck }
             }
 
             steps {
