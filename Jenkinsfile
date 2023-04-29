@@ -39,8 +39,10 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            checkout scm
-            skipCiCheck = this.SkipCI('1')
+            steps {
+                checkout scm
+                skipCiCheck = this.SkipCI('1')
+            }
         }
 
         stage("Gradle: Build") {
