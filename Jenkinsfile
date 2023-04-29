@@ -1,3 +1,5 @@
+def skipCiCheck
+
 def SkipCI(number = "all") {
     // Method copied from https://shenxianpeng.github.io/2022/10/jenkins-skip-ci/
     def statusCodeList = []
