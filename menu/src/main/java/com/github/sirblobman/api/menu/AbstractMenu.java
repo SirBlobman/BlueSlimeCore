@@ -22,24 +22,33 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.folia.FoliaHelper;
 import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
+import com.github.sirblobman.api.folia.scheduler.BukkitTaskScheduler;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
-import com.github.sirblobman.api.menu.button.AbstractButton;
+import com.github.sirblobman.api.menu.button.IButton;
 import com.github.sirblobman.api.menu.task.AbstractMenuInternalOpenTask;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
 public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
-    private final IFoliaPlugin<P> plugin;
+    private final P plugin;
     private final Player player;
-    private final Map<Integer, AbstractButton> buttonMap;
+    private final TaskScheduler scheduler;
+    private final Map<Integer, IButton> buttonMap;
 
-    public AbstractMenu(@NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
+    public AbstractMenu(@NotNull P plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AbstractMenu(@Nullable IMenu<P> parentMenu, @NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
+    public AbstractMenu(@Nullable IMenu parentMenu, @NotNull P plugin, @NotNull Player player) {
         super(parentMenu);
         if (!player.isOnline()) {
             throw new IllegalArgumentException("player must be online!");
+        }
+
+        if (plugin instanceof IFoliaPlugin) {
+            FoliaHelper foliaHelper = ((IFoliaPlugin) plugin).getFoliaHelper();
+            this.scheduler = foliaHelper.getScheduler();
+        } else {
+            this.scheduler = new BukkitTaskScheduler(plugin);
         }
 
         this.plugin = plugin;
@@ -48,14 +57,13 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
     }
 
     @Override
-    public final @NotNull IFoliaPlugin<P> getFoliaPlugin() {
+    public final @NotNull P getPlugin() {
         return this.plugin;
     }
 
     @Override
-    public final @NotNull P getPlugin() {
-        IFoliaPlugin<P> plugin = getFoliaPlugin();
-        return plugin.getPlugin();
+    public @NotNull TaskScheduler getTaskScheduler() {
+        return this.scheduler;
     }
 
     /**
@@ -75,7 +83,7 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
             ItemStack item = getItem(slot);
             contents[slot] = item;
 
-            AbstractButton button = getButton(slot);
+            IButton button = getButton(slot);
             setButton(slot, button);
         }
 
@@ -110,7 +118,7 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
         }
 
         int rawSlot = e.getRawSlot();
-        AbstractButton button = internalGetButton(rawSlot);
+        IButton button = internalGetButton(rawSlot);
         if (button != null) {
             button.onClick(e);
         }
@@ -141,11 +149,8 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
         Player player = getPlayer();
         player.closeInventory();
 
-        IFoliaPlugin<P> foliaPlugin = getFoliaPlugin();
-        FoliaHelper<P> foliaHelper = foliaPlugin.getFoliaHelper();
-        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
-
-        EntityTaskDetails<P, Player> task = new AbstractMenuInternalOpenTask<>(plugin, player, this);
+        TaskScheduler scheduler = getTaskScheduler();
+        EntityTaskDetails<Player> task = new AbstractMenuInternalOpenTask(plugin, player, this);
         scheduler.scheduleEntityTask(task);
     }
 
@@ -169,7 +174,7 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
      * @param slot   The slot to contain the button.
      * @param button The button instance. Use {@code null} to remove the current button.
      */
-    protected final void setButton(int slot, @Nullable AbstractButton button) {
+    protected final void setButton(int slot, @Nullable IButton button) {
         if (button == null) {
             this.buttonMap.remove(slot);
             return;
@@ -178,7 +183,7 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
         this.buttonMap.put(slot, button);
     }
 
-    private @Nullable AbstractButton internalGetButton(int slot) {
+    private @Nullable IButton internalGetButton(int slot) {
         return this.buttonMap.getOrDefault(slot, null);
     }
 
@@ -202,7 +207,7 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
      * @return A custom button or action that will be triggered when the slot is clicked.
      * You can also return null if you do not want an action.
      */
-    public abstract @Nullable AbstractButton getButton(int slot);
+    public abstract @Nullable IButton getButton(int slot);
 
     /**
      * {@inheritDoc}

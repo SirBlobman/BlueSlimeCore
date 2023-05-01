@@ -8,18 +8,18 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
 import com.github.sirblobman.api.menu.AdvancedAbstractMenu;
 
-public final class AdvancedMenuRefreshLoopTask<P extends Plugin> extends EntityTaskDetails<P, Player> {
-    private final AdvancedAbstractMenu<P> menu;
+public final class AdvancedMenuRefreshLoopTask extends EntityTaskDetails<Player> {
+    private final AdvancedAbstractMenu<?> menu;
 
-    public AdvancedMenuRefreshLoopTask(@NotNull P plugin, @NotNull Player entity,
-                                       @NotNull AdvancedAbstractMenu<P> menu) {
-        super(plugin, entity);
+    public AdvancedMenuRefreshLoopTask(@NotNull Plugin plugin, @NotNull Player player,
+                                       @NotNull AdvancedAbstractMenu<?> menu) {
+        super(plugin, player);
         setDelay(20L);
         setPeriod(20L);
         this.menu = menu;
     }
 
-    private @NotNull AdvancedAbstractMenu<P> getMenu() {
+    private @NotNull AdvancedAbstractMenu<?> getMenu() {
         return this.menu;
     }
 
@@ -31,7 +31,7 @@ public final class AdvancedMenuRefreshLoopTask<P extends Plugin> extends EntityT
             return;
         }
 
-        AdvancedAbstractMenu<P> menu = getMenu();
+        AdvancedAbstractMenu<?> menu = getMenu();
         menu.run();
     }
 }

@@ -27,7 +27,7 @@ import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.folia.details.TaskDetails;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 
-public final class SpigotUpdateManager<P extends Plugin> {
+public final class SpigotUpdateManager {
     private static final String BASE_UPDATE_URL;
     private static final String BASE_RESOURCE_URL;
 
@@ -36,11 +36,11 @@ public final class SpigotUpdateManager<P extends Plugin> {
         BASE_RESOURCE_URL = "https://www.spigotmc.org/resources/%s/";
     }
 
-    private final IFoliaPlugin<P> plugin;
+    private final IFoliaPlugin plugin;
     private final Map<String, Long> pluginResourceMap;
     private final Map<String, String> spigotVersionCache;
 
-    public SpigotUpdateManager(@NotNull IFoliaPlugin<P> plugin) {
+    public SpigotUpdateManager(@NotNull IFoliaPlugin plugin) {
         this.plugin = plugin;
         this.pluginResourceMap = new HashMap<>();
         this.spigotVersionCache = new HashMap<>();
@@ -76,15 +76,15 @@ public final class SpigotUpdateManager<P extends Plugin> {
             return;
         }
 
-        TaskDetails<P> task = new TaskDetails<P>(this.plugin.getPlugin()) {
+        TaskDetails task = new TaskDetails(this.plugin.getPlugin()) {
             @Override
             public void run() {
                 fetchUpdates();
             }
         };
 
-        FoliaHelper<P> foliaHelper = this.plugin.getFoliaHelper();
-        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
+        FoliaHelper foliaHelper = this.plugin.getFoliaHelper();
+        TaskScheduler scheduler = foliaHelper.getScheduler();
         scheduler.scheduleAsyncTask(task);
     }
 

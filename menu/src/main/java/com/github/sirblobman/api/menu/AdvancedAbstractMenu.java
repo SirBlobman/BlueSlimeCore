@@ -18,31 +18,45 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.folia.FoliaHelper;
 import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
+import com.github.sirblobman.api.folia.scheduler.BukkitTaskScheduler;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.folia.task.WrappedTask;
 import com.github.sirblobman.api.menu.task.AdvancedMenuInternalOpenTask;
 import com.github.sirblobman.api.menu.task.AdvancedMenuRefreshLoopTask;
 
 public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu<P> implements Runnable {
-    private final IFoliaPlugin<P> plugin;
+    private final P plugin;
+    private final TaskScheduler scheduler;
     private final Player player;
     private WrappedTask currentTask;
 
-    public AdvancedAbstractMenu(@NotNull IFoliaPlugin<P> plugin, @NotNull Player player) {
+    public AdvancedAbstractMenu(@NotNull P plugin, @NotNull Player player) {
         this(null, plugin, player);
     }
 
-    public AdvancedAbstractMenu(@Nullable IMenu<P> parentMenu, @NotNull IFoliaPlugin<P> plugin,
-                                @NotNull Player player) {
+    public AdvancedAbstractMenu(@Nullable IMenu parentMenu, @NotNull P plugin, @NotNull Player player) {
         super(parentMenu);
         this.plugin = plugin;
+
+        if (plugin instanceof IFoliaPlugin) {
+            FoliaHelper foliaHelper = ((IFoliaPlugin) plugin).getFoliaHelper();
+            this.scheduler = foliaHelper.getScheduler();
+        } else {
+            this.scheduler = new BukkitTaskScheduler(plugin);
+        }
+
         this.player = player;
         this.currentTask = null;
     }
 
     @Override
-    public final @NotNull IFoliaPlugin<P> getFoliaPlugin() {
+    public @NotNull P getPlugin() {
         return this.plugin;
+    }
+
+    @Override
+    public @NotNull TaskScheduler getTaskScheduler() {
+        return this.scheduler;
     }
 
     /**
@@ -116,14 +130,11 @@ public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu<P>
         Player player = getPlayer();
         player.closeInventory();
 
-        IFoliaPlugin<P> foliaPlugin = getFoliaPlugin();
-        FoliaHelper<P> foliaHelper = foliaPlugin.getFoliaHelper();
-        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
-
-        EntityTaskDetails<P, Player> task = new AdvancedMenuInternalOpenTask<>(plugin, player, this);
+        TaskScheduler scheduler = getTaskScheduler();
+        EntityTaskDetails<Player> task = new AdvancedMenuInternalOpenTask(plugin, player, this);
         scheduler.scheduleEntityTask(task);
 
-        EntityTaskDetails<P, Player> timer = new AdvancedMenuRefreshLoopTask<>(plugin, player, this);
+        EntityTaskDetails<Player> timer = new AdvancedMenuRefreshLoopTask(plugin, player, this);
         this.currentTask = scheduler.scheduleEntityTask(timer);
     }
 

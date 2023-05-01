@@ -40,13 +40,13 @@ import com.github.sirblobman.api.shaded.bstats.charts.SimplePie;
 public final class CorePlugin extends ConfigurablePlugin {
     private final CoreConfiguration coreConfiguration;
 
-    private final SpigotUpdateManager<?> spigotUpdateManager;
-    private final HangarUpdateManager<?> hangarUpdateManager;
+    private final SpigotUpdateManager spigotUpdateManager;
+    private final HangarUpdateManager hangarUpdateManager;
 
     public CorePlugin() {
         this.coreConfiguration = new CoreConfiguration();
-        this.spigotUpdateManager = new SpigotUpdateManager<>(this);
-        this.hangarUpdateManager = new HangarUpdateManager<>(this);
+        this.spigotUpdateManager = new SpigotUpdateManager(this);
+        this.hangarUpdateManager = new HangarUpdateManager(this);
     }
 
     @Override
@@ -100,11 +100,11 @@ public final class CorePlugin extends ConfigurablePlugin {
         return this.coreConfiguration;
     }
 
-    public @NotNull SpigotUpdateManager<?> getSpigotUpdateManager() {
+    public @NotNull SpigotUpdateManager getSpigotUpdateManager() {
         return this.spigotUpdateManager;
     }
 
-    public @NotNull HangarUpdateManager<?> getHangarUpdateManager() {
+    public @NotNull HangarUpdateManager getHangarUpdateManager() {
         return this.hangarUpdateManager;
     }
 
@@ -183,11 +183,11 @@ public final class CorePlugin extends ConfigurablePlugin {
     }
 
     private void registerUpdateChecker() {
-        SpigotUpdateManager<?> updateManager = getSpigotUpdateManager();
+        SpigotUpdateManager updateManager = getSpigotUpdateManager();
         updateManager.checkForUpdates();
 
         HangarInfo hangarInfo = new HangarInfo("SirBlobman", "BlueSlimeCore");
-        HangarUpdateManager<?> hangarUpdateManager = getHangarUpdateManager();
+        HangarUpdateManager hangarUpdateManager = getHangarUpdateManager();
         hangarUpdateManager.addProject(this, hangarInfo);
         hangarUpdateManager.checkForUpdates();
     }

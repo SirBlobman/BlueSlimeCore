@@ -29,7 +29,7 @@ import com.github.sirblobman.api.folia.IFoliaPlugin;
 import com.github.sirblobman.api.folia.details.TaskDetails;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 
-public final class HangarUpdateManager<P extends Plugin> {
+public final class HangarUpdateManager {
     private static final String BASE_API_URL;
     private static final String BASE_RESOURCE_URL;
 
@@ -38,11 +38,11 @@ public final class HangarUpdateManager<P extends Plugin> {
         BASE_RESOURCE_URL = "https://hangar.papermc.io/%s/%s";
     }
 
-    private final IFoliaPlugin<P> plugin;
+    private final IFoliaPlugin plugin;
     private final Map<String, HangarInfo> pluginInfoMap;
     private final Map<String, String> hangarVersionCache;
 
-    public HangarUpdateManager(@NotNull IFoliaPlugin<P> plugin) {
+    public HangarUpdateManager(@NotNull IFoliaPlugin plugin) {
         this.plugin = plugin;
         this.pluginInfoMap = new HashMap<>();
         this.hangarVersionCache = new HashMap<>();
@@ -78,20 +78,20 @@ public final class HangarUpdateManager<P extends Plugin> {
             return;
         }
 
-        IFoliaPlugin<P> plugin = getPlugin();
-        TaskDetails<P> task = new TaskDetails<P>(plugin.getPlugin()) {
+        IFoliaPlugin plugin = getPlugin();
+        TaskDetails task = new TaskDetails(plugin.getPlugin()) {
             @Override
             public void run() {
                 fetchUpdates();
             }
         };
 
-        FoliaHelper<P> foliaHelper = plugin.getFoliaHelper();
-        TaskScheduler<P> scheduler = foliaHelper.getScheduler();
+        FoliaHelper foliaHelper = plugin.getFoliaHelper();
+        TaskScheduler scheduler = foliaHelper.getScheduler();
         scheduler.scheduleAsyncTask(task);
     }
 
-    private @NotNull IFoliaPlugin<P> getPlugin() {
+    private @NotNull IFoliaPlugin getPlugin() {
         return this.plugin;
     }
 

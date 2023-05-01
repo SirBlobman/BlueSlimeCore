@@ -11,15 +11,16 @@ import org.bukkit.plugin.PluginManager;
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
 import com.github.sirblobman.api.menu.AbstractMenu;
 
-public final class AbstractMenuInternalOpenTask<P extends Plugin> extends EntityTaskDetails<P, Player> {
-    private final AbstractMenu<P> menu;
+public final class AbstractMenuInternalOpenTask extends EntityTaskDetails<Player> {
+    private final AbstractMenu<?> menu;
 
-    public AbstractMenuInternalOpenTask(@NotNull P plugin, @NotNull Player entity, @NotNull AbstractMenu<P> menu) {
-        super(plugin, entity);
+    public AbstractMenuInternalOpenTask(@NotNull Plugin plugin, @NotNull Player player,
+                                        @NotNull AbstractMenu<?> menu) {
+        super(plugin, player);
         this.menu = menu;
     }
 
-    private @NotNull AbstractMenu<P> getMenu() {
+    private @NotNull AbstractMenu<?> getMenu() {
         return this.menu;
     }
 
@@ -30,10 +31,10 @@ public final class AbstractMenuInternalOpenTask<P extends Plugin> extends Entity
             return;
         }
 
-        AbstractMenu<P> menu = getMenu();
+        AbstractMenu<?> menu = getMenu();
         menu.resetButtons();
 
-        P plugin = getPlugin();
+        Plugin plugin = getPlugin();
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(menu, plugin);
 

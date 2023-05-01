@@ -8,10 +8,10 @@ import org.bukkit.plugin.Plugin;
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
 import com.github.sirblobman.api.language.LanguageManager;
 
-public class UpdateLocaleTask<P extends Plugin> extends EntityTaskDetails<P, Player> {
+public class UpdateLocaleTask extends EntityTaskDetails<Player> {
     private final LanguageManager languageManager;
 
-    public UpdateLocaleTask(@NotNull P plugin, @NotNull Player player, @NotNull LanguageManager languageManager) {
+    public UpdateLocaleTask(@NotNull Plugin plugin, @NotNull Player player, @NotNull LanguageManager languageManager) {
         super(plugin, player);
         this.languageManager = languageManager;
     }

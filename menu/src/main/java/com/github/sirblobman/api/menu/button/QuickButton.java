@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class QuickButton extends AbstractButton {
+public class QuickButton implements IButton {
     @Override
     public void onClick(@NotNull InventoryClickEvent e) {
         HumanEntity human = e.getWhoClicked();

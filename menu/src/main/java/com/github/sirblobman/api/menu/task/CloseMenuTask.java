@@ -7,8 +7,8 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
 
-public final class CloseInventoryTask<P extends Plugin> extends EntityTaskDetails<P, HumanEntity> {
-    public CloseInventoryTask(@NotNull P plugin, @NotNull HumanEntity entity) {
+public final class CloseMenuTask extends EntityTaskDetails<HumanEntity> {
+    public CloseMenuTask(@NotNull Plugin plugin, @NotNull HumanEntity entity) {
         super(plugin, entity);
         setDelay(2L);
     }

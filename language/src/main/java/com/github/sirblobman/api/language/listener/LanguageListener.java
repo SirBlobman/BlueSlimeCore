@@ -15,35 +15,34 @@ import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.folia.FoliaHelper;
 import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.scheduler.BukkitTaskScheduler;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.language.LanguageManager;
 
-public final class LanguageListener<P extends Plugin> implements Listener {
-    private final IFoliaPlugin<P> plugin;
+public final class LanguageListener implements Listener {
+    private final Plugin plugin;
     private final LanguageManager languageManager;
+    private final TaskScheduler scheduler;
 
-    public LanguageListener(@NotNull IFoliaPlugin<P> plugin, @NotNull LanguageManager languageManager) {
+    public LanguageListener(@NotNull Plugin plugin, @NotNull LanguageManager languageManager) {
         this.plugin = plugin;
+
+        if (plugin instanceof IFoliaPlugin) {
+            FoliaHelper foliaHelper = ((IFoliaPlugin) plugin).getFoliaHelper();
+            this.scheduler = foliaHelper.getScheduler();
+        } else {
+            this.scheduler = new BukkitTaskScheduler(plugin);
+        }
+
         this.languageManager = languageManager;
     }
 
-    private @NotNull IFoliaPlugin<P> getFoliaPlugin() {
+    private @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 
-    private @NotNull P getPlugin() {
-        IFoliaPlugin<P> plugin = getFoliaPlugin();
-        return plugin.getPlugin();
-    }
-
-    private @NotNull FoliaHelper<P> getFoliaHelper() {
-        IFoliaPlugin<P> plugin = getFoliaPlugin();
-        return plugin.getFoliaHelper();
-    }
-
-    private @NotNull TaskScheduler<P> getTaskScheduler() {
-        FoliaHelper<P> foliaHelper = getFoliaHelper();
-        return foliaHelper.getScheduler();
+    private @NotNull TaskScheduler getTaskScheduler() {
+        return this.scheduler;
     }
 
     private @NotNull LanguageManager getLanguageManager() {
@@ -61,14 +60,14 @@ public final class LanguageListener<P extends Plugin> implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
-        P plugin = getPlugin();
+        Plugin plugin = getPlugin();
         Player player = e.getPlayer();
         LanguageManager languageManager = getLanguageManager();
 
-        UpdateLocaleTask<P> task = new UpdateLocaleTask<>(plugin, player, languageManager);
+        UpdateLocaleTask task = new UpdateLocaleTask(plugin, player, languageManager);
         task.setDelay(1L);
 
-        TaskScheduler<P> taskScheduler = getTaskScheduler();
+        TaskScheduler taskScheduler = getTaskScheduler();
         taskScheduler.scheduleEntityTask(task);
     }
 

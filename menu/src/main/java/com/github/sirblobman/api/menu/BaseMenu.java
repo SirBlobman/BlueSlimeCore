@@ -29,24 +29,24 @@ import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
-public abstract class BaseMenu<P extends Plugin> implements IMenu<P> {
-    private IMenu<P> parentMenu;
+public abstract class BaseMenu<P extends Plugin> implements IMenu {
+    private IMenu parentMenu;
 
     public BaseMenu() {
         this(null);
     }
 
-    public BaseMenu(@Nullable IMenu<P> parentMenu) {
+    public BaseMenu(@Nullable IMenu parentMenu) {
         this.parentMenu = parentMenu;
     }
 
     @Override
-    public @NotNull Optional<IMenu<P>> getParentMenu() {
+    public @NotNull Optional<IMenu> getParentMenu() {
         return Optional.ofNullable(this.parentMenu);
     }
 
     @Override
-    public void setParentMenu(@NotNull IMenu<P> parentMenu) {
+    public void setParentMenu(@NotNull IMenu parentMenu) {
         this.parentMenu = parentMenu;
     }
 

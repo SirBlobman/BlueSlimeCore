@@ -11,25 +11,26 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 
-import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.plugin.IMultiVersionPlugin;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
-public interface IMenu<P extends Plugin> extends InventoryHolder, Listener {
-    @NotNull IFoliaPlugin<P> getFoliaPlugin();
+public interface IMenu extends InventoryHolder, Listener {
 
     /**
      * @return The plugin that owns this menu.
      */
-    default @NotNull P getPlugin() {
-        IFoliaPlugin<P> plugin = getFoliaPlugin();
-        return plugin.getPlugin();
-    }
+    @NotNull Plugin getPlugin();
+
+    /**
+     * @return The task scheduler for the plugin that owns this menu.
+     */
+    @NotNull TaskScheduler getTaskScheduler();
 
     default @NotNull Logger getLogger() {
-        P plugin = getPlugin();
+        Plugin plugin = getPlugin();
         return plugin.getLogger();
     }
 
@@ -58,7 +59,7 @@ public interface IMenu<P extends Plugin> extends InventoryHolder, Listener {
      *
      * @return An optional menu that caused this menu to open.
      */
-    @NotNull Optional<IMenu<P>> getParentMenu();
+    @NotNull Optional<IMenu> getParentMenu();
 
     /**
      * Change the parent menu for this menu.
@@ -66,7 +67,7 @@ public interface IMenu<P extends Plugin> extends InventoryHolder, Listener {
      * @param parentMenu The new parent menu. Can be null.
      * @see #getParentMenu()
      */
-    void setParentMenu(@NotNull IMenu<P> parentMenu);
+    void setParentMenu(@NotNull IMenu parentMenu);
 
     default @Nullable MultiVersionHandler getMultiVersionHandler() {
         Plugin plugin = getPlugin();
