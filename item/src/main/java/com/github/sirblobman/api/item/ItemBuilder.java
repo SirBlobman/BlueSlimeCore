@@ -74,6 +74,10 @@ public class ItemBuilder {
 
     public @NotNull ItemBuilder withMaxAmount() {
         int maxAmount = this.finalItem.getMaxStackSize();
+        if (maxAmount == -1) {
+            maxAmount = 64;
+        }
+
         return withAmount(maxAmount);
     }
 
