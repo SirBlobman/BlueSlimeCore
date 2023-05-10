@@ -73,7 +73,8 @@ pipeline {
         success {
             script {
                 if (!skipCiCheck) {
-                    archiveArtifacts artifacts: 'core/build/libs/BlueSlimeCore-*.jar, bungeecord/core/build/libs/BlueSlimeBungeeCore-*.jar', fingerprint: true
+                    archiveArtifacts artifacts: 'core/build/libs/BlueSlimeCore-*.jar', fingerprint: true
+                    archiveArtifacts artifacts: 'bungeecord/core/build/libs/BlueSlimeBungeeCore-*.jar', fingerprint: true
                 }
             }
         }
@@ -81,13 +82,13 @@ pipeline {
         always {
             script {
                 if (!skipCiCheck) {
-                    discordSend webhookURL: DISCORD_URL,
-                            title: "${env.JOB_NAME}",
-                            link: "${env.BUILD_URL}",
+                    discordSend webhookURL: DISCORD_URL, title: "BlueSlimeCore", link: "${env.BUILD_URL}",
                             result: currentBuild.currentResult,
-                            description: "**Build:** ${env.BUILD_NUMBER}\n**Status:** ${currentBuild.currentResult}",
-                            enableArtifactsList: false,
-                            showChangeset: true
+                            description: """\
+                                **Branch:** ${env.GIT_BRANCH}
+                                **Build:** ${env.BUILD_NUMBER}
+                                **Status:** ${currentBuild.currentResult}""".stripIndent(),
+                            enableArtifactsList: false, showChangeset: true
                 }
             }
         }
