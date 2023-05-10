@@ -1,9 +1,15 @@
-val apiVersion = findProperty("version.api") ?: "invalid"
+val apiVersion = fetchProperty("version.api", "invalid")
 rootProject.ext.set("apiVersion", apiVersion)
 
-val baseVersion = findProperty("version.base") ?: "invalid"
-val betaString = ((findProperty("version.beta") ?: "false") as String)
-val jenkinsBuildNumber = System.getenv("BUILD_NUMBER") ?: "Unofficial"
+val mavenUsername = fetchEnv("MAVEN_DEPLOY_USR", "mavenUsernameSirBlobman", "")
+rootProject.ext.set("mavenUsername", mavenUsername)
+
+val mavenPassword = fetchEnv("MAVEN_DEPLOY_PSW", "mavenPasswordSirBlobman", "")
+rootProject.ext.set("mavenPassword", mavenPassword)
+
+val baseVersion = fetchProperty("version.base", "invalid")
+val betaString = fetchProperty("version.beta", "false")
+val jenkinsBuildNumber = fetchEnv("BUILD_NUMBER", null, "Unofficial")
 
 val betaBoolean = betaString.toBoolean()
 val betaVersion = if (betaBoolean) "Beta-" else ""
@@ -11,11 +17,27 @@ val calculatedVersion = "$baseVersion.$betaVersion$jenkinsBuildNumber"
 rootProject.ext.set("isBeta", betaBoolean)
 rootProject.ext.set("calculatedVersion", calculatedVersion)
 
-val mavenUsername = System.getenv("MAVEN_DEPLOY_USR") ?: findProperty("mavenUsernameSirBlobman") ?: ""
-rootProject.ext.set("mavenUsername", mavenUsername)
+fun fetchProperty(propertyName: String, defaultValue: String): String {
+    val found = findProperty(propertyName)
+    if (found != null) {
+        return found.toString()
+    }
 
-val mavenPassword = System.getenv("MAVEN_DEPLOY_PSW") ?: findProperty("mavenPasswordSirBlobman") ?: ""
-rootProject.ext.set("mavenPassword", mavenPassword)
+    return defaultValue
+}
+
+fun fetchEnv(envName: String, propertyName: String?, defaultValue: String): String {
+    val found = System.getenv(envName)
+    if (found != null) {
+        return found
+    }
+
+    if (propertyName != null) {
+        return fetchProperty(propertyName, defaultValue)
+    }
+
+    return defaultValue
+}
 
 plugins {
     id("java")
@@ -25,7 +47,7 @@ tasks.named("jar") {
     enabled = false
 }
 
-subprojects{
+subprojects {
     apply(plugin = "java")
 
     java {
