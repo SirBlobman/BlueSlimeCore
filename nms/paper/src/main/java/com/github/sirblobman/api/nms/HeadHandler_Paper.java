@@ -1,11 +1,13 @@
 package com.github.sirblobman.api.nms;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -13,21 +15,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.utility.VersionUtility;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
-public final class HeadHandler_Fallback extends HeadHandler {
-    public HeadHandler_Fallback(@NotNull JavaPlugin plugin) {
+public final class HeadHandler_Paper extends HeadHandler {
+    public HeadHandler_Paper(@NotNull JavaPlugin plugin) {
         super(plugin);
-
-        String minecraftVersion = VersionUtility.getMinecraftVersion();
-        String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
-
         Logger logger = getLogger();
-        logger.warning("Using fallback HeadHandler.");
-        logger.warning("Version '" + minecraftVersion + "' and NMS '" + nmsVersion + "' combo is not supported.");
-        logger.warning("Please contact SirBlobman if you believe this is a mistake.");
-        logger.warning("https://github.com/SirBlobman/BlueSlimeCore/issues/new/choose");
+        logger.info("Using non-NMS Paper HeadHandler");
     }
 
     @Override
@@ -39,12 +36,11 @@ public final class HeadHandler_Fallback extends HeadHandler {
 
         ItemMeta itemMeta = item.getItemMeta();
         if (!(itemMeta instanceof SkullMeta)) {
-            return new ItemStack(Material.AIR);
+            return item;
         }
 
         SkullMeta skullMeta = (SkullMeta) itemMeta;
-        String playerName = player.getName();
-        skullMeta.setOwner(playerName);
+        skullMeta.setOwningPlayer(player);
 
         item.setItemMeta(skullMeta);
         return item;
@@ -52,23 +48,34 @@ public final class HeadHandler_Fallback extends HeadHandler {
 
     @Override
     public @NotNull ItemStack getBase64Head(@NotNull String base64) {
+        byte[] base64Bytes = base64.getBytes(StandardCharsets.UTF_8);
+        UUID idFromBytes = UUID.nameUUIDFromBytes(base64Bytes);
+        return getBase64Head(base64, idFromBytes);
+    }
+
+    @Override
+    public @NotNull ItemStack getBase64Head(@NotNull String base64, @Nullable UUID customId) {
+        PlayerProfile profile = Bukkit.createProfile(customId, "custom");
+        ProfileProperty property = new ProfileProperty("textures", base64);
+        profile.setProperty(property);
+        return createPlayerProfileHead(profile);
+    }
+
+    private @NotNull ItemStack createPlayerProfileHead(@NotNull PlayerProfile profile) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
         if (item == null) {
             return new ItemStack(Material.AIR);
         }
 
         ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) {
-            return new ItemStack(Material.AIR);
+        if (!(itemMeta instanceof SkullMeta)) {
+            return item;
         }
 
-        itemMeta.setDisplayName("Fallback does not support Base64.");
+        SkullMeta skullMeta = (SkullMeta) itemMeta;
+        skullMeta.setPlayerProfile(profile);
+
         item.setItemMeta(itemMeta);
         return item;
-    }
-
-    @Override
-    public @NotNull ItemStack getBase64Head(@NotNull String base64, @Nullable UUID customId) {
-        return getBase64Head(base64);
     }
 }

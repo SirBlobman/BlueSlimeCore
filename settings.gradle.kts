@@ -15,6 +15,7 @@ include("nms:modern-nbt")
 
 // NMS Versions
 include("nms:fallback")
+include("nms:paper")
 include("nms:1_8_R3")
 include("nms:1_12_R1")
 include("nms:1_16_R3")

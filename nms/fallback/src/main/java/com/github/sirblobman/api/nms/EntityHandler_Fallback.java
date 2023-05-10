@@ -3,6 +3,8 @@ package com.github.sirblobman.api.nms;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -11,10 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.VersionUtility;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class EntityHandler_Fallback extends EntityHandler {
-    public EntityHandler_Fallback(JavaPlugin plugin) {
+    public EntityHandler_Fallback(@NotNull JavaPlugin plugin) {
         super(plugin);
 
         String minecraftVersion = VersionUtility.getMinecraftVersion();

@@ -3,22 +3,22 @@ package com.github.sirblobman.api.nms;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.nbt.CustomNbtContainer;
 import com.github.sirblobman.api.nbt.CustomNbtContainer_Fallback;
+import com.github.sirblobman.api.utility.VersionUtility;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
-import com.github.sirblobman.api.utility.VersionUtility;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 public final class ItemHandler_Fallback extends ItemHandler {
-    public ItemHandler_Fallback(JavaPlugin plugin) {
+    public ItemHandler_Fallback(@NotNull JavaPlugin plugin) {
         super(plugin);
 
         String minecraftVersion = VersionUtility.getMinecraftVersion();

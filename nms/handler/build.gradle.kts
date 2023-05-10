@@ -13,6 +13,9 @@ dependencies {
     // Spigot API
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
+    // Local Dependencies
+    compileOnly(project(":paper-helper"))
+
     // NMS Abstract + Modern NBT
     implementation(project(":nms:abstract"))
     implementation(project(":nms:modern-nbt"))
@@ -23,6 +26,7 @@ dependencies {
 
     // NMS Versions
     implementation(project(":nms:fallback")) // NMS Fallback
+    implementation(project(":nms:paper")) // NMS Paper
     implementation(project(":nms:1_8_R3")) // NMS 1.8.8
     implementation(project(":nms:1_12_R1")) // NMS 1.12.2
     implementation(project(":nms:1_16_R3")) // NMS 1.16.5

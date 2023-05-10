@@ -9,21 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.sirblobman.api.utility.VersionUtility;
 
-
-public final class PlayerHandler_Fallback extends PlayerHandler {
-    public PlayerHandler_Fallback(@NotNull JavaPlugin plugin) {
+public final class PlayerHandler_Paper extends PlayerHandler {
+    public PlayerHandler_Paper(@NotNull JavaPlugin plugin) {
         super(plugin);
-
-        String minecraftVersion = VersionUtility.getMinecraftVersion();
-        String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
-
         Logger logger = getLogger();
-        logger.warning("Using fallback PlayerHandler.");
-        logger.warning("Version '" + minecraftVersion + "' and NMS '" + nmsVersion + "' combo is not supported.");
-        logger.warning("Please contact SirBlobman if you believe this is a mistake.");
-        logger.warning("https://github.com/SirBlobman/BlueSlimeCore/issues/new/choose");
+        logger.info("Using non-NMS Paper PlayerHandler");
     }
 
     @Override
@@ -38,16 +29,16 @@ public final class PlayerHandler_Fallback extends PlayerHandler {
 
     @Override
     public double getAbsorptionHearts(@NotNull Player player) {
-        return 0.0D;
+        return player.getAbsorptionAmount();
     }
 
     @Override
     public void setAbsorptionHearts(@NotNull Player player, double hearts) {
-        // Not Supported
+        player.setAbsorptionAmount(hearts);
     }
 
     @Override
     public void sendCooldownPacket(@NotNull Player player, @NotNull Material material, int ticksLeft) {
-        // Not Supported
+        player.setCooldown(material, ticksLeft);
     }
 }

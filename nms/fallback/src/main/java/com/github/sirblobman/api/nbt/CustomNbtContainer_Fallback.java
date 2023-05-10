@@ -3,21 +3,19 @@ package com.github.sirblobman.api.nbt;
 import java.util.Collections;
 import java.util.Set;
 
-import org.bukkit.plugin.Plugin;
-
-import com.github.sirblobman.api.utility.Validate;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import org.bukkit.plugin.Plugin;
 
 public final class CustomNbtContainer_Fallback implements CustomNbtContainer {
     private final Plugin plugin;
 
-    public CustomNbtContainer_Fallback(Plugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+    public CustomNbtContainer_Fallback(@NotNull Plugin plugin) {
+        this.plugin = plugin;
     }
 
-    public Plugin getPlugin() {
+    public @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 
@@ -37,8 +35,8 @@ public final class CustomNbtContainer_Fallback implements CustomNbtContainer {
     }
 
     @Override
-    public <T, Z> @NotNull Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type,
-                                          @NotNull Z defaultValue) {
+    public <T, Z> @Nullable Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type,
+                                           @Nullable Z defaultValue) {
         return defaultValue;
     }
 

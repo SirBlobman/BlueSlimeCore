@@ -4,13 +4,14 @@ import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.bossbar.BossBarHandler;
 import com.github.sirblobman.api.nms.scoreboard.ScoreboardHandler;
 import com.github.sirblobman.api.utility.VersionUtility;
-
-import org.jetbrains.annotations.NotNull;
+import com.github.sirblobman.api.utility.paper.PaperChecker;
 
 public final class MultiVersionHandler {
     private final JavaPlugin plugin;
@@ -34,7 +35,7 @@ public final class MultiVersionHandler {
     /**
      * @return the plugin that owns this instance.
      */
-    public JavaPlugin getPlugin() {
+    public @NotNull JavaPlugin getPlugin() {
         return this.plugin;
     }
 
@@ -44,13 +45,13 @@ public final class MultiVersionHandler {
      * @return A class object for the class found at 'com.github.sirblobman.api.nms.[classType]_[nmsVersion]
      * @throws ClassNotFoundException when the class does not exist.
      */
-    private @NotNull Class<?> findHandlerClass(String classType) throws ClassNotFoundException {
+    private @NotNull Class<?> findHandlerClass(@NotNull String classType) throws ClassNotFoundException {
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
         String className = ("com.github.sirblobman.api.nms." + classType + "_" + nmsVersion);
         return Class.forName(className);
     }
 
-    private @NotNull<O> O getHandler(Class<O> typeClass, String classType) {
+    private @NotNull<O> O getHandler(@NotNull Class<O> typeClass, @NotNull String classType) {
         JavaPlugin plugin = getPlugin();
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
 
@@ -77,7 +78,7 @@ public final class MultiVersionHandler {
         }
     }
 
-    public BossBarHandler getBossBarHandler() {
+    public @NotNull BossBarHandler getBossBarHandler() {
         if (this.bossBarHandler == null) {
             JavaPlugin plugin = getPlugin();
             this.bossBarHandler = new BossBarHandler(plugin);
@@ -86,7 +87,7 @@ public final class MultiVersionHandler {
         return this.bossBarHandler;
     }
 
-    public ScoreboardHandler getScoreboardHandler() {
+    public @NotNull ScoreboardHandler getScoreboardHandler() {
         if (this.scoreboardHandler == null) {
             JavaPlugin plugin = getPlugin();
             this.scoreboardHandler = new ScoreboardHandler(plugin);
@@ -95,48 +96,78 @@ public final class MultiVersionHandler {
         return this.scoreboardHandler;
     }
 
-    public EntityHandler getEntityHandler() {
+    public @NotNull EntityHandler getEntityHandler() {
         if (this.entityHandler != null) {
             return this.entityHandler;
         }
 
+        if (PaperChecker.isPaper() && PaperChecker.hasNativeComponentSupport()) {
+            JavaPlugin plugin = getPlugin();
+            this.entityHandler = new EntityHandler_Paper(plugin);
+            return this.entityHandler;
+        }
+
         this.entityHandler = getHandler(EntityHandler.class, "EntityHandler");
-        return getEntityHandler();
+        return this.entityHandler;
     }
 
-    public PlayerHandler getPlayerHandler() {
+    public @NotNull PlayerHandler getPlayerHandler() {
         if (this.playerHandler != null) {
             return this.playerHandler;
         }
 
+        if (PaperChecker.isPaper() && PaperChecker.hasNativeComponentSupport()) {
+            JavaPlugin plugin = getPlugin();
+            this.playerHandler = new PlayerHandler_Paper(plugin);
+            return this.playerHandler;
+        }
+
         this.playerHandler = getHandler(PlayerHandler.class, "PlayerHandler");
-        return getPlayerHandler();
+        return this.playerHandler;
     }
 
-    public HeadHandler getHeadHandler() {
+    public @NotNull HeadHandler getHeadHandler() {
         if (this.headHandler != null) {
             return this.headHandler;
         }
 
+        if (PaperChecker.isPaper() && PaperChecker.hasNativeComponentSupport()) {
+            JavaPlugin plugin = getPlugin();
+            this.headHandler = new HeadHandler_Paper(plugin);
+            return this.headHandler;
+        }
+
         this.headHandler = getHandler(HeadHandler.class, "HeadHandler");
-        return getHeadHandler();
+        return this.headHandler;
     }
 
-    public ItemHandler getItemHandler() {
+    public @NotNull ItemHandler getItemHandler() {
         if (this.itemHandler != null) {
             return this.itemHandler;
         }
 
-        this.itemHandler = getHandler(ItemHandler.class, "ItemHandler");
-        return getItemHandler();
+        ItemHandler nmsItemHandler = getHandler(ItemHandler.class, "ItemHandler");
+        if (PaperChecker.isPaper() && PaperChecker.hasNativeComponentSupport()) {
+            JavaPlugin plugin = getPlugin();
+            this.itemHandler = new ItemHandler_Paper(plugin, nmsItemHandler);
+            return this.itemHandler;
+        }
+
+        return (this.itemHandler = nmsItemHandler);
     }
 
-    public ServerHandler getServerHandler() {
+    public @NotNull ServerHandler getServerHandler() {
         if (this.serverHandler != null) {
             return this.serverHandler;
         }
 
+        if (PaperChecker.isPaper() && PaperChecker.hasNativeComponentSupport()) {
+            JavaPlugin plugin = getPlugin();
+            this.serverHandler = new ServerHandler_Paper(plugin);
+            return this.serverHandler;
+        }
+
         this.serverHandler = getHandler(ServerHandler.class, "ServerHandler");
-        return getServerHandler();
+        return this.serverHandler;
     }
 }

@@ -1,8 +1,8 @@
 package com.github.sirblobman.api.nbt;
 
-import org.bukkit.plugin.Plugin;
-
 import org.jetbrains.annotations.NotNull;
+
+import org.bukkit.plugin.Plugin;
 
 public final class CustomNbtContext_Fallback implements CustomNbtContext {
     private final Plugin plugin;
@@ -11,7 +11,7 @@ public final class CustomNbtContext_Fallback implements CustomNbtContext {
         this.plugin = plugin;
     }
 
-    private Plugin getPlugin() {
+    private @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 
