@@ -62,8 +62,10 @@ public class ItemBuilder {
         }
 
         int maxStackSize = this.finalItem.getMaxStackSize();
-        if(amount > maxStackSize) {
-            throw new IllegalArgumentException("amount cannot be greater than the max stack size!");
+        if(maxStackSize != -1 && amount > maxStackSize) {
+            XMaterial material = XMaterial.matchXMaterial(this.finalItem);
+            String messageFormat = "Tried to set amount to %s on material %s with max amount %s.";
+            throw new IllegalArgumentException(String.format(messageFormat, amount, material, maxStackSize));
         }
 
         this.finalItem.setAmount(amount);
