@@ -26,8 +26,8 @@ language-test:
   sound:
     sound: "minecraft:block.beacon.activate"
     category: "master"
-    volume: "1.0"
-    pitch: "1.0"
+    volume: 1.0
+    pitch: 1.0
   title:
     title: "<green>Title Test</green>"
     subtitle: "<green>Subtitle Test</green>"

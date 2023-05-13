@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -63,7 +62,7 @@ public final class CommandDebugEvent extends ConsoleCommand {
             return false;
         }
 
-        String eventPriorityName = args[0].toUpperCase(Locale.US);
+        String eventPriorityName = args[0];
         EventPriority eventPriority = matchEnum(EventPriority.class, eventPriorityName);
         if (eventPriority == null) {
             Replacer replacer = new StringReplacer("{value}", eventPriorityName);

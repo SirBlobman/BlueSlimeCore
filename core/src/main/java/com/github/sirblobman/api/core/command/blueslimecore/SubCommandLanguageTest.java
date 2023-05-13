@@ -8,7 +8,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.sirblobman.api.command.Command;
 import com.github.sirblobman.api.core.CorePlugin;
@@ -28,8 +27,8 @@ public final class SubCommandLanguageTest extends Command {
 
     @Override
     protected @NotNull LanguageManager getLanguageManager() {
-        CorePlugin corePlugin = getCorePlugin();
-        return corePlugin.getLanguageManager();
+        CorePlugin plugin = getCorePlugin();
+        return plugin.getLanguageManager();
     }
 
     @Override
@@ -60,29 +59,31 @@ public final class SubCommandLanguageTest extends Command {
             return true;
         }
 
-        String languageCode = language.getLanguageName();
-        Replacer languageCodeReplacer = new StringReplacer("{language_code}", languageCode);
-        languageManager.sendMessage(target, "language-test.language-code", languageCodeReplacer);
-
-        Locale javaLocale = language.getJavaLocale();
-        String javaLocaleTag = javaLocale.toLanguageTag();
-        Replacer javaLocaleReplacer = new StringReplacer("{java_locale}", javaLocaleTag);
-        languageManager.sendMessage(target, "language-test.java-locale", javaLocaleReplacer);
-
-        if (target instanceof Player) {
-            Player targetPlayer = (Player) target;
-            languageManager.sendActionBar(targetPlayer, "language-test.action-bar");
-            languageManager.sendSound(targetPlayer, "language-test.sound");
-            languageManager.sendTitle(targetPlayer, "language-test.title");
-        }
-
-        languageManager.sendMessage(target, "language-test.message");
-        languageManager.broadcastMessage("language-test.broadcast", null);
+        sendTests(target, language);
         sendMessage(sender, "language-test.complete");
         return true;
     }
 
     private @NotNull CorePlugin getCorePlugin() {
         return this.plugin;
+    }
+
+    private void sendTests(@NotNull CommandSender audience, @NotNull Language language) {
+        LanguageManager languageManager = getLanguageManager();
+        String languageCode = language.getLanguageName();
+        Replacer codeReplacer = new StringReplacer("{language_code}", languageCode);
+        languageManager.sendMessage(audience, "language-test.language-code", codeReplacer);
+
+        Locale javaLocale = language.getJavaLocale();
+        String javaLocaleTag = javaLocale.toLanguageTag();
+        Replacer localeReplacer = new StringReplacer("{java_locale}", javaLocaleTag);
+        languageManager.sendMessage(audience, "language-test.java-locale", localeReplacer);
+
+        languageManager.sendActionBar(audience, "language-test.action-bar");
+        languageManager.sendSound(audience, "language-test.sound");
+        languageManager.sendTitle(audience, "language-test.title");
+
+        languageManager.sendMessage(audience, "language-test.message");
+        languageManager.broadcastMessage("language-test.broadcast", null);
     }
 }

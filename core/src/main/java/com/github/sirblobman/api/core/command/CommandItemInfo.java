@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.language.replacer.IntegerReplacer;
 import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
 import com.github.sirblobman.api.nms.ItemHandler;
@@ -52,11 +53,11 @@ public final class CommandItemInfo extends PlayerCommand {
 
         int minorVersion = VersionUtility.getMinorVersion();
         if (minorVersion < 13) {
-            String materialIdString = getMaterialIdString(item);
-            String dataString = getDataString(item);
+            int materialId = getMaterialIdLegacy(item);
+            short data = item.getDurability();
 
-            Replacer materialIdReplacer = new StringReplacer("{material_id}", materialIdString);
-            Replacer materialDataReplacer = new StringReplacer("{data}", dataString);
+            Replacer materialIdReplacer = new IntegerReplacer("{material_id}", materialId);
+            Replacer materialDataReplacer = new IntegerReplacer("{data}", data);
             sendMessage(player, "command.item-info.legacy", materialIdReplacer, materialDataReplacer);
         }
 
@@ -67,7 +68,7 @@ public final class CommandItemInfo extends PlayerCommand {
         return this.plugin;
     }
 
-    private @NotNull String getMaterialNameX(ItemStack item) {
+    private @NotNull String getMaterialNameX(@NotNull ItemStack item) {
         try {
             XMaterial material = XMaterial.matchXMaterial(item);
             return material.name();
@@ -76,31 +77,21 @@ public final class CommandItemInfo extends PlayerCommand {
         }
     }
 
-    private @NotNull String getMaterialNameBukkit(ItemStack item) {
+    private @NotNull String getMaterialNameBukkit(@NotNull ItemStack item) {
         Material material = item.getType();
         return material.name();
     }
 
     private @NotNull String getVanillaId(@NotNull ItemStack item) {
-        CorePlugin corePlugin = getCorePlugin();
-        MultiVersionHandler multiVersionHandler = corePlugin.getMultiVersionHandler();
+        CorePlugin plugin = getCorePlugin();
+        MultiVersionHandler multiVersionHandler = plugin.getMultiVersionHandler();
         ItemHandler itemHandler = multiVersionHandler.getItemHandler();
         return itemHandler.getKeyString(item);
     }
 
     @SuppressWarnings("deprecation")
-    private int getMaterialIdLegacy(ItemStack item) {
+    private int getMaterialIdLegacy(@NotNull ItemStack item) {
         Material material = item.getType();
         return material.getId();
-    }
-
-    private String getMaterialIdString(ItemStack item) {
-        int materialId = getMaterialIdLegacy(item);
-        return Integer.toString(materialId);
-    }
-
-    private @NotNull String getDataString(@NotNull ItemStack item) {
-        short data = item.getDurability();
-        return Short.toString(data);
     }
 }

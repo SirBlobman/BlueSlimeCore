@@ -3,6 +3,7 @@ package com.github.sirblobman.api.core.command;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Bukkit;
@@ -17,13 +18,13 @@ import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
 
 public final class CommandGlobalGamerule extends Command {
-    public CommandGlobalGamerule(CorePlugin plugin) {
+    public CommandGlobalGamerule(@NotNull CorePlugin plugin) {
         super(plugin, "global-gamerule");
         setPermissionName("blue.slime.core.command.global-gamerule");
     }
 
     @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+    protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         if (args.length == 1) {
             World world = getWorld(sender);
             if (world == null) {
@@ -42,7 +43,7 @@ public final class CommandGlobalGamerule extends Command {
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
         if (args.length < 1) {
             return false;
         }
@@ -69,8 +70,7 @@ public final class CommandGlobalGamerule extends Command {
         return true;
     }
 
-    @Nullable
-    private World getWorld(CommandSender sender) {
+    private @Nullable World getWorld(@NotNull CommandSender sender) {
         Location location = getLocation(sender);
         if (location == null) {
             return null;
@@ -79,14 +79,14 @@ public final class CommandGlobalGamerule extends Command {
         return location.getWorld();
     }
 
-    private void showPerWorldValueList(CommandSender sender, String gameRuleString) {
-        Replacer titleReplacer = new StringReplacer("{rule}", gameRuleString);
-        sendMessage(sender, "command.global-gamerule.list-title", titleReplacer);
+    private void showPerWorldValueList(@NotNull CommandSender sender, @NotNull String gameRuleName) {
+        Replacer ruleReplacer = new StringReplacer("{rule}", gameRuleName);
+        sendMessage(sender, "command.global-gamerule.list-title", ruleReplacer);
 
         List<World> worldList = Bukkit.getWorlds();
         for (World world : worldList) {
             String worldName = world.getName();
-            String gameRuleValue = world.getGameRuleValue(gameRuleString);
+            String gameRuleValue = world.getGameRuleValue(gameRuleName);
 
             Replacer worldReplacer = new StringReplacer("{world}", worldName);
             Replacer valueReplacer = new StringReplacer("{value}", gameRuleValue);
@@ -94,33 +94,32 @@ public final class CommandGlobalGamerule extends Command {
         }
     }
 
-    private void setGameRule(CommandSender sender, String gameRuleString, String value) {
+    private void setGameRule(@NotNull CommandSender sender, @NotNull String gameRuleName, @NotNull String value) {
         int successCount = 0;
         int failureCount = 0;
 
         List<World> worldList = Bukkit.getWorlds();
         for (World world : worldList) {
-            if (world.setGameRuleValue(gameRuleString, value)) {
+            if (world.setGameRuleValue(gameRuleName, value)) {
                 successCount++;
             } else {
                 failureCount++;
             }
         }
 
+        Replacer ruleReplacer = new StringReplacer("{rule}", gameRuleName);
+        Replacer valueReplacer = new StringReplacer("{value}", value);
+
         if (successCount > 0) {
+            String key = "command.global-gamerule.success-count";
             Replacer countReplacer = new IntegerReplacer("{count}", successCount);
-            Replacer ruleReplacer = new StringReplacer("{rule}", gameRuleString);
-            Replacer valueReplacer = new StringReplacer("{value}", value);
-            sendMessage(sender, "command.global-gamerule.success-count", countReplacer, ruleReplacer,
-                    valueReplacer);
+            sendMessage(sender, key, countReplacer, ruleReplacer, valueReplacer);
         }
 
         if (failureCount > 0) {
+            String key = "command.global-gamerule.failure-count";
             Replacer countReplacer = new IntegerReplacer("{count}", failureCount);
-            Replacer ruleReplacer = new StringReplacer("{rule}", gameRuleString);
-            Replacer valueReplacer = new StringReplacer("{value}", value);
-            sendMessage(sender, "command.global-gamerule.failure-count", countReplacer, ruleReplacer,
-                    valueReplacer);
+            sendMessage(sender, key, countReplacer, ruleReplacer, valueReplacer);
         }
     }
 }

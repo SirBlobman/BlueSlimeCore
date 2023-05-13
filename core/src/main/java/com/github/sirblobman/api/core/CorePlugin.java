@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Server;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -88,12 +87,7 @@ public final class CorePlugin extends ConfigurablePlugin {
         LanguageManager languageManager = getLanguageManager();
         languageManager.reloadLanguages();
 
-        YamlConfiguration configuration = configurationManager.get("config.yml");
-        CoreConfiguration coreConfiguration = getCoreConfiguration();
-        coreConfiguration.load(configuration);
-
-        HandlerList.unregisterAll(this);
-        registerListeners();
+        getCoreConfiguration().load(configurationManager.get("config.yml"));
     }
 
     public @NotNull CoreConfiguration getCoreConfiguration() {
@@ -160,9 +154,14 @@ public final class CorePlugin extends ConfigurablePlugin {
         logger.info(message);
     }
 
-    private String getClassName(@NotNull Object object) {
-        Class<?> objectClass = (object instanceof Class ? (Class<?>) object : object.getClass());
-        return objectClass.getName();
+    private @NotNull String getClassName(@NotNull Object object) {
+        if (object instanceof Class) {
+            Class<?> objectClass = (Class<?>) object;
+            return objectClass.getName();
+        }
+
+        Class<?> objectClass = getClass();
+        return getClassName(objectClass);
     }
 
     private void registerCommands() {

@@ -31,13 +31,12 @@ public final class CommandItemToNBT extends PlayerCommand {
         setPermissionName("blue.slime.core.command.item-to-nbt");
         this.plugin = plugin;
 
-        // 1.8 doesn't have the setLenient() method in GsonBuilder.
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setPrettyPrinting();
 
         try {
             gsonBuilder.setLenient();
-        } catch (NoSuchMethodError error) {
+        } catch (NoSuchMethodError ignored) {
             // 1.8 doesn't have the setLenient method in GsonBuilder.
         }
 
@@ -45,7 +44,7 @@ public final class CommandItemToNBT extends PlayerCommand {
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(@NotNull Player player, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull Player player, String @NotNull [] args) {
         if (args.length == 1) {
             return Collections.singletonList("pretty");
         }
@@ -83,7 +82,7 @@ public final class CommandItemToNBT extends PlayerCommand {
         return this.prettyGson;
     }
 
-    private @NotNull String prettyJSON(Player player, String json) {
+    private @NotNull String prettyJSON(@NotNull Player player, @NotNull String json) {
         try(JsonReader reader = new JsonReader(new StringReader(json))) {
             reader.setLenient(true);
 
