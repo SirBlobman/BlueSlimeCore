@@ -6,7 +6,7 @@ website: "${pluginWebsite}"
 main: "${pluginMainClass}"
 version: "${pluginVersion}"
 api-version: "1.13"
-load: STARTUP
+load: "STARTUP"
 
 folia-supported: true
 
