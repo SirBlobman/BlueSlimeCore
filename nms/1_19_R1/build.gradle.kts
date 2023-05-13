@@ -20,8 +20,6 @@ dependencies {
     paperweight.paperDevBundle("1.19.2-R0.1-SNAPSHOT")
 }
 
-tasks {
-    assemble {
-        dependsOn(reobfJar)
-    }
+tasks.named("assemble") {
+    dependsOn("reobfJar")
 }

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ServerHandler_Paper extends ServerHandler {
@@ -24,5 +25,11 @@ public final class ServerHandler_Paper extends ServerHandler {
     public double @NotNull [] getServerTpsValues() {
         Server server = getServer();
         return server.getTPS();
+    }
+
+    @Override
+    public @NotNull CommandMap getCommandMap() {
+        Server server = getServer();
+        return server.getCommandMap();
     }
 }

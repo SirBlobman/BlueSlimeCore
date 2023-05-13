@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.server.v1_16_R3.MinecraftServer;
@@ -31,5 +32,16 @@ public final class ServerHandler_1_16_R3 extends ServerHandler {
         CraftServer craftServer = (CraftServer) server;
         MinecraftServer minecraftServer = craftServer.getServer();
         return Arrays.copyOf(minecraftServer.recentTps, 3);
+    }
+
+    @Override
+    public @NotNull CommandMap getCommandMap() {
+        Server server = getServer();
+        if (!(server instanceof CraftServer)) {
+            throw new UnsupportedOperationException("Server implementation is not the correct class.");
+        }
+
+        CraftServer craftServer = (CraftServer) server;
+        return craftServer.getCommandMap();
     }
 }

@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.VersionUtility;
@@ -29,8 +30,14 @@ public final class ServerHandler_Fallback extends ServerHandler {
     }
 
     @Override
-    public @NotNull double[] getServerTpsValues() {
+    public double @NotNull [] getServerTpsValues() {
         // Not Supported, assume everything is fine.
         return new double[] {20.0D, 20.0D, 20.0D};
+    }
+
+    @Override
+    public @NotNull CommandMap getCommandMap() {
+        // Not Supported
+        throw new UnsupportedOperationException("Fallback handler does not support command map.");
     }
 }

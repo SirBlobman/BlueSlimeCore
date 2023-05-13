@@ -3,6 +3,7 @@ package com.github.sirblobman.api.nms;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -43,4 +44,10 @@ public abstract class ServerHandler extends Handler {
      * @return An array that contains the three server TPS values of [1m, 5m, 15m]
      */
     public abstract double @NotNull [] getServerTpsValues();
+
+    /**
+     * @return The Bukkit command map for the server.
+     * @throws UnsupportedOperationException when the current server version is not supported by the plugin.
+     */
+    public abstract @NotNull CommandMap getCommandMap();
 }
