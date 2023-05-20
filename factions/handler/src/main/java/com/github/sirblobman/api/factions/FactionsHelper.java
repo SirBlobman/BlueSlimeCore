@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -11,9 +14,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.Validate;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class FactionsHelper {
     private final JavaPlugin plugin;
@@ -132,7 +132,9 @@ public final class FactionsHelper {
                 return true;
             }
 
-            return pluginVersion.startsWith("1.6.9.5") && pluginVersion.endsWith("-RC");
+            if (pluginVersion.startsWith("1.6.9.5")) {
+                return (pluginVersion.endsWith("-RC") || pluginVersion.endsWith("-STABLE"));
+            }
         }
 
         return false;
