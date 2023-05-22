@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionType;
 
 public final class PotionBuilder extends ItemBuilder {
     public PotionBuilder(@NotNull BottleType bottleType) {
-        super(bottleType.getItem());
+        super(bottleType.getMaterial());
     }
 
     public @NotNull PotionBuilder withMainEffect(@NotNull PotionType potionType, boolean extended, boolean upgraded) {

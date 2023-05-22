@@ -1,6 +1,10 @@
 package com.github.sirblobman.api.item;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
@@ -36,6 +40,27 @@ public enum ArmorMaterialType {
     CHAINMAIL(CHAINMAIL_HELMET, CHAINMAIL_CHESTPLATE, CHAINMAIL_LEGGINGS, CHAINMAIL_BOOTS),
     DIAMOND(DIAMOND_HELMET, DIAMOND_CHESTPLATE, DIAMOND_LEGGINGS, DIAMOND_BOOTS),
     NETHERITE(NETHERITE_HELMET, NETHERITE_CHESTPLATE, NETHERITE_LEGGINGS, NETHERITE_BOOTS);
+
+    private static final Map<XMaterial, ArmorMaterialType> BY_MATERIAL;
+
+    static {
+        BY_MATERIAL = new EnumMap<>(XMaterial.class);
+        ArmorMaterialType[] values = values();
+        for (ArmorMaterialType type : values) {
+            XMaterial helmet = type.getHelmet();
+            XMaterial chestplate = type.getChestplate();
+            XMaterial leggings = type.getLeggings();
+            XMaterial boots = type.getBoots();
+            BY_MATERIAL.put(helmet, type);
+            BY_MATERIAL.put(chestplate, type);
+            BY_MATERIAL.put(leggings, type);
+            BY_MATERIAL.put(boots, type);
+        }
+    }
+
+    public static @Nullable ArmorMaterialType getByMaterial(@NotNull XMaterial material) {
+        return BY_MATERIAL.get(material);
+    }
 
     private final XMaterial helmet;
     private final XMaterial chestplate;

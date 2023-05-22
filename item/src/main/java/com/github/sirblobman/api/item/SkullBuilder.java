@@ -15,8 +15,7 @@ public final class SkullBuilder {
         this.headHandler = Validate.notNull(headHandler, "headHandler must not be null!");
     }
 
-    @NotNull
-    public HeadHandler getHeadHandler() {
+    public @NotNull HeadHandler getHeadHandler() {
         return this.headHandler;
     }
 

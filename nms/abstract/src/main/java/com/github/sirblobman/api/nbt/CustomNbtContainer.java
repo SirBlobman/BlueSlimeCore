@@ -90,7 +90,7 @@ public interface CustomNbtContainer {
      *                                  the {@link CustomNbtType#getPrimitiveType()}
      */
 
-    @Contract("_, _, null -> null")
+    @Contract("_, _, !null -> !null")
     <T, Z> @Nullable Z getOrDefault(@NotNull String key, @NotNull CustomNbtType<T, Z> type, @Nullable Z defaultValue);
 
     /**
@@ -100,8 +100,7 @@ public interface CustomNbtContainer {
      *
      * @return the key set
      */
-    @NotNull
-    Set<String> getKeys();
+    @NotNull Set<String> getKeys();
 
     /**
      * Removes a custom nbt by its key.
