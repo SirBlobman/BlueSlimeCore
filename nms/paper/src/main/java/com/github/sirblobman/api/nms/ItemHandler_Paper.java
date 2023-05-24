@@ -6,6 +6,7 @@ import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
@@ -87,9 +88,16 @@ public final class ItemHandler_Paper extends ItemHandler {
 
     @Override
     public @NotNull ItemStack fromBase64String(@NotNull String string) {
-        Decoder decoder = Base64.getDecoder();
-        byte[] byteArray = decoder.decode(string);
-        return ItemStack.deserializeBytes(byteArray);
+        try {
+            Decoder decoder = Base64.getDecoder();
+            byte[] byteArray = decoder.decode(string);
+            return ItemStack.deserializeBytes(byteArray);
+        } catch (Exception ex) {
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to encode an item from a string:", ex);
+            logger.warning("The item will be loaded as air.");
+            return new org.bukkit.inventory.ItemStack(Material.AIR);
+        }
     }
 
     @Override
