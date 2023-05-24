@@ -3,3 +3,8 @@ This jar shades the following dependencies:
 - CryptoMorin XSeries (https://github.com/CryptoMorin/XSeries#getting-started)
 - Kyori Adventure (https://docs.advntr.dev/getting-started.html)
 - Folia Helper (https://github.com/SirBlobman/Folia-Helper/)
+
+ViaVersion:
+Kyori Adventure adds "ViaVersion" to soft-depend list to prevent class issues.
+See https://github.com/KyoriPowered/adventure-platform/blob/master/platform-bukkit/src/main/java/net/kyori/adventure/platform/bukkit/BukkitAudiencesImpl.java#L179-L189
+for further details on this.

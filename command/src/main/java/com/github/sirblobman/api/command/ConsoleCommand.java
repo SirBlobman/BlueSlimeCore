@@ -40,7 +40,8 @@ public abstract class ConsoleCommand extends Command {
      * @param args    An array of command arguments.
      * @return The list of tab completions for this combination of sender and command arguments.
      */
-    protected abstract List<String> onTabComplete(@NotNull ConsoleCommandSender console, String @NotNull [] args);
+    protected abstract @NotNull List<String> onTabComplete(@NotNull ConsoleCommandSender console,
+                                                           String @NotNull [] args);
 
     /**
      * @param console The console that is executing this command.

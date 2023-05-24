@@ -17,6 +17,7 @@ public final class CommandBlueSlimeCore extends Command {
         addSubCommand(new SubCommandHelp(plugin));
         addSubCommand(new SubCommandLanguageTest(plugin));
         addSubCommand(new SubCommandReload(plugin));
+        addSubCommand(new SubCommandVersion(plugin));
     }
 
     @Override

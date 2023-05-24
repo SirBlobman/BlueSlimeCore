@@ -78,6 +78,9 @@ permissions:
   blue.slime.core.command.blueslimecore.reload:
     description: "Access to the '/blueslimecore reload' subcommand."
     default: op
+  blue.slime.core.command.blueslimecore.version:
+    description: "Access to the '/blueslimecore version' subcommand."
+    default: op
   blue.slime.core.command.item-to-yml:
     description: "Access to the '/item-to-yml' command."
     default: op

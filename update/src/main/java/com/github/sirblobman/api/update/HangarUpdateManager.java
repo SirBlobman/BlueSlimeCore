@@ -70,6 +70,15 @@ public final class HangarUpdateManager {
     }
 
     /**
+     * @param plugin The plugin that will be checked for updates.
+     * @return The cached hangar version, or null if one does not exist.
+     */
+    public @Nullable String getCachedHangarVersion(@NotNull Plugin plugin) {
+        String pluginName = plugin.getName();
+        return this.hangarVersionCache.get(pluginName);
+    }
+
+    /**
      * Schedule an async task that will check every plugin registered in this manager.
      */
     public void checkForUpdates() {
@@ -207,7 +216,7 @@ public final class HangarUpdateManager {
 
     private void printFailedInformation(@NotNull String pluginName, @NotNull Logger logger) {
         logger.info("[Update Checker] Update check failed for plugin '" + pluginName + "'.");
-        logger.info("[Updaye Checker] Is is possible that your server does not have access to the internet.");
+        logger.info("[Update Checker] Is is possible that your server does not have access to the internet.");
     }
 
     private void printSameVersion(@NotNull String pluginName, @NotNull Logger logger) {
