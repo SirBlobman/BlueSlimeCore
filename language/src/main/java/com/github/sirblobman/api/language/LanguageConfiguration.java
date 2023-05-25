@@ -187,12 +187,12 @@ public final class LanguageConfiguration {
             return null;
         }
 
-        String categoryName = originalConfiguration.getString("category", "master");
+        String categoryName = section.getString("category", "master");
         Source category = Source.valueOf(categoryName.toUpperCase(Locale.US));
 
         Key soundKey = Key.key(soundKeyString);
-        float volume = (float) originalConfiguration.getDouble("volume", 1.0D);
-        float pitch = (float) originalConfiguration.getDouble("pitch", 1.0D);
+        float volume = (float) section.getDouble("volume", 1.0D);
+        float pitch = (float) section.getDouble("pitch", 1.0D);
 
         Sound.Builder builder = Sound.sound();
         builder.type(soundKey);
