@@ -47,6 +47,7 @@ import com.github.sirblobman.api.shaded.adventure.platform.bukkit.BukkitAudience
 import com.github.sirblobman.api.shaded.adventure.sound.Sound;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.ComponentLike;
+import com.github.sirblobman.api.shaded.adventure.text.TextComponent;
 import com.github.sirblobman.api.shaded.adventure.text.TextReplacementConfig;
 import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.shaded.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -54,7 +55,6 @@ import com.github.sirblobman.api.shaded.adventure.title.Title;
 import com.github.sirblobman.api.shaded.adventure.title.Title.Times;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-
 
 public final class LanguageManager {
     private static final String[] KNOWN_LANGUAGE_ARRAY;
@@ -538,7 +538,11 @@ public final class LanguageManager {
 
         Component prefix = getMessage(audience, "prefix", replacerArray);
         if (!Component.empty().equals(prefix)) {
-            return prefix.append(Component.space()).append(message);
+            TextComponent.Builder builder = Component.text();
+            builder.append(prefix);
+            builder.append(Component.space());
+            builder.append(message);
+            return builder.build();
         }
 
         return message;
@@ -753,7 +757,11 @@ public final class LanguageManager {
         if (type == ModifiableMessageType.CHAT) {
             Component prefix = getMessage(audience, "prefix");
             if (!Component.empty().equals(prefix)) {
-                message = prefix.append(Component.space()).append(message);
+                TextComponent.Builder builder = Component.text();
+                builder.append(prefix);
+                builder.append(Component.space());
+                builder.append(message);
+                message = builder.build();
             }
         }
 
