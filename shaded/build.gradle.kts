@@ -16,7 +16,7 @@ dependencies {
     // Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.3.0")
     implementation("net.kyori:adventure-platform-bungeecord:4.3.0")
-    implementation("net.kyori:adventure-text-serializer-plain:4.13.1")
+    implementation("net.kyori:adventure-text-serializer-plain:4.14.0")
     implementation("net.kyori:adventure-text-minimessage:4.13.1")
 
     // bStats
