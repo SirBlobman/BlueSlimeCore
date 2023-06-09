@@ -13,8 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatMutableComponent;
+import net.minecraft.network.chat.Component;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 
 import com.github.sirblobman.api.utility.Validate;
@@ -25,6 +24,7 @@ public final class EntityHandler_1_20_R1 extends EntityHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public @NotNull String getName(@NotNull Entity entity) {
         if (entity instanceof Player player) {
             return player.getName();
@@ -41,9 +41,9 @@ public final class EntityHandler_1_20_R1 extends EntityHandler {
         }
 
         net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
-        IChatMutableComponent component = IChatBaseComponent.b(text);
-        nmsEntity.b(component);
-        nmsEntity.n(visible);
+        Component component = Component.literal(text);
+        nmsEntity.setCustomName(component);
+        nmsEntity.setCustomNameVisible(visible);
     }
 
     @Override

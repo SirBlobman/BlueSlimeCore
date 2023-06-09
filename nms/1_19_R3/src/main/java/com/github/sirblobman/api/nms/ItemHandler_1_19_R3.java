@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -50,21 +51,21 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @NotNull String getLocalizedName(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @NotNull String getLocalizedName(@NotNull ItemStack item) {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         net.minecraft.network.chat.Component hoverName = nmsItem.getHoverName();
         return CraftChatMessage.fromComponent(hoverName);
     }
 
     @Override
-    public @NotNull String getKeyString(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @NotNull String getKeyString(@NotNull ItemStack item) {
         Material material = item.getType();
         NamespacedKey registryKey = material.getKey();
         return registryKey.toString();
     }
 
     @Override
-    public @NotNull String toNBT(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @NotNull String toNBT(@NotNull ItemStack item) {
         CompoundTag tag = new CompoundTag();
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         nmsItem.save(tag);
@@ -72,7 +73,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @NotNull org.bukkit.inventory.ItemStack fromNBT(@NotNull String string) {
+    public @NotNull ItemStack fromNBT(@NotNull String string) {
         try {
             StringReader stringReader = new StringReader(string);
             TagParser tagParser = new TagParser(stringReader);
@@ -84,12 +85,12 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
             Logger logger = getLogger();
             logger.log(Level.WARNING, "Failed to parse an NBT string to an ItemStack:", ex);
             logger.warning("The item will be replaced with air.");
-            return new org.bukkit.inventory.ItemStack(Material.AIR);
+            return new ItemStack(Material.AIR);
         }
     }
 
     @Override
-    public @NotNull String toBase64String(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @NotNull String toBase64String(@NotNull ItemStack item) {
         CompoundTag tag = new CompoundTag();
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         nmsItem.save(tag);
@@ -108,11 +109,11 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @NotNull org.bukkit.inventory.ItemStack fromBase64String(@NotNull String string) {
+    public @NotNull ItemStack fromBase64String(@NotNull String string) {
         if (string.isEmpty()) {
             Logger logger = getLogger();
             logger.log(Level.WARNING, "Decoded an empty string to air.");
-            return new org.bukkit.inventory.ItemStack(Material.AIR);
+            return new ItemStack(Material.AIR);
         }
 
         Decoder decoder = Base64.getDecoder();
@@ -125,18 +126,18 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
             Logger logger = getLogger();
             logger.log(Level.WARNING, "Failed to encode an item from a string:", ex);
             logger.warning("The item will be loaded as air.");
-            return new org.bukkit.inventory.ItemStack(Material.AIR);
+            return new ItemStack(Material.AIR);
         }
     }
 
     @Override
     public @NotNull CustomNbtContainer createNewCustomNbtContainer() {
-        org.bukkit.inventory.ItemStack item = new org.bukkit.inventory.ItemStack(Material.BARRIER);
+        ItemStack item = new ItemStack(Material.BARRIER);
         return getCustomNbt(item);
     }
 
     @Override
-    public @NotNull CustomNbtContainer getCustomNbt(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @NotNull CustomNbtContainer getCustomNbt(@NotNull ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return createNewCustomNbtContainer();
@@ -148,7 +149,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @NotNull org.bukkit.inventory.ItemStack setCustomNbt(@NotNull org.bukkit.inventory.ItemStack item, @NotNull CustomNbtContainer container) {
+    public @NotNull ItemStack setCustomNbt(@NotNull ItemStack item, @NotNull CustomNbtContainer container) {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return item;
@@ -167,7 +168,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
         return item;
     }
 
-    private @NotNull PersistentDataContainer createNBT(@NotNull org.bukkit.inventory.ItemStack item) {
+    private @NotNull PersistentDataContainer createNBT(@NotNull ItemStack item) {
         ItemMeta itemMeta = item.getItemMeta();
         Validate.notNull(itemMeta, "item must not have null meta!");
 
@@ -188,7 +189,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @Nullable Component getDisplayName(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @Nullable Component getDisplayName(@NotNull ItemStack item) {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         if (nmsItem.hasCustomHoverName()) {
             net.minecraft.network.chat.Component component = nmsItem.getHoverName();
@@ -199,7 +200,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @NotNull org.bukkit.inventory.ItemStack setDisplayName(@NotNull org.bukkit.inventory.ItemStack item, @Nullable Component displayName) {
+    public @NotNull ItemStack setDisplayName(@NotNull ItemStack item, @Nullable Component displayName) {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 
         if (displayName == null) {
@@ -213,7 +214,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @Nullable List<Component> getLore(@NotNull org.bukkit.inventory.ItemStack item) {
+    public @Nullable List<Component> getLore(@NotNull ItemStack item) {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         if (!nmsItem.hasTag()) {
             return null;
@@ -252,7 +253,7 @@ public final class ItemHandler_1_19_R3 extends ItemHandler {
     }
 
     @Override
-    public @NotNull org.bukkit.inventory.ItemStack setLore(@NotNull org.bukkit.inventory.ItemStack item, @Nullable List<Component> lore) {
+    public @NotNull ItemStack setLore(@NotNull ItemStack item, @Nullable List<Component> lore) {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         CompoundTag tag = nmsItem.getOrCreateTag();
         CompoundTag display = tag.getCompound("display");

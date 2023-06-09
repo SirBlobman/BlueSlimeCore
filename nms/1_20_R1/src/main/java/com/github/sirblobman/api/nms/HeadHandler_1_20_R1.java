@@ -56,6 +56,7 @@ public final class HeadHandler_1_20_R1 extends HeadHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public @NotNull ItemStack getBase64Head(@NotNull String base64, @Nullable UUID customId) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
         if (item == null) {
@@ -73,6 +74,7 @@ public final class HeadHandler_1_20_R1 extends HeadHandler {
         return item;
     }
 
+    @SuppressWarnings("deprecation")
     private PlayerProfile createPlayerProfile(String base64, UUID uniqueId) {
         PlayerProfile profile = Bukkit.createPlayerProfile(uniqueId, "custom");
         PlayerTextures textures = profile.getTextures();
