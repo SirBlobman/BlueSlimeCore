@@ -7,18 +7,22 @@
 BlueSlimeCore is an library plugin with many features that are necessary for my other plugins.
 This library is also free for other developers to use.
 
-### Supported Versions
+### Downloads
 
-BlueSlimeCore support Spigot, Paper, and Folia.  
-Other custom forks may work, but they are untested and support will not be provided.  
-The following Minecraft versions are currently supported:
+- [SpigotMC](https://www.spigotmc.org/resources/83189/)
+- [Hangar](https://hangar.papermc.io/SirBlobman/BlueSlimeCore)
+- [Jenkins Beta Builds](https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/)
 
-- 1.8.8
-- 1.12.2
-- 1.16.5
-- 1.17.1
-- 1.18.2
-- 1.19.4
+### Version Information
+
+BlueSlimeCore supports Spigot, Paper, and Folia. Custom forks may work, but they are untested.
+
+| Version List                          | Status                        |
+|---------------------------------------|-------------------------------|
+| 1.19.4, 1.20.1                        | Recommended                   |
+| 1.8.8, 1.12.2, 1.16.5, 1.17.1, 1.18.2 | Working, but not recommended. |
+
+We only provide support for tested software and recommended versions.
 
 ### Features for Servers
 * '/item-to-nbt' command to view NBT data tags on items.

@@ -1,25 +1,39 @@
-[SIZE=5][B]Supported Spigot Versions:[/B][/SIZE]
-1.7.10, 1.8.8, 1.9.4, 1.10.2, 1.11.2, 1.12.2, 1.13.2, 1.14.4, 1.15.2, 1.16.5, 1.17.1, 1.18.2, 1.19.2
+[SIZE=5][B]Version Information:[/B][/SIZE]
+The recommended versions are currently 1.19.4 and 1.20.1.
 
-[SIZE=5][COLOR=#FF0000][B]Description:[/B][/COLOR][/SIZE]
-BlueSlimeCore is an API plugin with many features that are necessary for my plugins.
-If you are a developer and need some helpful utility classes, you can use this API as well.
+The following versions still work, but we do not provide support for them:
 
-[SIZE=5][COLOR=#FF0000][B]Features:[/B][/COLOR][/SIZE]
+1.8.8, 1.12.2, 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.3
+
+[SIZE=5][B]Description:[/B][/SIZE]
+BlueSlimeCore is an library plugin with many features that are necessary for my other plugins. This library is also free for other developers to use.
+
+[SIZE=5][B]Features for Servers:[/B][/SIZE]
 [LIST]
-[*]Multi-Version NMS Handler
-[*]BossBar + ActionBar managers
-[*]Minor command system improvements
-[*]Custom configuration and language system
-[*]Custom menus with options for buttons and pages
-[*]Plugin update checking
-[*]Minecraft version checking
-[*]Helpful abstraction to support multiple Factions plugins.
+[*]Support for Spigot, Paper, and Folia
+[*]'/item-to-nbt' command to view NBT data tags on items.
+[*]'/item-to-base64' command to convert items to Base64 strings.
+[*]'/debug-event' command to find plugins and listeners for events.
 [/LIST]
 
-[SIZE=5][B][COLOR=#FF0000]Help and Support:[/COLOR][/B][/SIZE]
+[SIZE=5][B]Features for Developers:[/B][/SIZE]
+[LIST]
+[*]Configuration management system for saving and loading of multiple files.
+[*]Language management system with support for per-player languages, MiniMessage, and PlaceholderAPI.
+[*]Ability to send action bars, titles, and sounds through the language API.
+[*]Command system with player checking and sub commands.
+[*]Plugin update checking with SpigotMC or Hangar.
+[*]Menu API for creation of menus with buttons or pages and a configurable item format.
+[*]Factions Handler API to aid support with many different Factions plugin.
+[*]Item builders to quickly create items, leather armor, potions, and player heads.
+[*]Multiple version handler for spawning entities, changing max health, checking absorption.
+[*]Multiple version handler for sending cooldown packets and checking server TPS.
+[*]Utility methods for dealing with block/entity locations, items, experience, hex colors, and versions.
+[/LIST]
+
+[SIZE=5][B]Help and Support:[/B][/SIZE]
 Click the image to join my discord for support. You can also join if you have feature requests or if you just want to chat with other users.
 [URL='https://discord.gg/XMq2agT'][IMG]https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png[/IMG][/URL]
 
-[SIZE=5][B][COLOR=#FF0000]Extra Information:[/COLOR][/B][/SIZE]
+[SIZE=5][B]Extra Information:[/B][/SIZE]
 Please do not use a review to leave bug reports or errors. I am not able to help you through a review.
