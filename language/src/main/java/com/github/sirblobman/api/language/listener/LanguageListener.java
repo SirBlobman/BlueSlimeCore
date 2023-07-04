@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.folia.FoliaHelper;
-import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.FoliaPlugin;
 import com.github.sirblobman.api.folia.scheduler.BukkitTaskScheduler;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.language.LanguageManager;
@@ -27,8 +27,8 @@ public final class LanguageListener implements Listener {
     public LanguageListener(@NotNull Plugin plugin, @NotNull LanguageManager languageManager) {
         this.plugin = plugin;
 
-        if (plugin instanceof IFoliaPlugin) {
-            FoliaHelper foliaHelper = ((IFoliaPlugin) plugin).getFoliaHelper();
+        if (plugin instanceof FoliaPlugin) {
+            FoliaHelper foliaHelper = ((FoliaPlugin) plugin).getFoliaHelper();
             this.scheduler = foliaHelper.getScheduler();
         } else {
             this.scheduler = new BukkitTaskScheduler(plugin);

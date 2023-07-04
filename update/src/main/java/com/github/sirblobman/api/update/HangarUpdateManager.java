@@ -25,7 +25,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.folia.FoliaHelper;
-import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.FoliaPlugin;
 import com.github.sirblobman.api.folia.details.TaskDetails;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 
@@ -38,11 +38,11 @@ public final class HangarUpdateManager {
         BASE_RESOURCE_URL = "https://hangar.papermc.io/%s/%s";
     }
 
-    private final IFoliaPlugin plugin;
+    private final FoliaPlugin plugin;
     private final Map<String, HangarInfo> pluginInfoMap;
     private final Map<String, String> hangarVersionCache;
 
-    public HangarUpdateManager(@NotNull IFoliaPlugin plugin) {
+    public HangarUpdateManager(@NotNull FoliaPlugin plugin) {
         this.plugin = plugin;
         this.pluginInfoMap = new HashMap<>();
         this.hangarVersionCache = new HashMap<>();
@@ -87,7 +87,7 @@ public final class HangarUpdateManager {
             return;
         }
 
-        IFoliaPlugin plugin = getPlugin();
+        FoliaPlugin plugin = getPlugin();
         TaskDetails task = new TaskDetails(plugin.getPlugin()) {
             @Override
             public void run() {
@@ -100,7 +100,7 @@ public final class HangarUpdateManager {
         scheduler.scheduleAsyncTask(task);
     }
 
-    private @NotNull IFoliaPlugin getPlugin() {
+    private @NotNull FoliaPlugin getPlugin() {
         return this.plugin;
     }
 

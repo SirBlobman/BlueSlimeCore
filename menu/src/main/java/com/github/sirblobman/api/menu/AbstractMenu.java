@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.folia.FoliaHelper;
-import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.FoliaPlugin;
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
 import com.github.sirblobman.api.folia.scheduler.BukkitTaskScheduler;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
@@ -44,8 +44,8 @@ public abstract class AbstractMenu<P extends Plugin> extends BaseMenu<P> {
             throw new IllegalArgumentException("player must be online!");
         }
 
-        if (plugin instanceof IFoliaPlugin) {
-            FoliaHelper foliaHelper = ((IFoliaPlugin) plugin).getFoliaHelper();
+        if (plugin instanceof FoliaPlugin) {
+            FoliaHelper foliaHelper = ((FoliaPlugin) plugin).getFoliaHelper();
             this.scheduler = foliaHelper.getScheduler();
         } else {
             this.scheduler = new BukkitTaskScheduler(plugin);

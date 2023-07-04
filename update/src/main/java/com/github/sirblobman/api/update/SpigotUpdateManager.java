@@ -23,7 +23,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.folia.FoliaHelper;
-import com.github.sirblobman.api.folia.IFoliaPlugin;
+import com.github.sirblobman.api.folia.FoliaPlugin;
 import com.github.sirblobman.api.folia.details.TaskDetails;
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 
@@ -36,11 +36,11 @@ public final class SpigotUpdateManager {
         BASE_RESOURCE_URL = "https://www.spigotmc.org/resources/%s/";
     }
 
-    private final IFoliaPlugin plugin;
+    private final FoliaPlugin plugin;
     private final Map<String, Long> pluginResourceMap;
     private final Map<String, String> spigotVersionCache;
 
-    public SpigotUpdateManager(@NotNull IFoliaPlugin plugin) {
+    public SpigotUpdateManager(@NotNull FoliaPlugin plugin) {
         this.plugin = plugin;
         this.pluginResourceMap = new HashMap<>();
         this.spigotVersionCache = new HashMap<>();
