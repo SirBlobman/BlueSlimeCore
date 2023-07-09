@@ -1,6 +1,7 @@
 package com.github.sirblobman.api.nms;
 
 import java.lang.reflect.Constructor;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,35 +46,43 @@ public final class MultiVersionHandler {
      * @return A class object for the class found at 'com.github.sirblobman.api.nms.[classType]_[nmsVersion]
      * @throws ClassNotFoundException when the class does not exist.
      */
-    private @NotNull Class<?> findHandlerClass(@NotNull String classType) throws ClassNotFoundException {
-        String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
-        String className = ("com.github.sirblobman.api.nms." + classType + "_" + nmsVersion);
+    private @NotNull Class<?> findHandlerClass(@NotNull String classType, @NotNull String nmsVersion)
+            throws ReflectiveOperationException {
+        Class<?> thisClass = getClass();
+        Package thisPackage = thisClass.getPackage();
+        String packageName = thisPackage.getName();
+        String className = String.format(Locale.US, "%s.%s_%s", packageName, classType, nmsVersion);
         return Class.forName(className);
     }
 
-    private @NotNull<O> O getHandler(@NotNull Class<O> typeClass, @NotNull String classType) {
+    private <O> @NotNull O convertClass(@NotNull Class<O> typeClass, Class<?> preClass)
+            throws ReflectiveOperationException {
+        JavaPlugin plugin = getPlugin();
+        Class<? extends O> subClass = preClass.asSubclass(typeClass);
+        Constructor<? extends O> constructor = subClass.getDeclaredConstructor(JavaPlugin.class);
+        return constructor.newInstance(plugin);
+    }
+
+    private <O> @NotNull O getHandler(@NotNull Class<O> typeClass, @NotNull String classType) {
         JavaPlugin plugin = getPlugin();
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
 
         try {
-            Class<?> handlerClass = findHandlerClass(classType);
-            Class<? extends O> aClass = handlerClass.asSubclass(typeClass);
-            Constructor<? extends O> constructor = aClass.getDeclaredConstructor(JavaPlugin.class);
-            return constructor.newInstance(plugin);
+            Class<?> handlerClass = findHandlerClass(classType, nmsVersion);
+            return convertClass(typeClass, handlerClass);
         } catch (ReflectiveOperationException ex) {
             Logger logger = plugin.getLogger();
-            logger.warning("Could not find '" + classType + "' for version '" + nmsVersion
-                    + "'. Searching for fallback handler...");
-            String className = ("com.github.sirblobman.api.nms." + classType + "_Fallback");
+            logger.warning("Failed to find handler class with type '" + typeClass + "'.");
+            logger.warning("Possibly missing support for NMS version '" + nmsVersion + "'.");
+            logger.warning("Searching for fallback handler...");
 
             try {
-                Class<?> fallbackClass = Class.forName(className);
-                Class<? extends O> aClass = fallbackClass.asSubclass(typeClass);
-                Constructor<? extends O> constructor = aClass.getDeclaredConstructor(JavaPlugin.class);
-                return constructor.newInstance(plugin);
+                Class<?> handlerClass = findHandlerClass(classType, "Fallback");
+                return convertClass(typeClass, handlerClass);
             } catch (ReflectiveOperationException ex2) {
-                logger.log(Level.WARNING, "Original Error that caused fallback search:", ex);
-                throw new IllegalStateException("Missing fallback class '" + className + "'.", ex2);
+                logger.log(Level.WARNING, "Failed to find fallback class with type '" + typeClass + "'.");
+                logger.log(Level.WARNING, "Original error that caused fallback search:", ex);
+                throw new IllegalStateException(ex2);
             }
         }
     }
