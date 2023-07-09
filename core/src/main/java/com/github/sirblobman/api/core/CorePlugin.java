@@ -160,7 +160,7 @@ public final class CorePlugin extends ConfigurablePlugin {
             return objectClass.getName();
         }
 
-        Class<?> objectClass = getClass();
+        Class<?> objectClass = object.getClass();
         return getClassName(objectClass);
     }
 
