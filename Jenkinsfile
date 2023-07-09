@@ -58,7 +58,7 @@ pipeline {
                     script {
                         if (env.BRANCH_NAME == "main") {
                             sh("./gradlew --no-daemon --refresh-dependencies clean build publish publishAllPublicationsToHangar")
-                        } else if (env.BRANCH_NAME == "dev") {
+                        } else if (env.BRANCH_NAME.contains("dev")) {
                             sh("./gradlew --no-daemon --refresh-dependencies clean build publish")
                         } else {
                             sh("./gradlew --no-daemon --refresh-dependencies clean build")
