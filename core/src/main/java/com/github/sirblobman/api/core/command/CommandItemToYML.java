@@ -17,7 +17,10 @@ import com.github.sirblobman.api.utility.ItemUtility;
 public final class CommandItemToYML extends PlayerCommand {
     public CommandItemToYML(@NotNull CorePlugin plugin) {
         super(plugin, "item-to-yml");
+        addAliases("itemtoyml");
         setPermissionName("blue.slime.core.command.item-to-yml");
+        setDescription("A debug command to show an item you are holding as a serialized YAML configuration value.");
+        setUsage("/<command>");
     }
 
     @Override

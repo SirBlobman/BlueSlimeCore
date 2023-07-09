@@ -19,7 +19,10 @@ public final class CommandItemToBase64 extends PlayerCommand {
 
     public CommandItemToBase64(@NotNull CorePlugin plugin) {
         super(plugin, "item-to-base64");
+        addAliases("item-to-b64", "itemtobase64", "itemtob64");
         setPermissionName("blue.slime.core.command.item-to-base64");
+        setDescription("A debug command to show an item you are holding as Base64.");
+        setUsage("/<command>");
         this.plugin = plugin;
     }
 

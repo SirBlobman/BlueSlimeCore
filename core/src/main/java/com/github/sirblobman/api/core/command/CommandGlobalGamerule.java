@@ -20,7 +20,10 @@ import com.github.sirblobman.api.language.replacer.StringReplacer;
 public final class CommandGlobalGamerule extends Command {
     public CommandGlobalGamerule(@NotNull CorePlugin plugin) {
         super(plugin, "global-gamerule");
+        addAliases("globalgamerule");
         setPermissionName("blue.slime.core.command.global-gamerule");
+        setDescription("Change a game rule for every world on your server.");
+        setUsage("/<command> <rule> [value]");
     }
 
     @Override

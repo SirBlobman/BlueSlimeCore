@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,12 +22,15 @@ import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -35,13 +39,16 @@ import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.language.replacer.Replacer;
 import com.github.sirblobman.api.language.replacer.StringReplacer;
+import com.github.sirblobman.api.nms.MultiVersionHandler;
+import com.github.sirblobman.api.nms.ServerHandler;
 import com.github.sirblobman.api.plugin.ConfigurablePlugin;
+import com.github.sirblobman.api.plugin.IMultiVersionPlugin;
 import com.github.sirblobman.api.utility.ConfigurationHelper;
 import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.utility.MessageUtility;
@@ -53,9 +60,12 @@ import com.github.sirblobman.api.shaded.adventure.text.Component;
 public abstract class Command implements TabExecutor {
     private final JavaPlugin plugin;
     private final String commandName;
+    private final Set<String> aliases;
     private final Map<String, Command> subCommandMap;
 
     private Permission permission;
+    private String usage;
+    private String description;
 
     /**
      * @param plugin      The plugin that will be used to register this command.
@@ -65,7 +75,11 @@ public abstract class Command implements TabExecutor {
         this.plugin = plugin;
         this.commandName = Validate.notEmpty(commandName, "commandName must not be empty!");
         this.subCommandMap = new HashMap<>();
+        this.aliases = new LinkedHashSet<>();
+
         this.permission = null;
+        this.usage = null;
+        this.description = null;
     }
 
     /**
@@ -115,27 +129,50 @@ public abstract class Command implements TabExecutor {
      *
      * @param commandName The name to use instead of the actual command name.
      */
-    public final void registerCustom(String commandName) {
+    public final void registerCustom(@NotNull String commandName) {
         try {
             JavaPlugin plugin = getPlugin();
-            PluginCommand pluginCommand = plugin.getCommand(commandName);
-
-            if (pluginCommand == null) {
-                Logger logger = plugin.getLogger();
-                String logMessage = "Failed to register command '/" + commandName + "':";
-                logger.warning(logMessage);
-
-                logger.warning("Command '" + commandName + "' is missing in the 'plugin.yml' file.");
-                return;
+            if (plugin instanceof IMultiVersionPlugin) {
+                IMultiVersionPlugin multiVersionPlugin = (IMultiVersionPlugin) plugin;
+                registerCustomModern(multiVersionPlugin, commandName);
+            } else {
+                registerCustomLegacy(commandName);
             }
-
-            pluginCommand.setExecutor(this);
-            pluginCommand.setTabCompleter(this);
         } catch (Exception ex) {
-            Logger logger = plugin.getLogger();
             String logMessage = "Failed to register command '/" + commandName + "':";
-            logger.log(Level.WARNING, logMessage, ex);
+            getLogger().log(Level.WARNING, logMessage, ex);
         }
+    }
+
+    private void registerCustomModern(@NotNull IMultiVersionPlugin plugin, @NotNull String commandName) {
+        Validate.notEmpty(commandName, "commandName must not be empty!");
+        MultiVersionHandler multiVersionHandler = plugin.getMultiVersionHandler();
+        ServerHandler serverHandler = multiVersionHandler.getServerHandler();
+
+        try {
+            CommandMap commandMap = serverHandler.getCommandMap();
+            String prefix = getPlugin().getName().toLowerCase(Locale.US);
+            MappedCommand command = new MappedCommand(this);
+            commandMap.register(prefix, command);
+        } catch (UnsupportedOperationException exception) {
+            registerCustomLegacy(commandName);
+        }
+    }
+
+    private void registerCustomLegacy(@NotNull String commandName) {
+        PluginCommand pluginCommand = getPlugin().getCommand(commandName);
+        if (pluginCommand == null) {
+            Logger logger = getLogger();
+            String logMessage = "Failed to register command '/" + commandName + "':";
+            logger.warning(logMessage);
+
+            logger.warning("Failed to use command map and ");
+            logger.warning("command '" + commandName + "' is missing in the 'plugin.yml' file.");
+            return;
+        }
+
+        pluginCommand.setExecutor(this);
+        pluginCommand.setTabCompleter(this);
     }
 
     /**
@@ -523,21 +560,47 @@ public abstract class Command implements TabExecutor {
         }
 
         JavaPlugin plugin = getPlugin();
-        PluginDescriptionFile pluginDescription = plugin.getDescription();
-        List<Permission> permissionList = pluginDescription.getPermissions();
-        for (Permission loopPermission : permissionList) {
-            String loopPermissionName = loopPermission.getName();
-            if (permissionName.equals(loopPermissionName)) {
-                setPermission(loopPermission);
-                return;
-            }
-        }
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.removePermission(permissionName);
 
         String pluginName = plugin.getName();
         String commandName = getCommandName();
         String description = ("Permission for plugin '" + pluginName + "' command '/" + commandName + "'.");
 
         Permission permission = new Permission(permissionName, description, PermissionDefault.OP);
+        pluginManager.addPermission(permission);
         setPermission(permission);
+    }
+
+    public @Nullable String getUsage() {
+        return this.usage;
+    }
+
+    public void setUsage(@Nullable String usage) {
+        this.usage = usage;
+    }
+
+    public @Nullable String getDescription() {
+        return description;
+    }
+
+    public void setDescription(@Nullable String description) {
+        this.description = description;
+    }
+
+    public @NotNull Set<String> getAliases() {
+        return Collections.unmodifiableSet(this.aliases);
+    }
+
+    public void resetAliases() {
+        this.aliases.clear();
+    }
+
+    public void addAliases(String @NotNull ... aliases) {
+        if (aliases.length == 0) {
+            throw new IllegalArgumentException("This argument must have at least one value.");
+        }
+
+        Collections.addAll(this.aliases, aliases);
     }
 }

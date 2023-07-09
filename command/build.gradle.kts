@@ -10,6 +10,10 @@ dependencies {
     compileOnly(project(":language"))
     compileOnly(project(":plugin"))
 
+    // NMS
+    compileOnly(project(":nms:abstract"))
+    compileOnly(project(":nms:handler"))
+
     // Spigot API
     compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
 }

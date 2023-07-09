@@ -13,7 +13,11 @@ import com.github.sirblobman.api.core.CorePlugin;
 public final class CommandBlueSlimeCore extends Command {
     public CommandBlueSlimeCore(@NotNull CorePlugin plugin) {
         super(plugin, "blueslimecore");
+        addAliases("bscore", "bsapi", "bsc", "bs");
         setPermissionName("blue.slime.core.command.blueslimecore");
+        setDescription("The main command for BlueSlimeCore.");
+        setUsage("/<command> help");
+
         addSubCommand(new SubCommandHelp(plugin));
         addSubCommand(new SubCommandLanguageTest(plugin));
         addSubCommand(new SubCommandReload(plugin));

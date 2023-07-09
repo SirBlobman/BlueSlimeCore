@@ -25,7 +25,10 @@ public final class CommandItemInfo extends PlayerCommand {
 
     public CommandItemInfo(@NotNull CorePlugin plugin) {
         super(plugin, "item-info");
+        addAliases("iteminfo", "iteminformation", "item-information");
         setPermissionName("blue.slime.core.command.item-info");
+        setDescription("A debug command for showing information about the item you are holding.");
+        setUsage("/<command>");
         this.plugin = plugin;
     }
 

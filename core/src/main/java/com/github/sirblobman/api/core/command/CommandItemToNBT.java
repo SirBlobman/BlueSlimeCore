@@ -29,6 +29,8 @@ public final class CommandItemToNBT extends PlayerCommand {
     public CommandItemToNBT(@NotNull CorePlugin plugin) {
         super(plugin, "item-to-nbt");
         setPermissionName("blue.slime.core.command.item-to-nbt");
+        setDescription("A debug command to show an item you are holding as NBT.");
+        setUsage("/<command>\n/<command> pretty");
         this.plugin = plugin;
 
         GsonBuilder gsonBuilder = new GsonBuilder();
