@@ -9,7 +9,7 @@ repositories {
 plugins {
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.hangar-publish-plugin") version "0.0.5"
+    id("io.papermc.hangar-publish-plugin") version "0.1.0"
 }
 
 dependencies {
