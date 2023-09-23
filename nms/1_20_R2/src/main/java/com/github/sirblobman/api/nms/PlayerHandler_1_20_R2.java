@@ -6,8 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PlayerHandler_1_19_R2 extends PlayerHandler {
-    public PlayerHandler_1_19_R2(@NotNull JavaPlugin plugin) {
+public final class PlayerHandler_1_20_R2 extends PlayerHandler {
+    public PlayerHandler_1_20_R2(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 

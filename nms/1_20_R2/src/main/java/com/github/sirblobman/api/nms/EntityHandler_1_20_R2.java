@@ -14,12 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.network.chat.Component;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftEntity;
 
 import com.github.sirblobman.api.utility.Validate;
 
-public final class EntityHandler_1_19_R1 extends EntityHandler {
-    public EntityHandler_1_19_R1(@NotNull JavaPlugin plugin) {
+public final class EntityHandler_1_20_R2 extends EntityHandler {
+    public EntityHandler_1_20_R2(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
@@ -69,8 +69,6 @@ public final class EntityHandler_1_19_R1 extends EntityHandler {
                                                      @NotNull Consumer<T> beforeSpawn) {
         World world = location.getWorld();
         Validate.notNull(world, "location must have a valid world!");
-
-        org.bukkit.util.Consumer<T> bukkitConsumer = beforeSpawn::accept;
-        return world.spawn(location, entityClass, bukkitConsumer);
+        return world.spawn(location, entityClass, beforeSpawn::accept);
     }
 }

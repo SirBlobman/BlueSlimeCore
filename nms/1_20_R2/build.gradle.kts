@@ -3,7 +3,7 @@ repositories {
 }
 
 plugins {
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("io.papermc.paperweight.userdev") version "1.5.6"
 }
 
 java {
@@ -17,7 +17,7 @@ dependencies {
     compileOnly(project(":nms:modern-nbt"))
 
     // Paper Development Bundle
-    paperweight.paperDevBundle("1.19.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
 }
 
 tasks.named("assemble") {
