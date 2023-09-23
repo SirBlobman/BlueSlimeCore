@@ -102,9 +102,9 @@ hangarPublish {
     if (envApiKey != null && beta) {
         publications.register("plugin") {
             apiKey.set(envApiKey)
-            namespace("SirBlobman", "BlueSlimeCore")
             version.set(rootProject.ext.get("calculatedVersion") as String)
             channel.set("Beta")
+            id.set("SirBlobman/BlueSlimeCore")
 
             platforms {
                 register(Platforms.PAPER) {
@@ -113,10 +113,14 @@ hangarPublish {
                         it.archiveFile
                     })
 
-                    platformVersions.set(listOf("1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.12.2", "1.8"))
+                    platformVersions.set(listOf("1.19.4", "1.20.2"))
                     changelog.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/changes")
 
                     this.dependencies {
+                        url("PlaceholderAPI", "https://www.spigotmc.org/resources/6245/") {
+                            required.set(false)
+                        }
+
                         url("Factions (Massive)", "https://www.spigotmc.org/resources/83459/") {
                             required.set(false)
                         }
@@ -129,15 +133,11 @@ hangarPublish {
                             required.set(false)
                         }
 
-                        url("FactionsX", "https://www.spigotmc.org/resources/83459/") {
+                        url("Factions (X)", "https://www.spigotmc.org/resources/83459/") {
                             required.set(false)
                         }
 
-                        url("LegacyFactions", "https://www.spigotmc.org/resources/40122/") {
-                            required.set(false)
-                        }
-
-                        url("PlaceholderAPI", "https://www.spigotmc.org/resources/6245/") {
+                        url("Factions (Legacy)", "https://www.spigotmc.org/resources/40122/") {
                             required.set(false)
                         }
                     }
