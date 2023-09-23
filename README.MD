@@ -55,7 +55,7 @@ We only provide support for tested software and recommended versions.
 BlueSlimeCore can also be used as a library in your own plugins.
 Just make sure to install the BlueSlimeCore jar on your server!
 
-[Wiki: Basic Usage](https://github.com/SirBlobman/BlueSlimeCore/wiki/Basic-Usage)
+[Developers Guide / Wiki](https://github.com/SirBlobman/BlueSlimeCore/wiki)
 
 ### Compilation Instructions
 
