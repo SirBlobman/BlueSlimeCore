@@ -8,5 +8,5 @@ dependencies {
     compileOnly(project(":bungeecord:abstract"))
 
     // PremiumVanish API
-    compileOnly("com.github.LeonMangler:PremiumVanishAPI:2.7.11-2")
+    compileOnly("com.github.LeonMangler:PremiumVanishAPI:2.8.8")
 }
