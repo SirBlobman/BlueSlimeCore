@@ -10,9 +10,12 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.sirblobman.api.command.PlayerCommand;
 import com.github.sirblobman.api.core.CorePlugin;
+import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.ItemHandler;
-import com.github.sirblobman.api.nms.MultiVersionHandler;
 import com.github.sirblobman.api.utility.ItemUtility;
+import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.adventure.text.event.ClickEvent;
+import com.github.sirblobman.api.shaded.adventure.text.event.HoverEvent;
 
 public final class CommandItemToBase64 extends PlayerCommand {
     private final CorePlugin plugin;
@@ -36,16 +39,32 @@ public final class CommandItemToBase64 extends PlayerCommand {
             return true;
         }
 
-        CorePlugin plugin = getCorePlugin();
-        MultiVersionHandler multiVersionHandler = plugin.getMultiVersionHandler();
-        ItemHandler itemHandler = multiVersionHandler.getItemHandler();
-        String base64String = itemHandler.toBase64String(item);
+        String base64 = getBase64String(item);
+        Component message = createCopyable(base64);
 
-        player.sendMessage(base64String);
+        LanguageManager languageManager = getLanguageManager();
+        if (languageManager != null) {
+            languageManager.sendMessage(player, message);
+        } else {
+            player.sendMessage(base64);
+        }
+
         return true;
     }
 
     private @NotNull CorePlugin getCorePlugin() {
         return this.plugin;
+    }
+
+    private @NotNull String getBase64String(@NotNull ItemStack stack) {
+        ItemHandler itemHandler = getCorePlugin().getMultiVersionHandler().getItemHandler();
+        return itemHandler.toBase64String(stack);
+    }
+
+    private @NotNull Component createCopyable(@NotNull String text) {
+        Component clickToCopy = Component.translatable("chat.copy.click");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(clickToCopy);
+        ClickEvent clickEvent = ClickEvent.copyToClipboard(text);
+        return Component.text(text).clickEvent(clickEvent).hoverEvent(hoverEvent);
     }
 }
