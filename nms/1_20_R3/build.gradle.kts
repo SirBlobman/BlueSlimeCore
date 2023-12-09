@@ -17,7 +17,7 @@ dependencies {
     compileOnly(project(":nms:modern-nbt"))
 
     // Paper Development Bundle
-    paperweight.paperDevBundle("1.20.3-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
 }
 
 tasks.named("assemble") {
