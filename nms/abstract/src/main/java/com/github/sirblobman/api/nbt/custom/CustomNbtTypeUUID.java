@@ -20,7 +20,7 @@ public final class CustomNbtTypeUUID implements CustomNbtType<byte[], UUID> {
     }
 
     @Override
-    public byte @NotNull [] toPrimitive(UUID complex, @NotNull CustomNbtContext context) {
+    public byte @NotNull [] toPrimitive(@NotNull UUID complex, @NotNull CustomNbtContext context) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
         byteBuffer.putLong(complex.getMostSignificantBits());
         byteBuffer.putLong(complex.getLeastSignificantBits());
