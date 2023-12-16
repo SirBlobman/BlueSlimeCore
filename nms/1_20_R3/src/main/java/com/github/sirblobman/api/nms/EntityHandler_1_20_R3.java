@@ -66,6 +66,6 @@ public final class EntityHandler_1_20_R3 extends EntityHandler {
                                                      @NotNull Consumer<T> beforeSpawn) {
         World world = location.getWorld();
         Validate.notNull(world, "location must have a valid world!");
-        return world.spawn(location, entityClass, beforeSpawn::accept);
+        return world.spawn(location, entityClass, beforeSpawn);
     }
 }

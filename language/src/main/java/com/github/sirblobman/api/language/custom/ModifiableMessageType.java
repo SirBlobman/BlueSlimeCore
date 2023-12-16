@@ -9,5 +9,5 @@ public enum ModifiableMessageType {
     /**
      * A message shown in the action bar above the inventory hotbar.
      */
-    ACTION_BAR;
+    ACTION_BAR
 }
