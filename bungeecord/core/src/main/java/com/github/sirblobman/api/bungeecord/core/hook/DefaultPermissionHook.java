@@ -1,18 +1,16 @@
 package com.github.sirblobman.api.bungeecord.core.hook;
 
-import java.util.Collection;
-import java.util.UUID;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
-
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
 import com.github.sirblobman.api.bungeecord.hook.permission.IPermissionHook;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.config.Configuration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.UUID;
 
 public record DefaultPermissionHook(@NotNull CorePlugin plugin) implements IPermissionHook {
     @Override
@@ -91,7 +89,7 @@ public record DefaultPermissionHook(@NotNull CorePlugin plugin) implements IPerm
         return plugin.getProxy();
     }
 
-    private @NotNull ProxiedPlayer getPlayer(UUID playerId) {
+    private @Nullable ProxiedPlayer getPlayer(@NotNull UUID playerId) {
         ProxyServer proxy = getProxy();
         return proxy.getPlayer(playerId);
     }
