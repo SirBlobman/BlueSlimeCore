@@ -48,7 +48,6 @@ out/
 ## Eclipse
 ##############################
 .settings/
-bin/
 tmp/
 .metadata
 .classpath
@@ -65,7 +64,6 @@ local.properties
 ## NetBeans
 ##############################
 nbproject/private/
-build/
 nbbuild/
 dist/
 nbdist/
@@ -88,4 +86,3 @@ nb-configuration.xml
 ## Windows
 ##############################
 ~$*
-*.tmp
