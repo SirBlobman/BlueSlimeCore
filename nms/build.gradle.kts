@@ -1,5 +1,5 @@
 tasks.named("jar") {
-    enabled = false;
+    enabled = false
 }
 
 subprojects {

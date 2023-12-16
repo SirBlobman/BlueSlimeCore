@@ -40,7 +40,7 @@ dependencies {
 
 tasks {
     named<Jar>("jar") {
-        enabled = false;
+        enabled = false
     }
 
     named<ShadowJar>("shadowJar") {
