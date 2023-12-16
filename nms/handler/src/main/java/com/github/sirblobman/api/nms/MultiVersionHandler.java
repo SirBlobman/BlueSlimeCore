@@ -43,7 +43,7 @@ public final class MultiVersionHandler {
     /**
      * Find a handler class based on the current NMS version.
      * @param classType The prefix name of the handler class (e.g. ItemHandler)
-     * @return A class object for the class found at 'com.github.sirblobman.api.nms.[classType]_[nmsVersion]
+     * @return A class object for the class found at 'com.github.sirblobman.api.nms.[classType]_[nmsVersion]'
      * @throws ClassNotFoundException when the class does not exist.
      */
     private @NotNull Class<?> findHandlerClass(@NotNull String classType, @NotNull String nmsVersion)

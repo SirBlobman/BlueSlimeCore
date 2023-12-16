@@ -1,20 +1,5 @@
 package com.github.sirblobman.api.menu;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Logger;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-
 import com.github.sirblobman.api.item.ItemBuilder;
 import com.github.sirblobman.api.item.SkullBuilder;
 import com.github.sirblobman.api.language.ComponentHelper;
@@ -22,12 +7,25 @@ import com.github.sirblobman.api.language.LanguageManager;
 import com.github.sirblobman.api.nms.HeadHandler;
 import com.github.sirblobman.api.nms.ItemHandler;
 import com.github.sirblobman.api.nms.MultiVersionHandler;
-import com.github.sirblobman.api.utility.MessageUtility;
-import com.github.sirblobman.api.utility.paper.PaperChecker;
-import com.github.sirblobman.api.utility.paper.PaperHelper;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 import com.github.sirblobman.api.shaded.adventure.text.minimessage.MiniMessage;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
+import com.github.sirblobman.api.utility.MessageUtility;
+import com.github.sirblobman.api.utility.paper.PaperChecker;
+import com.github.sirblobman.api.utility.paper.PaperHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 public abstract class BaseMenu<P extends Plugin> implements IMenu {
     private IMenu parentMenu;
@@ -102,8 +100,7 @@ public abstract class BaseMenu<P extends Plugin> implements IMenu {
     /**
      * @param size  The size of the inventory. Must be five for a hopper menu or a non-zero multiple of
      *              nine for a chest menu.
-     * @param title The title of the GUI.
-     *              (legacy color codes with the '&amp;' symbol will be translated automatically)
+     * @param title The title of the GUI. Legacy color codes that use the &amp; symbol will be automatically translated.
      * @return An empty {@link Inventory} instance with this menu instance as its holder.
      */
     public @NotNull Inventory getInventory(int size, @Nullable String title) {

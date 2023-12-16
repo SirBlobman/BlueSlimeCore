@@ -83,7 +83,7 @@ public abstract class FactionsHandler {
 
     /**
      * Determines if the specified Location is considered enemy territory for the given player.
-     * A Location is considered enemy territory if it is not owned by the player's Faction or an ally Faction.
+     * A Location is considered enemy territory if it is not owned by the player's Faction or a Faction that is allied.
      * @param player the player to check for enemy territory, must not be null
      * @param location the Location to check, must not be null
      * @return {@code true} if the Location is considered enemy territory for the player, otherwise {@code false}

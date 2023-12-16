@@ -1,11 +1,10 @@
 package com.github.sirblobman.api.utility;
 
-import java.util.logging.Logger;
-
-import org.jetbrains.annotations.NotNull;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Logger;
 
 public final class VersionUtility {
     static {
@@ -41,7 +40,7 @@ public final class VersionUtility {
     }
 
     /**
-     * @return The current major.minor version of the server (Example: 1.16)
+     * @return The current 'major.minor' version of the server (Example: 1.16)
      */
     public static @NotNull String getMajorMinorVersion() {
         String minecraftVersion = getMinecraftVersion();

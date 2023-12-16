@@ -1,10 +1,10 @@
 package com.github.sirblobman.api.nbt;
 
-import java.util.Set;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public interface CustomNbtContainer {
     /**
@@ -30,9 +30,9 @@ public interface CustomNbtContainer {
      * data type as the provided key.
      * <p>
      * Storing a value using a custom {@link CustomNbtType} implementation
-     * will not store the complex data type. Therefore storing a UUID (by
+     * will not store the complex data type. Therefore, storing a UUID (by
      * storing a byte[]) will match has("key" , {@link CustomNbtTypes#BYTE_ARRAY}).
-     * Likewise a stored byte[] will always match your UUID {@link CustomNbtType} even if it is not 16
+     * Likewise, a stored byte[] will always match your UUID {@link CustomNbtType} even if it is not 16
      * bytes long.
      * <p>
      * This method is only usable for custom object keys. Overwriting existing

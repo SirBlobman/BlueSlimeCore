@@ -4,7 +4,7 @@
 
 ## Description:
 
-BlueSlimeCore is an library plugin with many features that are necessary for my other plugins.
+BlueSlimeCore is a library plugin with many features that are necessary for my other plugins.
 This library is also free for other developers to use.
 
 ### Downloads
