@@ -6,7 +6,8 @@ plugins {
 }
 
 repositories {
-    maven("https://nexus.sirblobman.xyz/public/")
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") // OSS Sonatype Snapshots S01
+    maven("https://nexus.sirblobman.xyz/public/") // SirBlobman Public Repository
 }
 
 dependencies {
@@ -14,10 +15,10 @@ dependencies {
     implementation("com.github.cryptomorin:XSeries:9.8.0")
 
     // Adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.3.1")
-    implementation("net.kyori:adventure-platform-bungeecord:4.3.1")
-    implementation("net.kyori:adventure-text-serializer-plain:4.14.0")
-    implementation("net.kyori:adventure-text-minimessage:4.14.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.2-SNAPSHOT")
+    implementation("net.kyori:adventure-platform-bungeecord:4.3.2-SNAPSHOT")
+    implementation("net.kyori:adventure-text-serializer-plain:4.15.0-SNAPSHOT")
+    implementation("net.kyori:adventure-text-minimessage:4.15.0-SNAPSHOT")
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.2")
