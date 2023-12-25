@@ -28,7 +28,8 @@ Unsupported versions are planned for removal at a future date.
 | 1_18_R2     | 1.18.2 | :white_check_mark: | :x:                | :x:                |
 | 1_19_R3     | 1.19.4 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | 1_20_R1     | 1.20.1 | :x:                | :x:                | :x:                |
-| 1_20_R2     | 1.20.2 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| 1_20_R2     | 1.20.2 | :x:                | :x:                | :x:                |
+| 1_20_R3     | 1.20.4 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 We only provide support for tested software and recommended versions.
 
