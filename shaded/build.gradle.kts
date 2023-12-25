@@ -38,6 +38,7 @@ tasks {
         relocate("com.cryptomorin.xseries", "$shadePrefix.xseries")
         relocate("net.kyori.adventure", "$shadePrefix.adventure")
         relocate("net.kyori.examination", "$shadePrefix.examination")
+        relocate("net.kyori.option", "$shadePrefix.option")
         relocate("org.bstats", "$shadePrefix.bstats")
     }
 
