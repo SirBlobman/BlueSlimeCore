@@ -9,7 +9,8 @@ subprojects {
     }
 
     repositories {
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/") // BungeeCord API
+        maven("https://libraries.minecraft.net/") // BungeeCord Protocol
     }
 
     dependencies {
