@@ -770,8 +770,10 @@ public final class LanguageManager {
         switch (type) {
             case CHAT:
                 sendMessage(audience, message);
+                break;
             case ACTION_BAR:
                 sendActionBar(audience, message);
+                break;
             default:
                 break;
         }
