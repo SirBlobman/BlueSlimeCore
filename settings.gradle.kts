@@ -25,6 +25,7 @@ include("nms:1_19_R3")
 include("nms:1_20_R1")
 include("nms:1_20_R2")
 include("nms:1_20_R3")
+include("nms:1_20_R4")
 
 // NMS Handler
 include("nms:scoreboard")

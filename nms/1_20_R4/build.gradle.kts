@@ -7,8 +7,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 dependencies {
@@ -17,7 +17,7 @@ dependencies {
     compileOnly(project(":nms:modern-nbt"))
 
     // Paper Development Bundle
-    paperweight.paperDevBundle("1.17.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.5-R0.1-SNAPSHOT")
 }
 
 tasks.named("assemble") {

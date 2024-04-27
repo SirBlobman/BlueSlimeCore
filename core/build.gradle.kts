@@ -47,6 +47,10 @@ tasks {
         val calculatedVersion = rootProject.ext.get("calculatedVersion")
         archiveFileName.set("BlueSlimeCore-$calculatedVersion.jar")
         archiveClassifier.set(null as String?)
+
+        manifest {
+            attributes["paperweight-mappings-namespace"] = "spigot"
+        }
     }
 
     named("build") {
