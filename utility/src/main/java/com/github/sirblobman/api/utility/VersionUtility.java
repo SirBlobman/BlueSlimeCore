@@ -1,10 +1,12 @@
 package com.github.sirblobman.api.utility;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
+import java.lang.reflect.Method;
+import java.util.logging.Logger;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.logging.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 public final class VersionUtility {
     static {
@@ -20,23 +22,55 @@ public final class VersionUtility {
      * @return The current Minecraft version of the server (Example: 1.16.5)
      */
     public static @NotNull String getMinecraftVersion() {
-        String bukkitVersion = Bukkit.getBukkitVersion();
-        int firstDash = bukkitVersion.indexOf('-');
-        return bukkitVersion.substring(0, firstDash);
+        try {
+            return getNewMinecraftVersion();
+        } catch (ReflectiveOperationException ex) {
+            String bukkitVersion = Bukkit.getBukkitVersion();
+            int firstDash = bukkitVersion.indexOf('-');
+            return bukkitVersion.substring(0, firstDash);
+        }
+    }
+
+    /**
+     * @return The current Minecraft version. (Example: 1.20.5)
+     * @throws ReflectiveOperationException This method only works on Paper servers. Spigot will throw an error.
+     */
+    public static @NotNull String getNewMinecraftVersion() throws ReflectiveOperationException {
+        Server server = Bukkit.getServer();
+        Class<? extends Server> serverClass = server.getClass();
+        Method method_getMinecraftVersion = serverClass.getMethod("getMinecraftVersion");
+        return (String) method_getMinecraftVersion.invoke(server);
     }
 
     /**
      * @return The current NMS version of the server (Example: 1_16_R3)
      */
     public static @NotNull String getNetMinecraftServerVersion() {
-        Server server = Bukkit.getServer();
-        Class<? extends Server> serverClass = server.getClass();
-        Package serverPackage = serverClass.getPackage();
-        String serverPackageName = serverPackage.getName();
+        try {
+            String newMinecraftVersion = getNewMinecraftVersion();
 
-        int lastPeriodIndex = serverPackageName.lastIndexOf('.');
-        int nextIndex = (lastPeriodIndex + 2);
-        return serverPackageName.substring(nextIndex);
+            String version = "Unsupported";
+            switch(newMinecraftVersion) {
+                case "1.16.5": version = "1_16_R3"; break;
+                case "1.17.1": version = "1_17_R1"; break;
+                case "1.18.2": version = "1_19_R2"; break;
+                case "1.19.4": version = "1_19_R3"; break;
+                case "1.20.2": version = "1_20_R2"; break;
+                case "1.20.4": version = "1_20_R3"; break;
+                case "1.20.5": version = "1_20_R4"; break;
+            }
+
+            return version;
+        } catch (ReflectiveOperationException ex) {
+            Server server = Bukkit.getServer();
+            Class<? extends Server> serverClass = server.getClass();
+            Package serverPackage = serverClass.getPackage();
+            String serverPackageName = serverPackage.getName();
+
+            int lastPeriodIndex = serverPackageName.lastIndexOf('.');
+            int nextIndex = (lastPeriodIndex + 2);
+            return serverPackageName.substring(nextIndex);
+        }
     }
 
     /**
