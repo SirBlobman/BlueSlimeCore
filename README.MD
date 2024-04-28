@@ -19,18 +19,17 @@ BlueSlimeCore supports Spigot, Paper, and Folia. Custom forks may work, but they
 The following table is a list of versions that are included in code. 
 Unsupported versions are planned for removal at a future date.
 
-| NMS Version | Alias  | Supported          | Tested             | Recommended        | 
-|-------------|--------|--------------------|--------------------|--------------------|
-| 1_8_R3      | 1.8.8  | :x:                | :x:                | :x:                |
-| 1_12_R1     | 1.12.2 | :x:                | :x:                | :x:                |
-| 1_16_R3     | 1.16.5 | :x:                | :x:                | :x:                |
-| 1_17_R1     | 1.17.1 | :x:                | :x:                | :x:                |
-| 1_18_R2     | 1.18.2 | :white_check_mark: | :x:                | :x:                |
-| 1_19_R3     | 1.19.4 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| 1_20_R1     | 1.20.1 | :x:                | :x:                | :x:                |
-| 1_20_R2     | 1.20.2 | :x:                | :x:                | :x:                |
-| 1_20_R3     | 1.20.4 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| 1_20_R4     | 1.20.5 | :white_check_mark: | :x:                | :x:                |
+| NMS Version | Alias  | Supported          | 
+|-------------|--------|--------------------|
+| 1_8_R3      | 1.8.8  | :x:                |
+| 1_12_R1     | 1.12.2 | :x:                |
+| 1_16_R3     | 1.16.5 | :x:                |
+| 1_17_R1     | 1.17.1 | :x:                |
+| 1_18_R2     | 1.18.2 | :x:                |
+| 1_19_R3     | 1.19.4 | :white_check_mark: |
+| 1_20_R2     | 1.20.2 | :x:                |
+| 1_20_R3     | 1.20.4 | :x:                |
+| 1_20_R4     | 1.20.5 | :white_check_mark: |
 
 We only provide support for tested software and recommended versions.
 

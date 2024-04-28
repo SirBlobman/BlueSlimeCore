@@ -79,9 +79,9 @@ command:
   item-info:
     modern:
       - ""
-      - "<white><bold>XMaterial:</bold></aqua> <gray>{xmaterial}</gray>"
-      - "<white><bold>Bukkit Material:</bold></aqua> <gray>{material}</gray>"
-      - "<white><bold>Vanilla ID:</bold></aqua> <gray>{vanilla}</gray>"
+      - "<white><bold>XMaterial:</bold></white> <gray>{xmaterial}</gray>"
+      - "<white><bold>Bukkit Material:</bold></white> <gray>{material}</gray>"
+      - "<white><bold>Vanilla ID:</bold></white> <gray>{vanilla}</gray>"
     legacy:
       - ""
       - "<aqua><bold>Deprecated ID:</bold></aqua> <gray>{material_id}</gray>"
