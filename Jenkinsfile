@@ -29,6 +29,9 @@ pipeline {
         DISCORD_URL = credentials('PUBLIC_DISCORD_WEBHOOK')
         MAVEN_DEPLOY = credentials('MAVEN_DEPLOY')
         HANGAR_API_KEY = credentials('HANGAR_API_KEY')
+        JDK16 = '/home/container/jdk/zulu16.32.15-ca-jdk16.0.2-linux_x64'
+        JDK17 = '/home/container/jdk/zulu17.50.19-ca-jdk17.0.11-linux_x64'
+        JDK21 = '/home/container/jdk/zulu21.34.19-ca-jdk21.0.3-linux_x64'
     }
 
     triggers {
