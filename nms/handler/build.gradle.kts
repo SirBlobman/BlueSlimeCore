@@ -30,8 +30,8 @@ dependencies {
     implementation(project(":nms:1_8_R3")) // NMS 1.8.8
     implementation(project(":nms:1_12_R1")) // NMS 1.12.2
     implementation(project(":nms:1_16_R3")) // NMS 1.16.5
-//    implementation(project(path = ":nms:1_17_R1", configuration = "reobf")) // NMS 1.17.1
-//    implementation(project(path = ":nms:1_18_R2", configuration = "reobf")) // NMS 1.18.2
+    implementation(project(path = ":nms:1_17_R1", configuration = "reobf")) // NMS 1.17.1
+    implementation(project(path = ":nms:1_18_R2", configuration = "reobf")) // NMS 1.18.2
     implementation(project(path = ":nms:1_19_R3", configuration = "reobf")) // NMS 1.19.4
     implementation(project(path = ":nms:1_20_R2", configuration = "reobf")) // NMS 1.20.2
     implementation(project(path = ":nms:1_20_R3", configuration = "reobf")) // NMS 1.20.4
