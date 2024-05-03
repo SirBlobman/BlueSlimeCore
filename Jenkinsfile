@@ -36,6 +36,8 @@ pipeline {
     }
 
     tools {
+        jdk "JDK 16"
+        jdk "JDK 17"
         jdk "JDK 21"
     }
 
