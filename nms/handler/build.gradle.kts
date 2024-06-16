@@ -36,6 +36,7 @@ dependencies {
     implementation(project(path = ":nms:1_20_R2", configuration = "reobf")) // NMS 1.20.2
     implementation(project(path = ":nms:1_20_R3", configuration = "reobf")) // NMS 1.20.4
     implementation(project(path = ":nms:1_20_R4", configuration = "reobf")) // NMS 1.20.6
+    implementation(project(path = ":nms:1_21_R1", configuration = "reobf")) // NMS 1.21
 }
 
 tasks {
