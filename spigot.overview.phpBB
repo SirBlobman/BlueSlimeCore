@@ -1,9 +1,6 @@
 [SIZE=5][B]Supported Versions:[/B][/SIZE]
-The recommended versions are currently 1.19.4, 1.20.4, and 1.20.6.
-
-The following versions still work, but we do not provide support for them:
-
-1.8.8, 1.12.2, 1.16.5, 1.17.1, 1.18.2
+The recommended versions are currently 1.19.4, 1.20.6, and 1.21.
+Other Minecraft versions may work, but they are not being tested.
 
 [SIZE=5][B]Description:[/B][/SIZE]
 BlueSlimeCore is an library plugin with many features that are necessary for my other plugins. This library is also free for other developers to use.
