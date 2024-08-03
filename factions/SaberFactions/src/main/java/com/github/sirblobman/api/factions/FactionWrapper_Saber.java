@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
@@ -17,7 +19,6 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
-import org.jetbrains.annotations.NotNull;
 
 public final class FactionWrapper_Saber extends FactionWrapper {
     private final Faction faction;
@@ -107,7 +108,7 @@ public final class FactionWrapper_Saber extends FactionWrapper {
 
         Faction faction = getFaction();
         Access access = faction.getAccess(fplayer, PermissableAction.BUILD);
-        return (access != Access.DENY);
+        return (access == Access.ALLOW);
     }
 
     @Override
@@ -120,7 +121,7 @@ public final class FactionWrapper_Saber extends FactionWrapper {
 
         Faction faction = getFaction();
         Access access = faction.getAccess(fplayer, PermissableAction.DESTROY);
-        return (access != Access.DENY);
+        return (access == Access.ALLOW);
     }
 
     @Override
