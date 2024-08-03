@@ -75,14 +75,15 @@ public final class FactionsHelper {
             }
 
             String pluginVersion = description.getVersion();
-            if (pluginVersion.startsWith("1.6.9.5")) {
-                if (pluginVersion.startsWith("1.6.9.5-U0.2")) {
+            if (pluginVersion.startsWith("1.6.9.5-")) {
+                String subVersion = pluginVersion.substring(8);
+                if (subVersion.startsWith("U0.2")) {
                     printHookInfo("Factions", "Factions UUID Legacy");
                     this.factionsHandler = new FactionsHandler_UUID_Legacy();
                     return this.factionsHandler;
                 }
 
-                if (pluginVersion.startsWith("1.6.9.5-U0.6")) {
+                if (subVersion.startsWith("U0.6") || subVersion.startsWith("U0.7")) {
                     printHookInfo("Factions", "Factions UUID Modern");
                     this.factionsHandler = new FactionsHandler_UUID();
                     return this.factionsHandler;
