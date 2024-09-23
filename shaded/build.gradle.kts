@@ -22,7 +22,7 @@ dependencies {
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.0.2")
-    implementation("org.bstats:bstats-bungeecord:3.0.2")
+    implementation("org.bstats:bstats-bungeecord:3.1.0")
 
     // Folia Helper
     implementation("com.github.sirblobman.api:folia-helper:1.0.1-SNAPSHOT")
