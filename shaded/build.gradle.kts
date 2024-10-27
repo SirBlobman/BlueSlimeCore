@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.3"
 }
 
 repositories {
@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     // XSeries
-    implementation("com.github.cryptomorin:XSeries:11.2.0.1")
+    implementation("com.github.cryptomorin:XSeries:11.3.0")
 
     // Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
@@ -21,8 +21,8 @@ dependencies {
     implementation("net.kyori:adventure-text-serializer-plain:4.17.0")
 
     // bStats
-    implementation("org.bstats:bstats-bukkit:3.0.2")
-    implementation("org.bstats:bstats-bungeecord:3.0.2")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
+    implementation("org.bstats:bstats-bungeecord:3.1.0")
 
     // Folia Helper
     implementation("com.github.sirblobman.api:folia-helper:1.0.1-SNAPSHOT")
