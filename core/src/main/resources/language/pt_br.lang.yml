@@ -1,0 +1,88 @@
+## Informações Extras:
+## Este é o arquivo de idioma padrão para o BlueSlimeCore.
+## O idioma padrão é "pt_br", também conhecido como Português (Brasil).
+## O contexto para tradutores será adicionado como comentários YAML acima das strings.
+
+## O esquema de cores para mensagens é branco, verde e vermelho.
+## O feedback de comando que for bem-sucedido deve sempre ser verde.
+## Mensagens de erro devem sempre ser vermelhas.
+## Variáveis nas mensagens podem ser verdes ou amarelas.
+
+## As mensagens usam o formato MiniMessage em modo não restrito.
+## Mais informações sobre MiniMessage podem ser encontradas aqui:
+## https://docs.adventure.kyori.net/minimessage/format.html
+
+---
+language-name: "pt_br"
+decimal-format: "0.00"
+
+language-test:
+  invalid-language: "<red>O alvo não possui um idioma válido.</red>"
+  language-code: "<green>Código do Idioma: <gray>{language_code}</gray></green>"
+  java-locale: "<green>Localização Java: <gray>{java_locale}</gray></green>"
+  message: "<green>Teste de Mensagem</green>"
+  broadcast: "<bold><green>Teste de Broadcast</green></bold>"
+  action-bar: "<green>Teste de Barra de Ação</green>"
+  sound:
+    sound: "minecraft:block.beacon.activate"
+    category: "master"
+    volume: 1.0
+    pitch: 1.0
+  title:
+    title: "<green>Teste de Título</green>"
+    subtitle: "<green>Teste de Subtítulo</green>"
+    fade-in: 20
+    stay: 20
+    fade-out: 20
+  complete: "<green>O teste de idioma está concluído.</green>"
+
+error:
+  player-only: "<red>Esse comando só pode ser executado por um jogador.</red>"
+  console-only: "<red>Esse comando só pode ser executado no console do servidor.</red>"
+  invalid-held-item: "<red>Você deve estar segurando um item válido para usar este comando.</red>"
+  invalid-world: "<red>Você deve estar em um mundo válido para executar este comando.</red>"
+  world-required: "<red>O servidor precisa de pelo menos um mundo para usar este comando.</red>"
+  no-permission: "<red>Permissão Ausente: <gray>{permission}</gray>.</red>"
+  invalid-target: "<red><gray>{target}</gray> não está online ou não existe.</red>"
+
+command:
+  global-gamerule:
+    unknown-gamerule: "<red>Tipo de gamerule desconhecido <gray>{value}</gray>.</red>"
+    list-title: "<white><bold>Valores de Game Rule para <gray>{rule}</gray>:</bold></white>"
+    list-line-format: "<gray><bold>{world}:</bold></gray> <white>{value}</white>"
+    success-count: "<green>Game rule <gray>{rule}</gray> alterado com sucesso para o valor <gray>{value}</gray> em <gray>{count}</gray> mundos.</green>"
+    failure-count: "<red>Falha ao alterar game rule <gray>{rule}</gray> em <gray>{count}</gray> mundos.</red>"
+
+  debug-event:
+    invalid-priority: "<red>Tipo de EventPriority desconhecido <gray>{value}</gray>.</red>"
+    invalid-event-class: "<red>Classe de evento desconhecida ou inválida <gray>{value}</gray>.</red>"
+    reflection-error: "<red>Falha ao depurar esse evento. Verifique o console do servidor para erros.</red>"
+    results-title: "<white>Resultados da Depuração para o evento <gray>{event}</gray> e prioridade <gray>{priority}</gray>:</white>"
+    results-none: "<red>O evento <gray>{event}</gray> não possui ouvintes com a prioridade <gray>{priority}</gray>.</red>"
+
+  blueslimecore:
+    help:
+      title: "<white><bold>Comandos do BlueSlimeCore:</bold></white>"
+      command-list:
+        - "<aqua>/bscore help</aqua><gray>: Mostra esta lista de comandos.</gray>"
+        - "<aqua>/bscore reload</aqua><gray>: Recarrega os arquivos de configuração do BlueSlimeCore.</gray>"
+        - "<aqua>/bscore language-test [player]</aqua><gray>: Envia mensagens de teste de idioma."
+        - "<aqua>/debug-event</aqua><gray>: Mostra informações sobre quais classes estão ouvindo um evento (apenas console)</gray>"
+        - "<aqua>/global-gamerule</aqua><gray>: Altera uma gamerule para todos os mundos do servidor.</gray>"
+        - "<aqua>/item-info</aqua><gray>: Mostra informações sobre o material e dano de um item.</gray>"
+        - "<aqua>/item-to-base64</aqua><gray>: Converte um item para uma string binária em base64.</gray>"
+        - "<aqua>/item-to-nbt</aqua><gray>: Converte um item para seu formato NBT.</gray>"
+        - "<aqua>/item-to-yml</aqua><gray>: Converte um item para um formato Bukkit YAML serializado.</gray>"
+        - ""
+    reload-success: "<green>Arquivo de configuração recarregado com sucesso</green>"
+
+  item-info:
+    modern:
+      - ""
+      - "<white><bold>XMaterial:</bold></white> <gray>{xmaterial}</gray>"
+      - "<white><bold>Material Bukkit:</bold></white> <gray>{material}</gray>"
+      - "<white><bold>ID Vanilla:</bold></white> <gray>{vanilla}</gray>"
+    legacy:
+      - ""
+      - "<aqua><bold>ID Descontinuado:</bold></aqua> <gray>{material_id}</gray>"
+      - "<aqua><bold>Data Descontinuada:</bold></aqua> <gray>{data}</gray>"
