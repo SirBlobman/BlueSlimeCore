@@ -48,7 +48,7 @@ public final class EntityHandler_1_21_R2 extends EntityHandler {
 
     @Override
     public double getMaxHealth(@NotNull LivingEntity entity) {
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        AttributeInstance attribute = entity.getAttribute(Attribute.MAX_HEALTH);
         if (attribute != null) {
             return attribute.getValue();
         }
@@ -58,7 +58,7 @@ public final class EntityHandler_1_21_R2 extends EntityHandler {
 
     @Override
     public void setMaxHealth(@NotNull LivingEntity entity, double maxHealth) {
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        AttributeInstance attribute = entity.getAttribute(Attribute.MAX_HEALTH);
         if (attribute != null) {
             attribute.setBaseValue(maxHealth);
         }
