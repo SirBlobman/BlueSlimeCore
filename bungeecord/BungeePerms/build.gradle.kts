@@ -1,5 +1,5 @@
 repositories {
-    maven("https://repo.wea-ondara.net/repository/public/")
+    maven("https://repo.wea-ondara.net/repository/maven-releases/")
 }
 
 dependencies {
@@ -8,5 +8,5 @@ dependencies {
     compileOnly(project(":bungeecord:abstract"))
 
     // BungeePerms
-    compileOnly("net.alpenblock:BungeePerms:4.0-dev-143")
+    compileOnly("net.alpenblock:BungeePerms:4.0-dev-146")
 }
