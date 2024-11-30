@@ -134,7 +134,7 @@ public final class FactionsHelper {
             }
 
             if (pluginVersion.startsWith("1.6.9.5")) {
-                return (pluginVersion.endsWith("-RC") || pluginVersion.endsWith("-STABLE"));
+                return (pluginVersion.endsWith("-RC") || pluginVersion.endsWith("-STABLE") || pluginVersion.endsWith("-BETA"));
             }
         }
 
