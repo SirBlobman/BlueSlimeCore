@@ -12,13 +12,13 @@ repositories {
 
 dependencies {
     // XSeries
-    implementation("com.github.cryptomorin:XSeries:12.0.0")
+    implementation("com.github.cryptomorin:XSeries:12.1.0")
 
     // Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
     implementation("net.kyori:adventure-platform-bungeecord:4.3.4")
-    implementation("net.kyori:adventure-text-minimessage:4.17.0")
-    implementation("net.kyori:adventure-text-serializer-plain:4.17.0")
+    implementation("net.kyori:adventure-text-minimessage:4.18.0")
+    implementation("net.kyori:adventure-text-serializer-plain:4.18.0")
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.1.0")
