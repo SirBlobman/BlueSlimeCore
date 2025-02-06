@@ -3,13 +3,9 @@ package com.github.sirblobman.api.nms;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
+import java.util.*;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,17 +30,13 @@ import com.github.sirblobman.api.shaded.adventure.text.serializer.gson.GsonCompo
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtAccounter;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.TagParser;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.component.ItemLore;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_21_R3.CraftRegistry;
+import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -64,17 +56,21 @@ public final class ItemHandler_1_21_R2 extends ItemHandler {
     @Override
     public @NotNull String getKeyString(@NotNull ItemStack item) {
         Material material = item.getType();
-        NamespacedKey registryKey = material.getKey();
-        return registryKey.toString();
+        if (material.isRegistered()) {
+            NamespacedKey key = material.getKeyOrNull();
+            if (key != null) {
+                return key.toString();
+            }
+        }
+
+        return "minecraft:air";
     }
 
     @Override
     public @NotNull String toNBT(@NotNull ItemStack item) {
-        MinecraftServer server = MinecraftServer.getServer();
-        RegistryAccess.Frozen frozenRegistry = server.registryAccess();
-
+        RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        Tag tag = nmsItem.save(frozenRegistry);
+        Tag tag = nmsItem.save(registry);
         return tag.toString();
     }
 
@@ -85,9 +81,8 @@ public final class ItemHandler_1_21_R2 extends ItemHandler {
             TagParser tagParser = new TagParser(stringReader);
             CompoundTag tag = tagParser.readStruct();
 
-            MinecraftServer server = MinecraftServer.getServer();
-            RegistryAccess.Frozen frozenRegistry = server.registryAccess();
-            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(frozenRegistry, tag)
+            RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
+            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(registry, tag)
                     .orElseThrow();
             return CraftItemStack.asBukkitCopy(nmsItem);
         } catch(CommandSyntaxException | NoSuchElementException ex) {
@@ -100,11 +95,9 @@ public final class ItemHandler_1_21_R2 extends ItemHandler {
 
     @Override
     public @NotNull String toBase64String(@NotNull ItemStack item) {
-        MinecraftServer server = MinecraftServer.getServer();
-        RegistryAccess.Frozen frozenRegistry = server.registryAccess();
-
+        RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        Tag tag = nmsItem.save(frozenRegistry);
+        Tag tag = nmsItem.save(registry);
 
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             NbtIo.writeCompressed((CompoundTag) tag, outputStream);
@@ -130,11 +123,9 @@ public final class ItemHandler_1_21_R2 extends ItemHandler {
         Decoder decoder = Base64.getDecoder();
         byte[] byteArray = decoder.decode(string);
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray)) {
+            RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
             CompoundTag tag = NbtIo.readCompressed(inputStream, NbtAccounter.unlimitedHeap());
-
-            MinecraftServer server = MinecraftServer.getServer();
-            RegistryAccess.Frozen frozenRegistry = server.registryAccess();
-            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(frozenRegistry, tag)
+            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(registry, tag)
                     .orElseThrow();
             return CraftItemStack.asBukkitCopy(nmsItem);
         } catch(IOException ex) {
@@ -266,9 +257,8 @@ public final class ItemHandler_1_21_R2 extends ItemHandler {
     }
 
     private @NotNull Component convert(@NotNull net.minecraft.network.chat.Component  component) {
-        MinecraftServer server = MinecraftServer.getServer();
-        RegistryAccess.Frozen frozenRegistry = server.registryAccess();
-        String json = Serializer.toJson(component, frozenRegistry);
+        RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
+        String json = Serializer.toJson(component, registry);
         GsonComponentSerializer serializer = GsonComponentSerializer.gson();
         return serializer.deserialize(json);
     }
@@ -277,9 +267,8 @@ public final class ItemHandler_1_21_R2 extends ItemHandler {
         GsonComponentSerializer serializer = GsonComponentSerializer.gson();
         String json = serializer.serialize(component);
 
-        MinecraftServer server = MinecraftServer.getServer();
-        RegistryAccess.Frozen frozenRegistry = server.registryAccess();
-        MutableComponent nmsComponent = Serializer.fromJson(json, frozenRegistry);
+        RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
+        MutableComponent nmsComponent = Serializer.fromJson(json, registry);
         if (nmsComponent != null) {
             return nmsComponent;
         }

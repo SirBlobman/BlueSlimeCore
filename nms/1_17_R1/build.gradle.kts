@@ -1,9 +1,7 @@
-repositories {
-    maven("https://repo.papermc.io/repository/maven-public/")
-}
+import io.github.patrick.gradle.remapper.RemapTask
 
 plugins {
-    id("io.papermc.paperweight.userdev") version "1.7.7"
+    id("io.github.patrick.remapper") version "1.4.2"
 }
 
 java {
@@ -17,10 +15,32 @@ dependencies {
     compileOnly(project(":nms:abstract"))
     compileOnly(project(":nms:modern-nbt"))
 
-    // Paper Development Bundle
-    paperweight.paperDevBundle("1.17.1-R0.1-SNAPSHOT")
+    // SpigotMC Mojang Mapped NMS
+    compileOnly("org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT:remapped-mojang")
 }
 
-tasks.named("assemble") {
-    dependsOn("reobfJar")
+tasks {
+    named<RemapTask>("remap") {
+        version.set("1.17.1")
+        action.set(RemapTask.Action.MOJANG_TO_SPIGOT)
+        inputTask.set(named<Jar>("jar"))
+        archiveName.set("remap.jar")
+    }
+
+    named("assemble") {
+        dependsOn("remap")
+    }
+}
+
+configurations {
+    create("remap") {
+        isCanBeConsumed = true
+        isCanBeResolved = true
+    }
+}
+
+artifacts {
+    add("remap", layout.buildDirectory.file("libs/remap.jar")) {
+        builtBy("remap")
+    }
 }

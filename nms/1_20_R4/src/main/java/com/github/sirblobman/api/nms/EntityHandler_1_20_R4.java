@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.sirblobman.api.utility.Validate;
 
 import net.minecraft.network.chat.Component;
-import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R4.entity.CraftEntity;
 
 public final class EntityHandler_1_20_R4 extends EntityHandler {
     public EntityHandler_1_20_R4(@NotNull JavaPlugin plugin) {

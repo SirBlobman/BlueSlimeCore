@@ -52,7 +52,7 @@ public class ItemBuilder {
     }
 
     public @NotNull ItemBuilder withMaterial(@NotNull XMaterial material) {
-        Material bukkitMaterial = material.parseMaterial();
+        Material bukkitMaterial = material.get();
         return (bukkitMaterial == null ? this : withMaterial(bukkitMaterial));
     }
 

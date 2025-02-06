@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.sirblobman.api.utility.Validate;
 
 import net.minecraft.network.chat.Component;
-import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity;
 
 public final class EntityHandler_1_21_R2 extends EntityHandler {
     public EntityHandler_1_21_R2(@NotNull JavaPlugin plugin) {
@@ -24,7 +24,6 @@ public final class EntityHandler_1_21_R2 extends EntityHandler {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public @NotNull String getName(@NotNull Entity entity) {
         if (entity instanceof Player player) {
             return player.getName();

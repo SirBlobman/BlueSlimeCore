@@ -9,7 +9,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minecraft.server.MinecraftServer;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.v1_21_R3.CraftServer;
 
 public final class ServerHandler_1_21_R2 extends ServerHandler {
     public ServerHandler_1_21_R2(JavaPlugin plugin) {
