@@ -55,13 +55,8 @@ public final class VersionUtility {
                 case "1.17.1": version = "1_17_R1"; break;
                 case "1.18.2": version = "1_19_R2"; break;
                 case "1.19.4": version = "1_19_R3"; break;
-                case "1.20.2": version = "1_20_R2"; break;
-                case "1.20.4": version = "1_20_R3"; break;
                 case "1.20.6": version = "1_20_R4"; break;
-                case "1.21.1": version = "1_21_R1"; break;
-                case "1.21.3":
-                case "1.21.4":
-                    version = "1_21_R2"; break;
+                case "1.21.4": version = "1_21_R2"; break;
             }
 
             return version;
