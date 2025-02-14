@@ -27,8 +27,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public final class HeadHandler_1_21_R2 extends HeadHandler {
-    public HeadHandler_1_21_R2(@NotNull JavaPlugin plugin) {
+public final class HeadHandler_1_21_R3 extends HeadHandler {
+    public HeadHandler_1_21_R3(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 

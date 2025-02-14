@@ -41,8 +41,8 @@ import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-public final class ItemHandler_1_21_R2 extends ItemHandler {
-    public ItemHandler_1_21_R2(@NotNull JavaPlugin plugin) {
+public final class ItemHandler_1_21_R3 extends ItemHandler {
+    public ItemHandler_1_21_R3(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
