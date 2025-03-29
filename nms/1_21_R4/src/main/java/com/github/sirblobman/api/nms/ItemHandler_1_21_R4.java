@@ -3,17 +3,23 @@ package com.github.sirblobman.api.nms;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
+import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
@@ -30,18 +36,27 @@ import com.github.sirblobman.api.shaded.adventure.text.serializer.gson.GsonCompo
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.commands.GiveCommand;
-import net.minecraft.server.commands.ItemCommands;
+import net.minecraft.server.dedicated.DedicatedPlayerList;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.level.storage.WorldData;
 import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
+import org.bukkit.craftbukkit.v1_21_R4.CraftServer;
 import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R4.util.CraftChatMessage;
 
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.DataFixer;
+import com.mojang.serialization.Dynamic;
 
 public final class ItemHandler_1_21_R4 extends ItemHandler {
     public ItemHandler_1_21_R4(@NotNull JavaPlugin plugin) {
@@ -79,7 +94,7 @@ public final class ItemHandler_1_21_R4 extends ItemHandler {
     @Override
     public @NotNull ItemStack fromNBT(@NotNull String string) {
         try {
-            CompoundTag tag = TagParser.parseCompoundFully(string);
+            CompoundTag tag = fixData(TagParser.parseCompoundFully(string));
             RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
             net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(registry, tag)
                     .orElseThrow();
@@ -124,7 +139,8 @@ public final class ItemHandler_1_21_R4 extends ItemHandler {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray)) {
             RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
             CompoundTag tag = NbtIo.readCompressed(inputStream, NbtAccounter.unlimitedHeap());
-            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(registry, tag)
+            CompoundTag fixedTag = fixData(tag);
+            net.minecraft.world.item.ItemStack nmsItem = net.minecraft.world.item.ItemStack.parse(registry, fixedTag)
                     .orElseThrow();
             return CraftItemStack.asBukkitCopy(nmsItem);
         } catch(IOException ex) {
@@ -273,5 +289,53 @@ public final class ItemHandler_1_21_R4 extends ItemHandler {
         }
 
         return net.minecraft.network.chat.Component.literal(json);
+    }
+
+    private int getCurrentDataVersion() {
+        Server server = Bukkit.getServer();
+        if (server instanceof CraftServer craftServer) {
+            DedicatedPlayerList handle = craftServer.getHandle();
+            DedicatedServer dedicatedServer = handle.getServer();
+            WorldData worldData = dedicatedServer.getWorldData();
+            return worldData.getVersion();
+        }
+
+        return -1;
+    }
+
+    private int getDataVersion(CompoundTag nbt) {
+        int defaultValue = getCurrentDataVersion();
+        if(nbt.contains("DataVersion")) {
+            return nbt.getIntOr("DataVersion", -1);
+        }
+
+        return defaultValue;
+    }
+
+    private CompoundTag fixData(CompoundTag nbt) {
+        int currentVersion = getCurrentDataVersion();
+        int nbtVersion = getDataVersion(nbt);
+
+        // NBT from future version, can't fix.
+        if (nbtVersion > currentVersion) {
+            String message = String.format(Locale.US, "Can't fix data of newer NBT version. %s > %s.",
+                    nbtVersion, currentVersion);
+            throw new IllegalStateException(message);
+        }
+
+        // Same version, nothing to fix
+        if (currentVersion == nbtVersion) {
+            return nbt;
+        }
+
+        Server server = Bukkit.getServer();
+        if (server instanceof CraftServer craftServer) {
+            DedicatedPlayerList handle = craftServer.getHandle();
+            DedicatedServer dedicatedServer = handle.getServer();
+            DataFixer dataFixer = dedicatedServer.getFixerUpper();
+            return (CompoundTag) dataFixer.update(References.ITEM_STACK, new Dynamic<>(NbtOps.INSTANCE, nbt), nbtVersion, currentVersion).getValue();
+        }
+
+        throw new IllegalStateException("The server is somehow not a CraftServer?!");
     }
 }
