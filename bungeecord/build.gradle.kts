@@ -16,6 +16,6 @@ subprojects {
 
     dependencies {
         // BungeeCord API
-        compileOnly("net.md-5:bungeecord-api:1.21-R0.1")
+        compileOnly("net.md-5:bungeecord-api:1.21-R0.2")
     }
 }
