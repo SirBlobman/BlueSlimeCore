@@ -51,8 +51,19 @@ public final class MultiVersionHandler {
         Class<?> thisClass = getClass();
         Package thisPackage = thisClass.getPackage();
         String packageName = thisPackage.getName();
+
+        JavaPlugin plugin = getPlugin();
+        Logger logger = plugin.getLogger();
         String className = String.format(Locale.US, "%s.%s_%s", packageName, classType, nmsVersion);
-        return Class.forName(className);
+
+        try {
+            logger.info("Searching for class named '" + className + "'.");
+            return Class.forName(className);
+        } catch (NoClassDefFoundError ex) {
+            logger.log(Level.WARNING, "Failed to find class '" + className + "'.");
+            logger.log(Level.WARNING, "Original error:", ex);
+            throw new IllegalStateException(ex);
+        }
     }
 
     private <O> @NotNull O convertClass(@NotNull Class<O> typeClass, Class<?> preClass)
