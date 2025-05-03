@@ -20,6 +20,7 @@ import com.github.sirblobman.api.utility.VersionUtility;
 import com.github.sirblobman.api.utility.paper.PaperChecker;
 import com.github.sirblobman.api.utility.paper.PaperHelper;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
+import com.github.sirblobman.api.shaded.xseries.XEnchantment;
 import com.github.sirblobman.api.shaded.xseries.XMaterial;
 
 public class ItemBuilder {
@@ -244,6 +245,11 @@ public class ItemBuilder {
     }
 
     public @NotNull ItemBuilder withGlowing() {
-        return withEnchantment(Enchantment.LUCK, 1).withFlags(ItemFlag.HIDE_ENCHANTS);
+        Enchantment enchantment = XEnchantment.LUCK_OF_THE_SEA.get();
+        if (enchantment == null) {
+            throw new IllegalStateException("The enchantment 'Luck of the Sea' does not exist.");
+        }
+
+        return withEnchantment(enchantment, 1).withFlags(ItemFlag.HIDE_ENCHANTS);
     }
 }
