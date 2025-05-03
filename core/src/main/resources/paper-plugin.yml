@@ -1,0 +1,110 @@
+name: "${pluginName}"
+prefix: "${pluginPrefix}"
+description: "${pluginDescription}"
+website: "${pluginWebsite}"
+
+main: "${pluginMainClass}"
+version: "${pluginVersion}"
+api-version: "1.19"
+load: "STARTUP"
+
+folia-supported: true
+
+authors:
+  - "SirBlobman"
+
+dependencies:
+  server:
+    Factions:
+      load: AFTER
+      required: false
+    FactionsX:
+      load: AFTER
+      required: false
+    LegacyFactions:
+      load: AFTER
+      required: false
+    PlaceholderAPI:
+      load: AFTER
+      required: false
+
+commands:
+  blueslimecore:
+    description: "The main command for the BlueSlimeCore plugin."
+    usage: "/<command> help"
+    aliases:
+      - "bscore"
+      - "bsapi"
+      - "bsc"
+      - "bs"
+  item-info:
+    description: "A debug command to show information about an item."
+    usage: "/<command>"
+    aliases:
+      - "iteminfo"
+      - "iteminformation"
+      - "item-information"
+  item-to-base64:
+    description: "A debug command to show an item as a binary Base64 string."
+    usage: "/<command>"
+    aliases:
+      - "item-to-b64"
+      - "itemtobase64"
+      - "itemtob64"
+  item-to-nbt:
+    description: "A debug command to show an item as an NBT/JSON string."
+    usage: "/<command> [pretty]"
+    aliases:
+      - "itemtonbt"
+      - "itemtojson"
+      - "item-to-json"
+  item-to-yml:
+    description: "A debug command to show an item as a YML configuration value."
+    usage: "/<command>"
+    aliases:
+      - "itemtoyml"
+  debug-event:
+    description: "Show information about an event class."
+    usage: "/<command> <priority> <full.package.with.ClassNameEvent>"
+    aliases:
+      - "debugevent"
+  global-gamerule:
+    description: "Change a gamerule for every world on your server at once."
+    usage: "/<command> <gamerule> <value>"
+    aliases:
+      - "globalgamerule"
+
+permissions:
+  blue.slime.core.command.blueslimecore:
+    description: "Access to the '/blueslimecore' command."
+    default: op
+  blue.slime.core.command.blueslimecore.help:
+    description: "Access to the '/blueslimecore help' subcommand."
+    default: op
+  blue.slime.core.command.blueslimecore.language-test:
+    description: "Access to the '/blueslimecore language-test' subcommand."
+    default: op
+  blue.slime.core.command.blueslimecore.reload:
+    description: "Access to the '/blueslimecore reload' subcommand."
+    default: op
+  blue.slime.core.command.blueslimecore.version:
+    description: "Access to the '/blueslimecore version' subcommand."
+    default: op
+  blue.slime.core.command.item-to-yml:
+    description: "Access to the '/item-to-yml' command."
+    default: op
+  blue.slime.core.command.item-to-base64:
+    description: "Access to the '/item-to-base64' command."
+    default: op
+  blue.slime.core.command.item-to-nbt:
+    description: "Access to the '/item-to-nbt' command."
+    default: op
+  blue.slime.core.command.item-info:
+    description: "Access to the '/item-info' command."
+    default: op
+  blue.slime.core.command.global-gamerule:
+    description: "Access to the '/global-gamerule' command."
+    default: op
+  blue.slime.core.command.debug-event:
+    description: "Access to the '/debug-event' command."
+    default: op

@@ -1,5 +1,8 @@
 package com.github.sirblobman.api.command;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +51,9 @@ import com.github.sirblobman.api.utility.ItemUtility;
 import com.github.sirblobman.api.utility.MessageUtility;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.api.utility.VersionUtility;
+import com.github.sirblobman.api.utility.paper.CommandData;
+import com.github.sirblobman.api.utility.paper.PaperChecker;
+import com.github.sirblobman.api.utility.paper.PaperHelper;
 import com.github.sirblobman.api.shaded.adventure.audience.Audience;
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
@@ -118,8 +125,40 @@ public abstract class Command implements TabExecutor {
     public final void registerCustom(String commandName) {
         try {
             JavaPlugin plugin = getPlugin();
-            PluginCommand pluginCommand = plugin.getCommand(commandName);
+            if (PaperChecker.isPaper()) {
+                CommandData commandData = new CommandData(commandName, this);
 
+                InputStream resource = plugin.getResource("paper-plugin.yml");
+                if (resource == null) {
+                    resource = plugin.getResource("plugin.yml");
+                }
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+                YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(reader);
+
+                String description = pluginFile.getString("commands." + commandName + ".description", null);
+                commandData.setDescription(description);
+
+                String usage = pluginFile.getString("commands." + commandName + ".usage", null);
+                commandData.setUsage(usage);
+
+                List<String> aliases = pluginFile.getStringList("commands." + commandName + ".aliases");
+                if (!aliases.isEmpty()) {
+                    commandData.setAliases(aliases);
+                }
+
+                String permission = pluginFile.getString("commands." + commandName + ".permission", null);
+                commandData.setPermission(permission);
+
+                String permissionMessage = pluginFile.getString("commands." + commandName + ".permission-message",
+                        null);
+                commandData.setPermissionMessage(permissionMessage);
+
+                PaperHelper.registerCommand(plugin, commandData);
+                return;
+            }
+
+            PluginCommand pluginCommand = plugin.getCommand(commandName);
             if (pluginCommand == null) {
                 Logger logger = plugin.getLogger();
                 String logMessage = "Failed to register command '/" + commandName + "':";

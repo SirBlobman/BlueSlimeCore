@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 import com.github.sirblobman.api.shaded.adventure.text.Component;
 
@@ -102,6 +105,16 @@ public final class PaperHelper {
         }
 
         return null;
+    }
+
+    public static void registerCommand(Plugin plugin, CommandData commandData) {
+        String pluginName = plugin.getName();
+        String commandName = commandData.getName();
+        Command command = new PaperPluginCommand(plugin, commandName, commandData);
+
+        Server server = plugin.getServer();
+        CommandMap commandMap = server.getCommandMap();
+        commandMap.register(commandName, pluginName, command);
     }
 
     public static void setDisplayName(@NotNull ItemStack item, @Nullable Component name) {

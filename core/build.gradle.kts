@@ -58,24 +58,23 @@ tasks {
     }
 
     processResources {
-        filesMatching("plugin.yml") {
-            val pluginName = findProperty("bukkit.plugin.name") as String
-            val pluginPrefix = findProperty("bukkit.plugin.prefix") as String
-            val pluginDescription = findProperty("plugin.description") as String
-            val pluginWebsite = findProperty("bukkit.plugin.website") as String
-            val pluginMainClass = findProperty("bukkit.plugin.main") as String
-            val calculatedVersion = rootProject.ext.get("calculatedVersion")
+        val pluginName = findProperty("bukkit.plugin.name") as String
+        val pluginPrefix = findProperty("bukkit.plugin.prefix") as String
+        val pluginDescription = findProperty("plugin.description") as String
+        val pluginWebsite = findProperty("bukkit.plugin.website") as String
+        val pluginMainClass = findProperty("bukkit.plugin.main") as String
+        val calculatedVersion = rootProject.ext.get("calculatedVersion")
+        val replacements = mapOf(
+            "pluginName" to pluginName,
+            "pluginPrefix" to pluginPrefix,
+            "pluginWebsite" to pluginWebsite,
+            "pluginMainClass" to pluginMainClass,
+            "pluginDescription" to pluginDescription,
+            "pluginVersion" to calculatedVersion
+        )
 
-            expand(
-                mapOf(
-                    "pluginName" to pluginName,
-                    "pluginPrefix" to pluginPrefix,
-                    "pluginWebsite" to pluginWebsite,
-                    "pluginMainClass" to pluginMainClass,
-                    "pluginDescription" to pluginDescription,
-                    "pluginVersion" to calculatedVersion
-                )
-            )
+        filesMatching(setOf("plugin.yml", "paper-plugin.yml")) {
+            expand(replacements)
         }
     }
 }
