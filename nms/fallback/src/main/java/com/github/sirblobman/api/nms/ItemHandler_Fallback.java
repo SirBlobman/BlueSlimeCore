@@ -40,8 +40,12 @@ public final class ItemHandler_Fallback extends ItemHandler {
     @Override
     public @NotNull String getKeyString(@NotNull ItemStack item) {
         // Not Supported, may not be accurate.
-        XMaterial material = XMaterial.matchXMaterial(item);
-        return ("minecraft:" + material.name());
+        try {
+            XMaterial material = XMaterial.matchXMaterial(item);
+            return ("minecraft:" + material.name());
+        } catch (IllegalArgumentException ex) {
+            return "N/A";
+        }
     }
 
     @Override
