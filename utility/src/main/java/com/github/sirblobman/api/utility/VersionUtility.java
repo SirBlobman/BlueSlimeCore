@@ -39,7 +39,7 @@ public final class VersionUtility {
         Server server = Bukkit.getServer();
         Class<? extends Server> serverClass = server.getClass();
         Method method_getMinecraftVersion = serverClass.getMethod("getMinecraftVersion");
-        return (String) method_getMinecraftVersion.invoke(server);
+        return (String) method_getMinecraftVersion.invoke(server)
     }
 
     /**
@@ -48,20 +48,7 @@ public final class VersionUtility {
     public static @NotNull String getNetMinecraftServerVersion() {
         try {
             String newMinecraftVersion = getNewMinecraftVersion();
-
-            String version = "Unsupported";
-            switch(newMinecraftVersion) {
-                case "1.16.5": version = "1_16_R3"; break;
-                case "1.17.1": version = "1_17_R1"; break;
-                case "1.18.2": version = "1_18_R2"; break;
-                case "1.19.4": version = "1_19_R3"; break;
-                case "1.20.4": version = "1_20_R3"; break;
-                case "1.20.6": version = "1_20_R4"; break;
-                case "1.21.4": version = "1_21_R3"; break;
-                case "1.21.5": version = "1_21_R4"; break;
-            }
-
-            return version;
+            return getNmsVersion(newMinecraftVersion);
         } catch (ReflectiveOperationException ex) {
             Server server = Bukkit.getServer();
             Class<? extends Server> serverClass = server.getClass();
@@ -71,6 +58,64 @@ public final class VersionUtility {
             int lastPeriodIndex = serverPackageName.lastIndexOf('.');
             int nextIndex = (lastPeriodIndex + 2);
             return serverPackageName.substring(nextIndex);
+        }
+    }
+
+    /**
+     * This method is only triggered if the class {@link Server} contains a method {@code getMinecraftVersion()}.<br/>
+     * {@code getMinecraftVersion()} was added to Paper in 1.16.5
+     * @param version The version returned by the method above.
+     * @return The NMS version that corresponds.
+     */
+    private static @NotNull String getNmsVersion(@NotNull String version) {
+        switch (version) {
+            case "1.16":
+            case "1.16.1":
+                return "1_16_R1";
+            case "1.16.2":
+            case "1.16.3":
+                return "1_16_R2";
+            case "1.16.4":
+            case "1.16.5":
+                return "1_16_R3";
+            case "1.17":
+            case "1.17.1":
+                return "1_17_R1";
+            case "1.18":
+            case "1.18.1":
+                return "1_18_R1";
+            case "1.18.2":
+                return "1_18_R2";
+            case "1.19":
+            case "1.19.1":
+            case "1.19.2":
+                return "1_19_R1";
+            case "1.19.3":
+                return "1_19_R2";
+            case "1.19.4":
+                return "1_19_R3";
+            case "1.20":
+            case "1.20.1":
+                return "1_20_R1";
+            case "1.20.2":
+                return "1_20_R2";
+            case "1.20.3":
+            case "1.20.4":
+                return "1_20_R3";
+            case "1.20.5":
+            case "1.20.6":
+                return "1_20_R4";
+            case "1.21":
+            case "1.21.1":
+                return "1_21_R1";
+            case "1.21.2":
+            case "1.21.3":
+                return "1_21_R2";
+            case "1.21.4":
+                return "1_21_R3";
+            case "1.21.5":
+                return "1_21_R4";
+            default: return "Unsupported";
         }
     }
 
