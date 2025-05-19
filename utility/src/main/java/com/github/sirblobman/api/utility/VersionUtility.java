@@ -39,7 +39,7 @@ public final class VersionUtility {
         Server server = Bukkit.getServer();
         Class<? extends Server> serverClass = server.getClass();
         Method method_getMinecraftVersion = serverClass.getMethod("getMinecraftVersion");
-        return (String) method_getMinecraftVersion.invoke(server)
+        return (String) method_getMinecraftVersion.invoke(server);
     }
 
     /**
