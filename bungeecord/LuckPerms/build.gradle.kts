@@ -4,5 +4,5 @@ dependencies {
     compileOnly(project(":bungeecord:abstract"))
 
     // LuckPerms API
-    compileOnly("net.luckperms:api:5.4")
+    compileOnly("net.luckperms:api:5.5")
 }
