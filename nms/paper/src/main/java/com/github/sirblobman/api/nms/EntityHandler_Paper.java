@@ -16,6 +16,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.sirblobman.api.utility.Validate;
 
+import com.github.sirblobman.api.shaded.xseries.XAttribute;
+import com.github.sirblobman.api.shaded.xseries.XEntity;
+
 import net.kyori.adventure.text.Component;
 
 public final class EntityHandler_Paper extends EntityHandler {
@@ -44,19 +47,27 @@ public final class EntityHandler_Paper extends EntityHandler {
 
     @Override
     public double getMaxHealth(@NotNull LivingEntity entity) {
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        Attribute attribute = XAttribute.MAX_HEALTH.get();
         if (attribute == null) {
             return entity.getHealth();
         }
 
-        return attribute.getValue();
+        AttributeInstance instance = entity.getAttribute(attribute);
+        if (instance == null) {
+            return entity.getHealth();
+        }
+
+        return instance.getValue();
     }
 
     @Override
     public void setMaxHealth(@NotNull LivingEntity entity, double maxHealth) {
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        Attribute attribute = XAttribute.MAX_HEALTH.get();
         if (attribute != null) {
-            attribute.setBaseValue(maxHealth);
+            AttributeInstance instance = entity.getAttribute(attribute);
+            if (instance != null) {
+                instance.setBaseValue(maxHealth);
+            }
         }
     }
 
