@@ -115,6 +115,8 @@ public final class VersionUtility {
                 return "1_21_R3";
             case "1.21.5":
                 return "1_21_R4";
+            case "1.21.6":
+                return "1_21_R5";
             default: return "Unsupported";
         }
     }
