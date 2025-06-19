@@ -127,7 +127,7 @@ public abstract class Command implements TabExecutor {
     }
 
     private boolean isPaperPlugin() {
-        if (PaperChecker.isPaper()) {
+        if (PaperChecker.isPaper() && PaperChecker.hasPaperPluginSupport()) {
             JavaPlugin plugin = getPlugin();
             try (InputStream resource = plugin.getResource("paper-plugin.yml")) {
                 return (resource != null);

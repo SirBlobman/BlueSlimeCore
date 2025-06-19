@@ -5,10 +5,12 @@ import com.github.sirblobman.api.utility.VersionUtility;
 public final class PaperChecker {
     private static Boolean USE_PAPER;
     private static Boolean COMPONENT_SUPPORT;
+    private static Boolean PAPER_PLUGIN_SUPPORT;
 
     static {
         USE_PAPER = null;
         COMPONENT_SUPPORT = null;
+        PAPER_PLUGIN_SUPPORT = null;
     }
 
     public static boolean isPaper() {
@@ -57,6 +59,24 @@ public final class PaperChecker {
             return (COMPONENT_SUPPORT = false);
         } catch (ReflectiveOperationException | NoClassDefFoundError | ClassCastException ex) {
             return (COMPONENT_SUPPORT = false);
+        }
+    }
+
+    public static boolean hasPaperPluginSupport() {
+        if (PAPER_PLUGIN_SUPPORT != null) {
+            return PAPER_PLUGIN_SUPPORT;
+        }
+
+        int minorVersion = VersionUtility.getMinorVersion();
+        if (minorVersion < 19) {
+            return (PAPER_PLUGIN_SUPPORT = false);
+        }
+
+        try {
+            Class.forName("io.papermc.paper.plugin.loader.PluginLoader");
+            return (PAPER_PLUGIN_SUPPORT = true);
+        } catch (ReflectiveOperationException | NoClassDefFoundError | ClassCastException ex) {
+            return (PAPER_PLUGIN_SUPPORT = false);
         }
     }
 }
