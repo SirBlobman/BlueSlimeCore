@@ -1,6 +1,7 @@
 package com.github.sirblobman.api.command;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -16,7 +17,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +30,7 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -38,7 +39,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -90,8 +90,17 @@ public abstract class Command implements TabExecutor {
     }
 
     protected final @NotNull Logger getLogger() {
-        Plugin plugin = getPlugin();
+        JavaPlugin plugin = getPlugin();
         return plugin.getLogger();
+    }
+
+    protected final void printDebug(@NotNull String message) {
+        JavaPlugin plugin = getPlugin();
+        FileConfiguration configuration = plugin.getConfig();
+        if (configuration.getBoolean("debug-mode", false)) {
+            Logger logger = getLogger();
+            logger.info("[Debug] " + message);
+        }
     }
 
     /**
@@ -100,7 +109,7 @@ public abstract class Command implements TabExecutor {
      * @return A {@link LanguageManager} or {@code null} if not overridden.
      */
     protected @Nullable LanguageManager getLanguageManager() {
-        Plugin plugin = getPlugin();
+        JavaPlugin plugin = getPlugin();
         if (!(plugin instanceof ConfigurablePlugin)) {
             return null;
         }
@@ -117,63 +126,67 @@ public abstract class Command implements TabExecutor {
         registerCustom(commandName);
     }
 
+    private boolean isPaperPlugin() {
+        if (PaperChecker.isPaper()) {
+            JavaPlugin plugin = getPlugin();
+            try (InputStream resource = plugin.getResource("paper-plugin.yml")) {
+                return (resource != null);
+            } catch (IOException ex) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * The method used to register this command to the plugin.
      *
      * @param commandName The name to use instead of the actual command name.
      */
-    public final void registerCustom(String commandName) {
-        try {
-            JavaPlugin plugin = getPlugin();
-            if (PaperChecker.isPaper()) {
-                CommandData commandData = new CommandData(commandName, this);
+    public final void registerCustom(@NotNull String commandName) {
+        JavaPlugin plugin = getPlugin();
+        if (isPaperPlugin()) {
+            printDebug("Detected Paper plugin.");
+            printDebug("Attempting command map registration...");
 
-                InputStream resource = plugin.getResource("paper-plugin.yml");
-                if (resource == null) {
-                    resource = plugin.getResource("plugin.yml");
-                }
+            CommandData commandData = new CommandData(commandName, this);
+            InputStream resource = plugin.getResource("paper-plugin.yml");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+            YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(reader);
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
-                YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(reader);
+            String description = pluginFile.getString("commands." + commandName + ".description", null);
+            commandData.setDescription(description);
 
-                String description = pluginFile.getString("commands." + commandName + ".description", null);
-                commandData.setDescription(description);
+            String usage = pluginFile.getString("commands." + commandName + ".usage", null);
+            commandData.setUsage(usage);
 
-                String usage = pluginFile.getString("commands." + commandName + ".usage", null);
-                commandData.setUsage(usage);
-
-                List<String> aliases = pluginFile.getStringList("commands." + commandName + ".aliases");
-                if (!aliases.isEmpty()) {
-                    commandData.setAliases(aliases);
-                }
-
-                String permission = pluginFile.getString("commands." + commandName + ".permission", null);
-                commandData.setPermission(permission);
-
-                String permissionMessage = pluginFile.getString("commands." + commandName + ".permission-message",
-                        null);
-                commandData.setPermissionMessage(permissionMessage);
-
-                PaperHelper.registerCommand(plugin, commandData);
-                return;
+            List<String> aliases = pluginFile.getStringList("commands." + commandName + ".aliases");
+            if (!aliases.isEmpty()) {
+                commandData.setAliases(aliases);
             }
+
+            String permission = pluginFile.getString("commands." + commandName + ".permission", null);
+            commandData.setPermission(permission);
+
+            String permissionMessage = pluginFile.getString("commands." + commandName + ".permission-message",
+                    null);
+            commandData.setPermissionMessage(permissionMessage);
+
+            PaperHelper.registerCommand(plugin, commandData);
+            printDebug("Registered command '" + commandName + "' command map method.");
+        } else {
+            printDebug("Attempting to register with legacy Spigot method first...");
 
             PluginCommand pluginCommand = plugin.getCommand(commandName);
             if (pluginCommand == null) {
-                Logger logger = plugin.getLogger();
-                String logMessage = "Failed to register command '/" + commandName + "':";
-                logger.warning(logMessage);
-
-                logger.warning("Command '" + commandName + "' is missing in the 'plugin.yml' file.");
+                printDebug("Plugin command '" + commandName + "' is not available.");
                 return;
             }
 
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);
-        } catch (Exception ex) {
-            Logger logger = plugin.getLogger();
-            String logMessage = "Failed to register command '/" + commandName + "':";
-            logger.log(Level.WARNING, logMessage, ex);
+            printDebug("Registered command using classic Spigot method.");
         }
     }
 

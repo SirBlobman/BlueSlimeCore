@@ -115,6 +115,10 @@ public final class PaperHelper {
         Server server = plugin.getServer();
         CommandMap commandMap = server.getCommandMap();
         commandMap.register(commandName, pluginName, command);
+
+        if (!command.isRegistered()) {
+            throw new IllegalStateException("Failed to register command '/" + commandName + "'.");
+        }
     }
 
     public static void setDisplayName(@NotNull ItemStack item, @Nullable Component name) {
