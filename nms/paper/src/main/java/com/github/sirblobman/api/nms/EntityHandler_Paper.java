@@ -1,5 +1,6 @@
 package com.github.sirblobman.api.nms;
 
+import java.lang.reflect.Method;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -72,10 +73,18 @@ public final class EntityHandler_Paper extends EntityHandler {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Entity> @NotNull T spawnEntity(@NotNull Location location, @NotNull Class<T> entityClass,
                                                      @NotNull Consumer<T> beforeSpawn) {
         World world = location.getWorld();
         Validate.notNull(world, "location must have a valid world.");
-        return world.spawn(location, entityClass, beforeSpawn::accept);
+
+        try {
+            Class<?> class_World = World.class;
+            Method method_spawn = class_World.getMethod("spawn", Location.class, Class.class, Consumer.class);
+            return (T) method_spawn.invoke(world, location, entityClass, beforeSpawn);
+        } catch (ReflectiveOperationException ex) {
+            return world.spawn(location, entityClass, beforeSpawn::accept);
+        }
     }
 }
