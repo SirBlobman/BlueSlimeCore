@@ -58,6 +58,7 @@ import org.bukkit.craftbukkit.v1_21_R5.util.CraftChatMessage;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
@@ -160,11 +161,13 @@ public final class ItemHandler_1_21_R5 extends ItemHandler {
         byte[] byteArray = decoder.decode(string);
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray)) {
             RegistryAccess registry = CraftRegistry.getMinecraftRegistry();
-            CompoundTag tag = NbtIo.readCompressed(inputStream, NbtAccounter.unlimitedHeap());
+            NbtAccounter unlimited = NbtAccounter.unlimitedHeap();
+            CompoundTag tag = NbtIo.readCompressed(inputStream, unlimited);
             CompoundTag fixedTag = fixData(tag);
 
             DynamicOps<Tag> nbtOps = registry.createSerializationContext(NbtOps.INSTANCE);
-            DataResult<Pair<net.minecraft.world.item.ItemStack, Tag>> decode = net.minecraft.world.item.ItemStack.CODEC.decode(nbtOps, fixedTag);
+            Codec<net.minecraft.world.item.ItemStack> codec = net.minecraft.world.item.ItemStack.CODEC;
+            DataResult<Pair<net.minecraft.world.item.ItemStack, Tag>> decode = codec.decode(nbtOps, fixedTag);
             Pair<net.minecraft.world.item.ItemStack, Tag> pair = decode.getOrThrow();
 
             net.minecraft.world.item.ItemStack nmsItem = pair.getFirst();
