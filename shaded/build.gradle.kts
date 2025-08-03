@@ -25,7 +25,7 @@ dependencies {
     implementation("org.bstats:bstats-bungeecord:3.1.0")
 
     // Folia Helper
-    implementation("com.github.sirblobman.api:folia-helper:1.0.1-SNAPSHOT")
+    implementation("com.github.sirblobman.api:folia-helper:1.0.2-SNAPSHOT")
 }
 
 tasks {
