@@ -2,11 +2,9 @@ package com.github.sirblobman.api.menu.task;
 
 import org.jetbrains.annotations.NotNull;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.folia.details.EntityTaskDetails;
 import com.github.sirblobman.api.menu.AdvancedAbstractMenu;
@@ -31,11 +29,8 @@ public final class AdvancedMenuInternalOpenTask extends EntityTaskDetails<Player
             return;
         }
 
-        Plugin plugin = getPlugin();
         AdvancedAbstractMenu<?> menu = getMenu();
-
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(menu, plugin);
+        menu.registerListeners();
 
         Inventory inventory = menu.getInventory();
         player.openInventory(inventory);

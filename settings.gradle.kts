@@ -53,9 +53,12 @@ include("configuration")
 include("language")
 include("update")
 include("item")
-include("menu")
 include("plugin")
 include("command")
+
+// Menu Handler
+include("menu")
+include("menu:modern")
 
 // Core / Plugin
 include("core")
