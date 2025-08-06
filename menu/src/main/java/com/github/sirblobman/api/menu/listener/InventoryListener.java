@@ -51,7 +51,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        menu.onValidClick(e);
+        menu.onCustomClick(e);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -65,6 +65,6 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        menu.onValidDrag(e);
+        menu.onCustomDrag(e);
     }
 }

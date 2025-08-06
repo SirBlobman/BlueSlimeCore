@@ -108,6 +108,14 @@ public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu<P>
         onValidClose(e);
     }
 
+    public void onCustomClick(@NotNull InventoryClickEvent e) {
+        onValidClick(e);
+    }
+
+    public void onCustomDrag(@NotNull InventoryDragEvent e) {
+        onValidDrag(e);
+    }
+
     public final @NotNull Player getPlayer() {
         return this.player;
     }
@@ -149,9 +157,9 @@ public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu<P>
 
     public abstract @NotNull Inventory getInventory();
 
-    public abstract void onValidClose(@NotNull InventoryCloseEvent e);
+    protected abstract void onValidClose(@NotNull InventoryCloseEvent e);
 
-    public abstract void onValidClick(@NotNull InventoryClickEvent e);
+    protected abstract void onValidClick(@NotNull InventoryClickEvent e);
 
-    public abstract void onValidDrag(@NotNull InventoryDragEvent e);
+    protected abstract void onValidDrag(@NotNull InventoryDragEvent e);
 }
