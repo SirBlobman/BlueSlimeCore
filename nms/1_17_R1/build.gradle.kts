@@ -3,13 +3,6 @@ import io.github.patrick.gradle.remapper.RemapTask
 plugins {
     id("io.github.patrick.remapper") version "1.4.2"
 }
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
-    toolchain.languageVersion.set(JavaLanguageVersion.of(16))
-}
-
 dependencies {
     // Local Dependencies
     compileOnly(project(":nms:abstract"))

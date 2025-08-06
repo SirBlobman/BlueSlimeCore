@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":update"))
     implementation(project(":item"))
     implementation(project(":menu"))
+    implementation(project(":menu:modern"))
     implementation(project(":plugin"))
     implementation(project(":command"))
 
