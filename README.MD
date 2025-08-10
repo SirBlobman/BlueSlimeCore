@@ -15,6 +15,8 @@ This library is also free for other developers to use.
 
 ### Version Information
 
+BlueSlimeCore requires Java 21.
+
 BlueSlimeCore supports Spigot, Paper, and Folia. Custom forks may work, but they are untested. 
 The following table is a list of versions that are included in code. 
 Unsupported versions are planned for removal at a future date.

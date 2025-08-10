@@ -6,10 +6,12 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 import com.github.sirblobman.api.folia.scheduler.TaskScheduler;
 import com.github.sirblobman.api.language.LanguageManager;
@@ -84,5 +86,11 @@ public interface IMenu extends InventoryHolder, Listener {
      */
     default @Nullable LanguageManager getLanguageManager() {
         return null;
+    }
+
+    default void registerListeners() {
+        Plugin plugin = getPlugin();
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvents(this, plugin);
     }
 }

@@ -47,14 +47,20 @@ tasks.named("jar") {
     enabled = false
 }
 
-subprojects {
+allprojects {
     apply(plugin = "java")
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-        toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        withSourcesJar()
+        withJavadocJar()
     }
+}
+
+subprojects {
+    apply(plugin = "java")
 
     repositories {
         mavenCentral()
@@ -72,7 +78,7 @@ subprojects {
 
         withType<Javadoc> {
             val standard = options as StandardJavadocDocletOptions
-            standard.addStringOption("Xdoclint:none", "-quiet")
+            standard.addBooleanOption("Xdoclint:none", true)
         }
     }
 }

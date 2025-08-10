@@ -4,12 +4,6 @@ plugins {
     id("io.github.patrick.remapper") version "1.4.2"
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-}
-
 repositories {
     maven("https://libraries.minecraft.net")
 }
