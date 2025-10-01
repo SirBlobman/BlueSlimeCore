@@ -3,7 +3,7 @@ import io.papermc.hangarpublishplugin.model.Platforms
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/service/local/repositories/snapshots/content/")
 }
 
 plugins {
@@ -117,7 +117,7 @@ hangarPublish {
                         it.archiveFile
                     })
 
-                    platformVersions.set(listOf("1.19.4", "1.20.4", "1.20.6", "1.21.8"))
+                    platformVersions.set(listOf("1.19.4", "1.20.4", "1.20.6", "1.21.9"))
                     changelog.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/changes")
 
                     this.dependencies {

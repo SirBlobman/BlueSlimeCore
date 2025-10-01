@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -144,7 +145,7 @@ public final class HangarUpdateManager {
 
         try {
             String updateUrlString = String.format(Locale.US, BASE_API_URL, authorName, projectName);
-            URL updateUrl = new URL(updateUrlString);
+            URL updateUrl = URI.create(updateUrlString).toURL();
             fetchHangarVersion(pluginName, updateUrl);
         } catch (MalformedURLException ex) {
             Logger logger = getLogger();
