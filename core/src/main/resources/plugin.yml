@@ -15,6 +15,7 @@ authors:
 
 softdepend:
   - "Factions"
+  - "FactionsUUID"
   - "FactionsX"
   - "LegacyFactions"
   - "PlaceholderAPI"

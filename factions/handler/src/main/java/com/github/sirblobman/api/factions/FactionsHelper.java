@@ -55,6 +55,12 @@ public final class FactionsHelper {
                 return this.factionsHandler;
             }
 
+            if (manager.isPluginEnabled("FactionsUUID")) {
+                printHookInfo("FactionsUUID", "Factions UUID (API v4)");
+                this.factionsHandler = new FactionsHandler_UUID4();
+                return this.factionsHandler;
+            }
+
             Plugin plugin = getPlugin("Factions");
             if (plugin == null) {
                 throw new FactionsNotFoundException();
@@ -84,7 +90,7 @@ public final class FactionsHelper {
                 }
 
                 if (subVersion.startsWith("U0.6") || subVersion.startsWith("U0.7")) {
-                    printHookInfo("Factions", "Factions UUID Modern");
+                    printHookInfo("Factions", "Factions UUID");
                     this.factionsHandler = new FactionsHandler_UUID();
                     return this.factionsHandler;
                 }

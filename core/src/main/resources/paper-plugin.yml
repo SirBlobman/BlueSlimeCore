@@ -18,6 +18,9 @@ dependencies:
     Factions:
       load: AFTER
       required: false
+    FactionsUUID:
+      load: AFTER
+      required: false
     FactionsX:
       load: AFTER
       required: false

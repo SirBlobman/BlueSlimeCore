@@ -44,6 +44,7 @@ include("factions:MassiveCore-Factions")
 include("factions:SaberFactions")
 include("factions:FactionsUUID")
 include("factions:FactionsUUID-Legacy")
+include("factions:FactionsUUID-4")
 include("factions:FactionsX")
 
 // Factions Handler
