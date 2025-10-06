@@ -18,7 +18,7 @@ dependencies {
     compileOnly("dev.kitteh:factions:4.0.0")
 
     // Adventure Extras
-    compileOnly("net.kyori:adventure-text-minimessage:4.23.0")
-    compileOnly("net.kyori:adventure-text-serializer-gson:4.23.0")
-    compileOnly("net.kyori:adventure-text-serializer-legacy:4.23.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.24.0")
+    compileOnly("net.kyori:adventure-text-serializer-gson:4.24.0")
+    compileOnly("net.kyori:adventure-text-serializer-legacy:4.24.0")
 }
