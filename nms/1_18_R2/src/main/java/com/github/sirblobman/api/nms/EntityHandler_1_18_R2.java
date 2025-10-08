@@ -24,7 +24,6 @@ public final class EntityHandler_1_18_R2 extends EntityHandler {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public @NotNull String getName(@NotNull Entity entity) {
         if (entity instanceof Player player) {
             return player.getName();
