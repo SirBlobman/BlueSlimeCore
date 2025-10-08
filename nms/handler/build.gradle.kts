@@ -39,7 +39,7 @@ dependencies {
     implementation(project(path = ":nms:1_21_R3", configuration = "remap")) // NMS 1.21.4
     implementation(project(path = ":nms:1_21_R4", configuration = "remap")) // NMS 1.21.5
     implementation(project(path = ":nms:1_21_R5", configuration = "remap")) // NMS 1.21.8
-    implementation(project(path = ":nms:1_21_R6", configuration = "remap")) // NMS 1.21.9
+    implementation(project(path = ":nms:1_21_R6", configuration = "remap")) // NMS 1.21.10
 }
 
 tasks {
