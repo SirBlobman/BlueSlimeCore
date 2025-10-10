@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -518,7 +519,8 @@ public abstract class Command implements TabExecutor {
         }
 
         tabCompletions.addAll(onTabComplete(sender, args));
-        return tabCompletions;
+        return tabCompletions.stream().filter(s -> s.startsWith(args[args.length - 1]))
+                .collect(Collectors.toList());
     }
 
     /**
