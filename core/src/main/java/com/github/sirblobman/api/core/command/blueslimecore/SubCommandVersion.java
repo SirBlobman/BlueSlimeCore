@@ -2,7 +2,9 @@ package com.github.sirblobman.api.core.command.blueslimecore;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,18 +131,18 @@ public final class SubCommandVersion extends ConsoleCommand {
         List<String> softDependList = description.getSoftDepend();
         List<String> dependList = description.getDepend();
 
-        List<String> fullDependencyList = new ArrayList<>(loadBeforeList);
-        fullDependencyList.addAll(softDependList);
-        fullDependencyList.addAll(dependList);
+        Set<String> fullDependencySet = new LinkedHashSet<>(loadBeforeList);
+        fullDependencySet.addAll(softDependList);
+        fullDependencySet.addAll(dependList);
 
-        if (fullDependencyList.isEmpty()) {
+        if (fullDependencySet.isEmpty()) {
             list.add(listElement("None"));
             return;
         }
 
         Component missingText = Component.text("(not installed)", NamedTextColor.RED);
         PluginManager pluginManager = Bukkit.getPluginManager();
-        for (String dependencyName : fullDependencyList) {
+        for (String dependencyName : fullDependencySet) {
             Plugin dependency = pluginManager.getPlugin(dependencyName);
             if(dependency == null) {
                 list.add(listElement(dependencyName).append(Component.space()).append(missingText));
