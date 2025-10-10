@@ -487,9 +487,15 @@ public abstract class Command implements TabExecutor {
     public final @NotNull List<String> onTabComplete(@NotNull CommandSender sender,
                                                      @NotNull org.bukkit.command.Command command,
                                                      @NotNull String label, String @NotNull [] args) {
-        List<String> tabCompletions = new ArrayList<>();
+        if (args.length == 0) {
+            // Nothing to tab complete.
+            return Collections.emptyList();
+        }
+
+        List<String> tabCompletionList = new ArrayList<>();
 
         if (args.length == 1) {
+            // Add list of sub commands.
             Map<String, Command> subCommandMap = getSubCommands();
             Set<Entry<String, Command>> subCommandEntrySet = subCommandMap.entrySet();
             for (Entry<String, Command> subCommandEntry : subCommandEntrySet) {
@@ -501,11 +507,12 @@ public abstract class Command implements TabExecutor {
                     continue;
                 }
 
-                tabCompletions.add(subCommandName);
+                tabCompletionList.add(subCommandName);
             }
         }
 
         if (args.length > 1) {
+            // Use sub command for tab completion.
             String subCommandName = args[0].toLowerCase(Locale.US);
             Map<String, Command> subCommandMap = getSubCommands();
             Command subCommand = subCommandMap.getOrDefault(subCommandName, null);
@@ -513,14 +520,16 @@ public abstract class Command implements TabExecutor {
                 Permission permission = subCommand.getPermission();
                 if (permission == null || checkPermission(sender, permission, false)) {
                     String[] newArgs = getSubArguments(args, 1);
-                    tabCompletions.addAll(subCommand.onTabComplete(sender, command, label, newArgs));
+                    tabCompletionList.addAll(subCommand.onTabComplete(sender, command, label, newArgs));
                 }
             }
         }
 
-        tabCompletions.addAll(onTabComplete(sender, args));
-        return tabCompletions.stream().filter(s -> s.startsWith(args[args.length - 1]))
-                .collect(Collectors.toList());
+        // Use all tab completions from current command.
+        tabCompletionList.addAll(onTabComplete(sender, args));
+
+        String currentArg = args[args.length - 1];
+        return tabCompletionList.stream().filter(s -> s.startsWith(currentArg)).toList();
     }
 
     /**
