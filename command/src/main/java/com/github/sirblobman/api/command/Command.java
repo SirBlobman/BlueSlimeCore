@@ -529,7 +529,7 @@ public abstract class Command implements TabExecutor {
         tabCompletionList.addAll(onTabComplete(sender, args));
 
         String currentArg = args[args.length - 1];
-        return tabCompletionList.stream().filter(s -> s.startsWith(currentArg)).toList();
+        return getMatching(currentArg, args);
     }
 
     /**
