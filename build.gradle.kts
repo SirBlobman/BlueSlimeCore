@@ -12,10 +12,11 @@ val betaString = fetchProperty("version.beta", "false")
 val jenkinsBuildNumber = fetchEnv("BUILD_NUMBER", null, "Unofficial")
 
 val betaBoolean = betaString.toBoolean()
-val betaVersion = if (betaBoolean) "Beta-" else ""
-val calculatedVersion = "$baseVersion.$betaVersion$jenkinsBuildNumber"
 rootProject.ext.set("isBeta", betaBoolean)
-rootProject.ext.set("calculatedVersion", calculatedVersion)
+val betaVersion = if (betaBoolean) "Beta-" else ""
+version = "$baseVersion.$betaVersion$jenkinsBuildNumber"
+rootProject.ext.set("calculatedVersion", version)
+
 
 fun fetchProperty(propertyName: String, defaultValue: String): String {
     val found = findProperty(propertyName)

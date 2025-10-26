@@ -10,6 +10,8 @@ subprojects {
                 password = rootProject.ext.get("mavenPassword") as String
             }
         }
+
+        mavenLocal()
     }
 
     dependencies {

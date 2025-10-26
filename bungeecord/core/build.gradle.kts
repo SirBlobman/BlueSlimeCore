@@ -1,8 +1,16 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("maven-publish")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("de.eldoria.plugin-yml.bungee") version "0.8.0"
+}
+
+bungee {
+    name = "BlueSlimeCore"
+    author = "SirBlobman"
+    version = rootProject.ext.get("calculatedVersion").toString()
+    main = "com.github.sirblobman.api.bungeecord.core.CorePlugin"
 }
 
 dependencies {
@@ -30,26 +38,6 @@ tasks {
 
     named("build") {
         dependsOn("shadowJar")
-    }
-
-    processResources {
-        filesMatching("bungee.yml") {
-            val pluginName = findProperty("bungee.plugin.name") as String
-            val pluginPrefix = findProperty("bungee.plugin.prefix") as String
-            val pluginMainClass = findProperty("bungee.plugin.main") as String
-            val pluginDescription = findProperty("plugin.description") as String
-            val calculatedVersion = rootProject.ext.get("calculatedVersion")
-
-            expand(
-                mapOf(
-                    "pluginName" to pluginName,
-                    "pluginPrefix" to pluginPrefix,
-                    "pluginMainClass" to pluginMainClass,
-                    "pluginDescription" to pluginDescription,
-                    "pluginVersion" to calculatedVersion
-                )
-            )
-        }
     }
 }
 

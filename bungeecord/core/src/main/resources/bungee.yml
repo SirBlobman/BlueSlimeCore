@@ -1,7 +1,0 @@
-name: "${pluginName}"
-prefix: "${pluginPrefix}"
-description: "${pluginDescription}"
-author: "SirBlobman"
-
-main: "${pluginMainClass}"
-version: "${pluginVersion}"

@@ -1,5 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.papermc.hangarpublishplugin.model.Platforms
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -8,6 +10,8 @@ repositories {
 
 plugins {
     id("maven-publish")
+    id("de.eldoria.plugin-yml.bukkit") version "0.8.0"
+    id("de.eldoria.plugin-yml.paper") version "0.8.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
 }
@@ -57,27 +61,6 @@ tasks {
     named("build") {
         dependsOn("shadowJar")
     }
-
-    processResources {
-        val pluginName = findProperty("bukkit.plugin.name") as String
-        val pluginPrefix = findProperty("bukkit.plugin.prefix") as String
-        val pluginDescription = findProperty("plugin.description") as String
-        val pluginWebsite = findProperty("bukkit.plugin.website") as String
-        val pluginMainClass = findProperty("bukkit.plugin.main") as String
-        val calculatedVersion = rootProject.ext.get("calculatedVersion")
-        val replacements = mapOf(
-            "pluginName" to pluginName,
-            "pluginPrefix" to pluginPrefix,
-            "pluginWebsite" to pluginWebsite,
-            "pluginMainClass" to pluginMainClass,
-            "pluginDescription" to pluginDescription,
-            "pluginVersion" to calculatedVersion
-        )
-
-        filesMatching(setOf("plugin.yml", "paper-plugin.yml")) {
-            expand(replacements)
-        }
-    }
 }
 
 publishing {
@@ -96,6 +79,225 @@ publishing {
             artifactId = "core"
             version = rootProject.ext.get("apiVersion") as String
             artifact(tasks["shadowJar"])
+        }
+    }
+}
+
+bukkit {
+    name = "BlueSlimeCore"
+    prefix = "Blue Slime Core"
+    description="A core plugin with useful libraries."
+    website = "https://www.spigotmc.org/resources/83189/"
+
+    main = "com.github.sirblobman.api.core.CorePlugin"
+    version = rootProject.ext.get("calculatedVersion").toString()
+    apiVersion = "1.19"
+
+    load = BukkitPluginDescription.PluginLoadOrder.STARTUP
+    foliaSupported = true
+    authors = listOf("SirBlobman")
+
+    softDepend = listOf("Factions", "FactionsUUID", "FactionsX", "LegacyFactions", "PlaceholderAPI")
+
+    commands {
+        register("blueslimecore") {
+            description = "The main command for the BlueSlimeCore plugin."
+            usage = "/<command> help"
+            aliases = listOf("bscore", "bsapi", "bsc", "bs")
+        }
+
+        register("item-info") {
+            description = "A debug command to show information about an item."
+            usage = "/<command>"
+            aliases = listOf("iteminfo", "iteminformation", "item-information")
+        }
+
+        register("item-to-base64") {
+            description = "A debug command to show an item as a binary Base64 string."
+            usage = "/<command>"
+            aliases = listOf("item-to-b64", "itemtobase64", "itemtob64")
+        }
+
+        register("item-to-nbt") {
+            description = "A debug command to show an item as an NBT/JSON string."
+            usage = "/<command> [pretty]"
+            aliases = listOf("itemtonbt", "itemtojson", "item-to-json")
+        }
+
+        register("item-to-yml") {
+            description = "A debug command to show an item as a YML configuration value."
+            usage = "/<command>"
+            aliases = listOf("itemtoyml")
+        }
+
+        register("debug-event") {
+            description = "Show information about an event class."
+            usage = "/<command> <priority> <full.package.with.ClassNameEvent>"
+            aliases = listOf("debugevent")
+        }
+
+        register("global-gamerule") {
+            description = "Change a gamerule for every world on your server at once."
+            usage = "/<command> <gamerule> <value>"
+            aliases = listOf("globalgamerule")
+        }
+    }
+
+    permissions {
+        register("blue.slime.core.command.blueslimecore") {
+            description = "Access to the '/blueslimecore' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.help") {
+            description = "Access to the '/blueslimecore help' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.language-test") {
+            description = "Access to the '/blueslimecore language-test' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.reload") {
+            description = "Access to the '/blueslimecore reload' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.version") {
+            description = "Access to the '/blueslimecore version' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-info") {
+            description = "Access to the '/item-info' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-to-base64") {
+            description = "Access to the '/item-to-base64' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-to-nbt") {
+            description = "Access to the '/item-to-nbt' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-to-yml") {
+            description = "Access to the '/item-to-yml' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.global-gamerule") {
+            description = "Access to the '/global-gamerule' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.debug-event") {
+            description = "Access to the '/debug-event' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+    }
+}
+
+paper {
+    name = "BlueSlimeCore"
+    prefix = "Blue Slime Core"
+    description="A core plugin with useful libraries."
+    website = "https://www.spigotmc.org/resources/83189/"
+
+    main = "com.github.sirblobman.api.core.CorePlugin"
+    version = rootProject.ext.get("calculatedVersion").toString()
+    apiVersion = "1.19"
+
+    load = BukkitPluginDescription.PluginLoadOrder.STARTUP
+    foliaSupported = true
+    authors = listOf("SirBlobman")
+
+    dependencies {
+        serverDependencies {
+            register("Factions") {
+                load = PaperPluginDescription.RelativeLoadOrder.AFTER
+                required = false
+            }
+
+            register("FactionsUUID") {
+                load = PaperPluginDescription.RelativeLoadOrder.AFTER
+                required = false
+            }
+
+            register("FactionsX") {
+                load = PaperPluginDescription.RelativeLoadOrder.AFTER
+                required = false
+            }
+
+            register("LegacyFactions") {
+                load = PaperPluginDescription.RelativeLoadOrder.AFTER
+                required = false
+            }
+
+            register("PlaceholderAPI") {
+                load = PaperPluginDescription.RelativeLoadOrder.AFTER
+                required = false
+            }
+        }
+    }
+
+    permissions {
+        register("blue.slime.core.command.blueslimecore") {
+            description = "Access to the '/blueslimecore' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.help") {
+            description = "Access to the '/blueslimecore help' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.language-test") {
+            description = "Access to the '/blueslimecore language-test' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.reload") {
+            description = "Access to the '/blueslimecore reload' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.blueslimecore.version") {
+            description = "Access to the '/blueslimecore version' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-info") {
+            description = "Access to the '/item-info' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-to-base64") {
+            description = "Access to the '/item-to-base64' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-to-nbt") {
+            description = "Access to the '/item-to-nbt' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.item-to-yml") {
+            description = "Access to the '/item-to-yml' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.global-gamerule") {
+            description = "Access to the '/global-gamerule' command."
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("blue.slime.core.command.debug-event") {
+            description = "Access to the '/debug-event' command."
+            default = BukkitPluginDescription.Permission.Default.OP
         }
     }
 }
