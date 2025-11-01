@@ -1,5 +1,18 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+fun getEnvOrProp(variableName: String, propertyName: String): String {
+    val environmentProvider = providers.environmentVariable(variableName)
+    val propertyProvider = providers.gradleProperty(propertyName)
+    return environmentProvider.orElse(propertyProvider).orElse("").get()
+}
+
+fun getProp(propertyName: String): String {
+    val propertyProvider = providers.gradleProperty(propertyName)
+    return propertyProvider.get()
+}
+
+val pluginVersion = rootProject.version.toString()
+
 plugins {
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -9,7 +22,7 @@ plugins {
 bungee {
     name = "BlueSlimeCore"
     author = "SirBlobman"
-    version = rootProject.ext.get("calculatedVersion").toString()
+    version = pluginVersion
     main = "com.github.sirblobman.api.bungeecord.core.CorePlugin"
 }
 
@@ -31,8 +44,7 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar") {
-        val calculatedVersion = rootProject.ext.get("calculatedVersion")
-        archiveFileName.set("BlueSlimeBungeeCore-$calculatedVersion.jar")
+        archiveFileName.set("BlueSlimeBungeeCore-$pluginVersion.jar")
         archiveClassifier.set(null as String?)
     }
 
@@ -45,8 +57,8 @@ publishing {
     repositories {
         maven("https://nexus.sirblobman.xyz/public/") {
             credentials {
-                username = rootProject.ext.get("mavenUsername") as String
-                password = rootProject.ext.get("mavenPassword") as String
+                username = getEnvOrProp("MAVEN_DEPLOY_USR", "maven.username.sirblobman")
+                password = getEnvOrProp("MAVEN_DEPLOY_PSW", "maven.password.sirblobman")
             }
         }
     }
@@ -55,7 +67,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.sirblobman.api.bungeecord"
             artifactId = "core"
-            version = rootProject.ext.get("apiVersion") as String
+            version = getProp("version.api")
             artifact(tasks["shadowJar"])
         }
     }

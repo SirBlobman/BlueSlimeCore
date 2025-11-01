@@ -1,12 +1,3 @@
-val apiVersion = fetchProperty("version.api", "invalid")
-rootProject.ext.set("apiVersion", apiVersion)
-
-val mavenUsername = fetchEnv("MAVEN_DEPLOY_USR", "mavenUsernameSirBlobman", "")
-rootProject.ext.set("mavenUsername", mavenUsername)
-
-val mavenPassword = fetchEnv("MAVEN_DEPLOY_PSW", "mavenPasswordSirBlobman", "")
-rootProject.ext.set("mavenPassword", mavenPassword)
-
 val baseVersion = fetchProperty("version.base", "invalid")
 val betaString = fetchProperty("version.beta", "false")
 val jenkinsBuildNumber = fetchEnv("BUILD_NUMBER", null, "Unofficial")
@@ -14,8 +5,7 @@ val jenkinsBuildNumber = fetchEnv("BUILD_NUMBER", null, "Unofficial")
 val betaBoolean = betaString.toBoolean()
 rootProject.ext.set("isBeta", betaBoolean)
 val betaVersion = if (betaBoolean) "Beta-" else ""
-version = "$baseVersion.$betaVersion$jenkinsBuildNumber"
-rootProject.ext.set("calculatedVersion", version)
+rootProject.version = "$baseVersion.$betaVersion$jenkinsBuildNumber"
 
 
 fun fetchProperty(propertyName: String, defaultValue: String): String {

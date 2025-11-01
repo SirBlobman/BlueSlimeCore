@@ -3,6 +3,9 @@ import io.papermc.hangarpublishplugin.model.Platforms
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import net.minecrell.pluginyml.paper.PaperPluginDescription
 
+val pluginVersion = rootProject.version.toString()
+val pluginSoftDepend = listOf("Factions", "FactionsUUID", "FactionsX", "LegacyFactions", "PlaceholderAPI")
+
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/service/local/repositories/snapshots/content/")
@@ -49,8 +52,7 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar") {
-        val calculatedVersion = rootProject.ext.get("calculatedVersion")
-        archiveFileName.set("BlueSlimeCore-$calculatedVersion.jar")
+        archiveFileName.set("BlueSlimeCore-$pluginVersion.jar")
         archiveClassifier.set(null as String?)
 
         manifest {
@@ -63,12 +65,23 @@ tasks {
     }
 }
 
+fun getEnvOrProp(variableName: String, propertyName: String): String {
+    val environmentProvider = providers.environmentVariable(variableName)
+    val propertyProvider = providers.gradleProperty(propertyName)
+    return environmentProvider.orElse(propertyProvider).orElse("").get()
+}
+
+fun getProp(propertyName: String): String {
+    val propertyProvider = providers.gradleProperty(propertyName)
+    return propertyProvider.get()
+}
+
 publishing {
     repositories {
         maven("https://nexus.sirblobman.xyz/public/") {
             credentials {
-                username = rootProject.ext.get("mavenUsername") as String
-                password = rootProject.ext.get("mavenPassword") as String
+                username = getEnvOrProp("MAVEN_DEPLOY_USR", "maven.username.sirblobman")
+                password = getEnvOrProp("MAVEN_DEPLOY_PSW", "maven.password.sirblobman")
             }
         }
     }
@@ -77,9 +90,17 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.sirblobman.api"
             artifactId = "core"
-            version = rootProject.ext.get("apiVersion") as String
+            version = getProp("version.api")
             artifact(tasks["shadowJar"])
         }
+    }
+}
+
+fun quickRegister(definition: NamedDomainObjectContainer<PaperPluginDescription.DependencyDefinition>, name: String, required: Boolean) {
+    definition.register(name) {
+        this.load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        this.required = required
+        this.joinClasspath = true
     }
 }
 
@@ -90,14 +111,14 @@ bukkit {
     website = "https://www.spigotmc.org/resources/83189/"
 
     main = "com.github.sirblobman.api.core.CorePlugin"
-    version = rootProject.ext.get("calculatedVersion").toString()
+    version = pluginVersion
     apiVersion = "1.19"
 
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     foliaSupported = true
     authors = listOf("SirBlobman")
 
-    softDepend = listOf("Factions", "FactionsUUID", "FactionsX", "LegacyFactions", "PlaceholderAPI")
+    softDepend = pluginSoftDepend
 
     commands {
         register("blueslimecore") {
@@ -208,7 +229,7 @@ paper {
     website = "https://www.spigotmc.org/resources/83189/"
 
     main = "com.github.sirblobman.api.core.CorePlugin"
-    version = rootProject.ext.get("calculatedVersion").toString()
+    version = pluginVersion
     apiVersion = "1.19"
 
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
@@ -216,32 +237,7 @@ paper {
     authors = listOf("SirBlobman")
 
     dependencies {
-        serverDependencies {
-            register("Factions") {
-                load = PaperPluginDescription.RelativeLoadOrder.AFTER
-                required = false
-            }
-
-            register("FactionsUUID") {
-                load = PaperPluginDescription.RelativeLoadOrder.AFTER
-                required = false
-            }
-
-            register("FactionsX") {
-                load = PaperPluginDescription.RelativeLoadOrder.AFTER
-                required = false
-            }
-
-            register("LegacyFactions") {
-                load = PaperPluginDescription.RelativeLoadOrder.AFTER
-                required = false
-            }
-
-            register("PlaceholderAPI") {
-                load = PaperPluginDescription.RelativeLoadOrder.AFTER
-                required = false
-            }
-        }
+        pluginSoftDepend.forEach { it -> quickRegister(serverDependencies, it, false) }
     }
 
     permissions {
