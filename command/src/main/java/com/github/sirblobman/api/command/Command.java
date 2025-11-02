@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -151,29 +150,7 @@ public abstract class Command implements TabExecutor {
             printDebug("Detected Paper plugin.");
             printDebug("Attempting command map registration...");
 
-            CommandData commandData = new CommandData(commandName, this);
-            InputStream resource = plugin.getResource("paper-plugin.yml");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
-            YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(reader);
-
-            String description = pluginFile.getString("commands." + commandName + ".description", null);
-            commandData.setDescription(description);
-
-            String usage = pluginFile.getString("commands." + commandName + ".usage", null);
-            commandData.setUsage(usage);
-
-            List<String> aliases = pluginFile.getStringList("commands." + commandName + ".aliases");
-            if (!aliases.isEmpty()) {
-                commandData.setAliases(aliases);
-            }
-
-            String permission = pluginFile.getString("commands." + commandName + ".permission", null);
-            commandData.setPermission(permission);
-
-            String permissionMessage = pluginFile.getString("commands." + commandName + ".permission-message",
-                    null);
-            commandData.setPermissionMessage(permissionMessage);
-
+            CommandData commandData = loadCommandData(commandName);
             PaperHelper.registerCommand(plugin, commandData);
             printDebug("Registered command '" + commandName + "' command map method.");
         } else {
@@ -189,6 +166,78 @@ public abstract class Command implements TabExecutor {
             pluginCommand.setTabCompleter(this);
             printDebug("Registered command using classic Spigot method.");
         }
+    }
+
+    private @NotNull CommandData loadCommandData(@NotNull String commandName) {
+        JavaPlugin plugin = getPlugin();
+        CommandData commandData = new CommandData(commandName, this);
+        InputStream paperPluginStream = plugin.getResource("paper-plugin.yml");
+        InputStream bukkitPluginStream = plugin.getResource("plugin.yml");
+        
+        YamlConfiguration main = loadConfiguration(paperPluginStream);
+        YamlConfiguration backup = loadConfiguration(bukkitPluginStream);
+
+        String basePath = String.format(Locale.US, "commands.%s.", commandName);
+        String description = findString(main, backup, basePath + "description");
+        String usage = findString(main, backup, basePath + "usage");
+        String permission = findString(main, backup, basePath + "permission");
+        String permissionMessage = findString(main, backup, basePath + "permission-message");
+        List<String> aliases = findStringList(main, backup, basePath + "aliases");
+
+        if (description != null) {
+            commandData.setDescription(description);
+        }
+
+        if (usage != null) {
+            commandData.setUsage(usage);
+        }
+
+        if (permission != null) {
+            commandData.setPermission(permission);
+        }
+
+        if (permissionMessage != null) {
+            commandData.setPermissionMessage(permissionMessage);
+        }
+
+        if (!aliases.isEmpty()) {
+            commandData.setAliases(aliases);
+        }
+
+        return commandData;
+    }
+
+    private @Nullable YamlConfiguration loadConfiguration(@Nullable InputStream resource) {
+        if (resource == null) {
+            return null;
+        }
+        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+        return YamlConfiguration.loadConfiguration(reader);
+    }
+
+    private @Nullable String findString(@Nullable YamlConfiguration main, @Nullable YamlConfiguration backup, @NotNull String path) {
+        if (main != null && main.isSet(path)) {
+            return main.getString(path);
+        }
+
+        if (backup != null && backup.isSet(path)) {
+            return backup.getString(path);
+        }
+
+        return null;
+    }
+
+    private @NotNull List<String> findStringList(@Nullable YamlConfiguration main, @Nullable YamlConfiguration backup, @NotNull String path) {
+        if (main != null && main.isSet(path)) {
+            return main.getStringList(path);
+        }
+
+        if (backup != null && backup.isSet(path)) {
+            return backup.getStringList(path);
+        }
+
+        return Collections.emptyList();
     }
 
     /**
