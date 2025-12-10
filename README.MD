@@ -30,10 +30,11 @@ Unsupported versions are planned for removal at a future date.
 | 1_18_R2     | 1.18.2            | :x:                |
 | 1_19_R3     | 1.19.4            | :white_check_mark: |
 | 1_20_R4     | 1.20.6            | :white_check_mark: |
-| 1_21_R3     | 1.21.4            | :white_check_mark: |
-| 1_21_R4     | 1.21.5            | :white_check_mark: |
-| 1_21_R5     | 1.21.8            | :white_check_mark: |
+| 1_21_R3     | 1.21.4            | :x:                |
+| 1_21_R4     | 1.21.5            | :x:                |
+| 1_21_R5     | 1.21.8            | :x                 |
 | 1_21_R6     | 1.21.10           | :white_check_mark: |
+| 1_21_R7     | 1.21.11           | :white_check_mark: |
 
 We only provide support for tested software and recommended versions.
 

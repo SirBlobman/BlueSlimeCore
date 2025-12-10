@@ -315,7 +315,7 @@ hangarPublish {
                         it.archiveFile
                     })
 
-                    platformVersions.set(listOf("1.19.4", "1.20.4", "1.20.6", "1.21.10"))
+                    platformVersions.set(listOf("1.19.4", "1.20.4", "1.20.6", "1.21.10", "1.21.11"))
                     changelog.set("https://jenkins.sirblobman.xyz/job/SirBlobman/job/BlueSlimeCore/job/main/changes")
 
                     this.dependencies {
