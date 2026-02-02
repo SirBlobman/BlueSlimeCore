@@ -1,7 +1,7 @@
 import io.github.patrick.gradle.remapper.RemapTask
 
 plugins {
-    id("io.github.patrick.remapper") version "1.4.2"
+    id("io.github.patrick.remapper") version "1.4.3"
 }
 
 dependencies {
