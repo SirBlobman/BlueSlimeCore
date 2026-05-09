@@ -6,11 +6,13 @@ public final class PaperChecker {
     private static Boolean USE_PAPER;
     private static Boolean COMPONENT_SUPPORT;
     private static Boolean PAPER_PLUGIN_SUPPORT;
+    private static Boolean PAPER_PLUGIN_COMMAND_SUPPORT;
 
     static {
         USE_PAPER = null;
         COMPONENT_SUPPORT = null;
         PAPER_PLUGIN_SUPPORT = null;
+        PAPER_PLUGIN_COMMAND_SUPPORT = null;
     }
 
     public static boolean isPaper() {
@@ -77,6 +79,19 @@ public final class PaperChecker {
             return (PAPER_PLUGIN_SUPPORT = true);
         } catch (ReflectiveOperationException | NoClassDefFoundError | ClassCastException ex) {
             return (PAPER_PLUGIN_SUPPORT = false);
+        }
+    }
+
+    public static boolean hasPaperPluginCommandSupport() {
+        if (PAPER_PLUGIN_COMMAND_SUPPORT != null) {
+            return PAPER_PLUGIN_COMMAND_SUPPORT;
+        }
+
+        try {
+            Class.forName("io.papermc.paper.command.brigadier.BasicCommand");
+            return (PAPER_PLUGIN_COMMAND_SUPPORT = true);
+        } catch (ReflectiveOperationException ex) {
+            return (PAPER_PLUGIN_COMMAND_SUPPORT = false);
         }
     }
 }

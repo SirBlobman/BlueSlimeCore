@@ -132,8 +132,8 @@ public abstract class Command implements TabExecutor {
         registerCustom(commandName);
     }
 
-    private boolean isPaperPlugin() {
-        if (PaperChecker.isPaper() && PaperChecker.hasPaperPluginSupport()) {
+    private boolean canRegisterAsPaperCommand() {
+        if (PaperChecker.hasPaperPluginCommandSupport()) {
             JavaPlugin plugin = getPlugin();
             try (InputStream resource = plugin.getResource("paper-plugin.yml")) {
                 return (resource != null);
@@ -152,7 +152,7 @@ public abstract class Command implements TabExecutor {
      */
     public final void registerCustom(@NotNull String commandName) {
         JavaPlugin plugin = getPlugin();
-        if (isPaperPlugin()) {
+        if (canRegisterAsPaperCommand()) {
             printDebug("Detected Paper plugin.");
             printDebug("Attempting command map registration...");
 
