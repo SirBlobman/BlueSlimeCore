@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 repositories {
@@ -11,7 +11,9 @@ repositories {
 
 dependencies {
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT") {
+        exclude("net.md-5", "bungeecord-chat")
+    }
 
     // Local Dependencies
     compileOnly(project(":paper-helper"))
@@ -41,6 +43,7 @@ dependencies {
     implementation(project(path = ":nms:1_21_R5", configuration = "remap")) // NMS 1.21.8
     implementation(project(path = ":nms:1_21_R6", configuration = "remap")) // NMS 1.21.10
     implementation(project(path = ":nms:1_21_R7", configuration = "remap")) // NMS 1.21.11
+    implementation(project(path = ":nms:26_1_R1")) // NMS 26.1.2
 }
 
 tasks {

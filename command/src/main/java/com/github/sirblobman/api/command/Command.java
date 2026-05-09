@@ -123,6 +123,12 @@ public abstract class Command implements TabExecutor {
      */
     public final void register() {
         String commandName = getCommandName();
+
+        String className = getClass().getName();
+        String debugMessage = String.format(Locale.US, "Registering command '/%s' from class '%s'.",
+                commandName, className);
+        printDebug(debugMessage);
+
         registerCustom(commandName);
     }
 

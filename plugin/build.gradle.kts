@@ -12,5 +12,7 @@ dependencies {
     compileOnly(project(":language"))
 
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT") {
+        exclude("net.md-5", "bungeecord-chat")
+    }
 }

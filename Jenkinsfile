@@ -33,6 +33,7 @@ pipeline {
         JDK16 = '/home/container/jdk/zulu16.32.15-ca-jdk16.0.2-linux_x64'
         JDK17 = '/home/container/jdk/zulu17.50.19-ca-jdk17.0.11-linux_x64'
         JDK21 = '/home/container/jdk/zulu21.34.19-ca-jdk21.0.3-linux_x64'
+        JDK25 = '/home/container/jdk/zulu25.34.17-ca-jdk25.0.3-linux_x64'
     }
 
     triggers {
@@ -40,7 +41,7 @@ pipeline {
     }
 
     tools {
-        jdk "JDK 21"
+        jdk "JDK 25"
     }
 
     stages {

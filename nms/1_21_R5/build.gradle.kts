@@ -1,5 +1,11 @@
 import io.github.patrick.gradle.remapper.RemapTask
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
 plugins {
     id("io.github.patrick.remapper") version "1.4.2"
 }

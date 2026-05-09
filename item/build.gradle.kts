@@ -13,5 +13,7 @@ dependencies {
     compileOnly(project(":nms:handler"))
 
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT") {
+        exclude("net.md-5", "bungeecord-chat")
+    }
 }

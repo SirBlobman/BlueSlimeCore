@@ -46,19 +46,8 @@ public final class VersionUtility {
      * @return The current NMS version of the server (Example: 1_16_R3)
      */
     public static @NotNull String getNetMinecraftServerVersion() {
-        try {
-            String newMinecraftVersion = getNewMinecraftVersion();
-            return getNmsVersion(newMinecraftVersion);
-        } catch (ReflectiveOperationException ex) {
-            Server server = Bukkit.getServer();
-            Class<? extends Server> serverClass = server.getClass();
-            Package serverPackage = serverClass.getPackage();
-            String serverPackageName = serverPackage.getName();
-
-            int lastPeriodIndex = serverPackageName.lastIndexOf('.');
-            int nextIndex = (lastPeriodIndex + 2);
-            return serverPackageName.substring(nextIndex);
-        }
+        String minecraftVersion = getMinecraftVersion();
+        return getNmsVersion(minecraftVersion);
     }
 
     /**
@@ -69,6 +58,52 @@ public final class VersionUtility {
      */
     private static @NotNull String getNmsVersion(@NotNull String version) {
         switch (version) {
+            case "1.8":
+            case "1.8.1":
+            case "1.8.2":
+                return "1_8_R1";
+            case "1.8.3":
+                return "1_8_R2";
+            case "1.8.4":
+            case "1.8.5":
+            case "1.8.6":
+            case "1.8.7":
+            case "1.8.8":
+                return "1_8_R3";
+            case "1.9":
+            case "1.9.1":
+            case "1.9.2":
+            case "1.9.3":
+                return "1_9_R1";
+            case "1.9.4":
+                return "1_9_R2";
+            case "1.10":
+            case "1.10.1":
+            case "1.10.2":
+                return "1_10_R1";
+            case "1.11":
+            case "1.11.1":
+            case "1.11.2":
+                return "1_11_R1";
+            case "1.12":
+            case "1.12.1":
+            case "1.12.2":
+                return "1_12_R1";
+            case "1.13":
+                return "1_13_R1";
+            case "1.13.1":
+            case "1.13.2":
+                return "1_13_R2";
+            case "1.14":
+            case "1.14.1":
+            case "1.14.2":
+            case "1.14.3":
+            case "1.14.4":
+                return "1_14_R1";
+            case "1.15":
+            case "1.15.1":
+            case "1.15.2":
+                return "1_15_R1";
             case "1.16":
             case "1.16.1":
                 return "1_16_R1";
@@ -124,6 +159,10 @@ public final class VersionUtility {
                 return "1_21_R6";
             case "1.21.11":
                 return "1_21_R7";
+            case "26.1":
+            case "26.1.1":
+            case "26.1.2":
+                return "26_1_R1";
             default: return "Unsupported";
         }
     }

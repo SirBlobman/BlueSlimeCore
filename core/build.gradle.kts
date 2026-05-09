@@ -15,13 +15,15 @@ plugins {
     id("maven-publish")
     id("de.eldoria.plugin-yml.bukkit") version "0.8.0"
     id("de.eldoria.plugin-yml.paper") version "0.8.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.4.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
 dependencies {
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT") {
+        exclude("net.md-5", "bungeecord-chat")
+    }
 
     // Pre-Shaded Modules
     implementation(project(path = ":shaded", configuration = "shadow"))
