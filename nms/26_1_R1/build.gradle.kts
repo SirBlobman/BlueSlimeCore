@@ -1,3 +1,7 @@
+repositories {
+    maven("https://libraries.minecraft.net")
+}
+
 dependencies {
     // Local Dependencies
     compileOnly(project(":nms:abstract"))
