@@ -7,7 +7,7 @@ java {
 }
 
 plugins {
-    id("io.github.patrick.remapper") version "1.4.2"
+    id("io.github.patrick.remapper") version "1.4.3"
 }
 
 repositories {
