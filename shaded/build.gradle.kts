@@ -27,8 +27,8 @@ dependencies {
     implementation("net.kyori:adventure-text-serializer-plain:4.26.1")
 
     // bStats
-    implementation("org.bstats:bstats-bukkit:3.2.0")
-    implementation("org.bstats:bstats-bungeecord:3.2.0")
+    implementation("org.bstats:bstats-bukkit:3.2.1")
+    implementation("org.bstats:bstats-bungeecord:3.2.1")
 
     // Folia Helper
     implementation("com.github.sirblobman.api:folia-helper:1.0.2-SNAPSHOT")
