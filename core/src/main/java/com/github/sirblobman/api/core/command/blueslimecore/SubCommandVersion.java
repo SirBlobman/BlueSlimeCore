@@ -114,11 +114,17 @@ public final class SubCommandVersion extends ConsoleCommand {
         String version = server.getVersion();
         String bukkitVersion = server.getBukkitVersion();
         String minecraftVersion = VersionUtility.getMinecraftVersion();
+        String majorMinorVersion = VersionUtility.getMajorMinorVersion();
+        String majorVersion = Integer.toString(VersionUtility.getMajorVersion());
+        String minorVersion = Integer.toString(VersionUtility.getMinorVersion());
         String nmsVersion = VersionUtility.getNetMinecraftServerVersion();
 
         list.add(withPrefix("Server Version", version));
         list.add(withPrefix("Bukkit Version", bukkitVersion));
         list.add(withPrefix("Minecraft Version", minecraftVersion));
+        list.add(withPrefix("MajorMinor Version", majorMinorVersion));
+        list.add(withPrefix("Major Version", majorVersion));
+        list.add(withPrefix("Minor Version", minorVersion));
         list.add(withPrefix("NMS Version", nmsVersion));
     }
 

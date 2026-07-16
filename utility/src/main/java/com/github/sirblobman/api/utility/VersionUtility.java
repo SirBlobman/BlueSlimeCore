@@ -100,30 +100,37 @@ public final class VersionUtility {
      */
     public static @NotNull String getMajorMinorVersion() {
         String minecraftVersion = getMinecraftVersion();
-        int lastPeriodIndex = minecraftVersion.lastIndexOf('.');
-        return (lastPeriodIndex < 2 ? minecraftVersion : minecraftVersion.substring(0, lastPeriodIndex));
+        String[] splitVersion = minecraftVersion.split("\\.", 3);
+        if (splitVersion.length <= 2) {
+            return minecraftVersion;
+        }
+
+        return String.format("%s.%s", splitVersion[0], splitVersion[1]);
     }
 
     /**
      * @return The current major version of the server as an integer (Example: {@code 1})
      */
     public static int getMajorVersion() {
-        String majorMinorVersion = getMajorMinorVersion();
-        int periodIndex = majorMinorVersion.indexOf('.');
+        String minecraftVersion = getMinecraftVersion();
+        String[] splitVersion = minecraftVersion.split("\\.", 3);
+        if (splitVersion.length < 1) {
+            throw new IndexOutOfBoundsException("Unsure how to parse Minecraft version: " + minecraftVersion + ".");
+        }
 
-        String majorString = majorMinorVersion.substring(0, periodIndex);
-        return Integer.parseInt(majorString);
+        return Integer.parseInt(splitVersion[0]);
     }
 
     /**
      * @return The current minor version of the server as an integer (Example: {@code 16})
      */
     public static int getMinorVersion() {
-        String majorMinorVersion = getMajorMinorVersion();
-        int periodIndex = majorMinorVersion.indexOf('.');
-        int nextIndex = (periodIndex + 1);
+        String minecraftVersion = getMinecraftVersion();
+        String[] splitVersion = minecraftVersion.split("\\.", 3);
+        if (splitVersion.length < 2) {
+            throw new IndexOutOfBoundsException("Unsure how to parse Minecraft version: " + minecraftVersion + ".");
+        }
 
-        String minorString = majorMinorVersion.substring(nextIndex);
-        return Integer.parseInt(minorString);
+        return Integer.parseInt(splitVersion[1]);
     }
 }
