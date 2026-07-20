@@ -11,9 +11,7 @@ repositories {
 
 dependencies {
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT") {
-        exclude("net.md-5", "bungeecord-chat")
-    }
+    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
     // Local Dependencies
     compileOnly(project(":paper-helper"))
@@ -43,7 +41,7 @@ dependencies {
     implementation(project(path = ":nms:1_21_R5", configuration = "remap")) // NMS 1.21.8
     implementation(project(path = ":nms:1_21_R6", configuration = "remap")) // NMS 1.21.10
     implementation(project(path = ":nms:1_21_R7", configuration = "remap")) // NMS 1.21.11
-    implementation(project(path = ":nms:26_1_R1")) // NMS 26.2
+    implementation(project(path = ":nms:26_1_R1", configuration = "remap")) // NMS 26.2
 }
 
 tasks {
