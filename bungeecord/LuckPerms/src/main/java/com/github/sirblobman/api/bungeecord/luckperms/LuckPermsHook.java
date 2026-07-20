@@ -21,7 +21,18 @@ import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 
-public record LuckPermsHook(Plugin plugin) implements IPermissionHook {
+public final class LuckPermsHook implements IPermissionHook {
+    private final Plugin plugin;
+
+    public LuckPermsHook(@NotNull Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public @NotNull Plugin plugin() {
+        return this.plugin;
+    }
+
     @Override
     public boolean isDisabled() {
         Plugin plugin = plugin();
@@ -48,7 +59,7 @@ public record LuckPermsHook(Plugin plugin) implements IPermissionHook {
         CachedDataManager dataManager = user.getCachedData();
         CachedMetaData metaData = dataManager.getMetaData();
         String prefix = metaData.getPrefix();
-        return (prefix == null || prefix.isBlank() ? "" : prefix);
+        return (prefix == null || prefix.isEmpty() ? "" : prefix);
     }
 
     @Override
@@ -67,7 +78,7 @@ public record LuckPermsHook(Plugin plugin) implements IPermissionHook {
         CachedDataManager dataManager = user.getCachedData();
         CachedMetaData metaData = dataManager.getMetaData();
         String suffix = metaData.getSuffix();
-        return (suffix == null || suffix.isBlank() ? "" : suffix);
+        return (suffix == null || suffix.isEmpty() ? "" : suffix);
     }
 
     @Override

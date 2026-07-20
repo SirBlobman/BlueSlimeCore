@@ -40,10 +40,11 @@ public final class HeadHandler_26_1_R1 extends HeadHandler {
         }
 
         ItemMeta itemMeta = item.getItemMeta();
-        if (!(itemMeta instanceof SkullMeta skullMeta)) {
+        if (!(itemMeta instanceof SkullMeta)) {
             return item;
         }
 
+        SkullMeta skullMeta = (SkullMeta) itemMeta;
         skullMeta.setOwningPlayer(player);
         item.setItemMeta(skullMeta);
         return item;
@@ -64,10 +65,11 @@ public final class HeadHandler_26_1_R1 extends HeadHandler {
         }
 
         ItemMeta itemMeta = item.getItemMeta();
-        if (!(itemMeta instanceof SkullMeta skullMeta)) {
+        if (!(itemMeta instanceof SkullMeta)) {
             return item;
         }
 
+        SkullMeta skullMeta = (SkullMeta) itemMeta;
         PlayerProfile playerProfile = createPlayerProfile(base64, customId);
         skullMeta.setOwnerProfile(playerProfile);
         item.setItemMeta(skullMeta);

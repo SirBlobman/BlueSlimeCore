@@ -12,7 +12,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-public record PremiumVanishHook(Plugin plugin) implements IVanishHook {
+public final class PremiumVanishHook implements IVanishHook {
+    private final Plugin plugin;
+
+    public PremiumVanishHook(@NotNull Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public @NotNull Plugin plugin() {
+        return this.plugin;
+    }
+
     @Override
     public boolean isDisabled() {
         Plugin plugin = plugin();
@@ -59,12 +70,12 @@ public record PremiumVanishHook(Plugin plugin) implements IVanishHook {
     @Override
     public void registerListener() {
         Plugin plugin = plugin();
-        if (!(plugin instanceof ConfigurablePlugin configurablePlugin)) {
+        if (!(plugin instanceof ConfigurablePlugin)) {
             return;
         }
 
         ProxyServer proxy = plugin.getProxy();
         PluginManager pluginManager = proxy.getPluginManager();
-        pluginManager.registerListener(plugin, new PremiumVanishListener(configurablePlugin));
+        pluginManager.registerListener(plugin, new PremiumVanishListener((ConfigurablePlugin) plugin));
     }
 }

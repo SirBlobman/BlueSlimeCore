@@ -1,6 +1,7 @@
 package com.github.sirblobman.api.bungeecord.core.command;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +31,9 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
         if (args.length == 1) {
-            Set<String> valueSet = Set.of("on", "off");
+            Set<String> valueSet = new HashSet<>();
+            valueSet.add("on");
+            valueSet.add("off");
             return MessageUtility.getMatches(args[0], valueSet);
         }
 
@@ -39,19 +42,24 @@ public final class CommandSBCoreHide extends Command implements TabExecutor {
 
     @Override
     public void execute(@NotNull CommandSender sender, String @NotNull [] args) {
-        if (!(sender instanceof ProxiedPlayer player)) {
+        if (!(sender instanceof ProxiedPlayer)) {
             TextComponent message = new TextComponent("Only players can execute this command.");
             message.setColor(ChatColor.RED);
             sender.sendMessage(message);
             return;
         }
 
+        ProxiedPlayer player = (ProxiedPlayer) sender;
         if (args.length >= 1) {
             String toggle = args[0];
             switch (toggle) {
-                case "on" -> setHidden(player, true);
-                case "off" -> setHidden(player, false);
-                default -> {
+                case "on":
+                    setHidden(player, true);
+                    return;
+                case "off":
+                    setHidden(player, false);
+                    return;
+                default: {
                     TextComponent message = new TextComponent("/sbcorehide [on/off]");
                     message.setColor(ChatColor.RED);
                     sender.sendMessage(message);

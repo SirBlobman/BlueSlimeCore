@@ -16,7 +16,8 @@ public abstract class PlayerCommand extends Command {
 
     @Override
     protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
             return onTabComplete(player, args);
         }
 
@@ -25,7 +26,8 @@ public abstract class PlayerCommand extends Command {
 
     @Override
     protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
             return execute(player, args);
         }
 

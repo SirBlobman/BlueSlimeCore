@@ -5,13 +5,25 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 
 import com.github.sirblobman.api.bungeecord.configuration.ConfigurationManager;
 import com.github.sirblobman.api.bungeecord.core.CorePlugin;
 import com.github.sirblobman.api.bungeecord.hook.vanish.IVanishHook;
 
-public record DefaultVanishHook(@NotNull CorePlugin plugin) implements IVanishHook {
+public final class DefaultVanishHook implements IVanishHook {
+    private final CorePlugin plugin;
+
+    public DefaultVanishHook(@NotNull CorePlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public @NotNull CorePlugin plugin() {
+        return this.plugin;
+    }
+
     @Override
     public boolean isDisabled() {
         return false;

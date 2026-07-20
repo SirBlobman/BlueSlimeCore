@@ -25,7 +25,8 @@ public final class EntityHandler_26_1_R1 extends EntityHandler {
 
     @Override
     public @NotNull String getName(@NotNull Entity entity) {
-        if (entity instanceof Player player) {
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
             return player.getName();
         }
 
@@ -35,10 +36,11 @@ public final class EntityHandler_26_1_R1 extends EntityHandler {
 
     @Override
     public void setCustomNameTextOnly(@NotNull Entity entity, String text, boolean visible) {
-        if (!(entity instanceof CraftEntity craftEntity)) {
+        if (!(entity instanceof CraftEntity)) {
             return;
         }
 
+        CraftEntity craftEntity = (CraftEntity) entity;
         net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
         Component component = Component.literal(text);
         nmsEntity.setCustomName(component);

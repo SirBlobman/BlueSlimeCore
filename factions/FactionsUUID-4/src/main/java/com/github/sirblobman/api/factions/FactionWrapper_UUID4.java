@@ -1,5 +1,6 @@
 package com.github.sirblobman.api.factions;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -119,6 +120,7 @@ public final class FactionWrapper_UUID4 extends FactionWrapper {
     public @NotNull Set<UUID> getMembers() {
         Faction faction = getFaction();
         Set<FPlayer> memberSet = faction.members();
-        return memberSet.stream().map(FPlayer::uniqueId).collect(Collectors.toUnmodifiableSet());
+        Set<UUID> mapped = memberSet.stream().map(FPlayer::uniqueId).collect(Collectors.toSet());
+        return Collections.unmodifiableSet(mapped);
     }
 }

@@ -72,7 +72,7 @@ public abstract class AdvancedAbstractMenu<P extends Plugin> extends BaseMenu<P>
 
     private @NotNull Listener getInventoryListener() {
         try {
-            String packageName = AdvancedAbstractMenu.class.getPackageName();
+            String packageName = AdvancedAbstractMenu.class.getPackage().getName();
             Class<?> class_InventoryView = Class.forName("org.bukkit.inventory.InventoryView");
             if (class_InventoryView.isInterface()) {
                 // New Interface InventoryView

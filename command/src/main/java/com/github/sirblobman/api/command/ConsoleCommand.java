@@ -16,7 +16,8 @@ public abstract class ConsoleCommand extends Command {
 
     @Override
     protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, String @NotNull [] args) {
-        if (sender instanceof ConsoleCommandSender console) {
+        if (sender instanceof ConsoleCommandSender) {
+            ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return onTabComplete(console, args);
         }
 
@@ -25,7 +26,8 @@ public abstract class ConsoleCommand extends Command {
 
     @Override
     protected boolean execute(@NotNull CommandSender sender, String @NotNull [] args) {
-        if (sender instanceof ConsoleCommandSender console) {
+        if (sender instanceof ConsoleCommandSender) {
+            ConsoleCommandSender console = (ConsoleCommandSender) sender;
             return execute(console, args);
         }
 

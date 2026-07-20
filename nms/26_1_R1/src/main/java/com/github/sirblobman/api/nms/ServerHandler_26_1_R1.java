@@ -25,10 +25,11 @@ public final class ServerHandler_26_1_R1 extends ServerHandler {
     @Override
     public double @NotNull [] getServerTpsValues() {
         Server server = getServer();
-        if (!(server instanceof CraftServer craftServer)) {
+        if (!(server instanceof CraftServer)) {
             return new double[] {20.0D, 20.0D, 20.0D};
         }
 
+        CraftServer craftServer = (CraftServer) server;
         MinecraftServer minecraftServer = craftServer.getServer();
         return Arrays.copyOf(minecraftServer.recentTps, 3);
     }
@@ -36,10 +37,11 @@ public final class ServerHandler_26_1_R1 extends ServerHandler {
     @Override
     public @NotNull CommandMap getCommandMap() {
         Server server = getServer();
-        if (!(server instanceof CraftServer craftServer)) {
+        if (!(server instanceof CraftServer)) {
             throw new UnsupportedOperationException("Server implementation is not the correct class.");
         }
 
+        CraftServer craftServer = (CraftServer) server;
         return craftServer.getCommandMap();
     }
 }

@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.CraftServer;
@@ -206,7 +207,8 @@ public final class ItemHandler_26_1_R1 extends ItemHandler {
         }
 
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
-        if (container instanceof CustomNbtPersistentDataContainerWrapper wrapper) {
+        if (container instanceof CustomNbtPersistentDataContainerWrapper) {
+            CustomNbtPersistentDataContainerWrapper wrapper = (CustomNbtPersistentDataContainerWrapper) container;
             PersistentDataContainer internalContainer = wrapper.getContainer();
 
             JavaPlugin plugin = getPlugin();
@@ -278,8 +280,7 @@ public final class ItemHandler_26_1_R1 extends ItemHandler {
         }
 
         List<net.minecraft.network.chat.Component> nmsLines = itemLore.lines();
-        List<Component> adventureLines = nmsLines.stream().map(this::convert).toList();
-        return new ArrayList<>(adventureLines);
+        return nmsLines.stream().map(this::convert).collect(Collectors.toList());
     }
 
     @Override
@@ -291,8 +292,8 @@ public final class ItemHandler_26_1_R1 extends ItemHandler {
                 nmsItem.remove(DataComponents.LORE);
             }
         } else {
-            List<net.minecraft.network.chat.Component> nmsLines = new ArrayList<>(lore.stream().map(this::convert)
-                    .toList());
+            List<net.minecraft.network.chat.Component> nmsLines = lore.stream().map(this::convert)
+                    .collect(Collectors.toList());
             ItemLore itemLore = new ItemLore(nmsLines);
             nmsItem.set(DataComponents.LORE, itemLore);
         }
@@ -322,7 +323,8 @@ public final class ItemHandler_26_1_R1 extends ItemHandler {
 
     private int getCurrentDataVersion() {
         Server server = Bukkit.getServer();
-        if (server instanceof CraftServer craftServer) {
+        if (server instanceof CraftServer) {
+            CraftServer craftServer = (CraftServer) server;
             DedicatedPlayerList handle = craftServer.getHandle();
             DedicatedServer dedicatedServer = handle.getServer();
             WorldData worldData = dedicatedServer.getWorldData();
@@ -358,7 +360,8 @@ public final class ItemHandler_26_1_R1 extends ItemHandler {
         }
 
         Server server = Bukkit.getServer();
-        if (server instanceof CraftServer craftServer) {
+        if (server instanceof CraftServer) {
+            CraftServer craftServer = (CraftServer) server;
             DedicatedPlayerList handle = craftServer.getHandle();
             DedicatedServer dedicatedServer = handle.getServer();
             DataFixer dataFixer = dedicatedServer.getFixerUpper();

@@ -16,7 +16,18 @@ import net.alpenblock.bungeeperms.BungeePermsAPI;
 import net.alpenblock.bungeeperms.Group;
 import net.alpenblock.bungeeperms.PermissionsManager;
 
-public record BungeePermsHook(Plugin plugin) implements IPermissionHook {
+public final class BungeePermsHook implements IPermissionHook {
+    private final Plugin plugin;
+
+    public BungeePermsHook(@NotNull Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public @NotNull Plugin plugin() {
+        return this.plugin;
+    }
+
     @Override
     public boolean isDisabled() {
         Plugin plugin = plugin();
