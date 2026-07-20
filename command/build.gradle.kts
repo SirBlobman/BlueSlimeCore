@@ -1,6 +1,5 @@
 repositories {
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://oss.sonatype.org/service/local/repositories/snapshots/content/")
+    maven("https://repo.aikar.co/nexus/content/groups/aikar/")
 }
 
 dependencies {
@@ -12,7 +11,5 @@ dependencies {
     compileOnly(project(":paper-helper"))
 
     // Spigot API
-    compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT") {
-        exclude("net.md-5", "bungeecord-chat")
-    }
+    compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
 }

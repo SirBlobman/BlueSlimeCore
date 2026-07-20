@@ -4,8 +4,8 @@ tasks.named("jar") {
 
 subprojects {
     repositories {
-        maven("https://oss.sonatype.org/service/local/repositories/snapshots/content/") // BungeeCord API
-        maven("https://libraries.minecraft.net/") // BungeeCord Protocol
+        maven("https://libraries.minecraft.net/")
+        maven("https://repo.aikar.co/nexus/content/groups/aikar/")
     }
 
     dependencies {
