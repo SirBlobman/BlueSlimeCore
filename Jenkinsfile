@@ -1,13 +1,13 @@
 def skipCiCheck
 
-def SkipCI(number = "all") {
+def SkipCI(number = 'all') {
     // Method copied from https://shenxianpeng.github.io/2022/10/jenkins-skip-ci/
     def statusCodeList = []
 
     String[] keyWords = ['ci skip', 'skip ci'] // add more keywords if need.
     keyWords.each { keyWord ->
         def statusCode = null
-        if (number == "all") {
+        if (number == 'all') {
             statusCode = sh script: "git log --oneline --all | grep \'${keyWord}\'", returnStatus: true
         } else {
             statusCode = sh script: "git log --oneline -n ${number} | grep \'${keyWord}\'", returnStatus: true
@@ -20,11 +20,11 @@ def SkipCI(number = "all") {
 
 pipeline {
     agent {
-        label "multi-java"
+        label 'multi-java'
     }
 
     options {
-        githubProjectProperty(projectUrlStr: "https://github.com/SirBlobman/BlueSlimeCore")
+        githubProjectProperty(projectUrlStr: 'https://github.com/SirBlobman/BlueSlimeCore')
     }
 
     environment {
@@ -60,12 +60,12 @@ pipeline {
             steps {
                 withGradle {
                     script {
-                        if (env.BRANCH_NAME == "main") {
-                            sh("./gradlew --no-daemon --no-configuration-cache --refresh-dependencies clean build publish publishAllPublicationsToHangar")
-                        } else if (env.BRANCH_NAME.contains("dev")) {
-                            sh("./gradlew --no-daemon --no-configuration-cache --refresh-dependencies clean build publish")
+                        if (env.BRANCH_NAME == 'main') {
+                            sh('./gradlew --no-daemon --no-configuration-cache --refresh-dependencies clean build publish publishAllPublicationsToHangar')
+                        } else if (env.BRANCH_NAME.contains('dev')) {
+                            sh('./gradlew --no-daemon --no-configuration-cache --refresh-dependencies clean build publish')
                         } else {
-                            sh("./gradlew --no-daemon --no-configuration-cache --refresh-dependencies clean build")
+                            sh('./gradlew --no-daemon --no-configuration-cache --refresh-dependencies clean build')
                         }
                     }
                 }
@@ -86,13 +86,21 @@ pipeline {
         always {
             script {
                 if (!skipCiCheck) {
-                    discordSend webhookURL: DISCORD_URL, title: "BlueSlimeCore", link: "${env.BUILD_URL}",
+                    def description = """
+                        **Branch:** ${env.GIT_BRANCH}
+                        **Build:** ${env.BUILD_NUMBER}
+                        **Status:** ${currentBuild.currentResult}
+                    """
+
+                    discordSend(
+                            webhookURL: DISCORD_URL,
+                            title: 'BlueSlimeCore',
+                            link: env.BUILD_URL,
                             result: currentBuild.currentResult,
-                            description: """\
-                                **Branch:** ${env.GIT_BRANCH}
-                                **Build:** ${env.BUILD_NUMBER}
-                                **Status:** ${currentBuild.currentResult}""".stripIndent(),
-                            enableArtifactsList: false, showChangeset: true
+                            description: description.stripIndent(),
+                            enableArtifactsList: false,
+                            showChangeset: true
+                    )
                 }
             }
         }
