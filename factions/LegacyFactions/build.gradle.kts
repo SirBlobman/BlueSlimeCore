@@ -1,5 +1,5 @@
 repositories {
-    maven("https://nexus.sirblobman.xyz/proxy-public/")
+    maven("https://nexus.sirblobman.xyz/public/")
 }
 
 dependencies {
@@ -7,7 +7,5 @@ dependencies {
     compileOnly(project(":factions:abstract"))
 
     // LegacyFactions
-    compileOnly("com.github.redstone:LegacyFactions:v1.4.4") {
-        exclude("mkremins", "fanciful")
-    }
+    compileOnly("com.github.redstone:LegacyFactions:1.4.7")
 }

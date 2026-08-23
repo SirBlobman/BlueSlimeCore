@@ -19,7 +19,9 @@ def SkipCI(number = "all") {
 }
 
 pipeline {
-    agent any
+    agent {
+        label "multi-java"
+    }
 
     options {
         githubProjectProperty(projectUrlStr: "https://github.com/SirBlobman/BlueSlimeCore")
@@ -38,10 +40,6 @@ pipeline {
 
     triggers {
         githubPush()
-    }
-
-    tools {
-        jdk "JDK 25"
     }
 
     stages {

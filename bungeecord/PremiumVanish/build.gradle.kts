@@ -1,5 +1,5 @@
 repositories {
-    maven("https://nexus.sirblobman.xyz/proxy-public/")
+    maven("https://nexus.sirblobman.xyz/jitpack-mirror/")
 }
 
 dependencies {
@@ -8,5 +8,5 @@ dependencies {
     compileOnly(project(":bungeecord:abstract"))
 
     // PremiumVanish API
-    compileOnly("com.github.LeonMangler:PremiumVanishAPI:2.9.0-4")
+    compileOnly("com.github.LeonMangler:PremiumVanishAPI:2.9.18-2")
 }

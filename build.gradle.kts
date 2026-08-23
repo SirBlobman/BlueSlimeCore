@@ -52,7 +52,7 @@ allprojects {
 
 subprojects {
     repositories {
-        mavenCentral()
+        maven("https://nexus.sirblobman.xyz/central-mirror/") // Central Mirror
     }
 
     dependencies {
