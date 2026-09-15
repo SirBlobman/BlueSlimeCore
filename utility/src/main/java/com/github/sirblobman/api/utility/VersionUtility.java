@@ -196,6 +196,7 @@ public final class VersionUtility {
             case "26.1.1":
             case "26.1.2":
             case "26.2":
+            case "26.3":
                 return "26_1_R1";
 
             default:

@@ -37,6 +37,7 @@ Unsupported versions are planned for removal at a future date.
 | 1_21_R7     | 1.21.11           | :white_check_mark: |
 | 26_1_R1     | 26.1.2            | :white_check_mark: |
 | 26_1_R1     | 26.2              | :white_check_mark: |
+| 26_1_R1     | 26.3              | :white_check_mark: |
 
 We only provide support for tested software and recommended versions.
 

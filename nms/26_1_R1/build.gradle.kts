@@ -13,8 +13,8 @@ dependencies {
     compileOnly(project(":nms:abstract"))
     compileOnly(project(":nms:modern-nbt"))
 
-    // SpigotMC 26.2
-    compileOnly("org.spigotmc:spigot:26.2-R0.1-SNAPSHOT")
+    // SpigotMC 26.3
+    compileOnly("org.spigotmc:spigot:26.3-R0.1-SNAPSHOT")
 }
 
 configurations {
